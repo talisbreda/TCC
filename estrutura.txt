@@ -1,0 +1,23 @@
+1. Introdução (contextualização - copiar da proposta e evoluir)
+1.1. Objetivos: geral +  específicos
+1.2. Delimitação do estudo (limitar)
+
+2. Fundamentação Teórica
+2.1 Definições sobre Grafos
+2.2 Falar do Problema Geral de Emparelhamento
+2.3. Problemas de emparelhamento geral
+
+3. Problemas de Emparelhamento em Estudo
+3.1 Introdução sobre Taxonomia dos Problemas (ciência que lida com a descrição, identificação e classificação) 
+3.2 Emparelhamento em Grafos Bipartidos
+3.2.1 Cardinalidade Máxima
+   Definição do problema
+   Propriedades
+   Algoritmo(s)
+   Algoritmo(s) de Aproximação
+   Método(s) Heurístico(s)
+3.2.2 Maximização de Pesos
+3.2.3 Minmização de Pesos
+3.3 Emparelhamento em Grafos Gerais
+
+4. Metodologia / Proposta

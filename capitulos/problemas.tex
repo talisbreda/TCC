@@ -1,0 +1,74 @@
+\section{Problemas de Emparelhamento}
+
+% ==================================================================================================================================
+% 3.1. Introdução sobre taxonomia dos problemas
+% ==================================================================================================================================
+\subsection{Introdução sobre taxonomia dos problemas}
+
+% ==================================================================================================================================
+% 3.2. Emparelhamento em grafos bipartidos
+% ==================================================================================================================================
+\subsection{Emparelhamento em grafos bipartidos}
+
+\subsubsection{Emparelhamento bipartido}
+
+% ---------------------------------------------------------------------------------------------------------------------------------
+% 3.2.1. Emparelhamento de cardinalidade máxima
+% ---------------------------------------------------------------------------------------------------------------------------------
+\subsubsection{Emparelhamento de cardinalidade máxima}
+
+Dado um grafo bipartido, o problema da cardinalidade máxima busca encontrar o emparelhamento que contém o maior número possível de 
+arestas. Ele pode ser reduzido ao problema de fluxo máximo em uma rede da seguinte maneira:
+
+Construimos um grafo direcionado a partir do grafo bipartido original, adicionando um vértice fonte $s$ e um vértice sumidouro $t$.
+Conectamos o vértice fonte $s$ a todos os vértices do primeiro conjunto de partição com arestas de capacidade 1, e conectamos
+todos os vértices do segundo conjunto de partição ao vértice sumidouro $t$ com arestas de capacidade 1. As arestas entre os dois
+conjuntos de partição recebem capacidade infinita. Seguindo o teorema da integralidade \textbf{CITAR FONTES}, qualquer fluxo máximo encontrado nesta rede
+será integral, correspondendo a um emparelhamento no grafo bipartido original.
+
+Aplicando um algoritmo de fluxo máximo, como o algoritmo de Edmonds-Karp ou o algoritmo de Dinic, podemos determinar o fluxo máximo
+da fonte ao sumidouro. O conjunto de arestas que transportam fluxo na solução do fluxo máximo forma o emparelhamento de 
+cardinalidade máxima no grafo bipartido original. \textbf{CITAR FONTES}
+
+% ---------------------------------------------------------------------------------------------------------------------------------
+% 3.2.1. Problema de atribuição (Assignment Problem)
+% ---------------------------------------------------------------------------------------------------------------------------------
+\subsubsection{Problema de atribuição (Assignment Problem)}
+\textbf{Talvez chamar de Problema de emparelhamento ponderado?}
+
+O problema de atribuição consiste em encontrar uma combinação ótima de atribuições entre dois conjuntos disjuntos, minimizando 
+o custo total associado a essas atribuições. Exemplo: Considere $N$ trabalhadores e $N$ tarefas, onde cada trabalhador pode ser designado 
+a exatamente uma tarefa, e cada tarefa deve ser atribuída a exatamente um trabalhador. O custo de atribuir o trabalhador i à tarefa j é 
+representado por uma matriz de custos $C = [c_{ij}]$ \cite{lawler}. O objetivo é encontrar um conjunto de atribuições que minimize o custo total.
+
+É possível modelar esse problema como um problema de emparelhamento de custo mínimo em um grafo bipartido ponderado, da seguinte forma:
+
+Construimos um grafo bipartido com $N$ vértices em cada conjunto de partição, onde cada vértice do 
+primeiro conjunto representa um homem e cada vértice do segundo conjunto representa um trabalho. Cada aresta entre um vértice do 
+primeiro conjunto e um vértice do segundo conjunto é ponderada com o custo $c_{ij}$ de atribuir o homem i ao trabalho j. 
+Cria-se um novo vértice fonte conectado a todos os vértices do primeiro conjunto com arestas de peso zero, e um novo vértice 
+sumidouro conectado a todos os vértices do segundo conjunto com arestas de peso zero. O objetivo é encontrar um fluxo máximo de 
+custo mínimo neste grafo modificado, que corresponde a um emparelhamento de custo mínimo no grafo bipartido original \cite{lawler}.
+Assim, reduzimos o problema de emparelhamento em um grafo bipartido ponderado ao problema de fluxo de custo mínimo, que pode ser 
+resolvido eficientemente usando algoritmos de fluxo de custo mínimo, como o algoritmo de ciclo negativo \textbf{CITAR FONTES}
+
+% ---------------------------------------------------------------------------------------------------------------------------------
+% 3.2.1. Bottleneck assignment problem
+% ---------------------------------------------------------------------------------------------------------------------------------
+\subsubsection{Problema de atribuição gargalo}
+
+O problema de atribuição gargalo, também conhecido como \textbf{Problema de Emparelhamento Min-Max} ou \textbf{Bottleneck Assignment
+problem}, é uma variação do problema de atribuição tradicional. O objetivo deste problema é encontrar, em um grafo bipartido ponderado,
+um emparelhamento de cardinalidade máxima (maior número possível de arestas) no qual o mínimo dos pesos das arestas do emparelhamento seja
+maximizado \cite{lawler}.
+
+Por exemplo. Considere $N$ trabalhadores e $N$ estações de trabalho. $w_{ij}$ representa a eficiência do trabalhador i na 
+estação de trabalho j. A eficiência total da produção é limitada pela eficiência do trabalhador menos eficiente. 
+O objetivo é atribuir trabalhadores às estações de trabalho de forma a maximizar a eficiência mínima entre todas as atribuições. 
+Para resolver este problema, podemos utilizar o método de threshold \cite{lawler}.
+
+\subsubsection{Problema do emparelhamento estável (Stable Marriage Problem)}
+
+\subsubsection{Problema de atribuição quadrática (QAP)}
+
+\subsubsection{Problema de atribuição linear (LAP)}

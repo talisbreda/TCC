@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{helvet}
+\usepackage{lipsum}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{multicol}
+\usepackage{amssymb}
+\usepackage{pifont}
+\usepackage{setspace}
+\usepackage{tocloft}
+\usepackage{indentfirst}
+\usepackage{cite}
+\usepackage[alf]{abntex2cite}
+\usepackage[portuguese]{babel}
+
+% ABNT 14724: As folhas devem apresentar margem esquerda e superior de 3 cm; direita e inferior de 2 cm.
+\usepackage[left=3cm,top=3cm=bottom=2cm,right=2cm]{geometry}
+
+% Define família de fonte padrão como Helvetica
+\renewcommand{\familydefault}{\sfdefault}
+
+% Define um X para ser usado no cronograma
+\newcommand\xmark{\huge{$\times$}}
+
+% Adiciona linha pontilhada para \section no sumário (\tableofcontents)
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % Add dots for sections
+
+\begin{document}
+
+% Remove contagem de páginas
+\pagestyle{empty}
+
+\input{pre_textual/definicoes}
+
+\input{pre_textual/capa}
+\input{pre_textual/preambulo}
+\input{pre_textual/resumo}
+
+\tableofcontents
+\newpage
+
+\input{capitulos/introducao}
+\input{capitulos/fundamentacao.tex}
+\input{capitulos/problemas.tex}
+
+\newpage
+\centering \bibliographystyle{abntex2-alf}
+\bibliography{pos_textual/referencias}
+
+\end{document}

@@ -1,0 +1,123 @@
+\section{Fundamentação teórica}
+
+% ==================================================================================================================================
+% 2.1. Definições sobre grafos
+% ==================================================================================================================================
+\subsection{Definições sobre grafos}
+
+
+Um \textbf{grafo} $G$ é uma uma estrutura definida por um par $G=(V,E)$, consistindo de um conjunto finito $V$ de elementos 
+chamados \textbf{vértices} (ou \textbf{nós} ou \textbf{pontos}) e um conjunto (ou família) $E$ de pares não ordenados de vértices, 
+chamados de \textbf{arestas} \cite{jungnickel}. O conjunto V é o conjunto de vértices de $G (VG)$ e $E$ é a família de arestas de 
+$G (EG)$.
+
+No contexto deste projeto, assumimos que as arestas $e={u,v}$ são pares não ordenados de vértices distintos. Se uma aresta $e$ 
+conecta os vértices $a$ e $b$, diz-se que $a$ e $b$ são \textbf{adjacentes} ou \textbf{vizinhos}, e que a aresta $e$ é 
+\textbf{incidente} a $a$ e $b$ \cite{schrijver}.
+
+O conceito de grafo é amplamente utilizado como uma representação abstrata concisa para estruturas complexas e para 
+codificar relações binárias entre um conjunto de objetos.
+
+% ---------------------------------------------------------------------------------------------------------------------------------
+% 2.1.1. Grafo direcionado
+% ---------------------------------------------------------------------------------------------------------------------------------
+\subsubsection{Grafo direcionado}
+
+Se as relações entre os vértices forem assimétricas, utilizamos um \textbf{grafo direcionado} ou \textbf{dígrafo}, $D=(V,A)$. 
+Neste caso, $A$ é uma família de pares ordenados de vértices, chamados \textbf{arcos} (ou arestas direcionadas). 
+Para um arco $e=(u,v)$, $u$ é chamado o vértice inicial ou \textbf{cauda} (tail), e $v$ é o vértice final ou \textbf{cabeça} (head)
+\cite{manber}
+
+% ---------------------------------------------------------------------------------------------------------------------------------
+% 2.1.2. Grafo ponderado
+% ---------------------------------------------------------------------------------------------------------------------------------
+\subsubsection{Grafo ponderado}
+
+Um grafo $G=(V,E)$ é chamado \textbf{grafo ponderado} (ou com pesos) se uma \textbf{função de peso} (ou função de custo, 
+ou função de comprimento) $w:E\rightarrow R$ está associada às arestas. Formalmente: $G=(V,E,w)$, onde $w:E\rightarrow R$. 
+Geralmente, o peso $w(e)$ de uma aresta $e$ é um valor real não negativo que representa o custo, comprimento ou capacidade 
+associada àquela aresta \cite{rosen}.
+
+Grafos ponderados podem ser representados por matrizes de adjacência de valor real $A$, onde a entrada $A_{ij}$ 
+é o peso $w_{ij}$ da aresta \cite{path_following_algo}
+
+% ---------------------------------------------------------------------------------------------------------------------------------
+% 2.1.3. Grafo bipartido
+% ---------------------------------------------------------------------------------------------------------------------------------
+\subsubsection{Grafo bipartido}
+
+Um grafo bipartido é um grafo não direcionado que pode ser facilmente colorido com apenas duas cores \cite{manber}
+
+Formalmente, um grafo $G=(V,E)$ é chamado \textbf{grafo bipartido} se o conjunto de vértices $V$ puder ser
+particionado em dois subconjuntos disjuntos $V_1$ e $V_2$, chamados calsses de cor, tais que:
+
+\begin{equation}
+    V = V_1 \cup V_2 \quad {e} \quad V_1 \cap V_2 = \emptyset
+\end{equation}
+
+e todas as arestas $e \in E$ conectam um vértice em $V_1$ a um vértice em $V_2$. Ou seja, não existem arestas que conectem
+vértices dentro do mesmo subconjunto \cite{dasgupta}.
+
+Observações:
+\begin{itemize}
+    \item Um grafo é bipartido se e somente se não contém ciclos de comprimento ímpar \cite{schrijver}
+    \item O grafo bipartido completo $K_{m,n}$ possui $m$ vértices em $V_1$ e $n$ vértices em $V_2$, 
+    e contém todas as arestas possíveis entre $V_1$ e $V_2$ \cite{jungnickel}
+\end{itemize}
+
+
+% TODO: teorema da integralidade
+% TODO: Mendelsohn-Dulmage
+
+% ==================================================================================================================================
+% 2.2. Problema Geral do Emparelhamento
+% ==================================================================================================================================
+\subsection{Problema Geral do Emparelhamento}
+
+O problema de \textbf{matching} (emparelhamento) em grafos é um problema fundamental na otimização combinatória
+
+Um \textbf{matching} M em um grafo não-direcionado $G=(V,E)$ é um subconjunto de arestas $M \subseteq E$ tal que
+nenhum par de arestas em $M$ compartilha um vértice comum \cite{kleinberg}. Em outras palavras, cada nó aparece em no máximo
+uma aresta de $M$.
+
+\begin{itemize}
+    \item Um vértice é chamado \textbf{coberto} (\textit{matched}) se for incidente a uma aresta em $M$; caso contrário, 
+    é \textbf{descoberto} (\textit{unmatched} ou \textit{exposed}) \cite{cormen}
+    \item Um \textbf{matching de cardinalidade máxima} (Maximum Matching) é um matching com o maior número possível 
+    de arestas \cite{cormen}. A cardinalidade máxima de um matching é denotada por $v(G)$ \cite{schrijver}
+    \item Um \textbf{matching perfeito} é um matching que cobre todos os vértices do grafo \cite{kleinberg}
+    \item  O \textbf{problema de matching ponderado} (Weighted Matching Problem) envolve encontrar um matching para o qual a 
+    soma dos pesos das arestas é máxima. Em um grafo ponderado $G=(V,E,w)$, busca-se um $M\subseteq E$ que maximize $w(M)$ \cite{matching_gpus_sc24}
+\end{itemize}
+
+% ---------------------------------------------------------------------------------------------------------------------------------
+% 2.2.1. Matching em grafos bipartidos
+% ---------------------------------------------------------------------------------------------------------------------------------
+\subsubsection{Matching em grafos bipartidos}
+
+O problema de \textbf{Matching Bipartido} é o caso clássico de encontrar um matching de cardinalidade máxima em um grafo 
+bipartido $G=(V,E)$, onde $V=X\cup Y$ \cite{kleinberg}
+
+\begin{itemize}
+    \item O matching em grafos bipartidos pode modelar situações de atribuição, como associar empregos ($X$) a máquinas ($Y$), 
+    ou professores ($X$) a cursos ($Y$), onde uma aresta indica uma capacidade de atribuição \cite{kleinberg}
+    \item O problema de matching ponderado em grafos bipartidos é equivalente ao \textbf{problema de atribuição \cite{lawler}}, 
+    que historicamente motivou o desenvolvimento do \textbf{método Húngaro} \cite{schrijver}
+\end{itemize}
+
+% ---------------------------------------------------------------------------------------------------------------------------------
+% 2.2.2. Formulação geral (emparelhamento e otimização)
+% ---------------------------------------------------------------------------------------------------------------------------------
+\subsubsection{Formulação geral (emparelhamento e otimização)}
+
+Em um contexto mais amplo, o emparelhamento de grafos pode ser formalizado como um problema de otimização que 
+busca maximizar a compatibilidade entre dois grafos $G$ e $G'$ \cite{learning_graph_matching}.
+
+\begin{itemize}
+    \item  O problema de graph matching é frequentemente abordado como um \textbf{problema de atribuição qua\-drática (QAP)}. 
+    Essa formulação busca maximizar uma função objetivo que combina termos de compatibilidade unária (nó-nó, $c_{ii'}$) 
+    e compatibilidade par a par (aresta-aresta, $d_{ii'jj'}$), sujeito a restrições de atribuição binária ($y_{ii'} \in {0,1}$). 
+    O termo quadrático codifica a preservação das relações (arestas) entre os nós \cite{learning_graph_matching}
+    \item Para grafos bipartidos, a determinação de um matching máximo pode ser resolvida de maneira eficiente e está intimamente 
+    ligada a problemas de \textit{network flow} (fluxo em redes) \cite{kleinberg}
+\end{itemize}
