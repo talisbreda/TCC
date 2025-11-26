@@ -1,56 +1,321 @@
-\section{Problemas de Emparelhamento}
+%!TeX root = ../main.tex
 
-% ==================================================================================================================================
-% 3.1. Introdução sobre taxonomia dos problemas
-% ==================================================================================================================================
-\subsection{Introdução sobre taxonomia dos problemas}
 
-% ==================================================================================================================================
-% 3.2. Emparelhamento em grafos bipartidos
-% ==================================================================================================================================
-\subsection{Emparelhamento em grafos bipartidos}
+% ================================================================================================
+% 4. Problemas de emparelhamento em grafos bipartidos
+% ================================================================================================
+\section{Problemas de emparelhamento em grafos bipartidos}
 
-\subsubsection{Emparelhamento bipartido}
 
-% ---------------------------------------------------------------------------------------------------------------------------------
-% 3.2.1. Emparelhamento de cardinalidade máxima
-% ---------------------------------------------------------------------------------------------------------------------------------
-\subsubsection{Emparelhamento de cardinalidade máxima}
+% ------------------------------------------------------------------------------------------------
+% 4.1. Emparelhamento de cardinalidade máxima
+% ------------------------------------------------------------------------------------------------
+\subsection{Emparelhamento de cardinalidade máxima}
 
-Dado um grafo bipartido, o problema da cardinalidade máxima busca encontrar o emparelhamento que contém o maior número possível de 
-arestas. Ele pode ser reduzido ao problema de fluxo máximo em uma rede da seguinte maneira:
+\subsubsection{Definição do problema}
 
-Construimos um grafo direcionado a partir do grafo bipartido original, adicionando um vértice fonte $s$ e um vértice sumidouro $t$.
-Conectamos o vértice fonte $s$ a todos os vértices do primeiro conjunto de partição com arestas de capacidade 1, e conectamos
-todos os vértices do segundo conjunto de partição ao vértice sumidouro $t$ com arestas de capacidade 1. As arestas entre os dois
-conjuntos de partição recebem capacidade infinita. Seguindo o teorema da integralidade \textbf{CITAR FONTES}, qualquer fluxo máximo encontrado nesta rede
-será integral, correspondendo a um emparelhamento no grafo bipartido original.
+Dado um grafo não-direcionado $G=(V,E)$, o problema de emparelhamento de cardinalidade máxima (MCM) busca encontrar um emparelhamento $M \subseteq E$ tal que o número de arestas em $M$ seja maximizado, ou seja, $|M|$ é o maior entre todos os emparelhamentos possíveis em $G$.
 
-Aplicando um algoritmo de fluxo máximo, como o algoritmo de Edmonds-Karp ou o algoritmo de Dinic, podemos determinar o fluxo máximo
-da fonte ao sumidouro. O conjunto de arestas que transportam fluxo na solução do fluxo máximo forma o emparelhamento de 
-cardinalidade máxima no grafo bipartido original. \textbf{CITAR FONTES}
+Um caso especial, mas importante, do MCM é o \textbf{Emparelhamento perfeito}, que é um emparelhamento onde todos os vértices do grafo são cobertos por exatamente uma aresta do emparelhamento. Para que um emparelhamento perfeito exista, o grafo deve ter um número par de vértices e o emparelhamento máximo deve ter cardinalidade igual a $|V|/2$ \cite{jungnickel}.
+
+\subsubsection{Propriedades}
+
+Antes de continuar para os algoritmos e soluções, é necessário entender algumas propriedades importantes
+
+\topic{Emparelhamento máximo vs maximal}
+
+Um emparelhamento máximo é aquele que contém o maior número possível de arestas, enquanto um emparelhamento maximal é aquele que não pode ser aumentado adicionando mais arestas, mas não necessariamente é o maior possível \cite{manber}.
+
+\topic{Caminhos aumentantes}
+
+Um caminho aumentante $P$ em um grafo $G$ é chamado de caminho aumentante se $P$ tem tamanho ímpar, começa e termina em vértices livres (não cobertos por nenhuma aresta do emparelhamento atual) e alterna entre arestas que pertencem a $M$ e arestas que não pertencem a $M$. A existência de um caminho aumentante indica que o emparelhamento atual não é máximo \cite{schrijver}
+
+\subsubsection{Algoritmos exatos}
+
+Por ser em um ambiente mais restrito, o problema de emparelhamento de cardinalidade máxima tem diversas soluções em tempo polinomial. A seguir listadas algumas delas:
+
+\topic{Algoritmo do caminho aumentante}
+
+O algoritmo de caminho aumentante se baseia em um lema proposto por Claude Berge, que afirma que um grafo G é maximo se e somente se não existe nenhum caminho aumentante em G. Este algoritmo é uma implementação direta deste lema, onde se busca repetidamente por caminhos aumentantes e se aumenta o emparelhamento até que nenhum caminho aumentante possa ser encontrado \cite{lawler}.
+
+Começamos com um emparelhamento vazio $M=\emptyset$. Escolhemos um vértice livre $u$ no lado esquerdo do grafo bipartido e tentamos encontrar um caminho aumentante $P$ que começa em $u$ e termina em um vértice livre no lado direito do grafo, respeitando a regra da alternância entre arestas em $M$ e arestas fora de $M$. Se um caminho aumentante for encontrado, atualizamos o emparelhamento $M$ invertendo as arestas ao longo do caminho $P$. Repetimos esse processo até que não seja possível encontrar mais caminhos aumentantes. O emparelhamento resultante será o emparelhamento de cardinalidade máxima \cite{halim}.
+
+Em seguida o algoritmo em pseudo-código:
+
+\begin{lstlisting}[language=C, caption=Algoritmo de caminhos aumentantes \cite{halim}]
+// global variables
+vi match, vis; // ('vi' is an alias for vector<int>)
+
+int Aug(int l) { // return 1 if an augmenting path is found
+    if (vis[l]) return 0; // return 0 otherwise
+    vis[l] = 1;
+    for (int j = 0; j < (int)AdjList[l].size(); j++) {
+        int r = AdjList[l][j]; // edge weight not needed -> vector<vi> AdjList
+        if (match[r] == -1 || Aug(match[r])) {
+            match[r] = l; return 1; // found 1 matching
+    } }
+    return 0; // no matching
+}
+// inside int main()
+    // build unweighted bipartite graph with directed edge left->right set
+    int MCBM = 0;
+    match.assign(V, -1); // V is the number of vertices in bipartite graph
+    for (int l = 0; l < n; l++) { // n = size of the left set
+        vis.assign(n, 0); // reset before each recursion
+        MCBM += Aug(l);
+    }
+    printf("Found %d matchings\n", MCBM);
+\end{lstlisting}
+
+Como o algoritmo repete a busca por caminhos aumentantes para cada vértice do lado esquerdo do grafo, o tempo de execução total do algoritmo é $O(VE)$, onde $V$ é o número de vértices e $E$ é o número de arestas no grafo bipartido \cite{halim}.
+
+\topic{Redução ao problema de fluxo máximo}
+
+O problema de emparelhamento de cardinalidade máxima em grafos bipartidos pode ser eficientemente resolvido através de uma redução ao problema de fluxo máximo em redes. A ideia central é construir uma rede de fluxo a partir do grafo bipartido original, onde cada aresta do grafo bipartido é convertida em uma aresta com capacidade unitária na rede de fluxo. \cite{lawler}
+
+Primeiro, adicionamos um vértice fonte $s$ e um vértice sumidouro $t$ à rede. Conectamos o vértice fonte $s$ a todos os vértices do conjunto esquerdo do grafo bipartido com arestas de capacidade 1. Em seguida, conectamos todos os vértices do conjunto direito do grafo bipartido ao vértice sumidouro $t$, também com arestas de capacidade 1. As arestas entre os conjuntos esquerdo e direito do grafo bipartido são mantidas na rede de fluxo, cada uma com capacidade 1 \cite{halim}.
+
+Com isso, temos agora um grafo de fluxo onde o objetivo é encontrar o fluxo máximo do vértice fonte $s$ para o vértice sumidouro $t$. O valor do fluxo máximo encontrado nesta rede corresponde ao tamanho do emparelhamento máximo no grafo bipartido original. \cite{lawler}. Para encontrar o fluxo máximo, podemos utilizar algoritmos clássicos como o de Edmonds-Karp.
+
+O algoritmo de Edmonds-Karp é o padrão para resolver o problema de fluxo máximo, utilizando buscas em largura (BFS) para encontrar caminhos aumentantes na rede residual. A seguir, o pseudo-código do algoritmo:
+
+\begin{lstlisting}[language=C, caption=Algoritmo de Edmonds-Karp \cite{halim}]
+int res[MAX_V][MAX_V], mf, f, s, t; // global variables
+vi p; // p stores the BFS spanning tree from s
+
+void augment(int v, int minEdge) { // traverse BFS spanning tree from s->t
+    if (v == s) { f = minEdge; return; } // record minEdge in a global var f
+    else if (p[v] != -1) { 
+        augment(p[v], min(minEdge, res[p[v]][v]));
+        res[p[v]][v] -= f; res[v][p[v]] += f; 
+    } 
+}
+
+// inside int main(): set up 'res', 's', and 't' with appropriate values
+    mf = 0; // mf stands for max_flow
+
+    while (1) { // O(VE^2) (actually O(V^3 E) Edmonds Karp's algorithm
+        f = 0;
+
+        // run BFS, compare with the original BFS shown in Section 4.2.2
+        vi dist(MAX_V, INF); dist[s] = 0; queue<int> q; q.push(s);
+        p.assign(MAX_V, -1); // record the BFS spanning tree, from s to t!
+
+        while (!q.empty()) {
+            int u = q.front(); q.pop();
+            if (u == t) break; // immediately stop BFS if we already reach sink t
+
+            for (int v = 0; v < MAX_V; v++) // note: this part is slow
+                if (res[u][v] > 0 && dist[v] == INF)
+                    dist[v] = dist[u] + 1, q.push(v), p[v] = u; // 3 lines in 1!
+        }
+
+        augment(t, INF); // find the min edge weight 'f' in this path, if any
+        if (f == 0) break; // we cannot send any more flow ('f' = 0), terminate
+        mf += f; // we can still send a flow, increase the max flow!
+    }
+    printf("%d\n", mf); 
+\end{lstlisting}
+
+Outra opção para resolver o problema de fluxo máximo é o algoritmo de Dinic, que é mais eficiente em muitos casos práticos, especialmente em grafos densos. O algoritmo de Dinic utiliza uma combinação de buscas em largura (BFS) para construir níveis na rede residual e buscas em profundidade (DFS) para encontrar caminhos aumentantes dentro desses níveis. O tempo de execução do algoritmo de Dinic é $O(E \sqrt{V})$ para grafos gerais, tornando-o uma escolha preferida para muitos problemas de fluxo máximo \cite{halim}.
+
+Este trabalho não tem uma implementação do algoritmo de Dinic. Ao invés disso, será apresentado o algoritmo de Hopcroft-Karp, que é uma variação especializada do algoritmo de Dinic para o problema de emparelhamento em grafos bipartidos, oferecendo uma solução mais eficiente para este caso específico.
+
+\topic{Algoritmo de Hopcroft-Karp}
+
+O algoritmo de Hopcroft-Karp é um algoritmo eficiente para encontrar o emparelhamento máximo em grafos bipartidos. Ele melhora o desempenho do algoritmo de caminhos aumentantes ao encontrar múltiplos caminhos aumentantes em cada iteração, em vez de apenas um. O tempo de execução do algoritmo de Hopcroft-Karp é $O(E \sqrt{V})$, tornando-o significativamente mais rápido do que o algoritmo de caminhos aumentantes simples, especialmente em grafos grandes \cite{halim}.
+
+O algoritmo consiste em duas fases principais: a fase de construção de níveis e a fase de busca de caminhos aumentantes. Na fase de construção de níveis, uma busca em largura (BFS) é realizada a partir dos vértices livres no lado esquerdo do grafo bipartido para construir uma camada de níveis que ajuda a identificar os caminhos aumentantes mais curtos. Na fase de busca de caminhos aumentantes, uma busca em profundidade (DFS) é realizada para encontrar todos os caminhos aumentantes possíveis dentro da camada de níveis construída na fase anterior. Esses caminhos são então usados para aumentar o emparelhamento \cite{halim}.
+
+A seguir, o pseudo-código do algoritmo de Hopcroft-Karp:
+
+\begin{lstlisting}[language=C, caption=Algoritmo de Hopcroft-Karp (implementação própria)]
+ALGORITMO Hopcroft-Karp(G, U, V):
+    Para cada u em U: PairU[u] = NIL
+    Para cada v em V: PairV[v] = NIL
+    Matching = 0
+
+    Enquanto BFS() for verdadeiro:
+        Para cada u em U:
+            Se PairU[u] == NIL:
+                Se DFS(u) for verdadeiro:
+                    Matching = Matching + 1
+    
+    Retornar Matching
+
+---------------------------------------------------------
+
+FUNCAO BFS():
+    Fila Q = vazia
+    Para cada u em U:
+        Se PairU[u] == NIL:
+            Dist[u] = 0
+            Q.push(u)
+        SenAo:
+            Dist[u] = INFINITO
+    
+    Dist[NIL] = INFINITO
+
+    Enquanto Q nAo estiver vazia:
+        u = Q.pop()
+        
+        // Se a distAncia atual for menor que a distancia para o NIL, 
+        // continuamos procurando. Se for maior, ja achamos um caminho mais curto antes.
+        Se Dist[u] < Dist[NIL]:
+            Para cada v adjacente a u:
+                // Se v ja tem par, verificamos a distancia desse par
+                Se Dist[PairV[v]] == INFINITO:
+                    Dist[PairV[v]] = Dist[u] + 1
+                    Q.push(PairV[v])
+    
+    // Retorna verdadeiro se alcancamos o NIL (ou seja, achamos um caminho aumentante livre)
+    Retornar Dist[NIL] != INFINITO
+
+---------------------------------------------------------
+
+FUNCAO DFS(u):
+    Se u != NIL:
+        Para cada v adjacente a u:
+            // So seguimos se o vizinho estiver na proxima "camada" valida (distancia + 1)
+            Se Dist[PairV[v]] == Dist[u] + 1:
+                Se DFS(PairV[v]) for verdadeiro:
+                    PairV[v] = u
+                    PairU[u] = v
+                    Retornar VERDADEIRO
+        
+        // Otimizacao: Se nao achou caminho por u, marca como infinito para nao tentar de novo nesta fase
+        Dist[u] = INFINITO
+        Retornar FALSO
+    
+    Retornar VERDADEIRO
+\end{lstlisting}
 
 % ---------------------------------------------------------------------------------------------------------------------------------
 % 3.2.1. Problema de atribuição (Assignment Problem)
 % ---------------------------------------------------------------------------------------------------------------------------------
-\subsubsection{Problema de atribuição (Assignment Problem)}
+\subsection{Problema de atribuição (Assignment Problem)}
 \textbf{Talvez chamar de Problema de emparelhamento ponderado?}
 
-O problema de atribuição consiste em encontrar uma combinação ótima de atribuições entre dois conjuntos disjuntos, minimizando 
-o custo total associado a essas atribuições. Exemplo: Considere $N$ trabalhadores e $N$ tarefas, onde cada trabalhador pode ser designado 
-a exatamente uma tarefa, e cada tarefa deve ser atribuída a exatamente um trabalhador. O custo de atribuir o trabalhador i à tarefa j é 
-representado por uma matriz de custos $C = [c_{ij}]$ \cite{lawler}. O objetivo é encontrar um conjunto de atribuições que minimize o custo total.
+\subsubsection{Descrição do problema}
 
-É possível modelar esse problema como um problema de emparelhamento de custo mínimo em um grafo bipartido ponderado, da seguinte forma:
+O problema de atribuição consiste em encontrar uma combinação ótima de atribuições entre dois conjuntos disjuntos, minimizando o custo total associado a essas atribuições. Exemplo: Considere $N$ trabalhadores e $N$ tarefas, onde cada trabalhador pode ser designado a exatamente uma tarefa, e cada tarefa deve ser atribuída a exatamente um trabalhador. O custo de atribuir o trabalhador i à tarefa j é representado por uma matriz de custos $W = [w_{ij}]$ \cite{lawler}. O objetivo é encontrar um conjunto de atribuições que minimize o custo total.
 
-Construimos um grafo bipartido com $N$ vértices em cada conjunto de partição, onde cada vértice do 
-primeiro conjunto representa um homem e cada vértice do segundo conjunto representa um trabalho. Cada aresta entre um vértice do 
-primeiro conjunto e um vértice do segundo conjunto é ponderada com o custo $c_{ij}$ de atribuir o homem i ao trabalho j. 
-Cria-se um novo vértice fonte conectado a todos os vértices do primeiro conjunto com arestas de peso zero, e um novo vértice 
-sumidouro conectado a todos os vértices do segundo conjunto com arestas de peso zero. O objetivo é encontrar um fluxo máximo de 
-custo mínimo neste grafo modificado, que corresponde a um emparelhamento de custo mínimo no grafo bipartido original \cite{lawler}.
-Assim, reduzimos o problema de emparelhamento em um grafo bipartido ponderado ao problema de fluxo de custo mínimo, que pode ser 
-resolvido eficientemente usando algoritmos de fluxo de custo mínimo, como o algoritmo de ciclo negativo \textbf{CITAR FONTES}
+\subsubsection{Propriedades}
+
+\subsubsection{Algoritmos exatos}
+
+\topic{Método Húngaro}
+
+O método Húngaro é um algoritmo eficiente para resolver o problema de atribuição em tempo polinomial. Ele foi desenvolvido por Harold Kuhn em 1955 e é baseado no trabalho de Dénes Kőnig e Jenő Egerváry sobre emparelhamentos em grafos bipartidos \cite{jungnickel}.
+
+O método se baseia em manter um conjunto de potenciais para os vértices dos dois conjuntos do grafo bipartido, sendo $u_i$ o potencial do vértice i no conjunto esquerdo e $v_j$ o potencial do vértice j no conjunto direito. A regra que o algoritmo mantém é que para cada aresta $(i,j)$, a soma dos potenciais deve ser maior ou igual ao custo da aresta, ou seja, $u_i + v_j \geq w_{ij}$. 
+
+Cria-se um subgrafo de igualdade $H_{u,v}$ contendo apenas as arestas onde a soma dos potenciais é igual ao custo da aresta, ou seja, $u_i + v_j = w_{ij}$. O algoritmo então tenta encontrar um emparelhamento máximo neste subgrafo de igualdade. Se o emparelhamento encontrado cobre todos os vértices do conjunto esquerdo, então ele é ótimo para o problema de atribuição original. Caso contrário, o algoritmo ajusta os potenciais para criar novas arestas de igualdade e repete o processo até encontrar um emparelhamento máximo que cubra todos os vértices do conjunto esquerdo \cite{jungnickel}.
+
+Em seguida o pseudo-código do método Húngaro:
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \Fn{HUNGARIAN($n, w; mate$)}{
+        
+        % Lines 1-3
+        \lFor{$v \in V$}{ $mate(v) \leftarrow 0$ }
+        \lFor{$i = 1$ \KwTo $n$}{ $u_i \leftarrow \max \{ w_{ij} : j=1,\dots,n \}; v_i \leftarrow 0$ }
+        $nrex \leftarrow n$\;
+
+        % Line 4: While Loop
+        \While{$nrex \neq 0$}{
+            
+            % Line 5
+            \lFor{$i = 1$ \KwTo $n$}{ $m(i) \leftarrow \text{false}; p(i) \leftarrow 0; \delta_i \leftarrow \infty$ }
+            $aug \leftarrow \text{false}; Q \leftarrow \{ i \in S : mate(i) = 0 \}$\;
+            
+            % Line 7: Repeat Loop
+            \Repeat{$aug = \text{true}$}{
+                remove an arbitrary vertex $i$ from $Q$; $m(i) \leftarrow \text{true}; j \leftarrow 1$\;
+                
+                % Line 9: Inner While
+                \While{$aug = \text{false}$ \KwAnd $j \leq n$}{
+                    \If{$mate(i) \neq j'$}{
+                         \If{$u_i + v_j - w_{ij} < \delta_j$}{
+                            $\delta_j \leftarrow u_i + v_j - w_{ij}; p(j) \leftarrow i$\;
+                            \If{$\delta_j = 0$}{
+                                \eIf{$mate(j') = 0$}{
+                                    AUGMENT($mate, p, j'; mate$)\;
+                                    $aug \leftarrow \text{true}; nrex \leftarrow nrex - 1$\;
+                                }{
+                                    $Q \leftarrow Q \cup \{ mate(j') \}$\;
+                                }
+                            }
+                        }
+                    }
+                    $j \leftarrow j + 1$\;
+                }
+                
+                % Line 24: Check if augmentation failed and Q is empty
+                \If{$aug = \text{false}$ \KwAnd $Q = \emptyset$}{
+                    $J \leftarrow \{ i \in S : m(i) = \text{true} \}; K \leftarrow \{ j' \in T : \delta_j = 0 \}$\;
+                    $\delta \leftarrow \min \{ \delta_j : j' \in T \setminus K \}$\;
+                    \lFor{$i \in J$}{ $u_i \leftarrow u_i - \delta$ }
+                    \lFor{$j' \in K$}{ $v_j \leftarrow v_j + \delta$ }
+                    \lFor{$j' \in T \setminus K$}{ $\delta_j \leftarrow \delta_j - \delta$ }
+                    $X \leftarrow \{ j' \in T \setminus K : \delta_j = 0 \}$\;
+                    
+                    \eIf{$mate(j') \neq 0$ for all $j' \in X$}{
+                        \lFor{$j' \in X$}{ $Q \leftarrow Q \cup \{ mate(j') \}$ }
+                    }{
+                        choose $j' \in X$ with $mate(j') = 0$\;
+                        AUGMENT($mate, p, j'; mate$)\;
+                        $aug \leftarrow \text{true}; nrex \leftarrow nrex - 1$\;
+                    }
+                }
+            }
+        }
+    }
+    \caption{Hungarian Algorithm \cite{jungnickel}}
+    \label{alg:hungarian}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \Fn{AUGMENT($mate, p, j'; mate$)}{
+        \Repeat{$next = 0$}{
+            $i \leftarrow p(j); mate(j') \leftarrow i; next \leftarrow mate(i); mate(i) \leftarrow j'$\;
+            \If{$next \neq 0$}{
+                $j' \leftarrow next$\;
+            }
+        }
+    }
+    \caption{Augment Procedure \cite{jungnickel}}
+    \label{alg:augment}
+\end{algorithm}
+
+\topic{Jonker-Volgenant} 
+
+Aqui está uma descrição do algoritmo Jonker-Volgenant (JV), estruturada exatamente nos mesmos moldes e nível de complexidade da descrição que você forneceu para o método Húngaro.
+
+O algoritmo de Jonker-Volgenant é uma evolução otimizada para a resolução do problema de atribuição linear, proposto por Roy Jonker e Anton Volgenant em 1987. Ele foi desenvolvido para superar o desempenho prático do método Húngaro, especialmente em grafos densos, combinando a teoria de dualidade com estratégias de inicialização e busca mais eficientes \cite{jonker}.
+
+Assim como o método Húngaro, este algoritmo baseia-se na manutenção de potenciais duais ($u_i$ e $v_j$) e respeita as condições de folga complementar. No entanto, sua principal distinção conceitual é o uso da estratégia de Caminho Aumentante Mais Curto (Shortest Augmenting Path). Ao invés de construir emparelhamentos máximos em fases distintas, o algoritmo foca em encontrar o caminho de custo mínimo que conecta uma linha não atribuída a uma coluna livre.
+
+O processo inicia com heurísticas avançadas (conhecidas como redução de colunas e transferência de redução) para resolver rapidamente as atribuições triviais. Para os vértices restantes, o algoritmo realiza uma busca similar ao algoritmo de Dijkstra: ele explora o grafo para encontrar o caminho aumentante mais curto, atualizando os potenciais duais simultaneamente durante a busca. Isso garante que, a cada iteração, o emparelhamento seja aumentado pelo menor custo possível até que a solução ótima completa seja atingida.
+
+% TODO: adicionar pseudo-código do algoritmo Jonker-Volgenant
+% "A Shortest Augmenting Path Algorithm for Dense and Sparse Linear Assignment Problems"
+
+\topic{Primal-Dual} % path_following_algo
+
+\topic{Redução para problema de fluxo de custo mínimo}
+
+Similarmente ao que foi feito para o problema de emparelhamento de cardinalidade máxima, o problema de atribuição pode ser resolvido através de uma redução ao problema de fluxo de custo mínimo. Nesta abordagem, o grafo bipartido é transformado em uma rede de fluxo onde cada aresta tem uma capacidade unitária e um custo associado, que corresponde ao custo da atribuição original \cite{lawler}.
+
+Para resolver 
+
+\topic{Algoritmo simplex}
 
 % ---------------------------------------------------------------------------------------------------------------------------------
 % 3.2.1. Bottleneck assignment problem

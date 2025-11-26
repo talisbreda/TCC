@@ -1,0 +1,146 @@
+\providecommand{\abntreprintinfo}[1]{%
+ \citeonline{#1}}
+\setlength{\labelsep}{0pt}\begin{thebibliography}{}
+\providecommand{\abntrefinfo}[3]{}
+\providecommand{\abntbstabout}[1]{}
+\abntbstabout{v-1.9.7 }
+
+\bibitem[Caetano Julian J.~McAuley e Smola 2009]{learning_graph_matching}
+\abntrefinfo{Caetano Julian J.~McAuley e Smola}{CAETANO JULIAN J.~MCAULEY;
+  SMOLA}{2009}
+{CAETANO JULIAN J.~MCAULEY, L. C. Q. V.~L. T.~S.; SMOLA, A.~J. Learning graph
+  matching.
+\emph{IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE}, IEEE
+  Computer Society, United States, v.~31, n.~X, December 2009.
+ISSN 0162-8828.}
+
+\bibitem[Cormen Charles E.~Leiserson 2009]{cormen}
+\abntrefinfo{Cormen Charles E.~Leiserson}{CORMEN CHARLES E.~LEISERSON}{2009}
+{CORMEN CHARLES E.~LEISERSON, R. L. R. C.~S. T.~H. \emph{Introduction to
+  Algorithms}. 3rd. ed. Cambdrige, MA: The MIT Press, 2009.
+ISBN 978-0-262-53305-8.}
+
+\bibitem[Dasgupta Christos H.~Papadimitriou 2006]{dasgupta}
+\abntrefinfo{Dasgupta Christos H.~Papadimitriou}{DASGUPTA CHRISTOS
+  H.~PAPADIMITRIOU}{2006}
+{DASGUPTA CHRISTOS H.~PAPADIMITRIOU, U. V.~V. S. \emph{Algorithms}. 1st. ed.
+  New York, NY: McGraw-Hill Education, 2006.
+ISBN 978-0073523408.}
+
+\bibitem[Fan 2012]{wenfei_socialnetwork}
+\abntrefinfo{Fan}{FAN}{2012}
+{FAN, W. Graph pattern matching revised for social network analysis. In:
+  \emph{Proceedings of the 15th International Conference on Database Theory}.
+  New York, NY, USA: Association for Computing Machinery, 2012.  (ICDT '12), p.
+  8–21.
+ISBN 9781450307918. Dispon{\'\i}vel em:
+  \url{https://doi.org/10.1145/2274576.2274578}.}
+
+\bibitem[Feofiloff 2019]{imeUSP_matching}
+\abntrefinfo{Feofiloff}{FEOFILOFF}{2019}
+{FEOFILOFF, P. \emph{Emparelhamento em Grafos Bipartidos}. 2019.
+IME-USP.
+Dispon{\'\i}vel em:
+  \url{https://www.ime.usp.br/~pf/algoritmos\_para\_grafos/aulas/matching-bipartite.html}.}
+
+\bibitem[Halim e Halim 2013]{halim}
+\abntrefinfo{Halim e Halim}{HALIM; HALIM}{2013}
+{HALIM, S.; HALIM, F. \emph{Competitive Programming 3: The New Lower Bound of
+  Programming Contests}. 3rd. ed. [S.l.]: Lulu.com, 2013. Self-published by the
+  authors.
+ISBN 978-1482852483.}
+
+\bibitem[Haller et al. 2022]{haller2022comparativestudygraphmatching}
+\abntrefinfo{Haller et al.}{HALLER et al.}{2022}
+{HALLER, S. et al. \emph{A Comparative Study of Graph Matching Algorithms in
+  Computer Vision}. 2022.
+Dispon{\'\i}vel em: \url{https://arxiv.org/abs/2207.00291}.}
+
+\bibitem[Jonker e Volgenant 1987]{jonker}
+\abntrefinfo{Jonker e Volgenant}{JONKER; VOLGENANT}{1987}
+{JONKER, R.; VOLGENANT, A. A shortest augmenting path algorithm for dense and
+  sparse linear assignment problems.
+\emph{Computing}, v.~38, n.~4, p. 325--340, 1987.
+Dispon{\'\i}vel em: \url{https://doi.org/10.1007/BF02278710}.}
+
+\bibitem[Jungnickel 2008]{jungnickel}
+\abntrefinfo{Jungnickel}{JUNGNICKEL}{2008}
+{JUNGNICKEL, D. \emph{Graphs, Networks and Algorithms}. 3rd. ed. Berlin,
+  Germany: Springer, 2008.
+ISBN 978-354727798.}
+
+\bibitem[Kleinberg e Tardos 2005]{kleinberg}
+\abntrefinfo{Kleinberg e Tardos}{KLEINBERG; TARDOS}{2005}
+{KLEINBERG, J.; TARDOS Éva. \emph{Algorithm Design}. 1st. ed. Boston, MA:
+  Pearson, 2005.
+ISBN 978-0321295354.}
+
+\bibitem[Lawler 2011]{lawler}
+\abntrefinfo{Lawler}{LAWLER}{2011}
+{LAWLER, E.~L. \emph{Combinatorial Optimization: Networks and Matroids}. New
+  York, NY: Dover Publications, 2011. Reprint edition.
+ISBN 978-0486414539.}
+
+\bibitem[Manber 1989]{manber}
+\abntrefinfo{Manber}{MANBER}{1989}
+{MANBER, U. \emph{Introduction to Algorithms: A Creative Approach}. 1st. ed.
+  Reading, MA: Addison-Wesley, 1989.
+ISBN 978-0201120370.}
+
+\bibitem[Mandulak Sayan~Ghosh e Slota 2024]{matching_gpus_sc24}
+\abntrefinfo{Mandulak Sayan~Ghosh e Slota}{MANDULAK SAYAN~GHOSH; SLOTA}{2024}
+{MANDULAK SAYAN~GHOSH, S. M. F.~M.~H. M.; SLOTA, G. Efficient weighted graph
+  matching on gpus.
+\emph{SC24}, IEEE Computer Society, United States, November 2024.
+ISSN 0162-8828.}
+
+\bibitem[Rosen, Kreher e Stinson 1998]{rosen}
+\abntrefinfo{Rosen, Kreher e Stinson}{ROSEN; KREHER; STINSON}{1998}
+{ROSEN, K.~H.; KREHER, D.~L.; STINSON, D.~R. \emph{Discrete Mathematics and Its
+  Applications}. 1st. ed. Boca Raton, FL: CRC Press, 1998.
+ISBN 978-0849339882.}
+
+\bibitem[Saad-Eldin et al. 2021]{saadeldin_goat}
+\abntrefinfo{Saad-Eldin et al.}{SAAD-ELDIN et al.}{2021}
+{SAAD-ELDIN, A. et al. \emph{Graph Matching via Optimal Transport}. 2021.
+Dispon{\'\i}vel em: \url{https://arxiv.org/abs/2111.05366}.}
+
+\bibitem[Schrijver 2004]{schrijver}
+\abntrefinfo{Schrijver}{SCHRIJVER}{2004}
+{SCHRIJVER, A. \emph{Combinatorial Optimization: Polyhedra and Efficiency}.
+  1st. ed. Berlin, Germany: Springer, 2004.
+ISBN 3540204563.}
+
+\bibitem[Sussman et al. 2021]{MIT2021}
+\abntrefinfo{Sussman et al.}{SUSSMAN et al.}{2021}
+{SUSSMAN, D.~L. et al. \emph{Overview of Graph Matching Challenges and
+  Approaches}. 2021.
+Acessado em: 26 nov. 2024.
+Dispon{\'\i}vel em: \url{https://www.ll.mit.edu/}.}
+
+\bibitem[Taylor 2002]{Taylor2002}
+\abntrefinfo{Taylor}{TAYLOR}{2002}
+{TAYLOR, W.~R. Protein structure comparison using bipartite graph matching and
+  its application to protein structure classification.
+\emph{Molecular and Cellular Proteomics}, American Society for Biochemistry and
+  Molecular Biology, United States, v.~1, n.~4, April 2002.
+ISSN 1535-9476.}
+
+\bibitem[Yan, Yang e Hancock 2020]{ijcai2020p694}
+\abntrefinfo{Yan, Yang e Hancock}{YAN; YANG; HANCOCK}{2020}
+{YAN, J.; YANG, S.; HANCOCK, E. Learning for graph matching and related
+  combinatorial optimization problems. In:  BESSIERE, C. (Ed.).
+  \emph{Proceedings of the Twenty-Ninth International Joint Conference on
+  Artificial Intelligence, {IJCAI-20}}. International Joint Conferences on
+  Artificial Intelligence Organization, 2020. p. 4988--4996. Survey track.
+  Dispon{\'\i}vel em: \url{https://doi.org/10.24963/ijcai.2020/694}.}
+
+\bibitem[Zaslavskiy e Vert 2009]{path_following_algo}
+\abntrefinfo{Zaslavskiy e Vert}{ZASLAVSKIY; VERT}{2009}
+{ZASLAVSKIY, F.~B. M.; VERT, J.-P. A path following algorithm for the graph
+  matching problem.
+\emph{IEEE TRANSACTIONS ON PATTERN ANALYSIS AND MACHINE INTELLIGENCE}, IEEE
+  Computer Society, United States, v.~31, n.~12, December 2009.
+ISSN 0162-8828.}
+
+\end{thebibliography}

@@ -1,0 +1,165 @@
+This is BibTeX, Version 0.99d
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: main.aux
+Reallocating 'name_of_file' (item size: 1) to 12 items.
+The style file: abntex2-alf.bst
+Reallocating 'name_of_file' (item size: 1) to 16 items.
+Reallocating 'name_of_file' (item size: 1) to 24 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'wiz_functions' (item size: 4) to 6000 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Reallocating 'wiz_functions' (item size: 4) to 9000 items.
+Database file #1: abntex2-options.bib
+Database file #2: pos_textual/referencias.bib
+Reallocating 'singl_function' (item size: 4) to 100 items.
+Name 1 in "Mikhail Zaslavskiy, Francis Bach, and Jean-Philippe Vert" has a comma at the end for entry path_following_algo
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Mikhail Zaslavskiy, Francis Bach, and Jean-Philippe Vert" has a comma at the end for entry path_following_algo
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Mikhail Zaslavskiy, Francis Bach, and Jean-Philippe Vert" has a comma at the end for entry path_following_algo
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Mikhail Zaslavskiy, Francis Bach, and Jean-Philippe Vert" has a comma at the end for entry path_following_algo
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Mikhail Zaslavskiy, Francis Bach, and Jean-Philippe Vert" has a comma at the end for entry path_following_algo
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein" for entry cormen
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein" for entry cormen
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein" for entry cormen
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein" for entry cormen
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein" for entry cormen
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" has a comma at the end for entry matching_gpus_sc24
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" for entry matching_gpus_sc24
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" has a comma at the end for entry matching_gpus_sc24
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" for entry matching_gpus_sc24
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" has a comma at the end for entry matching_gpus_sc24
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" for entry matching_gpus_sc24
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" has a comma at the end for entry matching_gpus_sc24
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" for entry matching_gpus_sc24
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" has a comma at the end for entry matching_gpus_sc24
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" for entry matching_gpus_sc24
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" has a comma at the end for entry learning_graph_matching
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" for entry learning_graph_matching
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" has a comma at the end for entry learning_graph_matching
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" for entry learning_graph_matching
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" has a comma at the end for entry learning_graph_matching
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" for entry learning_graph_matching
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" has a comma at the end for entry learning_graph_matching
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" for entry learning_graph_matching
+while executing---line 2091 of file abntex2-alf.bst
+Name 1 in "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" has a comma at the end for entry learning_graph_matching
+while executing---line 2091 of file abntex2-alf.bst
+Too many commas in name 1 of "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" for entry learning_graph_matching
+while executing---line 2091 of file abntex2-alf.bst
+Reallocating 'glb_str_end' (item size: 4) to 20 items.
+Reallocating 'glb_str_ptr' (item size: 4) to 20 items.
+Reallocating 'global_strs' (item size: 1) to 4000000 items.
+Name 1 in "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" has a comma at the end for entry learning_graph_matching
+while executing---line 2146 of file abntex2-alf.bst
+Too many commas in name 1 of "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" for entry learning_graph_matching
+while executing---line 2146 of file abntex2-alf.bst
+Name 1 in "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" has a comma at the end for entry learning_graph_matching
+while executing---line 2146 of file abntex2-alf.bst
+Too many commas in name 1 of "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" for entry learning_graph_matching
+while executing---line 2146 of file abntex2-alf.bst
+Name 1 in "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" has a comma at the end for entry learning_graph_matching
+while executing---line 2146 of file abntex2-alf.bst
+Too many commas in name 1 of "Tibério S. Caetano, Julian J. McAuley, Li Cheng, Quoc V. Le, and Alex J. Smola" for entry learning_graph_matching
+while executing---line 2146 of file abntex2-alf.bst
+Too many commas in name 1 of "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein" for entry cormen
+while executing---line 2146 of file abntex2-alf.bst
+Too many commas in name 1 of "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein" for entry cormen
+while executing---line 2146 of file abntex2-alf.bst
+Too many commas in name 1 of "Thomas H. Cormen, Charles E. Leiserson, Ronald L. Rivest, Clifford Stein" for entry cormen
+while executing---line 2146 of file abntex2-alf.bst
+Name 1 in "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" has a comma at the end for entry matching_gpus_sc24
+while executing---line 2146 of file abntex2-alf.bst
+Too many commas in name 1 of "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" for entry matching_gpus_sc24
+while executing---line 2146 of file abntex2-alf.bst
+Name 1 in "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" has a comma at the end for entry matching_gpus_sc24
+while executing---line 2146 of file abntex2-alf.bst
+Too many commas in name 1 of "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" for entry matching_gpus_sc24
+while executing---line 2146 of file abntex2-alf.bst
+Name 1 in "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" has a comma at the end for entry matching_gpus_sc24
+while executing---line 2146 of file abntex2-alf.bst
+Too many commas in name 1 of "Michael Mandulak, Sayan Ghosh, S M Ferdous, Mahantesh Halappanvar, and George Slota" for entry matching_gpus_sc24
+while executing---line 2146 of file abntex2-alf.bst
+Name 1 in "Mikhail Zaslavskiy, Francis Bach, and Jean-Philippe Vert" has a comma at the end for entry path_following_algo
+while executing---line 2146 of file abntex2-alf.bst
+Name 1 in "Mikhail Zaslavskiy, Francis Bach, and Jean-Philippe Vert" has a comma at the end for entry path_following_algo
+while executing---line 2146 of file abntex2-alf.bst
+Name 1 in "Mikhail Zaslavskiy, Francis Bach, and Jean-Philippe Vert" has a comma at the end for entry path_following_algo
+while executing---line 2146 of file abntex2-alf.bst
++---------------------------------------------------------+
+| Estilo bibliográfico abntex2-alf.bst versão v-1.9.7           |
+| Em caso de dúvidas ou problemas com este estilo procure |
+| http://www.abntex.net.br/                               |
++---------------------------------------------------------+
+You've used 21 entries,
+            6714 wiz_defined-function locations,
+            1342 strings with 12921 characters,
+and the built_in function-call counts, 21849 in all, are:
+= -- 2247
+> -- 567
+< -- 308
++ -- 538
+- -- 172
+* -- 1432
+:= -- 2863
+add.period$ -- 99
+call.type$ -- 21
+change.case$ -- 205
+chr.to.int$ -- 57
+cite$ -- 20
+duplicate$ -- 1657
+empty$ -- 1262
+format.name$ -- 819
+if$ -- 4803
+int.to.chr$ -- 0
+int.to.str$ -- 0
+missing$ -- 388
+newline$ -- 114
+num.names$ -- 101
+pop$ -- 492
+preamble$ -- 1
+purify$ -- 79
+quote$ -- 0
+skip$ -- 1697
+stack$ -- 1
+substring$ -- 742
+swap$ -- 670
+text.length$ -- 18
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 2
+warning$ -- 0
+while$ -- 133
+width$ -- 0
+write$ -- 341
+(There were 48 error messages)

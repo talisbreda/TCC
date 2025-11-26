@@ -11,12 +11,13 @@
 \usepackage{setspace}
 \usepackage{tocloft}
 \usepackage{indentfirst}
-\usepackage{cite}
+\usepackage[hidelinks]{hyperref}
 \usepackage[alf]{abntex2cite}
 \usepackage[portuguese]{babel}
+\usepackage[letterspace=100]{microtype}
 
 % ABNT 14724: As folhas devem apresentar margem esquerda e superior de 3 cm; direita e inferior de 2 cm.
-\usepackage[left=3cm,top=3cm=bottom=2cm,right=2cm]{geometry}
+\usepackage[left=3cm,top=3cm,bottom=2cm,right=2cm]{geometry}
 
 % Define família de fonte padrão como Helvetica
 \renewcommand{\familydefault}{\sfdefault}
@@ -26,6 +27,51 @@
 
 % Adiciona linha pontilhada para \section no sumário (\tableofcontents)
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % Add dots for sections
+
+\newcommand{\topic}[1]{%
+  \medskip
+  \textbf{#1}
+  \smallskip
+}
+
+
+% Listings configuration (for code blocks)
+
+\usepackage{listings}
+\usepackage{xcolor} % for colors
+
+\lstset{
+backgroundcolor=\color{lightgray},   % set background color
+  basicstyle=\ttfamily\footnotesize,    % font type and size
+  numbers=left,                         % line numbers on the left
+  numberstyle=\tiny\color{gray},         % line number style
+  keywordstyle=\color{blue},             % keyword style
+  commentstyle=\color{green!50!black},   % comment style
+  stringstyle=\color{red},               % string literal style
+  showstringspaces=false,                % don't mark spaces in strings
+  frame=single,                          % frame around the code
+  breaklines=true                        % automatic line breaking
+}
+% End listings configuration
+
+% algorithm2e settings
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb} % For math fonts
+\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+% 1. Change line numbering style to (1), (2)...
+\SetNlSty{textnormal}{(}{)}
+
+% 2. Define the "Procedure" keyword
+\SetKwProg{Fn}{Procedure}{}{}
+
+% 3. Define specific keywords to match the image
+\SetKw{KwOr}{or}
+\SetKw{KwAnd}{and}
+\SetKw{KwTo}{to}
+
+\SetKw{KwStep}{step}
 
 \begin{document}
 
