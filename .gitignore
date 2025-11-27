@@ -1,19 +1,36 @@
+# Core LaTeX auxiliary files
 *.aux
 *.log
 *.out
 *.toc
 *.lof
 *.lot
+*.dvi
+*.ps
+
+# Bibliography and Index files
+*.bbl
+*.blg
+*.brf
+*.idx
+*.ind
+*.ilg
+
+# VS Code / latexmk build artifacts (Crucial for cleaning up your folder)
 *.fls
 *.fdb_latexmk
 *.synctex.gz
+*.synctex(busy)
+
+# Beamer (Slides) auxiliary files (Good to have just in case)
 *.nav
 *.snm
 *.vrb
-*.bbl
-*.blg
-*.idx
-*.ilg
-*.ind
-*.tex.backup
-*.tex.auto
+
+# Output PDF
+# Standard practice is to ignore the PDF because it is a "build artifact."
+# If you WANT to version control the PDF, remove this line.
+*.pdf
+
+# Editor specific
+.vscode/
