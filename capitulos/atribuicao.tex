@@ -1,0 +1,123 @@
+% ----------------------------------------------------------------------------------------------
+% 3.2.1. Problema de atribuição (Assignment Problem)
+% ----------------------------------------------------------------------------------------------
+\subsection{Problema de atribuição (Assignment Problem)}
+\textbf{Talvez chamar de Problema de emparelhamento ponderado?}
+
+\subsubsection{Descrição do problema}
+
+O problema de atribuição consiste em encontrar uma combinação ótima de atribuições entre dois conjuntos disjuntos, minimizando o custo total associado a essas atribuições. Exemplo: Considere $N$ trabalhadores e $N$ tarefas, onde cada trabalhador pode ser designado a exatamente uma tarefa, e cada tarefa deve ser atribuída a exatamente um trabalhador. O custo de atribuir o trabalhador i à tarefa j é representado por uma matriz de custos $W = [w_{ij}]$ \cite{lawler}. O objetivo é encontrar um conjunto de atribuições que minimize o custo total.
+
+\subsubsection{Propriedades}
+
+\subsubsection{Algoritmos exatos}
+
+% \paragraph{Método Húngaro}
+\paragraph{Método Húngaro}
+
+O método Húngaro é um algoritmo eficiente para resolver o problema de atribuição em tempo polinomial. Ele foi desenvolvido por Harold Kuhn em 1955 e é baseado no trabalho de Dénes Kőnig e Jenő Egerváry sobre emparelhamentos em grafos bipartidos \cite{jungnickel}.
+
+O método se baseia em manter um conjunto de potenciais para os vértices dos dois conjuntos do grafo bipartido, sendo $u_i$ o potencial do vértice i no conjunto esquerdo e $v_j$ o potencial do vértice j no conjunto direito. A regra que o algoritmo mantém é que para cada aresta $(i,j)$, a soma dos potenciais deve ser maior ou igual ao custo da aresta, ou seja, $u_i + v_j \geq w_{ij}$. 
+
+Cria-se um subgrafo de igualdade $H_{u,v}$ contendo apenas as arestas onde a soma dos potenciais é igual ao custo da aresta, ou seja, $u_i + v_j = w_{ij}$. O algoritmo então tenta encontrar um emparelhamento máximo neste subgrafo de igualdade. Se o emparelhamento encontrado cobre todos os vértices do conjunto esquerdo, então ele é ótimo para o problema de atribuição original. Caso contrário, o algoritmo ajusta os potenciais para criar novas arestas de igualdade e repete o processo até encontrar um emparelhamento máximo que cubra todos os vértices do conjunto esquerdo \cite{jungnickel}.
+
+Em seguida o pseudo-código do método Húngaro:
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \Fn{HUNGARIAN($n, w; mate$)}{
+        
+        % Lines 1-3
+        \lFor{$v \in V$}{ $mate(v) \leftarrow 0$ }
+        \lFor{$i = 1$ \KwTo $n$}{ $u_i \leftarrow \max \{ w_{ij} : j=1,\dots,n \}; v_i \leftarrow 0$ }
+        $nrex \leftarrow n$\;
+
+        % Line 4: While Loop
+        \While{$nrex \neq 0$}{
+            
+            % Line 5
+            \lFor{$i = 1$ \KwTo $n$}{ $m(i) \leftarrow \text{false}; p(i) \leftarrow 0; \delta_i \leftarrow \infty$ }
+            $aug \leftarrow \text{false}; Q \leftarrow \{ i \in S : mate(i) = 0 \}$\;
+            
+            % Line 7: Repeat Loop
+            \Repeat{$aug = \text{true}$}{
+                remove an arbitrary vertex $i$ from $Q$; $m(i) \leftarrow \text{true}; j \leftarrow 1$\;
+                
+                % Line 9: Inner While
+                \While{$aug = \text{false}$ \KwAnd $j \leq n$}{
+                    \If{$mate(i) \neq j'$}{
+                         \If{$u_i + v_j - w_{ij} < \delta_j$}{
+                            $\delta_j \leftarrow u_i + v_j - w_{ij}; p(j) \leftarrow i$\;
+                            \If{$\delta_j = 0$}{
+                                \eIf{$mate(j') = 0$}{
+                                    AUGMENT($mate, p, j'; mate$)\;
+                                    $aug \leftarrow \text{true}; nrex \leftarrow nrex - 1$\;
+                                }{
+                                    $Q \leftarrow Q \cup \{ mate(j') \}$\;
+                                }
+                            }
+                        }
+                    }
+                    $j \leftarrow j + 1$\;
+                }
+                
+                % Line 24: Check if augmentation failed and Q is empty
+                \If{$aug = \text{false}$ \KwAnd $Q = \emptyset$}{
+                    $J \leftarrow \{ i \in S : m(i) = \text{true} \}; K \leftarrow \{ j' \in T : \delta_j = 0 \}$\;
+                    $\delta \leftarrow \min \{ \delta_j : j' \in T \setminus K \}$\;
+                    \lFor{$i \in J$}{ $u_i \leftarrow u_i - \delta$ }
+                    \lFor{$j' \in K$}{ $v_j \leftarrow v_j + \delta$ }
+                    \lFor{$j' \in T \setminus K$}{ $\delta_j \leftarrow \delta_j - \delta$ }
+                    $X \leftarrow \{ j' \in T \setminus K : \delta_j = 0 \}$\;
+                    
+                    \eIf{$mate(j') \neq 0$ for all $j' \in X$}{
+                        \lFor{$j' \in X$}{ $Q \leftarrow Q \cup \{ mate(j') \}$ }
+                    }{
+                        choose $j' \in X$ with $mate(j') = 0$\;
+                        AUGMENT($mate, p, j'; mate$)\;
+                        $aug \leftarrow \text{true}; nrex \leftarrow nrex - 1$\;
+                    }
+                }
+            }
+        }
+    }
+    \caption{Hungarian Algorithm \cite{jungnickel}}
+    \label{alg:hungarian}
+\end{algorithm}
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \Fn{AUGMENT($mate, p, j'; mate$)}{
+        \Repeat{$next = 0$}{
+            $i \leftarrow p(j); mate(j') \leftarrow i; next \leftarrow mate(i); mate(i) \leftarrow j'$\;
+            \If{$next \neq 0$}{
+                $j' \leftarrow next$\;
+            }
+        }
+    }
+    \caption{Augment Procedure \cite{jungnickel}}
+    \label{alg:augment}
+\end{algorithm}
+
+\paragraph{Jonker-Volgenant} 
+
+O algoritmo de Jonker-Volgenant é uma evolução otimizada para a resolução do problema de atribuição linear, proposto por Roy Jonker e Anton Volgenant em 1987. Ele foi desenvolvido para superar o desempenho prático do método Húngaro, especialmente em grafos densos, combinando a teoria de dualidade com estratégias de inicialização e busca mais eficientes \cite{jonker}.
+
+Assim como o método Húngaro, este algoritmo baseia-se na manutenção de potenciais duais ($u_i$ e $v_j$) e respeita as condições de folga complementar. No entanto, sua principal distinção conceitual é o uso da estratégia de Caminho Aumentante Mais Curto (Shortest Augmenting Path). Ao invés de construir emparelhamentos máximos em fases distintas, o algoritmo foca em encontrar o caminho de custo mínimo que conecta uma linha não atribuída a uma coluna livre.
+
+O processo inicia com heurísticas avançadas (conhecidas como redução de colunas e transferência de redução) para resolver rapidamente as atribuições triviais. Para os vértices restantes, o algoritmo realiza uma busca similar ao algoritmo de Dijkstra: ele explora o grafo para encontrar o caminho aumentante mais curto, atualizando os potenciais duais simultaneamente durante a busca. Isso garante que, a cada iteração, o emparelhamento seja aumentado pelo menor custo possível até que a solução ótima completa seja atingida.
+
+% TODO: adicionar pseudo-código do algoritmo Jonker-Volgenant
+% "A Shortest Augmenting Path Algorithm for Dense and Sparse Linear Assignment Problems"
+
+\paragraph{Redução para problema de fluxo de custo mínimo}
+
+Similarmente ao que foi feito para o problema de emparelhamento de cardinalidade máxima, o problema de atribuição pode ser resolvido através de uma redução ao problema de fluxo de custo mínimo. Nesta abordagem, o grafo bipartido é transformado em uma rede de fluxo onde cada aresta tem uma capacidade unitária e um custo associado, que corresponde ao custo da atribuição original \cite{lawler}.
+
+Para resolver 
+
+\paragraph{Algoritmo simplex}

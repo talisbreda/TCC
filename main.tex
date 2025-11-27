@@ -29,10 +29,23 @@
 \renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % Add dots for sections
 
 \newcommand{\topic}[1]{%
-  \medskip
+  \bigskip
   \textbf{#1}
-  \smallskip
+  \medskip
 }
+
+% Include numbering for paragraphs (up to 4 levels)
+\usepackage{titlesec}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+
+\titleformat{\paragraph}
+{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
+\titlespacing*{\paragraph}
+{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
+
+% End paragraph numbering configuration
 
 
 % Listings configuration (for code blocks)

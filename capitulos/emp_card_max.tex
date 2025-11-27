@@ -1,0 +1,183 @@
+% ------------------------------------------------------------------------------------------------
+% 4.1. Emparelhamento de cardinalidade máxima
+% ------------------------------------------------------------------------------------------------
+\subsection{Emparelhamento de cardinalidade máxima}
+
+\subsubsection{Definição do problema}
+
+Dado um grafo não-direcionado $G=(V,E)$, o problema de emparelhamento de cardinalidade máxima (MCM) busca encontrar um emparelhamento $M \subseteq E$ tal que o número de arestas em $M$ seja maximizado, ou seja, $|M|$ é o maior entre todos os emparelhamentos possíveis em $G$.
+
+Um caso especial, mas importante, do MCM é o \textbf{Emparelhamento perfeito}, que é um emparelhamento onde todos os vértices do grafo são cobertos por exatamente uma aresta do emparelhamento. Para que um emparelhamento perfeito exista, o grafo deve ter um número par de vértices e o emparelhamento máximo deve ter cardinalidade igual a $|V|/2$ \cite{jungnickel}.
+
+\subsubsection{Propriedades}
+
+Antes de continuar para os algoritmos e soluções, é necessário entender algumas propriedades importantes
+
+\paragraph{Emparelhamento máximo vs maximal}
+
+Um emparelhamento máximo é aquele que contém o maior número possível de arestas, enquanto um emparelhamento maximal é aquele que não pode ser aumentado adicionando mais arestas, mas não necessariamente é o maior possível \cite{manber}.
+
+\paragraph{Caminhos aumentantes}
+
+Um caminho aumentante $P$ em um grafo $G$ é chamado de caminho aumentante se $P$ tem tamanho ímpar, começa e termina em vértices livres (não cobertos por nenhuma aresta do emparelhamento atual) e alterna entre arestas que pertencem a $M$ e arestas que não pertencem a $M$. A existência de um caminho aumentante indica que o emparelhamento atual não é máximo \cite{schrijver}
+
+\subsubsection{Algoritmos exatos}
+
+Por ser em um ambiente mais restrito, o problema de emparelhamento de cardinalidade máxima tem diversas soluções em tempo polinomial. A seguir listadas algumas delas:
+
+\paragraph{Algoritmo do caminho aumentante}
+
+O algoritmo de caminho aumentante se baseia em um lema proposto por Claude Berge, que afirma que um grafo G é maximo se e somente se não existe nenhum caminho aumentante em G. Este algoritmo é uma implementação direta deste lema, onde se busca repetidamente por caminhos aumentantes e se aumenta o emparelhamento até que nenhum caminho aumentante possa ser encontrado \cite{lawler}.
+
+Começamos com um emparelhamento vazio $M=\emptyset$. Escolhemos um vértice livre $u$ no lado esquerdo do grafo bipartido e tentamos encontrar um caminho aumentante $P$ que começa em $u$ e termina em um vértice livre no lado direito do grafo, respeitando a regra da alternância entre arestas em $M$ e arestas fora de $M$. Se um caminho aumentante for encontrado, atualizamos o emparelhamento $M$ invertendo as arestas ao longo do caminho $P$. Repetimos esse processo até que não seja possível encontrar mais caminhos aumentantes. O emparelhamento resultante será o emparelhamento de cardinalidade máxima \cite{halim}.
+
+Em seguida o algoritmo em pseudo-código:
+
+\begin{lstlisting}[language=C, caption=Algoritmo de caminhos aumentantes \cite{halim}]
+// global variables
+vi match, vis; // ('vi' is an alias for vector<int>)
+
+int Aug(int l) { // return 1 if an augmenting path is found
+    if (vis[l]) return 0; // return 0 otherwise
+    vis[l] = 1;
+    for (int j = 0; j < (int)AdjList[l].size(); j++) {
+        int r = AdjList[l][j]; // edge weight not needed -> vector<vi> AdjList
+        if (match[r] == -1 || Aug(match[r])) {
+            match[r] = l; return 1; // found 1 matching
+    } }
+    return 0; // no matching
+}
+// inside int main()
+    // build unweighted bipartite graph with directed edge left->right set
+    int MCBM = 0;
+    match.assign(V, -1); // V is the number of vertices in bipartite graph
+    for (int l = 0; l < n; l++) { // n = size of the left set
+        vis.assign(n, 0); // reset before each recursion
+        MCBM += Aug(l);
+    }
+    printf("Found %d matchings\n", MCBM);
+\end{lstlisting}
+
+Como o algoritmo repete a busca por caminhos aumentantes para cada vértice do lado esquerdo do grafo, o tempo de execução total do algoritmo é $O(VE)$, onde $V$ é o número de vértices e $E$ é o número de arestas no grafo bipartido \cite{halim}.
+
+\paragraph{Redução ao problema de fluxo máximo}
+
+O problema de emparelhamento de cardinalidade máxima em grafos bipartidos pode ser eficientemente resolvido através de uma redução ao problema de fluxo máximo em redes. A ideia central é construir uma rede de fluxo a partir do grafo bipartido original, onde cada aresta do grafo bipartido é convertida em uma aresta com capacidade unitária na rede de fluxo. \cite{lawler}
+
+Primeiro, adicionamos um vértice fonte $s$ e um vértice sumidouro $t$ à rede. Conectamos o vértice fonte $s$ a todos os vértices do conjunto esquerdo do grafo bipartido com arestas de capacidade 1. Em seguida, conectamos todos os vértices do conjunto direito do grafo bipartido ao vértice sumidouro $t$, também com arestas de capacidade 1. As arestas entre os conjuntos esquerdo e direito do grafo bipartido são mantidas na rede de fluxo, cada uma com capacidade 1 \cite{halim}.
+
+Com isso, temos agora um grafo de fluxo onde o objetivo é encontrar o fluxo máximo do vértice fonte $s$ para o vértice sumidouro $t$. O valor do fluxo máximo encontrado nesta rede corresponde ao tamanho do emparelhamento máximo no grafo bipartido original. \cite{lawler}. Para encontrar o fluxo máximo, podemos utilizar algoritmos clássicos como o de Edmonds-Karp.
+
+O algoritmo de Edmonds-Karp é o padrão para resolver o problema de fluxo máximo, utilizando buscas em largura (BFS) para encontrar caminhos aumentantes na rede residual. A seguir, o pseudo-código do algoritmo:
+
+\begin{lstlisting}[language=C, caption=Algoritmo de Edmonds-Karp \cite{halim}]
+int res[MAX_V][MAX_V], mf, f, s, t; // global variables
+vi p; // p stores the BFS spanning tree from s
+
+void augment(int v, int minEdge) { // traverse BFS spanning tree from s->t
+    if (v == s) { f = minEdge; return; } // record minEdge in a global var f
+    else if (p[v] != -1) { 
+        augment(p[v], min(minEdge, res[p[v]][v]));
+        res[p[v]][v] -= f; res[v][p[v]] += f; 
+    } 
+}
+
+// inside int main(): set up 'res', 's', and 't' with appropriate values
+    mf = 0; // mf stands for max_flow
+
+    while (1) { // O(VE^2) (actually O(V^3 E) Edmonds Karp's algorithm
+        f = 0;
+
+        // run BFS, compare with the original BFS shown in Section 4.2.2
+        vi dist(MAX_V, INF); dist[s] = 0; queue<int> q; q.push(s);
+        p.assign(MAX_V, -1); // record the BFS spanning tree, from s to t!
+
+        while (!q.empty()) {
+            int u = q.front(); q.pop();
+            if (u == t) break; // immediately stop BFS if we already reach sink t
+
+            for (int v = 0; v < MAX_V; v++) // note: this part is slow
+                if (res[u][v] > 0 && dist[v] == INF)
+                    dist[v] = dist[u] + 1, q.push(v), p[v] = u; // 3 lines in 1!
+        }
+
+        augment(t, INF); // find the min edge weight 'f' in this path, if any
+        if (f == 0) break; // we cannot send any more flow ('f' = 0), terminate
+        mf += f; // we can still send a flow, increase the max flow!
+    }
+    printf("%d\n", mf); 
+\end{lstlisting}
+
+Outra opção para resolver o problema de fluxo máximo é o algoritmo de Dinic, que é mais eficiente em muitos casos práticos, especialmente em grafos densos. O algoritmo de Dinic utiliza uma combinação de buscas em largura (BFS) para construir níveis na rede residual e buscas em profundidade (DFS) para encontrar caminhos aumentantes dentro desses níveis. O tempo de execução do algoritmo de Dinic é $O(E \sqrt{V})$ para grafos gerais, tornando-o uma escolha preferida para muitos problemas de fluxo máximo \cite{halim}.
+
+Este trabalho não tem uma implementação do algoritmo de Dinic. Ao invés disso, será apresentado o algoritmo de Hopcroft-Karp, que é uma variação especializada do algoritmo de Dinic para o problema de emparelhamento em grafos bipartidos, oferecendo uma solução mais eficiente para este caso específico.
+
+\paragraph{Algoritmo de Hopcroft-Karp}
+
+O algoritmo de Hopcroft-Karp é um algoritmo eficiente para encontrar o emparelhamento máximo em grafos bipartidos. Ele melhora o desempenho do algoritmo de caminhos aumentantes ao encontrar múltiplos caminhos aumentantes em cada iteração, em vez de apenas um. O tempo de execução do algoritmo de Hopcroft-Karp é $O(E \sqrt{V})$, tornando-o significativamente mais rápido do que o algoritmo de caminhos aumentantes simples, especialmente em grafos grandes \cite{halim}.
+
+O algoritmo consiste em duas fases principais: a fase de construção de níveis e a fase de busca de caminhos aumentantes. Na fase de construção de níveis, uma busca em largura (BFS) é realizada a partir dos vértices livres no lado esquerdo do grafo bipartido para construir uma camada de níveis que ajuda a identificar os caminhos aumentantes mais curtos. Na fase de busca de caminhos aumentantes, uma busca em profundidade (DFS) é realizada para encontrar todos os caminhos aumentantes possíveis dentro da camada de níveis construída na fase anterior. Esses caminhos são então usados para aumentar o emparelhamento \cite{halim}.
+
+A seguir, o pseudo-código do algoritmo de Hopcroft-Karp:
+
+\begin{lstlisting}[language=C, caption=Algoritmo de Hopcroft-Karp (implementação própria)]
+ALGORITMO Hopcroft-Karp(G, U, V):
+    Para cada u em U: PairU[u] = NIL
+    Para cada v em V: PairV[v] = NIL
+    Matching = 0
+
+    Enquanto BFS() for verdadeiro:
+        Para cada u em U:
+            Se PairU[u] == NIL:
+                Se DFS(u) for verdadeiro:
+                    Matching = Matching + 1
+    
+    Retornar Matching
+
+---------------------------------------------------------
+
+FUNCAO BFS():
+    Fila Q = vazia
+    Para cada u em U:
+        Se PairU[u] == NIL:
+            Dist[u] = 0
+            Q.push(u)
+        SenAo:
+            Dist[u] = INFINITO
+    
+    Dist[NIL] = INFINITO
+
+    Enquanto Q nAo estiver vazia:
+        u = Q.pop()
+        
+        // Se a distAncia atual for menor que a distancia para o NIL, 
+        // continuamos procurando. Se for maior, ja achamos um caminho mais curto antes.
+        Se Dist[u] < Dist[NIL]:
+            Para cada v adjacente a u:
+                // Se v ja tem par, verificamos a distancia desse par
+                Se Dist[PairV[v]] == INFINITO:
+                    Dist[PairV[v]] = Dist[u] + 1
+                    Q.push(PairV[v])
+    
+    // Retorna verdadeiro se alcancamos o NIL (ou seja, achamos um caminho aumentante livre)
+    Retornar Dist[NIL] != INFINITO
+
+---------------------------------------------------------
+
+FUNCAO DFS(u):
+    Se u != NIL:
+        Para cada v adjacente a u:
+            // So seguimos se o vizinho estiver na proxima "camada" valida (distancia + 1)
+            Se Dist[PairV[v]] == Dist[u] + 1:
+                Se DFS(PairV[v]) for verdadeiro:
+                    PairV[v] = u
+                    PairU[u] = v
+                    Retornar VERDADEIRO
+        
+        // Otimizacao: Se nao achou caminho por u, marca como infinito para nao tentar de novo nesta fase
+        Dist[u] = INFINITO
+        Retornar FALSO
+    
+    Retornar VERDADEIRO
+\end{lstlisting}
+
