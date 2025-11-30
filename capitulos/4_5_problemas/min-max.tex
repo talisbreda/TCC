@@ -1,0 +1,214 @@
+% ------------------------------------------------------------------------------------------------
+% 4.3. Emparelhamento min-max
+% ------------------------------------------------------------------------------------------------
+\subsection{Problema de atribuição gargalo}
+
+\subsubsection{Descrição do problema}
+
+O problema de atribuição gargalo, também conhecido como \textbf{Problema de Emparelhamento Min-Max} ou \textbf{Bottleneck Assignment
+problem}, é uma variação do problema de atribuição tradicional. O objetivo deste problema é encontrar, em um grafo bipartido ponderado, um emparelhamento de cardinalidade máxima (maior número possível de arestas) no qual o mínimo dos pesos das arestas do emparelhamento seja maximizado \cite{lawler}.
+
+Por exemplo. Considere $N$ trabalhadores e $N$ estações de trabalho. $w_{ij}$ representa a eficiência do trabalhador i na estação de trabalho j. A eficiência total da produção é limitada pela eficiência do trabalhador menos eficiente.  O objetivo é atribuir trabalhadores às estações de trabalho de forma a maximizar a eficiência mínima entre todas as atribuições. Para resolver este problema, podemos utilizar o método de threshold \cite{lawler}.
+
+\subsubsection{Propriedades}
+
+\subsubsection{Soluções exatas}
+
+\paragraph{Métodos de threshold}
+
+Métodos de threshold funcionam alternando entre duas fases. A primeira fase consiste em selecionar um valor limite, chamando de \textbf{threshold}, descrito por $c\star$. Na segunda fase, constrói-se um grafo bipartido com todas as arestas cujo peso é menor ou igual a $c\star$. Em seguida, verifica-se se existe um emparelhamento perfeito nesse grafo. O menor valor de $c\star$ que permite um emparelhamento perfeito é a solução ótima para o problema de atribuição gargalo \cite{burkard}.
+
+Para selecionar o valor limite $c\star$, podemos utilizar uma busca binária entre o menor e o maior peso das arestas do grafo original. A cada iteração, ajustamos o valor de $c\star$ com base na existência ou não de um emparelhamento perfeito no grafo construído. Esse processo continua até que o valor ótimo seja encontrado. Burkard \cite{burkard}, que descreve esse método, utiliza um algoritmo baseado em matrizes para decidir se um emparelhamento é perfeito ou não, porém podemos utilizar qualquer algoritmo clássico de emparelhamento em grafos bipartidos, como os definidos no capítulo \ref{sec:algos_exatos_emp_card_max}, como por exemplo o algoritmo de Hopcroft-Karp.
+
+Lawler \cite{lawler} menciona um método de threshold para solução do problema de atribuição gargalo, porém a definição de threshold dele é levemente diferente, referindo-se ao valor dinâmico do rótulo de um vértice durante busca de caminhos. O algoritmo que ele descreve se assemelha mais aos algoritmos de caminhos aumentantes, que serão discutidos no capítulo \ref{sec:caminhos_aumentantes_min_max}.
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    % Main Algorithm Body
+    \KwLet $C = (c_{ij})$ be a given $n \times n$ cost matrix;\;
+    $c_0^* := \min_{ij}\{c_{ij}\}, c_1^* := \max_{ij}\{c_{ij}\}$\;
+    
+    \eIf{$c_0^* = c_1^*$}{
+        $z := c_0^*$ \AlgComment{any permutation of $\{1, 2, \dots, n\}$ is optimal}
+    }{
+        \While{$C^* = \{c_{ij} : c_0^* < c_{ij} < c_1^*\} \neq \emptyset$}{
+            \AlgComment{find the median, $c^*$, of $C^*$;}
+            
+            % The complex median formula
+            $c^* := \min \{ c \in C^* : |\{ c_{ij} \in C^* : c_{ij} \le c \}| \ge |C^*|/2 \}$;\;
+            
+            Feasibility\_check($c^*, c_0^*, c_1^*$)\;
+        }
+        
+        \If{Feasibility\_check has not yet been executed for $c_0^*$}{
+             Feasibility\_check($c_0^*, c_0^*, c_1^*$)\;
+        }
+        
+        find a perfect matching in the current bipartite graph $G[c_1^*]$\;
+        $z := c_1^*$ \AlgComment{value of the optimal matching}
+    }
+    
+    \bigskip % Add some vertical space between the main block and the procedure
+    
+    % The Procedure Definition
+    \Fn{Feasibility\_check($c^*, c_0^*, c_1^*$)}{
+        define the current graph $G[c^*]$\;
+        \eIf{$G[c^*]$ contains a perfect matching}{
+            $c_1^* := c^*$\;
+        }{
+            $c_0^* := c^*$\;
+        }
+    }
+    
+    \caption{Threshold algorithm for the LBAP \cite{burkard}}
+    \label{alg:threshold}
+\end{algorithm}
+
+\paragraph{Método dual}
+
+Assim como os métodos de threshold, o método dual também define um valor limite $c\star$. No entanto, ao invés de 'chutar' um valor usando busca binária, este método define o valor inicial de $c\star$ como sendo o menor valor possível que ele pode assumir. Olhando para a matriz de custos, esse valor é o máximo entre os mínimos de cada linha e cada coluna da matriz:
+
+\begin{equation}
+    c\star = \max \left\{ \max_{i} (\min_{j} c_{ik}), \max_{j} (\min_{i} c_{kj}) \right\}
+\end{equation}
+
+Com o limite definido, verificamos se é possível encontrar um emparelhamento perfeito no grafo bipartido formado pelas arestas cujo peso é menor ou igual a $c\star$, usando os mesmos algoritmos de antes. Se um emparelhamento perfeito for encontrado, então $c\star$ é a solução ótima. Caso contrário, é necessário aumentar o valor de $c\star$, e para isso nos baseamos no teorema de Kőnig. 
+
+Sabemos que todas as arestas $c_{ij} > c\star$ estão conectadas a um conjunto de linhas $I$ e um conjunto de colunas $J$. Essas linhas e colunas "cobrem" todas as arestas do grafo atual. Para aumentar o valor de $c\star$, precisamos adicionar uma nova aresta que não esteja coberta por esses conjuntos. Procuramos o menor peso entre as arestas não cobertas, ou seja, aquelas que não pertencem às linhas em $I$ nem às colunas em $J$. Esse valor se torna o novo $c\star$:
+
+\begin{equation}
+    Novo\space c\star = \min_{i \notin I, j \notin J} c_{ij}
+\end{equation}
+
+A partir daqui, o processo se repete. Com o novo valor de $c\star$ e a nova aresta adicionada ao grafo, verificamos novamente a existência de um emparelhamento perfeito. Esse ciclo continua até que um emparelhamento perfeito seja encontrado, momento em que o valor atual de $c\star$ será a solução ótima para o problema de atribuição gargalo.
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    % Line 1
+    \KwLet $C = (c_{ij})$ be a given $n \times n$ cost matrix;\;
+    
+    % Line 2: Complex Max/Min assignment
+    $c^* := \max_{k=1,2,\dots,n} (\min_{i=1,2,\dots,n} c_{ik}, \ \min_{j=1,2,\dots,n} c_{kj})$\;
+    
+    % Line 3
+    $M := \emptyset$\;
+
+    % Line 4: While Loop
+    \While{$|M| < n$}{
+        define the bipartite graph $G[c^*]$\;
+        find a maximum matching $M$ in $G[c^*]$\;
+        
+        % Line 7: If statement
+        \If{$|M| < n$}{
+            % Line 8
+            \KwLet $I \subseteq U$ and $J \subseteq V$ be vertex sets in a minimum vertex cover of $G[c^*]$\;
+            
+            % Line 9: Min assignment with 'not in' notation
+            $c^* := \min_{i \notin I, \ j \notin J} c_{ij}$\;
+        }
+    }
+    
+    \caption{Dual\_LBAP. Dual algorithm for the LBAP \cite{burkard}.}
+    \label{alg:dual_lbap}
+\end{algorithm}
+
+\paragraph{Método de caminhos aumentantes}
+\label{sec:caminhos_aumentantes_min_max}
+
+Ao contrário do método dual, que ajusta um limiar global para todo o grafo, o método de caminhos aumentantes é construtivo. Ele inicia com um emparelhamento vazio e busca aumentar sua cardinalidade iterativamente, adicionando um par de vértices de cada vez. O objetivo central em cada passo é encontrar um caminho aumentante $P$ que conecte uma linha livre a uma coluna livre, de tal forma que a capacidade desse caminho seja mínima. A capacidade aqui é definida pelo peso da aresta mais cara contida no caminho:
+
+\begin{equation}     
+    cap(P) = \max_{(i,j) \in P} c_{ij} 
+\end{equation}
+
+Para encontrar tal caminho, utiliza-se uma adaptação do algoritmo de Dijkstra. Em vez de somar os pesos das arestas, mantemos para cada vértice um valor de rótulo que representa o "gargalo" mínimo necessário para alcançá-lo. Durante a busca, ao tentar estender o caminho de um nó $u$ (com rótulo $d_u$) para um vizinho $v$ através da aresta $(u,v)$, o custo não é somado, mas sim comparado. O novo custo potencial para atingir $v$ é o máximo entre o gargalo já existente até $u$ e o peso da nova aresta:
+
+\begin{equation}     
+    Novo\space Custo_v = \max(d_u, c_{uv}) 
+\end{equation}
+
+O algoritmo seleciona, a cada passo, o nó não visitado com o menor rótulo atual, garantindo uma exploração gulosa que minimiza o gargalo. Assim que uma coluna livre é alcançada por essa busca, o caminho aumentante é identificado e o emparelhamento é expandido, invertendo-se as arestas ao longo do caminho. Esse processo se repete (reiniciando as distâncias) até que um emparelhamento perfeito seja obtido. A solução do problema será determinada pela maior capacidade encontrada entre todos os caminhos aumentantes utilizados na construção.
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \KwLet $G = (U, V; E)$ be a bipartite graph with edge lengths $c_{ij}$ for $[i, j] \in E$;\;
+    find a lower bound $c^*$ for the optimum objective function value;\;
+    \AlgComment{e.g., $c^* := \max(\max_{i \in U} \min_{j \in V} c_{ij}, \ \max_{j \in V} \min_{i \in U} c_{ij})$}\;
+    
+    find a maximum matching $M$ in the graph $G[c^*]$ having an edge $[i, j]$ \KwIff $c_{ij} \le c^*$;\;
+    
+    \eIf{$|M| = |U|$}{
+        \KwStop \AlgComment{$M$ is an optimum matching of cost $c^*$}
+    }{
+        \KwLet $L$ be the set of unmatched vertices of $U$\;
+    }
+
+    % Continuation from the second image (The Main Loop)
+    \While{$L$ is nonempty}{
+        choose an arbitrary vertex $i \in L$;\;
+        $L := L \setminus \{i\}$;\;
+        Dijkstra($i$); \AlgComment{the procedure returns a path $P$ starting in $i$}\;
+        
+        \If{$P \neq \mathrm{nil}$}{
+            $M := M \ominus P$;\;
+            $c^* := \max(c^*, \ell(P))$\;
+        }
+    }
+    \AlgComment{$M$ is a maximum matching with minimum cost $c^*$.}
+
+    \caption{LBAP usando caminhos aumentantes \cite{burkard}}
+    \label{alg:augmenting_lbap}
+\end{algorithm}
+
+\newpage
+
+% ALGORITHM 6.4: DIJKSTRA AND LABEL
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \Fn{Dijkstra($i$)}{
+        label all vertices $j \in V$ by $(\alpha(j), \beta(j)) := (\infty, \mathrm{nil})$;\;
+        $R := V$; \AlgComment{$R$ contains the unscanned vertices of $V$}\;
+        $\overline{\alpha}(i) := c^*, P := \mathrm{nil}$;\;
+        Label($i$);\;
+        
+        \While{$R \neq \emptyset$}{
+            find a vertex $j_1 \in R$ with minimum $\alpha(j_1)$;\;
+            \eIf{$\alpha(j_1) = \infty$}{
+                $R := \emptyset$\;
+            }{
+                \eIf{$j_1$ is unmatched}{
+                    find the path $P$ induced by the vertex sequence $(i, \dots, \overline{\beta}(\beta(j_1)), \beta(j_1), j_1)$;\;
+                    $\ell(P) := \alpha(j_1)$;\;
+                    $R := \emptyset$\;
+                }{
+                    let $[i_1, j_1]$ be the matching edge;\;
+                    label $i_1$ with $(\overline{\alpha}(i_1), \overline{\beta}(i_1)) = (\alpha(j_1), j_1)$;\;
+                    $R := R \setminus \{j_1\}$;\;
+                    Label($i_1$);\;
+                }
+            }
+        }
+    }
+    
+    \bigskip
+    
+    \Fn{Label($i$)}{
+        \For{each neighbor $j \in R$ of $i$}{
+            \If{$\alpha(j) > \max(\overline{\alpha}(i), c_{ij})$}{
+                $\alpha(j) := \max(\overline{\alpha}(i), c_{ij})$;\;
+                $\beta(j) := i$\;
+            }
+        }
+    }
+
+    \caption{Dijkstra modificado para caminhos aumentantes em LBAP \cite{burkard}}
+    \label{alg:dijkstra}
+\end{algorithm}

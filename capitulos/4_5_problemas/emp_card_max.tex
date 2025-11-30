@@ -3,7 +3,7 @@
 % ------------------------------------------------------------------------------------------------
 \subsection{Emparelhamento de cardinalidade máxima}
 
-\subsubsection{Definição do problema}
+\subsubsection{Descrição do problema}
 
 Dado um grafo não-direcionado $G=(V,E)$, o problema de emparelhamento de cardinalidade máxima (MCM) busca encontrar um emparelhamento $M \subseteq E$ tal que o número de arestas em $M$ seja maximizado, ou seja, $|M|$ é o maior entre todos os emparelhamentos possíveis em $G$.
 
@@ -22,6 +22,7 @@ Um emparelhamento máximo é aquele que contém o maior número possível de are
 Um caminho aumentante $P$ em um grafo $G$ é chamado de caminho aumentante se $P$ tem tamanho ímpar, começa e termina em vértices livres (não cobertos por nenhuma aresta do emparelhamento atual) e alterna entre arestas que pertencem a $M$ e arestas que não pertencem a $M$. A existência de um caminho aumentante indica que o emparelhamento atual não é máximo \cite{schrijver}
 
 \subsubsection{Algoritmos exatos}
+\label{sec:algos_exatos_emp_card_max}
 
 Por ser em um ambiente mais restrito, o problema de emparelhamento de cardinalidade máxima tem diversas soluções em tempo polinomial. A seguir listadas algumas delas:
 

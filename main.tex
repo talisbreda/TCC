@@ -40,6 +40,26 @@
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{4}
 
+% Change Section
+\titleformat{\section}
+  {\LARGE\bfseries} % Size: 16pt, Line-height: 18pt, Bold
+  {\thesection} % The number (e.g., "1")
+  {1em}         % Space between number and title
+  {}  
+% Change Subsection
+\titleformat{\subsection}
+  {\Large\bfseries} % Format: Size and Bold
+  {\thesubsection}  % The number (e.g., 2.1)
+  {1em}             % Space between number and title
+  {}                % Code before the title body
+
+% Change Subsubsection
+\titleformat{\subsubsection}
+  {\large\bfseries}
+  {\thesubsubsection}
+  {1em}
+  {}
+
 \titleformat{\paragraph}
 {\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
 \titlespacing*{\paragraph}
@@ -83,8 +103,12 @@ backgroundcolor=\color{lightgray},   % set background color
 \SetKw{KwOr}{or}
 \SetKw{KwAnd}{and}
 \SetKw{KwTo}{to}
-
 \SetKw{KwStep}{step}
+\SetKw{KwLet}{let}
+\SetKw{KwStop}{stop}
+\SetKw{KwIff}{iff}
+
+\newcommand{\AlgComment}[1]{\textbf{[comment: #1]}}
 
 \begin{document}
 
@@ -100,9 +124,10 @@ backgroundcolor=\color{lightgray},   % set background color
 \tableofcontents
 \newpage
 
-\input{capitulos/introducao}
-\input{capitulos/fundamentacao.tex}
-\input{capitulos/problemas.tex}
+\input{capitulos/1_introducao}
+\input{capitulos/2_fundamentacao.tex}
+\input{capitulos/3_taxonomia.tex}
+\input{capitulos/4_5_problemas/problemas.tex}
 
 \newpage
 \centering \bibliographystyle{abntex2-alf}
