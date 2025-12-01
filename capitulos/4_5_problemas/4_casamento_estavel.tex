@@ -1,0 +1,79 @@
+% ------------------------------------------------------------------------------------------------
+% 4.4. Emparelhamento estável (Stable Marriage Problem)
+% ------------------------------------------------------------------------------------------------
+\subsection{Problema do emparelhamento estável}
+
+\subsubsection{Descrição do problema}
+
+O problema do emparelhamento estável, também conhecido como \textit{Stable Marriage Problem} (SMP), é um problema clássico na teoria dos grafos e na ciência da computação, proposto inicialmente por Gale e Shapley em 1962 \cite{kleinberg}. Ele envolve a combinação de dois conjuntos distintos de elementos e, apesar de semelhante aos problemas de emparelhamento em grafos bipartidos estudados anteriormente, possui características e objetivos diferentes.
+
+Imagine dois conjuntos distintos de mesmo tamanho, $N$ homens e $N$ mulheres. Cada indivíduo em ambos os conjuntos tem uma lista de preferências ordenadas para todos os membros do outro conjunto. O objetivo do SMP é encontrar um emparelhamento entre homens e mulheres de tal forma que não existam dois indivíduos, um homem e uma mulher, que prefeririam estar juntos em vez de com seus parceiros atuais. Se tal par existir, o emparelhamento é considerado instável.
+
+O problema pode ser resolvido utilizando o algoritmo de Gale-Shapley, que usa um processo iterativo de propostas e rejeições para garantir que o emparelhamento final seja estável.
+
+% VariaçÕes do problema: Stable Roommates problem, Hospitais e Residentes, etc.
+\subsubsection{Propriedades}
+
+\begin{itemize}
+    \item \textbf{Estabilidade}: Um emparelhamento é estável se não houver dois indivíduos que prefeririam estar juntos em vez de com seus parceiros atuais. A estabilidade é a característica central do problema \cite{lawler}.
+    \item \textbf{Existência de solução}: Gale e Shapley provaram que sempre existe pelo menos um emparelhamento estável para qualquer conjunto de preferências \cite{ahuja}.
+    \item \textbf{Otimalidade para quem propõe}: O emparelhamento resultante do algoritmo de Gale-Shapley é ótimo para o conjunto que faz as propostas (por exemplo, os homens), significando que cada indivíduo nesse conjunto recebe o melhor parceiro possível dentro dos emparelhamentos estáveis \cite{ahuja}.
+    \item \textbf{Pessimismo para quem recebe propostas}: Por outro lado, o emparelhamento é o pior possível para o conjunto que recebe as propostas (por exemplo, as mulheres), significando que cada indivíduo nesse conjunto recebe o pior parceiro possível dentro dos emparelhamentos estáveis \cite{ahuja}.
+    \item \textbf{Não-unicidade}: Pode haver múltiplos emparelhamentos estáveis para um dado conjunto de preferências, dependendo das listas de preferências dos indivíduos \cite{kleinberg}.
+\end{itemize}
+
+\subsubsection{Algoritmo de Gale-Shapley}
+
+A solução clássica para o problema do emparelhamento estável é o algoritmo de Gale-Shapley, também conhecido como o algoritmo de casamento estável. O algoritmo funciona sob a lógica de propostas e rejeições, onde um dos conjuntos (por exemplo, os homens) faz propostas às mulheres com base em suas listas de preferências. 
+
+O algoritmo pode ser descrito de forma simples da seguinte maneira:
+
+Enquanto existir um homem $h$ que ainda não propôs a todas as mulheres em sua lista:
+
+\begin{enumerate}
+    \item O homem $h$ propõe à primeira mulher $m$ da sua lista de preferências a quem ele ainda não propôs.
+    \item A decisão da mulher $m$ é tomada com base em suas preferências:
+    \begin{itemize}
+        \item Se $m$ não estiver comprometida, ela aceita a proposta de $h$. Eles ficam "noivos".
+        \item Se $m$ já estiver comprometida com outro homem $h'$, ela compara $h$ e $h'$. Se $m$ preferir $h$ a $h'$, ela rejeita $h'$ (que fica livre) e aceita a proposta de $h$. Caso contrário, ela rejeita $h$ (que continue livre e tenta a próxima da sua lista).
+    \end{itemize}
+\end{enumerate}
+
+O algoritmo continua até que todos os homens estejam comprometidos. O resultado final é um emparelhamento estável, onde não existem pares instáveis \cite{kleinberg}.
+
+Segue um exemplo em pseudocódigo do algoritmo:
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    % Initial state
+    Initially all $m \in M$ and $w \in W$ are free\;
+
+    % Main Loop
+    \While{there is a man $m$ who is free and hasn't proposed to every woman}{
+        Choose such a man $m$\;
+        Let $w$ be the highest-ranked woman in $m$'s preference list to whom $m$ has not yet proposed\;
+        
+        % Check if woman is free
+        \eIf{$w$ is free}{
+            $(m, w)$ become engaged\;
+        }{
+            % Else case: w is engaged to m'
+            $w$ is currently engaged to $m'$\;
+            
+            \eIf{$w$ prefers $m'$ to $m$}{
+                $m$ remains free\;
+            }{
+                % w prefers m to m'
+                $(m, w)$ become engaged\;
+                $m'$ becomes free\;
+            }
+        }
+    }
+    
+    Return the set $S$ of engaged pairs\;
+
+    \caption{Algoritmo de Gale-Shapley para o problema do emparelhamento estável \cite{kleinberg}}
+    \label{alg:gale_shapley}
+\end{algorithm}

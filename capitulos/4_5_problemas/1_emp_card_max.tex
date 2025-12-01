@@ -21,6 +21,12 @@ Um emparelhamento máximo é aquele que contém o maior número possível de are
 
 Um caminho aumentante $P$ em um grafo $G$ é chamado de caminho aumentante se $P$ tem tamanho ímpar, começa e termina em vértices livres (não cobertos por nenhuma aresta do emparelhamento atual) e alterna entre arestas que pertencem a $M$ e arestas que não pertencem a $M$. A existência de um caminho aumentante indica que o emparelhamento atual não é máximo \cite{schrijver}
 
+\paragraph{Teorema de Kőnig}
+
+O teorema de Kőnig estabelece uma relação fundamental entre emparelhamentos e coberturas em grafos bipartidos. Ele afirma que, em qualquer grafo bipartido, o tamanho do maior emparelhamento é igual ao tamanho da menor cobertura de vértices \cite{jungnickel}.
+
+A cobertura de vértices é um conjunto de vértices tal que cada aresta do grafo é incidente a pelo menos um vértice desse conjunto. O teorema de Kőnig é uma ferramenta poderosa para resolver problemas de emparelhamento, utilizado nos algoritmos de Hopcroft-Karp e no método Húngaro.
+
 \subsubsection{Algoritmos exatos}
 \label{sec:algos_exatos_emp_card_max}
 
@@ -34,30 +40,49 @@ Começamos com um emparelhamento vazio $M=\emptyset$. Escolhemos um vértice liv
 
 Em seguida o algoritmo em pseudo-código:
 
-\begin{lstlisting}[language=C, caption=Algoritmo de caminhos aumentantes \cite{halim}]
-// global variables
-vi match, vis; // ('vi' is an alias for vector<int>)
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
 
-int Aug(int l) { // return 1 if an augmenting path is found
-    if (vis[l]) return 0; // return 0 otherwise
-    vis[l] = 1;
-    for (int j = 0; j < (int)AdjList[l].size(); j++) {
-        int r = AdjList[l][j]; // edge weight not needed -> vector<vi> AdjList
-        if (match[r] == -1 || Aug(match[r])) {
-            match[r] = l; return 1; // found 1 matching
-    } }
-    return 0; // no matching
-}
-// inside int main()
-    // build unweighted bipartite graph with directed edge left->right set
-    int MCBM = 0;
-    match.assign(V, -1); // V is the number of vertices in bipartite graph
-    for (int l = 0; l < n; l++) { // n = size of the left set
-        vis.assign(n, 0); // reset before each recursion
-        MCBM += Aug(l);
+    % Variáveis globais
+    \textbf{Global:} $match$ (vetor de emparelhamento), $vis$ (vetor de visitados), $AdjList$\;
+    \bigskip
+
+    % Procedimento Augment (DFS)
+    \Fn{Aug($l$)}{
+        \If{$vis[l] = 1$}{
+            \KwRet 0\;
+        }
+        $vis[l] \leftarrow 1$\;
+        
+        \For{each $r \in AdjList[l]$}{
+            % A lógica do caminho aumentante
+            \If{$match[r] = -1$ \KwOr Aug($match[r]$)}{
+                $match[r] \leftarrow l$\;
+                \KwRet 1 \textbf{[comment: found 1 matching]}\;
+            }
+        }
+        \KwRet 0 \textbf{[comment: no matching]}\;
     }
-    printf("Found %d matchings\n", MCBM);
-\end{lstlisting}
+
+    \bigskip
+
+    % Procedimento Principal
+    \Fn{MCBM\_Algorithm($n$)}{
+        $MCBM \leftarrow 0$\;
+        $match \leftarrow -1$ (initialize for all $V$)\;
+        
+        \For{$l \leftarrow 0$ \KwTo $n-1$}{
+            $vis \leftarrow 0$ (reset before each recursion)\;
+            $MCBM \leftarrow MCBM + \text{Aug}(l)$\;
+        }
+        
+        \KwRet $MCBM$\;
+    }
+    
+    \caption{Algoritmo de caminhos aumentantes (MCBM) \cite{halim}}
+    \label{alg:mcbm_augmenting}
+\end{algorithm}
 
 Como o algoritmo repete a busca por caminhos aumentantes para cada vértice do lado esquerdo do grafo, o tempo de execução total do algoritmo é $O(VE)$, onde $V$ é o número de vértices e $E$ é o número de arestas no grafo bipartido \cite{halim}.
 
@@ -71,43 +96,72 @@ Com isso, temos agora um grafo de fluxo onde o objetivo é encontrar o fluxo má
 
 O algoritmo de Edmonds-Karp é o padrão para resolver o problema de fluxo máximo, utilizando buscas em largura (BFS) para encontrar caminhos aumentantes na rede residual. A seguir, o pseudo-código do algoritmo:
 
-\begin{lstlisting}[language=C, caption=Algoritmo de Edmonds-Karp \cite{halim}]
-int res[MAX_V][MAX_V], mf, f, s, t; // global variables
-vi p; // p stores the BFS spanning tree from s
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
 
-void augment(int v, int minEdge) { // traverse BFS spanning tree from s->t
-    if (v == s) { f = minEdge; return; } // record minEdge in a global var f
-    else if (p[v] != -1) { 
-        augment(p[v], min(minEdge, res[p[v]][v]));
-        res[p[v]][v] -= f; res[v][p[v]] += f; 
-    } 
-}
+    % Variáveis globais explicadas no início (opcional, mas ajuda na clareza)
+    \textbf{Global:} $res$ (matriz de capacidade residual), $mf, f, s, t$, $p$ (vetor de pais da BFS)\;
+    \bigskip
 
-// inside int main(): set up 'res', 's', and 't' with appropriate values
-    mf = 0; // mf stands for max_flow
-
-    while (1) { // O(VE^2) (actually O(V^3 E) Edmonds Karp's algorithm
-        f = 0;
-
-        // run BFS, compare with the original BFS shown in Section 4.2.2
-        vi dist(MAX_V, INF); dist[s] = 0; queue<int> q; q.push(s);
-        p.assign(MAX_V, -1); // record the BFS spanning tree, from s to t!
-
-        while (!q.empty()) {
-            int u = q.front(); q.pop();
-            if (u == t) break; // immediately stop BFS if we already reach sink t
-
-            for (int v = 0; v < MAX_V; v++) // note: this part is slow
-                if (res[u][v] > 0 && dist[v] == INF)
-                    dist[v] = dist[u] + 1, q.push(v), p[v] = u; // 3 lines in 1!
+    % Procedimento Recursivo AUGMENT
+    \Fn{Augment($v, \text{minEdge}$)}{
+        \eIf{$v = s$}{
+            $f \leftarrow \text{minEdge}$\;
+            \KwRet\;
+        }{
+            \If{$p[v] \neq -1$}{
+                Augment($p[v], \min(\text{minEdge}, res_{p[v], v})$)\;
+                $res_{p[v], v} \leftarrow res_{p[v], v} - f$\;
+                $res_{v, p[v]} \leftarrow res_{v, p[v]} + f$\;
+            }
         }
-
-        augment(t, INF); // find the min edge weight 'f' in this path, if any
-        if (f == 0) break; // we cannot send any more flow ('f' = 0), terminate
-        mf += f; // we can still send a flow, increase the max flow!
     }
-    printf("%d\n", mf); 
-\end{lstlisting}
+
+    \bigskip
+
+    % Procedimento Principal (Main)
+    \Fn{EdmondsKarp($s, t$)}{
+        $mf \leftarrow 0$\;
+        
+        \While{\KwTrue}{
+            $f \leftarrow 0$\;
+            
+            % Setup da BFS
+            $dist \leftarrow \infty; \quad dist[s] \leftarrow 0$\;
+            $Q \leftarrow \{s\}; \quad p \leftarrow \text{nil}$ (init vector with -1)\;
+
+            % BFS Loop
+            \While{$Q \neq \emptyset$}{
+                $u \leftarrow Q.\text{front}()$; $Q.\text{pop}()$\;
+                
+                \If{$u = t$}{
+                    \KwBreak (stop BFS)\;
+                }
+
+                \For{each $v \in V$}{
+                    \If{$res_{u, v} > 0$ \KwAnd $dist[v] = \infty$}{
+                        $dist[v] \leftarrow dist[u] + 1$\;
+                        $Q.\text{push}(v)$\;
+                        $p[v] \leftarrow u$\;
+                    }
+                }
+            }
+
+            Augment($t, \infty$); \textbf{[comment: find min edge weight $f$ in path]}\;
+            
+            \If{$f = 0$}{
+                \KwBreak (terminate)\;
+            }
+            $mf \leftarrow mf + f$\;
+        }
+        
+        \KwRet $mf$\;
+    }
+    
+    \caption{Algoritmo de Edmonds-Karp \cite{halim}}
+    \label{alg:edmonds_karp}
+\end{algorithm}
 
 Outra opção para resolver o problema de fluxo máximo é o algoritmo de Dinic, que é mais eficiente em muitos casos práticos, especialmente em grafos densos. O algoritmo de Dinic utiliza uma combinação de buscas em largura (BFS) para construir níveis na rede residual e buscas em profundidade (DFS) para encontrar caminhos aumentantes dentro desses níveis. O tempo de execução do algoritmo de Dinic é $O(E \sqrt{V})$ para grafos gerais, tornando-o uma escolha preferida para muitos problemas de fluxo máximo \cite{halim}.
 
@@ -119,66 +173,87 @@ O algoritmo de Hopcroft-Karp é um algoritmo eficiente para encontrar o emparelh
 
 O algoritmo consiste em duas fases principais: a fase de construção de níveis e a fase de busca de caminhos aumentantes. Na fase de construção de níveis, uma busca em largura (BFS) é realizada a partir dos vértices livres no lado esquerdo do grafo bipartido para construir uma camada de níveis que ajuda a identificar os caminhos aumentantes mais curtos. Na fase de busca de caminhos aumentantes, uma busca em profundidade (DFS) é realizada para encontrar todos os caminhos aumentantes possíveis dentro da camada de níveis construída na fase anterior. Esses caminhos são então usados para aumentar o emparelhamento \cite{halim}.
 
+% TODO: melhorar essa explicação
+
 A seguir, o pseudo-código do algoritmo de Hopcroft-Karp:
 
-\begin{lstlisting}[language=C, caption=Algoritmo de Hopcroft-Karp (implementação própria)]
-ALGORITMO Hopcroft-Karp(G, U, V):
-    Para cada u em U: PairU[u] = NIL
-    Para cada v em V: PairV[v] = NIL
-    Matching = 0
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
 
-    Enquanto BFS() for verdadeiro:
-        Para cada u em U:
-            Se PairU[u] == NIL:
-                Se DFS(u) for verdadeiro:
-                    Matching = Matching + 1
+    \caption{Algoritmo de Hopcroft-Karp \cite{burkard}}
+    \label{alg:hopcroft_karp}
+
+    % MAIN ALGORITHM
+    \KwLet $G = (U, V; E)$ be a bipartite graph with initial (possibly empty) matching $M$;\;
+    \KwLet $U_0$ contain all unmatched vertices of $U$;\;
+    \KwLet $V_0$ contain all unmatched vertices of $V$;\;
     
-    Retornar Matching
+    \While{$U_0 \neq \emptyset$}{
+        Construct\_layered\_graph;\;
+        Find\_set\_$\Delta M$;\;
+        $M := M \ominus \Delta M$;\;
+        update sets $U_0, V_0$ of unmatched vertices\;
+    }
 
----------------------------------------------------------
+    \bigskip
 
-FUNCAO BFS():
-    Fila Q = vazia
-    Para cada u em U:
-        Se PairU[u] == NIL:
-            Dist[u] = 0
-            Q.push(u)
-        SenAo:
-            Dist[u] = INFINITO
-    
-    Dist[NIL] = INFINITO
+    % PROCEDURE 1: CONSTRUCT LAYERED GRAPH
+    \Fn{Construct\_layered\_graph}{
+        $L_0 := U_0, k^* := k := 0$;\;
+        \While{$L_k \neq \emptyset$}{
+            \For{each $i \in L_k$}{
+                $N(i) := \{ j : [i, j] \in E \setminus M, j \notin L_1 \cup L_3 \cup \dots \cup L_{k-1} \}$;
+            }
+            $L_{k+1} := \bigcup_{i \in L_k} N(i)$;\;
+            
+            \If{$L_{k+1} = \emptyset$}{
+                \KwStop \AlgComment{$M$ is a maximum matching}
+            }
+            
+            \eIf{$L_{k+1} \cap V_0 \neq \emptyset$}{
+                $k^* := k + 1$;\;
+                $L_{k+2} := \emptyset$\;
+            }{
+                $L_{k+2} := \{ \overline{i} : [\overline{i}, j] \in M, j \in L_{k+1} \}$;
+            }
+            $k := k + 2$\;
+        }
+    }
 
-    Enquanto Q nAo estiver vazia:
-        u = Q.pop()
+    \bigskip
+
+    % PROCEDURE 2: FIND SET DELTA M
+    \Fn{Find\_set\_$\Delta M$}{
+        \AlgComment{find a maximal set $\Delta M$ of disjoint augmenting paths}\;
+        delete all vertices in $L_{k^*} \setminus V_0$;\;
+        mark all remaining vertices as unscanned;\;
+        $k := 1$; \AlgComment{path counter}\;
         
-        // Se a distAncia atual for menor que a distancia para o NIL, 
-        // continuamos procurando. Se for maior, ja achamos um caminho mais curto antes.
-        Se Dist[u] < Dist[NIL]:
-            Para cada v adjacente a u:
-                // Se v ja tem par, verificamos a distancia desse par
-                Se Dist[PairV[v]] == INFINITO:
-                    Dist[PairV[v]] = Dist[u] + 1
-                    Q.push(PairV[v])
-    
-    // Retorna verdadeiro se alcancamos o NIL (ou seja, achamos um caminho aumentante livre)
-    Retornar Dist[NIL] != INFINITO
+        \While{$L_0 \neq \emptyset$}{
+            choose $x_0 := i \in L_0$ and delete it in $L_0$;\;
+            $\ell := 0$;\;
+            
+            \While{$\ell \ge 0$}{
+                \While{$x_\ell$ has an unscanned neighbor in $L_{\ell+1}$}{
+                    choose unscanned neighbor $x_{\ell+1}$;\;
+                    mark $x_{\ell+1}$ as scanned;\;
+                    $\ell := \ell + 1$;\;
+                    
+                    \If{$\ell = k^*$}{
+                        $P_k := (x_0, x_1, \dots, x_{k^*})$;\;
+                        $k := k + 1$\;
+                    }
+                }
+                \eIf{$\ell < k^*$}{
+                    $\ell := \ell - 1$\;
+                }{
+                    $\ell := -1$\;
+                }
+            }
+        }
+        \KwRet $\Delta M := (P_1, P_2, \dots, P_{k-1})$\;
+    }
 
----------------------------------------------------------
-
-FUNCAO DFS(u):
-    Se u != NIL:
-        Para cada v adjacente a u:
-            // So seguimos se o vizinho estiver na proxima "camada" valida (distancia + 1)
-            Se Dist[PairV[v]] == Dist[u] + 1:
-                Se DFS(PairV[v]) for verdadeiro:
-                    PairV[v] = u
-                    PairU[u] = v
-                    Retornar VERDADEIRO
-        
-        // Otimizacao: Se nao achou caminho por u, marca como infinito para nao tentar de novo nesta fase
-        Dist[u] = INFINITO
-        Retornar FALSO
-    
-    Retornar VERDADEIRO
-\end{lstlisting}
+\end{algorithm}
 
