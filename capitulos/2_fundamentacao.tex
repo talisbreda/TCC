@@ -70,6 +70,167 @@ Observações:
 % TODO: teorema da integralidade
 % TODO: Mendelsohn-Dulmage
 
+\subsection{Redes de fluxo em grafos}
+
+A teoria dos fluxos em redes é um ramo fundamental da otimização combinatória que modela problemas de transporte de recursos através de um sistema conectado. Esta seção define os conceitos preliminares e apresenta os teoremas centrais que sustentam os algoritmos utilizados neste trabalho.
+
+\subsubsection{Definições básicas}
+
+Uma rede de fluxo é definida por um grafo direcionado $G = (V, E)$, onde $V$ é o conjunto de vértices e $E$ é o conjunto de arestas. Distinguem-se dois vértices especiais: a \textbf{fonte} $s\in V$. que produz o fluxo, e o \textbf{sorvedouro} $t\in V$, que o consome. Para cada aresta $(u, v) \in E$, associa-se uma capacidade não-negativa $c(u,v) \geq o$, que limita a quantidade de fluxo que pode atravessar aquela aresta. Um \textbf{fluxo} em $G$ é uma função $f \space : \space E \rightarrow \mathbb{R}^+$ que satisfaz as seguintes propriedades \cite{cormen}:
+
+\begin{itemize}
+    \item \textbf{Restrição de capacidade:} O fluxo em uma aresta não pode exceder a sua capacidade.
+    \begin{equation}
+        0 \leq f(u,v) \leq c(u,v), \qquad \forall(u,v) \in E
+    \end{equation}
+    \item \textbf{Conservação de fluxo:} para todo vértice $v \in V - \{s,t\}$, a quantidade total de fluxo que entra deve ser igual à que sai
+    \begin{equation}
+        \sum_{v \in V}f(v,u) = \sum_{v \in V}f(u,v)
+    \end{equation}
+\end{itemize}
+
+\subsubsection{O problema do fluxo máximo}
+
+O \textbf{problema do fluxo máximo} consiste em encontrar um fluxo $f$ tal que $|f|$ seja o maior possível. Para entender a limitação desse fluxo, precisamos entender os conceitos de corte, redes residuais e caminhos aumentantes.
+
+\paragraph{Corte}
+
+Um \textbf{corte} $(S,T)$ é uma partição do conjunto de vértices $V$ em dois subconjuntos disjuntos $S$ e $T$, tal que $s\in S$ e $t\in T$. A \textbf{capacidade do corte}, denotada por $c(S,T)$, é a soma das capacidades das arestas que partem de $S$ para $T$ \cite{cormen}:
+
+\begin{equation}
+    c(S,T) = \sum_{u\in S,v\in T}c(u,v)
+\end{equation}
+
+O \textbf{corte mínimo} de uma rede $N$ é um corte cuja capacidade é a menor entre todos os cortes possíveis nessa rede \cite{cormen}. Isso nos leva ao \textbf{teorema do fluxo máximo e corte mínimo (Max-flow Min-cut)}
+
+\begin{quotation}
+    \textit{O valor máximo do fluxo de uma rede $N$ é igual à capacidade do corte mínimo em $N$ \cite{jungnickel}}
+\end{quotation}
+
+Este teorema é fundamental para a compreensão e corretudo dos algoritmos de caminhhos aumentantes.
+
+\paragraph{Redes residuais}
+
+A maioria dos algoritmos de resolução de problemas de fluxo máximo se baseia no conceito de redes residuais. Uma \textbf{rede residual} $G_f$ consiste em arestas com capacidades que representam como podemos alterar o fluxo das arestas em $G$. A capacidade das arestas da rede residual $G_f$ corresponde à diferença entre a capacidade da aresta original de $G$ e o fluxo $f$ que está passando pela aresta \cite{cormen}. Ou seja:
+
+\begin{equation}
+    c_f(u,v) = c(u,v) - f(u,v)
+\end{equation}
+
+Quando a aresta $(u,v)$ possui fluxo igual à sua capacidade, $c_f(u,v) = 0$ e a aresta não é incluída no grafo residual $G_f$
+
+\paragraph{Caminhos aumentantes}
+
+Dado um grafo $G=(V,E)$ e um fluxo $f$, um \textbf{caminho aumentante} é um caminho de $s$ para $t$ na rede residual $G_f$. Por definição, podemos aumentar o fluxo em uma aresta $(u,v)$ de um caminho aumentante em até $c_f(u,v)$ sem violar a capacidade da aresta original em $G$ \cite{cormen}.
+
+O método de Ford-Fulkerson, que é base dos principais algoritmos de resolução do problema do fluxo máximo, iterativamente encontra um caminho aumentante, calcula sua capacidade residual e adiciona esse fluxo à solução atual até que não existam mais caminhos aumentantes \cite{ahuja}.
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \Fn{FORD-FULKERSON($G, s, t$)}{
+        \ForEach{edge $(u, v) \in G.E$}{
+            $(u, v).f \leftarrow 0$\;
+        }
+        
+        \While{there exists a path $p$ from $s$ to $t$ in the residual network $G_f$}{
+            $c_f(p) \leftarrow \min \{ c_f(u, v) : (u, v) \text{ is in } p \}$\;
+            
+            \ForEach{edge $(u, v) \in p$}{
+                \eIf{$(u, v) \in E$}{
+                    $(u, v).f \leftarrow (u, v).f + c_f(p)$\;
+                }{
+                    $(v, u).f \leftarrow (v, u).f - c_f(p)$\; 
+                }
+            }
+        }
+    }
+    
+    \caption{Ford-Fulkerson Algorithm}
+    \label{alg:ford_fulkerson}
+\end{algorithm}
+
+\paragraph{Algoritmo de Edmonds-Karp}
+\label{p:edmonds-karp}
+
+O algoritmo de \textbf{Edmonds-Karp} é uma especialização do método de Ford-Fulkerson que utiliza uma busca em largura (BFS) para encontrar sempre o camino aumentante mais curto em número de arestas. Tem complexidade de tempo $O(VE^2)$:
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    % Variáveis globais explicadas no início (opcional, mas ajuda na clareza)
+    \textbf{Global:} $res$ (matriz de capacidade residual), $mf, f, s, t$, $p$ (vetor de pais da BFS)\;
+    \bigskip
+
+    % Procedimento Recursivo AUGMENT
+    \Fn{Augment($v, \text{minEdge}$)}{
+        \eIf{$v = s$}{
+            $f \leftarrow \text{minEdge}$\;
+            \KwRet\;
+        }{
+            \If{$p[v] \neq -1$}{
+                Augment($p[v], \min(\text{minEdge}, res_{p[v], v})$)\;
+                $res_{p[v], v} \leftarrow res_{p[v], v} - f$\;
+                $res_{v, p[v]} \leftarrow res_{v, p[v]} + f$\;
+            }
+        }
+    }
+
+    \bigskip
+
+    % Procedimento Principal (Main)
+    \Fn{EdmondsKarp($s, t$)}{
+        $mf \leftarrow 0$\;
+        
+        \While{\KwTrue}{
+            $f \leftarrow 0$\;
+            
+            % Setup da BFS
+            $dist \leftarrow \infty; \quad dist[s] \leftarrow 0$\;
+            $Q \leftarrow \{s\}; \quad p \leftarrow \text{nil}$ (init vector with -1)\;
+
+            % BFS Loop
+            \While{$Q \neq \emptyset$}{
+                $u \leftarrow Q.\text{front}()$; $Q.\text{pop}()$\;
+                
+                \If{$u = t$}{
+                    \KwBreak (stop BFS)\;
+                }
+
+                \For{each $v \in V$}{
+                    \If{$res_{u, v} > 0$ \KwAnd $dist[v] = \infty$}{
+                        $dist[v] \leftarrow dist[u] + 1$\;
+                        $Q.\text{push}(v)$\;
+                        $p[v] \leftarrow u$\;
+                    }
+                }
+            }
+
+            Augment($t, \infty$); \textbf{[comment: find min edge weight $f$ in path]}\;
+            
+            \If{$f = 0$}{
+                \KwBreak (terminate)\;
+            }
+            $mf \leftarrow mf + f$\;
+        }
+        
+        \KwRet $mf$\;
+    }
+    
+    \caption{Algoritmo de Edmonds-Karp \cite{halim}}
+    \label{alg:edmonds_karp}
+\end{algorithm}
+
+\paragraph{Algoritmo de Dinic}
+
+TODO
+
+\subsubsection{Fluxo de custo mínimo}
+
+Uma outra variação dos problemas em redes de fluxo em grafos é o problema do fluxo de custo mínimo. Essa variação considera, além das capacidades disponíveis, uma dimensão econômica. Seja $G=(V, E)$ uma rede direcionada one cada aresta $(u,v)$ possui uma capacidade $c(u,v)$ e um custo unitário $w(u,v)$. O objetivo é transmitir uma quantidade de fluxo pré-determinada $v$ da fonte $s$ ao sorvedouro $t$ com o menor custo total possível.
+
 % ==================================================================================================================================
 % 2.2. Problema Geral do Emparelhamento
 % ==================================================================================================================================

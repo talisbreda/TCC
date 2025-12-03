@@ -13,6 +13,8 @@ Schrijver capitulo 21.13 - MUITA coisa
 
 ver inequacoes ao invés de simplex
 
+Definir proposta (exato/heuristico ou os dois)
 
+seção de comparação (tabela comparando algoritmos e casos de uso pra eles)
 
-!!!!! DEFINIR TEOREMA DE KONIG !!!!!!
+escrever seção na fundamentacao sobre caminhos em grafos
