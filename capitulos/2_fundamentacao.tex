@@ -70,6 +70,105 @@ Observações:
 % TODO: teorema da integralidade
 % TODO: Mendelsohn-Dulmage
 
+\subsection{Busca em grafos}
+
+A exploração sistemática dos vértices e arestas de um grafo é uma sub-rotina fundamental para a maioria dos algoritmos em redes, incluindo aqueles utilizados para encontrar emparelhamentos, fluxo máximo e componentes conexos. A busca em grafos consiste em seguir as arestas do grafo para visitar os vértices, permitindo descobrir a estrutura da rede e propriedades de conectividade \cite{cormen}.
+
+\subsubsection{Representação computacional}
+
+Antes de discutir os algoritmos de busca, é essencial definir como o grafo $G=(V,E)$ é representado computacionalmente, pois isso impacta diretamente a complexidade temporal das operações. Destacam-se duas representações primárias \cite{aho}:
+
+\begin{itemize}
+    \item \textbf{Matriz de adjacência:} Uma matriz $A$ de dimensão $|V| \times |V|$, onde $A_{ij} = 1$ se existe uma aresta $(i,j) \in E$, e $0$ caso contrário. Embora permita verificação de existência de arestas em tempo constante $O(1)$, ela consome espaço $\theta(V^2)$ ,sendo ineficiente para grafos esparsos.
+    \item \textbf{Matriz de adjacência:} Consiste em um array de $|V|$ e listas, onde caad lista $Adj[u]$ contém todos os vértices $v$ tal que $(u,v) \in E$. Esta representação é preferível para grafos esparsos, pois consome espaço $\theta(V+E)$ \cite{cormen}.
+\end{itemize}
+
+Para os algoritmos de busca descritos a seguir, assume-se geralmente o uso de listas de adjacência, resultando em complexidades lineares em relação ao tamanho do grafo.
+
+\subsubsection{Busca em largura}
+
+A \textbf{busca em largura}, ou Breadth-First Search (BFS) é um dos algoritmos mais simples e fundamentais para a exploração de grafos. A BFS explora o grafo em "camadas" ou níveis. Dado um vértice fonte $s$, o algoritmo visita primeiro todos os vizinhos de $s$ (camada $L_1$), depois os vizinhos desses vizinhos (camada $L_2$), e assim sucessivamente \cite{kleinberg}.
+
+O procedimento utiliza uma estrutura de dados do tipo Fila (FIFO) para gerenciar a fronteira de exploração. \citeonline{cormen} descrevem o uso de um sistema de "cores" para monitorar o estado dos vértices: brancos (não descobertos), cinzas (descobertos, mas com vizinhos ainda não explorados) e pretos (totalmente explorados).
+
+\textbf{Propriedades e Complexidade:} A propriedade mais importante da BFS, destacada por \citeonline{dasgupta}, é que ela calcula o caminho mais curto (em número de arestas) de $s$ a todos os outros vértices alcançáveis em grafos não ponderados. A complexidade de tempo da BFS é $O(V+E)$, pois cada vértice é enfileirado no máximo uma vez e cada lista de adjacência é varrida uma única vez.
+
+\subsubsection{Busca em profundidade}
+
+A \textbf{busca em profundidade} ou Depth-First Search (DFS), ao contrário da estratégia por níveis da BFS, a busca em profundidade explora as arestas a partir do vértice mais recentemente descoberto que ainda possui arestas inexploradas. Conforme \citeonline{manber}, a DFS "aprofunda-se" no grafo tanto quanto possível e, quando não há mais para onde ir, realiza o backtracking (retrocesso) para explorar outros caminhos.
+
+Computacionalmente, a DFS pode ser implementada de forma recursiva ou utilizando uma Pilha (LIFO). Uma característica crucial da DFS é a classificação temporal dos eventos. \citeonline{cormen} sugerem registrar dois carimbos de tempo para cada vértice $u$:
+
+\begin{itemize}
+    \item $d[u]$: Momento de descoberta (quando o vértice passa de branco para cinza).
+    \item $f[u]$: Momento de finalização (quando o vértice passa de cinza para preto, após toda sua lista de adjacência ser explorada).
+\end{itemize}
+
+\textbf{Classificação de arestas}: a execução da DFS induz uma estrutura de floresta (Floresta DFS) e permite classificar as arestas do grafo original em quatro tipos, fundamentais para entender ciclos e estrutura \cite{cormen}
+\begin{itemize}
+    \item \textbf{Arestas de Árvore:} Arestas $(u,v)$ percorridas pela busca quando $v$ é descoberto.
+    \item \textbf{Arestas de Retorno (Back edges):} Conectam um vértice $u$ a um ancestral $v$ na árvore DFS. A existência destas arestas indica a presença de ciclos.
+    \item \textbf{Arestas de Avanço (Forward edges):} Conectam $u$ a um descendente $v$ que não é seu filho direto.
+    \item \textbf{Arestas de Cruzamento (Cross edges):} Conectam vértices sem relação de ancestralidade.
+\end{itemize}
+
+A complexidade da DFS, assim como a BFS, é $\theta(V+E)$ para grafos representados por listas de adjacência.
+
+
+\subsection{Caminhos mais curtos}
+
+O problema de encontrar o caminho mais curto entre dois vértices em um grafo é um dos problemas de otimização combinatória mais estudados, servindo como sub-rotina para diversas aplicações, incluindo roteamento de redes e algoritmos de fluxo.
+
+Seja $G=(V,E)$ um grafo ponderado com uma função de peso $w : E \rightarrow \mathbb{R}$. O peso de um caminho $p = \langle v_0, v_1 \dots, v_k \rangle$ é a soma dos pesos de suas arestas constituintes: $w(p) = \sum_{i=1}^{k}w(v_{i-1},v_i)$. O \textbf{caminho mais curto} de um vértice $u$ a um vértice $v$ é definido como qualquer camino $p$ com peso mínimo $\delta(u,v)$ \cite{cormen}.
+
+\subsubsection{Princípio do relaxamento e subestrutura ótima}
+
+Os algoritmos de caminho mínimo baseiam-se na propriedade de \textbf{subestrutura ótima}: subcaminhos de um caminho mais curto são, por si mesmos, caminhos mais curtos. Além disso, utilizam a técnica de \textbf{relaxamento} \cite{kleinberg}.
+
+Para cada vértice $v$, o algoritmo mantém um atributo $d[v]$, que é um limite superior para o peso do caminho mais curto da fonte $s$ até $v$. O processo de relaxar uma aresta $(u,v)$ consiste em testar se é possível melhorar o caminho para $v$ passando por $u$:
+
+\begin{equation}
+    \text{Se } d[v] > d[u] + w(u,v)\text{, então } d[v] \leftarrow d[u] + w(u,v)
+\end{equation}
+
+A diferença entre os algoritmos reside na ordem e na frequência com que as arestas são relaxadas.
+
+\subsubsection{Algoritmo de Dijkstra}
+
+Para grafos onde os pesos das arestas são não-negativos ($w(u,v)\geq 0$), o Algoritmo de Dijkstra é a abordagem mais eficiente. Ele utiliza uma estratégia gulosa, mantendo um conjunto de vértices cujos pesos finais dos caminhos mais curtos já foram determinados \cite{aho}.
+
+O algoritmo seleciona repetidamente o vértice $u$ com a menor estimativa de caminho mais curto $d[u]$ de uma fila de prioridade, adiciona-o ao conjunto de visitados e relaxa todas as arestas que saem de $u$. \citeonline{dasgupta} destacam que a eficiência do Dijkstra depende da estrutura de dados utilizada. Com um Heap Binário, a complexidade é $O((V+E)\log V)$. \citeonline{cormen} apontam que, ao utilizar um Heap de Fibonacci, a complexidade amortizada pode ser reduzida para $O(E+VlogV)$, o que é crucial para grafos densos.
+
+TODO: pseudocódigo
+
+\subsubsection{Algoritmo de Bellman-Ford}
+
+Quando o grafo contém arestas com pesos negativos, o algoritmo de Dijkstra não garante a corretude. Nesses casos, utiliza-se o Algoritmo de Bellman-Ford. Segundo \citeonline{manber}, este algoritmo baseia-se em programação dinâmica, relaxando todas as arestas do grafo $|V|-1$ vezes.
+
+A propriedade fundamental do Bellman-Ford é sua capacidade de detectar ciclos negativos. Se, após $|V|-1$ iterações, ainda for possível relaxar alguma aresta, o grafo contém um ciclo com peso total negativo acessível a partir da fonte, o que implica que $\delta(s,v)=-\infty$ para alguns vértices \cite{kleinberg}. Sua complexidade é $O(VE)$.
+
+TODO: pseudocódigo
+
+\subsubsection{Algoritmo de Floyd-Warshall}
+
+Enquanto Dijkstra e Bellman-Ford resolvem o problema de fonte única (Single-Source), o algoritmo de Floyd-Warshall resolve o problema de caminhos mais curtos entre todos os pares de vértices (All-Pairs).
+
+\citeonline{aho} explicam que o algoritmo utiliza programação dinâmica baseada na numeração dos vértices. Seja $d_{ij}^{(k)}$ o peso do caminho mais curto de $i$ a $j$ utilizando apenas vértices do conjunto ${1,2,\dots,k}$ como intermediários. A recorrência é dada por:
+
+\begin{equation}
+    d_{ij}^{(k)} = \min(d_{ij}^{(k-1)}, d_{ik}^{(k-1)} + d_{kj}^{(k-1)})
+\end{equation}
+
+A complexidade temporal é $\theta(V^3)$. \citeonline{jungnickel} observa que, para grafos densos, este método é geralmente mais eficiente do que executar o algoritmo de Bellman-Ford a partir de cada vértice.
+
+TODO: pseudocodigo
+
+% 2.7.5. Reponderação e Algoritmo de Johnson
+
+% Uma técnica avançada, relevante para algoritmos de fluxo de custo mínimo, é a reponderação de arestas para eliminar pesos negativos sem alterar os caminhos mais curtos. O Algoritmo de Johnson combina Bellman-Ford e Dijkstra.
+
+% Conforme descrito por Cormen et al. (2009) e Ahuja et al. (1993), utiliza-se uma função de potencial h:V→R tal que o novo peso da aresta seja w^(u,v)=w(u,v)+h(u)−h(v)≥0. Se o grafo não contiver ciclos negativos, é possível calcular tais potenciais (usando Bellman-Ford uma vez) e subsequentemente rodar Dijkstra para cada vértice, obtendo uma complexidade assintótica melhor que Floyd-Warshall para grafos esparsos: O(V2logV+VE).
+
 \subsection{Redes de fluxo em grafos}
 
 A teoria dos fluxos em redes é um ramo fundamental da otimização combinatória que modela problemas de transporte de recursos através de um sistema conectado. Esta seção define os conceitos preliminares e apresenta os teoremas centrais que sustentam os algoritmos utilizados neste trabalho.
@@ -121,6 +220,7 @@ A maioria dos algoritmos de resolução de problemas de fluxo máximo se baseia 
 Quando a aresta $(u,v)$ possui fluxo igual à sua capacidade, $c_f(u,v) = 0$ e a aresta não é incluída no grafo residual $G_f$
 
 \paragraph{Caminhos aumentantes}
+\label{p:ford_fulkerson}
 
 Dado um grafo $G=(V,E)$ e um fluxo $f$, um \textbf{caminho aumentante} é um caminho de $s$ para $t$ na rede residual $G_f$. Por definição, podemos aumentar o fluxo em uma aresta $(u,v)$ de um caminho aumentante em até $c_f(u,v)$ sem violar a capacidade da aresta original em $G$ \cite{cormen}.
 
@@ -151,82 +251,6 @@ O método de Ford-Fulkerson, que é base dos principais algoritmos de resoluçã
     \caption{Ford-Fulkerson Algorithm}
     \label{alg:ford_fulkerson}
 \end{algorithm}
-
-\paragraph{Algoritmo de Edmonds-Karp}
-\label{p:edmonds-karp}
-
-O algoritmo de \textbf{Edmonds-Karp} é uma especialização do método de Ford-Fulkerson que utiliza uma busca em largura (BFS) para encontrar sempre o camino aumentante mais curto em número de arestas. Tem complexidade de tempo $O(VE^2)$:
-
-\begin{algorithm}[H]
-    \DontPrintSemicolon
-    \SetAlgoLined
-
-    % Variáveis globais explicadas no início (opcional, mas ajuda na clareza)
-    \textbf{Global:} $res$ (matriz de capacidade residual), $mf, f, s, t$, $p$ (vetor de pais da BFS)\;
-    \bigskip
-
-    % Procedimento Recursivo AUGMENT
-    \Fn{Augment($v, \text{minEdge}$)}{
-        \eIf{$v = s$}{
-            $f \leftarrow \text{minEdge}$\;
-            \KwRet\;
-        }{
-            \If{$p[v] \neq -1$}{
-                Augment($p[v], \min(\text{minEdge}, res_{p[v], v})$)\;
-                $res_{p[v], v} \leftarrow res_{p[v], v} - f$\;
-                $res_{v, p[v]} \leftarrow res_{v, p[v]} + f$\;
-            }
-        }
-    }
-
-    \bigskip
-
-    % Procedimento Principal (Main)
-    \Fn{EdmondsKarp($s, t$)}{
-        $mf \leftarrow 0$\;
-        
-        \While{\KwTrue}{
-            $f \leftarrow 0$\;
-            
-            % Setup da BFS
-            $dist \leftarrow \infty; \quad dist[s] \leftarrow 0$\;
-            $Q \leftarrow \{s\}; \quad p \leftarrow \text{nil}$ (init vector with -1)\;
-
-            % BFS Loop
-            \While{$Q \neq \emptyset$}{
-                $u \leftarrow Q.\text{front}()$; $Q.\text{pop}()$\;
-                
-                \If{$u = t$}{
-                    \KwBreak (stop BFS)\;
-                }
-
-                \For{each $v \in V$}{
-                    \If{$res_{u, v} > 0$ \KwAnd $dist[v] = \infty$}{
-                        $dist[v] \leftarrow dist[u] + 1$\;
-                        $Q.\text{push}(v)$\;
-                        $p[v] \leftarrow u$\;
-                    }
-                }
-            }
-
-            Augment($t, \infty$); \textbf{[comment: find min edge weight $f$ in path]}\;
-            
-            \If{$f = 0$}{
-                \KwBreak (terminate)\;
-            }
-            $mf \leftarrow mf + f$\;
-        }
-        
-        \KwRet $mf$\;
-    }
-    
-    \caption{Algoritmo de Edmonds-Karp \cite{halim}}
-    \label{alg:edmonds_karp}
-\end{algorithm}
-
-\paragraph{Algoritmo de Dinic}
-
-TODO
 
 \subsubsection{Fluxo de custo mínimo}
 

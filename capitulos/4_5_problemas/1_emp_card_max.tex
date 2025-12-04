@@ -94,7 +94,81 @@ Primeiro, adicionamos um vértice fonte $s$ e um vértice sumidouro $t$ à rede.
 
 Com isso, temos agora um grafo de fluxo onde o objetivo é encontrar o fluxo máximo do vértice fonte $s$ para o vértice sumidouro $t$. O valor do fluxo máximo encontrado nesta rede corresponde ao tamanho do emparelhamento máximo no grafo bipartido original. \cite{lawler}. Para encontrar o fluxo máximo, podemos utilizar algoritmos clássicos como o de Edmonds-Karp.
 
-O algoritmo de Edmonds-Karp, que foi definido na seção \ref{p:edmonds-karp} é o padrão para resolver o problema de fluxo máximo, utilizando buscas em largura (BFS) para encontrar caminhos aumentantes na rede residual.
+\paragraph{Algoritmo de Edmonds-Karp}
+\label{p:edmonds-karp}
+
+O algoritmo de \textbf{Edmonds-Karp} é p principal método para resolver esse tipo de problema. Ele é uma especialização do método de Ford-Fulkerson descrito na seção \ref{p:ford_fulkerson} que utiliza uma busca em largura (BFS) para encontrar sempre o camino aumentante mais curto em número de arestas. Tem complexidade de tempo $O(VE^2)$:
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    % Variáveis globais explicadas no início (opcional, mas ajuda na clareza)
+    \textbf{Global:} $res$ (matriz de capacidade residual), $mf, f, s, t$, $p$ (vetor de pais da BFS)\;
+    \bigskip
+
+    % Procedimento Recursivo AUGMENT
+    \Fn{Augment($v, \text{minEdge}$)}{
+        \eIf{$v = s$}{
+            $f \leftarrow \text{minEdge}$\;
+            \KwRet\;
+        }{
+            \If{$p[v] \neq -1$}{
+                Augment($p[v], \min(\text{minEdge}, res_{p[v], v})$)\;
+                $res_{p[v], v} \leftarrow res_{p[v], v} - f$\;
+                $res_{v, p[v]} \leftarrow res_{v, p[v]} + f$\;
+            }
+        }
+    }
+
+    \bigskip
+
+    % Procedimento Principal (Main)
+    \Fn{EdmondsKarp($s, t$)}{
+        $mf \leftarrow 0$\;
+        
+        \While{\KwTrue}{
+            $f \leftarrow 0$\;
+            
+            % Setup da BFS
+            $dist \leftarrow \infty; \quad dist[s] \leftarrow 0$\;
+            $Q \leftarrow \{s\}; \quad p \leftarrow \text{nil}$ (init vector with -1)\;
+
+            % BFS Loop
+            \While{$Q \neq \emptyset$}{
+                $u \leftarrow Q.\text{front}()$; $Q.\text{pop}()$\;
+                
+                \If{$u = t$}{
+                    \KwBreak (stop BFS)\;
+                }
+
+                \For{each $v \in V$}{
+                    \If{$res_{u, v} > 0$ \KwAnd $dist[v] = \infty$}{
+                        $dist[v] \leftarrow dist[u] + 1$\;
+                        $Q.\text{push}(v)$\;
+                        $p[v] \leftarrow u$\;
+                    }
+                }
+            }
+
+            Augment($t, \infty$); \textbf{[comment: find min edge weight $f$ in path]}\;
+            
+            \If{$f = 0$}{
+                \KwBreak (terminate)\;
+            }
+            $mf \leftarrow mf + f$\;
+        }
+        
+        \KwRet $mf$\;
+    }
+    
+    \caption{Algoritmo de Edmonds-Karp \cite{halim}}
+    \label{alg:edmonds_karp}
+\end{algorithm}
+
+\paragraph{Algoritmo de Dinic}
+
+TODO
 
 Outra opção para resolver o problema de fluxo máximo é o algoritmo de Dinic, que é mais eficiente em muitos casos práticos, especialmente em grafos densos. O algoritmo de Dinic utiliza uma combinação de buscas em largura (BFS) para construir níveis na rede residual e buscas em profundidade (DFS) para encontrar caminhos aumentantes dentro desses níveis. O tempo de execução do algoritmo de Dinic é $O(E \sqrt{V})$ para grafos gerais, tornando-o uma escolha preferida para muitos problemas de fluxo máximo \cite{halim}.
 
