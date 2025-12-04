@@ -116,6 +116,7 @@ A implementação deste algoritmo é bastante complexa, e portanto não será de
 % "A Shortest Augmenting Path Algorithm for Dense and Sparse Linear Assignment Problems"
 
 \paragraph{Redução para problema de fluxo de custo mínimo}
+\label{p:reduction_to_minimal_flow}
 
 Similarmente ao que foi feito para o problema de emparelhamento de cardinalidade máxima, o problema de atribuição pode ser resolvido através de uma redução ao problema de fluxo de custo mínimo. Assim como para o problema anterior, essa redução é feita criando dois novos vértices: um vértice fonte $s$ e um vértice sorvedouro $t$. Em seguida, são adicionadas arestas do vértice fonte $s$ para cada vértice de um dos conjuntos do grafo bipartido, com capacidade 1 e custo 0. Também são adicionadas arestas de cada vértice do outro conjunto para o vértice sorvedouro $t$, também com capacidade 1 e custo 0. Finalmente, As arestas do grafo bipartido original são adicionadas com capacidade 1 e custo igual ao custo de atribuição correspondente.
 
@@ -166,7 +167,7 @@ O primeiro algoritmo, o de caminhos de custo mínimo sucessivos, foi inicialment
 
  \begin{itemize}
     \item \textbf{Utilizar Bellman-Ford:} A solução mais simples e direta é utilizar, ao invés do algoritmo de Dijkstra, o algoritmo de Bellman-Ford para encontrar o caminho de custo mínimo $P$. O Bellman-Ford é mais lento, com uma complexidade de $O(nm)$, mas lida corretamente com arestas de custo negativo.
-    \item \textbf{Utilizar a técnica de Potenciais:} Técnica que permite que utilizemos o algoritmo de Dijkstra mesmo na presença de arestas de custo negativo. A ideia é manter um \textbf{potencial} para cada vértice $v$ do grafo, chamado de $h(v)$, com valor inicial 0. Definimos o \textbf{custo reduzido} de uma aresta $(u,v)$ como $\gamma'(u,v) = \gamma(u,v) + h(u) - h(v)$. Se os potenciais forem escolhidos de forma adequada, todos os custos reduzidos podem ser garantidos como não-negativos, permitindo o uso do algoritmo de Dijkstra. Além disso, é garantido que os caminhos de custo mínimo no grafo original e no grafo com custos reduzidos são os mesmos. \cite{jungnickel}.
+    \item \textbf{Utilizar a técnica de Potenciais:} Permite que utilizemos o algoritmo de Dijkstra mesmo na presença de arestas de custo negativo.
     
     A cada iteração do loop, encontra-se o caminho de custo mínimo $P$ utilizando Dijkstra com os custos reduzidos. Após encontrar o caminho, os potenciais são atualizados para todos os vértices $v$ alcançáveis a partir de $s$ no grafo residual, ajustando-os conforme a distância mínima encontrada pelo Dijkstra, de acordo com a fórmula $h(v) \leftarrow h(v) + d(s,v)$, onde $d(s,v)$ é a distância mínima de $s$ até $v$ no grafo residual com custos reduzidos.
 

@@ -81,6 +81,7 @@ Uma rede de fluxo é definida por um grafo direcionado $G = (V, E)$, onde $V$ é
 \begin{itemize}
     \item \textbf{Restrição de capacidade:} O fluxo em uma aresta não pode exceder a sua capacidade.
     \begin{equation}
+        \label{eq:capacity_restraint}
         0 \leq f(u,v) \leq c(u,v), \qquad \forall(u,v) \in E
     \end{equation}
     \item \textbf{Conservação de fluxo:} para todo vértice $v \in V - \{s,t\}$, a quantidade total de fluxo que entra deve ser igual à que sai
@@ -229,7 +230,44 @@ TODO
 
 \subsubsection{Fluxo de custo mínimo}
 
-Uma outra variação dos problemas em redes de fluxo em grafos é o problema do fluxo de custo mínimo. Essa variação considera, além das capacidades disponíveis, uma dimensão econômica. Seja $G=(V, E)$ uma rede direcionada one cada aresta $(u,v)$ possui uma capacidade $c(u,v)$ e um custo unitário $w(u,v)$. O objetivo é transmitir uma quantidade de fluxo pré-determinada $v$ da fonte $s$ ao sorvedouro $t$ com o menor custo total possível.
+Uma outra variação dos problemas em redes de fluxo em grafos é o problema do fluxo de custo mínimo. Essa variação considera, além das capacidades disponíveis, uma dimensão econômica. Seja $G=(V, E)$ uma rede direcionada one cada aresta $(u,v)$ possui uma capacidade $c(u,v)$ e um custo unitário $w(u,v)$. O objetivo é transmitir uma quantidade de fluxo pré-determinada $F$ da fonte $s$ ao sorvedouro $t$ com o menor custo total possível.
+
+A formulação linear do problema é dada por \cite{ahuja}. O primeiro objetivo é minimizar o custo total do fluxo, que segue a fórmula:
+
+\begin{equation}
+    \text{Minimizar o custo do fluxo:}\quad z(f) = \sum_{(u,v)\in A} w(u,v) \cdot f(u,v)
+\end{equation}
+
+A função a seguir assegura que o nó fonte $s$ gere exatamente a demanda $F$, e que o nó sorvedouro $t$ absorva-a integralmente. 
+
+\begin{equation}
+    \sum_{i,j\in V}f(i,j) - \sum_{k,i\in V}f(k,i) = 
+        \begin{cases}
+            F  & \text{se } i = s \\
+            -F & \text{se } j = t \\
+            0  & \text{caso contrário}
+        \end{cases}
+\end{equation}
+
+Além desta, é importante lembrar da equação \ref{eq:capacity_restraint}, que define que o fluxo em uma aresta não pode exceder a sua capacidade.
+
+\paragraph{Condições de otimalidade e ciclos negativos}
+
+O critério fundamental para verificar se uma solução é ótima é o \textbf{teorema dos ciclos negativos}:
+
+\begin{quotation}
+    Um fluxo $f$ é uma solução viável para o problema do fluxo de custo mínimo se e somente se ele satisfaz a condição de otimalidade de ciclo negativo: a rede resiual $G(f)$ não contém um ciclo e custo negativo \cite{ahuja}
+\end{quotation}
+
+Este teorema é a base dos algoritmos de \textbf{cancelamento de ciclos} (Cycle Canceling), que iterativamente identificam ciclos negativos na rede residual e enviam fluxo através deles para reduzir o custo total da função objetivo até que nenhum ciclo negativo reste.
+
+\paragraph{Potenciais de vértices e custos reduzidos}
+
+Embora o cancelamento de ciclos seja teoricamente sólido, a detecção de ciclos negativos (via Bellman-Ford) pode ser computacionalmente custosa. Para permitir o uso de algoritmos mais eficientes como o de Dijkstra, a literatura introduz o conceito de \textbf{potenciais de vértices}, baseando-se na teoria de dualidade da programação linear.
+
+A ideia é manter um \textbf{potencial} para cada vértice $v$ do grafo, chamado de $h(v)$, com valor inicial 0. Definimos o \textbf{custo reduzido} de uma aresta $(u,v)$ como $\gamma'(u,v) = \gamma(u,v) + h(u) - h(v)$. Se os potenciais forem escolhidos de forma adequada, todos os custos reduzidos podem ser garantidos como não-negativos, permitindo o uso do algoritmo de Dijkstra. Além disso, é garantido que os caminhos de custo mínimo no grafo original e no grafo com custos reduzidos são os mesmos. \cite{jungnickel}.
+
+O conceito de potenciais e de custo reduzido será utilizado em algoritmos como o de caminhos sucessivos para resolução do problema de atribuição na seção \ref{p:reduction_to_minimal_flow}.
 
 % ==================================================================================================================================
 % 2.2. Problema Geral do Emparelhamento
@@ -239,8 +277,7 @@ Uma outra variação dos problemas em redes de fluxo em grafos é o problema do 
 O problema de \textbf{matching} (emparelhamento) em grafos é um problema fundamental na otimização combinatória
 
 Um \textbf{matching} M em um grafo não-direcionado $G=(V,E)$ é um subconjunto de arestas $M \subseteq E$ tal que
-nenhum par de arestas em $M$ compartilha um vértice comum \cite{kleinberg}. Em outras palavras, cada nó aparece em no máximo
-uma aresta de $M$.
+nenhum par de arestas em $M$ compartilha um vértice comum \cite{kleinberg}. Em outras palavras, cada nó aparece em no máximo uma aresta de $M$.
 
 \begin{itemize}
     \item Um vértice é chamado \textbf{coberto} (\textit{matched}) se for incidente a uma aresta em $M$; caso contrário, 
