@@ -17,6 +17,4 @@ Definir proposta (exato/heuristico ou os dois)
 
 seção de comparação (tabela comparando algoritmos e casos de uso pra eles)
 
-escrever seção na fundamentacao sobre caminhos em grafos
-
 colocar \citeonline onde encaixar

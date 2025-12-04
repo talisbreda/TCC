@@ -131,6 +131,18 @@ Para cada vértice $v$, o algoritmo mantém um atributo $d[v]$, que é um limite
     \text{Se } d[v] > d[u] + w(u,v)\text{, então } d[v] \leftarrow d[u] + w(u,v)
 \end{equation}
 
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+        \Fn{Relax($u, v, w$)}{
+        \If{$v.d > u.d + w(u, v)$}{
+            $v.d \leftarrow u.d + w(u, v)$\;
+            $v.\pi \leftarrow u$\;
+        }
+    }
+    \caption{Método de relaxamento \cite{cormen}}
+\end{algorithm}
+
 A diferença entre os algoritmos reside na ordem e na frequência com que as arestas são relaxadas.
 
 \subsubsection{Algoritmo de Dijkstra}
@@ -139,7 +151,24 @@ Para grafos onde os pesos das arestas são não-negativos ($w(u,v)\geq 0$), o Al
 
 O algoritmo seleciona repetidamente o vértice $u$ com a menor estimativa de caminho mais curto $d[u]$ de uma fila de prioridade, adiciona-o ao conjunto de visitados e relaxa todas as arestas que saem de $u$. \citeonline{dasgupta} destacam que a eficiência do Dijkstra depende da estrutura de dados utilizada. Com um Heap Binário, a complexidade é $O((V+E)\log V)$. \citeonline{cormen} apontam que, ao utilizar um Heap de Fibonacci, a complexidade amortizada pode ser reduzida para $O(E+VlogV)$, o que é crucial para grafos densos.
 
-TODO: pseudocódigo
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \Fn{Dijkstra($G, w, s$)}{
+        Initialize-Single-Source($G, s$)\;
+        $S \leftarrow \emptyset$\;
+        $Q \leftarrow G.V$\;
+        \While{$Q \neq \emptyset$}{
+            $u \leftarrow \text{Extract-Min}(Q)$\;
+            $S \leftarrow S \cup \{u\}$\;
+            \ForEach{vertex $v \in G.Adj[u]$}{
+                Relax($u, v, w$)\;
+            }
+        }
+    }
+    \caption{Algoritmo de Dijkstra \cite{cormen}}
+\end{algorithm}
 
 \subsubsection{Algoritmo de Bellman-Ford}
 
@@ -147,7 +176,26 @@ Quando o grafo contém arestas com pesos negativos, o algoritmo de Dijkstra não
 
 A propriedade fundamental do Bellman-Ford é sua capacidade de detectar ciclos negativos. Se, após $|V|-1$ iterações, ainda for possível relaxar alguma aresta, o grafo contém um ciclo com peso total negativo acessível a partir da fonte, o que implica que $\delta(s,v)=-\infty$ para alguns vértices \cite{kleinberg}. Sua complexidade é $O(VE)$.
 
-TODO: pseudocódigo
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \Fn{Bellman-Ford($G, w, s$)}{
+        Initialize-Single-Source($G, s$)\;
+        \For{$i = 1$ \KwTo $|G.V| - 1$}{
+            \ForEach{edge $(u, v) \in G.E$}{
+                Relax($u, v, w$)\;
+            }
+        }
+        \ForEach{edge $(u, v) \in G.E$}{
+            \If{$v.d > u.d + w(u, v)$}{
+                \KwRet \KwFalse\;
+            }
+        }
+        \KwRet \KwTrue\;
+    }
+    \caption{Algoritmo de Bellman-Ford \cite{cormen}}
+\end{algorithm}
 
 \subsubsection{Algoritmo de Floyd-Warshall}
 
@@ -161,7 +209,25 @@ Enquanto Dijkstra e Bellman-Ford resolvem o problema de fonte única (Single-Sou
 
 A complexidade temporal é $\theta(V^3)$. \citeonline{jungnickel} observa que, para grafos densos, este método é geralmente mais eficiente do que executar o algoritmo de Bellman-Ford a partir de cada vértice.
 
-TODO: pseudocodigo
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \Fn{Floyd-Warshall($W$)}{
+        $n \leftarrow W.rows$\;
+        $D^{(0)} \leftarrow W$\;
+        \For{$k = 1$ \KwTo $n$}{
+            \KwLet $D^{(k)} = (d_{ij}^{(k)})$ be a new $n \times n$ matrix\;
+            \For{$i = 1$ \KwTo $n$}{
+                \For{$j = 1$ \KwTo $n$}{
+                    $d_{ij}^{(k)} \leftarrow \min \left( d_{ij}^{(k-1)}, d_{ik}^{(k-1)} + d_{kj}^{(k-1)} \right)$\;
+                }
+            }
+        }
+        \KwRet $D^{(n)}$\;
+    }
+    \caption{Algoritmo de Floyd-Warshall \cite{cormen}}
+\end{algorithm}
 
 % 2.7.5. Reponderação e Algoritmo de Johnson
 
@@ -217,7 +283,7 @@ A maioria dos algoritmos de resolução de problemas de fluxo máximo se baseia 
     c_f(u,v) = c(u,v) - f(u,v)
 \end{equation}
 
-Quando a aresta $(u,v)$ possui fluxo igual à sua capacidade, $c_f(u,v) = 0$ e a aresta não é incluída no grafo residual $G_f$
+Quando a aresta $(u,v)$ possui fluxo igual à sua capacidade, então $c_f(u,v) = 0$ e a aresta não é incluída no grafo residual $G_f$
 
 \paragraph{Caminhos aumentantes}
 \label{p:ford_fulkerson}
