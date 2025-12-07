@@ -1,0 +1,44 @@
+\section{Problemas de emparelhamento em grafos gerais}
+
+Ao contrário dos problemas em grafos bipartidos, problemas de emparelhamento em grafos gerais podem ser consideravelmente mais complexos. Alguns dos exemplos apresentados nesta seção são resolvíveis por algoritmo exatos em tempo polinomial, apesar de apresentarem uma complexidade de tempo considerada alta ($O(N^3)$). Outros problemas pertencem à classe NP, o que significa que não foi proposto um algoritmo que pudesse resolver esses problemas em tempo poliomial.
+
+\subsection{Emparelhamento de cardinalidade máxima}
+
+\subsubsection{Descrição}
+
+A definição do problema de emparelhamento de cardinalidade máxima é, fundamentalmente, a mesma da sua contraparte bipartida, descrita na seção \ref{sec:emp_card_max_bip}. No entanto, a solução deste problema é significativamente mais complexa que a versão bipartida, mesmo ainda sendo em tempo polinomial.
+
+\subsubsection{Propriedades}
+
+\paragraph{Ciclos ímpares}
+
+Previamente, na seção \ref{p:caminhos_aumentantes}, vimos a definição de caminhos aumentantes, que vieram a ser fundamentais para a solução de grande parte dos problemas de emparelhamento em grafos bipartidos. Em grafos gerais, a base da solução ainda é a mesma, se baseando no lema de Berge, descrito por \citeonline{jungnickel} como:
+
+\begin{quotation}
+    Um emparelhamento $M$ em um grafo $G$ é máximo se, e somente se, não existe nenhum caminho aumentante em $G$ relativo a $M$.
+\end{quotation}
+
+Em grafos bipartidos, ciclos sempre têm tamanho par. Isso garante que, ao realizar uma busca (BFS ou DFS) a partir de um vértice livre, nunca encontraremos uma aresta que conecte dois vértices que estejam à mesma distância ("paridade") da raiz na árvore de busca alternante \cite{ahuja}.
+
+No entanto, em grafos gerais, a presença de ciclos de comprimento ímpar quebra essa lógica. \citeonline{schrijver} explica que, ao explorar o grafo, o algoritmo pode encontrar uma aresta conectando dois vértices que possuem paridade "par" em relação à raiz da busca. Essa estrutura forma um \textbf{ciclo ímpar} que "confunde" a identificação de um caminho aumentante simples, pois um vértice poderia ser alcançado por dois caminhos alternantes de paridades diferentes.
+
+\paragraph{Flor (Blossom)}
+
+edmonds
+
+
+\subsection{Emparelhamento ponderado máximo}
+
+\subsection{b-emparelhamento}
+
+\subsection{Emparelhamento localmente dominante}
+
+\subsection{Emparelhamento tridimensional}
+
+\subsection{Emparelhamento induzido máximo}
+
+\subsection{Emparelhamento desconectante}
+
+\subsection{Emparelhamento em matroid (lawler)}
+
+\subsection{Stable roommates problem}
