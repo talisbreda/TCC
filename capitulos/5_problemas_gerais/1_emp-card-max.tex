@@ -1,0 +1,195 @@
+\subsection{Emparelhamento de cardinalidade máxima}
+\label{sec:emp_card_max_geral}
+
+\subsubsection{Descrição}
+
+A definição do problema de emparelhamento de cardinalidade máxima é, fundamentalmente, a mesma da sua contraparte bipartida, descrita na seção \ref{sec:emp_card_max_bip}. No entanto, a solução deste problema é significativamente mais complexa que a versão bipartida, mesmo ainda sendo em tempo polinomial.
+
+\subsubsection{Propriedades}
+
+\paragraph{Ciclos ímpares}
+
+Previamente, na seção \ref{p:caminhos_aumentantes}, vimos a definição de caminhos aumentantes, que vieram a ser fundamentais para a solução de grande parte dos problemas de emparelhamento em grafos bipartidos. Em grafos gerais, a base da solução ainda é a mesma, se baseando no lema de Berge, descrito por \citeonline{jungnickel} como:
+
+\begin{quotation}
+    Um emparelhamento $M$ em um grafo $G$ é máximo se, e somente se, não existe nenhum caminho aumentante em $G$ relativo a $M$.
+\end{quotation}
+
+Em grafos bipartidos, ciclos sempre têm tamanho par. Isso garante que, ao realizar uma busca (BFS ou DFS) a partir de um vértice livre, nunca encontraremos uma aresta que conecte dois vértices que estejam à mesma distância ("paridade") da raiz na árvore de busca alternante \cite{ahuja}.
+
+No entanto, em grafos gerais, a presença de ciclos de comprimento ímpar quebra essa lógica. \citeonline{schrijver} explica que, ao explorar o grafo, o algoritmo pode encontrar uma aresta conectando dois vértices que possuem paridade "par" em relação à raiz da busca. Essa estrutura forma um \textbf{ciclo ímpar} que "confunde" a identificação de um caminho aumentante simples, pois um vértice poderia ser alcançado por dois caminhos alternantes de paridades diferentes.
+
+\paragraph{Flor (Blossom)}
+
+A solução para lidar com cíclos ímpares foi proposta por \citeonline{edmonds}, e consiste em uma estrutura denominada \textbf{Blossom}.
+
+Uma Blossom $B$ é definida como um ciclo de comprimento ímpar $2k+1$, onde $k$ arestas pertencem ao emparelhamento $M$, de tal forma que existe apenas um vértice $v_B$ no ciclo (a base da flor) que não é coberto por uma aresta de $M$ dentro do próprio ciclo. A base $v_B$ é conectada ao resto do grafo por um caminho alternante de comprimento par (o \textbf{caule} ou \textit{stem}).
+
+Edmonds provou que uma \textit{blossom} pode ser contraída em um único vértice, com base no seguinte teorema:
+
+\begin{quotation}
+    \label{t:contraction}
+    Existe um caminho aumentante no grafo original $G$ se, e somente se, existe um caminho aumentante no grafo contraído $G' = G / B$, onde a flor $B$ foi reduzida a um único vértice. \cite{schrijver}
+\end{quotation}
+
+\subsubsection{O algoritmo de Edmonds}
+
+Baseando-se na propriedade de Blossom e no teorema da contração, \citeonline{lawler} descreve o algoritmo para encontrar o 
+emparelhamento máximo em grafos gerais da seguinte forma:
+
+\begin{enumerate}
+    \item \textbf{Busca:} Inicie uma busca (geralmente BFS) a partir dos vértices livres para encontrar um caminho aumentante, construindo uma Floresta de Árvores Alternantes.
+    \item \textbf{Detecção:} Se a busca encontrar uma aresta que fecha um ciclo ímpar, uma \textbf{blossom} foi identificada.
+    \item \textbf{Contração:} Contraia todos os vértices da \textbf{blossom} em um único super-vértice e modifique o grafo temporariamente.
+    \item \textbf{Recursão:} Continue a busca no grafo contraído.
+    \item \textbf{Expansão:} Se um caminho aumentante for encontrado no grafo contraído passando pelo super-vértice, "abra" (expanda) a flor novamente para traduzir esse caminho para o grafo original. O caminho dentro da flor será roteado de forma a manter a alternância correta.
+    \item \textbf{Aumento:} Use o caminho encontrado para aumentar o emparelhamento através da diferença simétrica (inversão das arestas).
+\end{enumerate}
+
+\citeonline{schrijver} detalha que, a depender da forma como o algoritmo é implementado, principalmente no que trata da contração, a complexidade do algoritmo ingênuo pode chegar a $O(V^3)$. No entanto, melhorias subsequentes nesse algoritmo culminaram em uma implementação em $O(E\sqrt{V})$, descrita por \citeonline{vazirani}. No entanto, por conta da complexidade de implementação da solução mais rápida, a maioria das implementações práticas do algoritmo utilizam variantes com complexidade próxima a $O(V^3)$.
+
+% ---------------------------------------------------------
+% 1. MAXMATCH (Main Procedure)
+% ---------------------------------------------------------
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \Fn{MAXMATCH($G; mate, nrex$)}{
+        INMATCH($G; mate, nrex$)\;
+        $r \leftarrow 0$\;
+        \While{$nrex \ge 2$ \KwAnd $r < n$}{
+            $r \leftarrow r + 1$\;
+            \If{$mate(r) = 0$}{
+                $Q \leftarrow \emptyset, aug \leftarrow \KwFalse, m \leftarrow 0$\;
+                \For{$v \in V$}{
+                    $p(v) \leftarrow 0, d(v) \leftarrow -1, a(v) \leftarrow \KwTrue$\;
+                    $CA(v) \leftarrow A_v$\;
+                }
+                $d(r) \leftarrow 0$; append $r$ to $Q$\;
+                
+                \While{$aug = \KwFalse$ \KwAnd $Q \neq \emptyset$}{
+                    remove the first vertex $x$ of $Q$\;
+                    \If{$a(x) = \KwTrue$}{
+                        $cont \leftarrow \KwFalse$\;
+                        \For{$y \in CA(x)$}{ $u(y) \leftarrow \KwFalse$ }
+                        
+                        \Repeat{$u(y) = \KwTrue$ for all $y \in CA(v)$ \KwOr $aug = \KwTrue$ \KwOr $cont = \KwTrue$}{
+                            choose $y \in CA(x)$ with $u(y) = \KwFalse; u(y) \leftarrow \KwTrue$\;
+                            \If{$a(y) = \KwTrue$}{
+                                \If{$d(y) \equiv 0 \pmod 2$}{
+                                    $m \leftarrow m + 1$\;
+                                    BLOSSOM($x, y; B(m), w(m)$)\;
+                                    CONTRACT($B(m), m, w$)\;
+                                }
+                                \ElseIf{$d(y) = -1$}{
+                                    \eIf{$mate(y) = 0$}{
+                                        AUGMENT($x, y$)\;
+                                    }{
+                                        $z \leftarrow mate(y)$\;
+                                        $p(y) \leftarrow x; d(y) \leftarrow d(x) + 1$\;
+                                        $p(z) \leftarrow y; d(z) \leftarrow d(y) + 1$\;
+                                        insert $z$ with priority $d(z)$ into $Q$\;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    \caption{Procedimento MAXMATCH \cite{jungnickel}}
+\end{algorithm}
+
+
+% ---------------------------------------------------------
+% 2. BLOSSOM
+% ---------------------------------------------------------
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \Fn{BLOSSOM($x, y; B, w$)}{
+        $P \leftarrow \{x\}; P' \leftarrow \{y\}; u \leftarrow x; v \leftarrow y$\;
+        \Repeat{$p(u) = r$}{
+            $P \leftarrow P \cup \{p(u)\}; u \leftarrow p(u)$\;
+        }
+        \Repeat{$v = r$}{
+            $P' \leftarrow P' \cup \{p(v)\}; v \leftarrow p(v)$\;
+        }
+        $S \leftarrow P \cap P'$\;
+        let $w$ be the element of $S$ for which $d(w) \ge d(z)$ for all $z \in S$\;
+        $B \leftarrow ((P \cup P') \setminus S) \cup \{w\}$\;
+    }
+    \caption{Algoritmo de BLOSSOM \cite{jungnickel}}
+\end{algorithm}
+
+
+% ---------------------------------------------------------
+% 3. CONTRACT
+% ---------------------------------------------------------
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \Fn{CONTRACT($B, m, w$)}{
+        $b \leftarrow n + m; a(b) \leftarrow \KwTrue$\;
+        $p(b) \leftarrow p(w); d(b) \leftarrow d(w); mate(b) \leftarrow mate(w)$\;
+        insert $b$ into $Q$ with priority $d(b)$\;
+        $CA(b) \leftarrow \bigcup_{z \in B} CA(z)$\;
+        \For{$z \in CA(b)$}{ $CA(z) \leftarrow CA(z) \cup \{b\}$ }
+        \For{$z \in B$}{ $a(z) \leftarrow \KwFalse$ }
+        \For{$z \in CA(b)$}{
+            \If{$a(z) = \KwTrue$ \KwAnd $p(z) \in B$}{
+                $d(z) \leftarrow d(b) + 1; p(z) \leftarrow b$\;
+                $d(mate(z)) \leftarrow d(z) + 1$\;
+            }
+        }
+        $cont \leftarrow \KwTrue$\;
+    }
+    \caption{Procedimento CONTRACT \cite{jungnickel}}
+\end{algorithm}
+
+
+% ---------------------------------------------------------
+% 4. AUGMENT
+% ---------------------------------------------------------
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \Fn{AUGMENT($x, y$)}{
+        $P \leftarrow \{y, x\}; v \leftarrow x$\;
+        \While{$p(v) \neq 0$}{
+            $P \leftarrow P \cup \{p(v)\}; v \leftarrow p(v)$\;
+        }
+        \While{there exists $b \in P$ with $b > n$}{
+            choose the largest $b \in P$ with $b > n$\;
+            $B \leftarrow B(b - n); w \leftarrow w(b - n); z \leftarrow mate(w)$\;
+            let $q$ be the neighbor of $b$ on $P$ which is different from $z$\;
+            choose some $q' \in B \cap CA(q)$\;
+            determine the alternating path $B'$ of even length in $B$ from $w$ to $q'$\;
+            replace $b$ by $w$ in $P$\;
+            insert $B'$ into $P$ between $w$ and $q$\;
+        }
+        $u \leftarrow y; v \leftarrow x$\;
+        \While{$v \neq r$}{
+            $z \leftarrow mate(v); mate(v) \leftarrow u; mate(u) \leftarrow v$\;
+            $u \leftarrow z$; let $v$ be the successor of $z$ on $P$\;
+        }
+        $mate(v) \leftarrow u; mate(u) \leftarrow v$\;
+        $nrex \leftarrow nrex - 2; aug \leftarrow \KwTrue$\;
+    }
+    \caption{Procedimento AUGMENT \cite{jungnickel}}
+\end{algorithm}
+
+\paragraph{Teorema de Tutte-Berge}
+
+O teorema de Tutte-Berge, apesar de não aparecer explicitamente na descrição do algoritmo, é fundamental para sua corretude, pois ele fornece um certificado de otimalidade. Por exemplo, digamos que a etapa de busca do algoritmo de Blossom não encontrou nenhum caminho aumentante. Como sabemos que o emparelhamento atual é máximo? Para descobrir isso, utilizamos a fórmula de Tutte-Berge, descrita por \citeonline{jungnickel} da seguinte forma:
+
+\begin{equation}
+    v(G) = \frac{1}{2} \min_{U \subseteq V} (|V| + |U| - \mathrm{odd}(G - U))
+\end{equation}
+
+Onde $v(G)$ é o tamanho do emparelhamento máximo, e $\mathrm{odd}(G - U)$ é o número de componentes conexos com número ímpar de vértices no grafo resultante após a remoção de $U$. Se o grafo possui um emparelhamento perfeito, o mínimo desta equação é $|V|/2$, o que ocorre se e somente se $odd(G-U) \le |U|$ para todo $U$.

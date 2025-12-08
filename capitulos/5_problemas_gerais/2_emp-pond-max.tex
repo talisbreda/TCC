@@ -1,0 +1,53 @@
+\subsection{Emparelhamento ponderado máximo}
+
+Enquanto o problema de cardinalidade máxima busca o maior número de arestas, o problema do \textbf{Emparelhamento de Peso Máximo} (Maximum Weight Matching) introduz uma função de peso $w: E \to \mathbb{R}$ nas arestas, e o objetivo torna-se encontrar um emparelhamento $M$ que maximize $\sum_{e \in M} w(e)$. Este problema é a generalização natural do Problema da Atribuição para grafos não-bipartidos, descrito em \ref{sec:assignment_problem}.
+
+A complexidade deste problema em grafos gerais decorre, assim como no problema de emparelhamento de cardinalidade máxima descrito em \ref{sec:emp_card_max_geral}, da presença de ciclos ímpares. Se tentarmos modelar o problema usando Programação Linear (PL) apenas com restrições de grau ($\sum x_e \le 1$), a solução ótima do sistema relaxado pode ser fracionária (ex: $x_e = 0.5$ para as três arestas de um triângulo), o que não corresponde a um emparelhamento válido.
+
+\subsubsection{Formulação poliédrica e Restrições de Blossom}
+
+Conforme detalhado por \citeonline{schrijver}, para descrever o \textbf{Poliedro do Emparelhamento} (Matching Polytope) em grafos gerais, Edmonds (1965) provou que é necessário adicionar uma família exponencial de restrições conhecidas como \textbf{Desigualdades de Blossom} (ou restrições de subconjuntos ímpares):
+
+\begin{equation}
+    \sum_{e \in E(U)} x_e \le \frac{|U| - 1}{2}, \quad \forall U \subseteq V, |U| \text{ ímpar}, |U| \ge 3
+\end{equation}
+
+Onde $E(U)$ é o conjunto de arestas com ambas as extremidades em $U$. Essas inequações garantem que, em qualquer subconjunto ímpar de vértices, o número de arestas selecionadas não exceda a capacidade máxima inteira possível.
+
+\subsubsection{A abordagem Primal-Dual}
+
+Diferente do caso de cardinalidade, onde buscamos apenas caminhos aumentantes, o algoritmo para o caso ponderado é um método \textbf{Primal-Dual}. Ele é uma generalização do Método Húngaro, mas adaptado para lidar com as blossoms.
+
+Segundo \citeonline{lawler}, o algoritmo mantém variáveis duais não apenas para os vértices ($y_v$), mas também para cada subconjunto ímpar de vértices ($z_B$) que forma uma blossom contraída. A condição de otimalidade baseia-se na folga complementar. Uma aresta $(u, v)$ é considerada "admissível" ou "justa" (\textit{tight}) se a soma dos duais correspondentes iguala o peso da aresta. Simplificadamente:
+
+\begin{equation}
+    y_u + y_v + \sum_{B : (u,v) \in B} z_B = w_{uv}
+\end{equation}
+
+O algoritmo opera iterativamente em dois estágios, descritos por \citeonline{jungnickel} e \citeonline{schrijver}:
+
+\begin{enumerate}
+    \item \textbf{Estágio Primal (Busca):} Restringindo-se apenas às arestas admissíveis (onde a equação acima é satisfeita), o algoritmo busca um caminho aumentante usando a técnica de contração de blossoms de Edmonds. Se encontrado, o emparelhamento é aumentado.
+    \item \textbf{Estágio Dual (Ajuste de Preços):} Se a busca falha em encontrar um caminho aumentante no grafo de arestas admissíveis, o algoritmo não termina (ao contrário do caso de cardinalidade). Em vez disso, ele realiza uma atualização das variáveis duais $y$ e $z$.
+    \begin{itemize}
+        \item O algoritmo calcula um valor $\delta$ (delta), que é a menor "folga" entre as arestas que conectam a árvore de busca atual a vértices externos.
+        \item Os duais dos vértices na árvore são ajustados por $\pm \delta$ e os duais das blossoms ($z_B$) também são ajustados.
+        \item Esse ajuste tem o efeito de "destravar" novas arestas (tornando-as admissíveis) ou permitir a expansão/contração de blossoms, possibilitando que a busca prossiga.
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{O algoritmo de Edmonds Ponderado}
+
+O procedimento resultante é frequentemente chamado de \textbf{Algoritmo de Blossom Ponderado} ou simplesmente Algoritmo de Edmonds para Emparelhamento Ponderado.
+
+A implementação original de Edmonds era polinomial, $O(V^4)$. \citeonline{lawler} apresentou uma implementação $O(V^3)$, que por muito tempo foi o padrão em livros didáticos.
+
+A variante $O(V^3)$ descrita por Lawler (1976) para o emparelhamento ponderado utiliza uma abordagem primal-dual rigorosa. O algoritmo mantém um conjunto de arestas admissíveis (custo reduzido nulo) baseadas em variáveis duais de vértices ($y_i$) e de subconjuntos ímpares ($z_B$). A cada iteração onde a busca por caminhos aumentantes falha, o algoritmo calcula um escalar crítico $\delta$ baseado nas folgas das arestas incidentes à árvore alternante atual (conjunto $S$). A atualização dual subsequente ($y_i \leftarrow y_i \pm \delta$, $z_B \leftarrow z_B \pm 2\delta$) garante o surgimento de novas arestas admissíveis ou a expansão de *blossoms* com dual nulo, mantendo a complexidade cúbica através do gerenciamento eficiente dos valores de folga mínima (*slack*) para vértices fora da árvore.
+
+Lawler também destaca que a manipulação das variáveis duais das blossoms ($z_B$) é o que permite ao algoritmo "pagar" o custo de usar arestas dentro de estruturas cíclicas ímpares. Quando uma blossom é formada durante a busca, ela recebe um valor dual $z_B > 0$; quando ela precisa ser desfeita (expandida) para encontrar um caminho, seu valor dual retorna a zero.
+
+\subsubsection{Otimizações}
+
+Desenvolvimentos posteriores por \citeonline{galil_micali_gabow} e \citeonline{gabow1990} melhoraram a estrutura de dados para gerenciar a prioridade das atualizações duais e a contração de blossoms, atingindo complexidades próximas a $O(E V \log V)$ ou $O(E \sqrt{V \alpha(E, V)})$ em implementações de escalonamento \cite{schrijver}.
+
+Apesar de ser polinomial (classe P), a implementação de emparelhamento ponderado em grafos gerais é considerada uma das rotinas mais complexas da otimização combinatória clássica, sendo significativamente mais difícil de implementar corretamente do que algoritmos para grafos bipartidos ou fluxo máximo.

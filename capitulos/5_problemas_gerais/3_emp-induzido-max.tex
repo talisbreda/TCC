@@ -1,0 +1,59 @@
+\subsection{Emparelhamento induzido máximo}
+
+Diferentemente dos problemas de emparelhamento em grafos gerais vistos até o momento, que pertencem à classe de complexiade P, o problema do Emparelhamento Induzido Máximo (MIM - \textit{Maximum Induced Matching}), frequentemente referido na literatura como \textbf{Emparelhamento Forte} (\textit{Strong Matching}), pertence à classe os problemas NP-difíceis. Apesar de ter uma variação estruturalmente simples quando comparado aos problemas clássicos, esse problema impõe uma restrição topológica severa sobre quais arestas podem coexistir na solução.
+
+\subsubsection{Propriedades}
+
+Seja $G = (V, E)$ um grafo geral. Um subconjunto de arestas $M \subseteq E$ é um \textbf{emparelhamento induzido} se satisfaz duas condições:
+
+\begin{enumerate}
+    \item \textbf{Condição de Emparelhamento:} Nenhuma aresta em $M$ compartilha um vértice (são disjuntas par a par).
+    \item \textbf{Condição Induzida:} O subgrafo induzido pelos vértices saturados por $M$, denotado por $G[V(M)]$, contém \textbf{apenas} as arestas de $M$.
+\end{enumerate}
+
+Em termos mais simples, se tomarmos duas arestas quaisquer $(u, v)$ e $(x, y)$ pertencentes ao emparelhamento induzido, não pode existir no grafo original nenhuma aresta conectando um vértice do par $\{u, v\}$ a um vértice do par $\{x, y\}$. Isso implica que as arestas do emparelhamento devem estar "topologicamente isoladas" umas das outras.
+
+\citeonline{cameron} oferece uma caracterização alternativa baseada em distância: um emparelhamento induzido é um conjunto de arestas onde a distância entre quaisquer duas arestas distintas é de pelo menos 2 (ou seja, não há aresta de ligação entre elas).
+
+\subsubsection{Complexidade computacional}
+
+Diferentemente do emparelhamento clássico (cardinalidade ou ponderado), que possui algoritmos polinomiais eficientes, o problema de encontrar o emparelhamento induzido de cardinalidade máxima é \textbf{NP-Difícil}.
+
+Este resultado foi estabelecido no trabalho fundamental de \citeonline{stockmeyer}. Eles demonstraram que o problema permanece NP-Difícil mesmo quando restrito a grafos bipartidos com grau máximo 3. Isso é um fato surpreendente e crucial: a propriedade de ser bipartido, que geralmente torna problemas de emparelhamento fáceis (como visto no Teorema de König), \textbf{não} ajuda no caso do emparelhamento induzido.
+
+% TODO: INCLUIR FUNDAMENTACAO SOBRE PROBLEMA DO CONJUNTO INDEPENDENTE
+\subsubsection{Redução ao Problema do Conjunto Independente}
+
+A intratabilidade do MIM pode ser explicada através de uma transformação de grafos. O problema de encontrar um emparelhamento induzido em $G$ é equivalente a encontrar um \textbf{Conjunto Independente Máximo} (Maximum Independent Set - MIS) em um grafo transformado.
+
+A transformação ocorre em dois passos:
+\begin{enumerate}
+    \item Construímos o \textbf{Grafo de Linha} $L(G)$, onde cada vértice representa uma aresta de $G$ e dois vértices são adjacentes se as arestas correspondentes em $G$ compartilham uma ponta. (Emparelhamento clássico em $G$ $\equiv$ Conjunto Independente em $L(G)$).
+    \item Construímos o \textbf{Quadrado do Grafo de Linha} $L(G)^2$. Neste grafo, conectamos dois vértices se a distância entre eles em $L(G)$ for 1 ou 2.
+\end{enumerate}
+
+Encontrar um emparelhamento induzido máximo em $G$ equivale exatamente a encontrar um Conjunto Independente Máximo em $L(G)^2$ \cite{cameron}. Como o problema do Conjunto Independente é NP-Difícil para grafos gerais \cite{garey-jhonson}, essa relação estrutural justifica a dificuldade do MIM.
+
+\subsubsection{Abordagens de solução e heurísticas}
+
+Dada a natureza NP-Difícil do problema e a ineficácia de métodos exatos para grafos densos ou de grande escala, a literatura concentra-se majoritariamente em algoritmos construtivos gulosos e metaheurísticas.
+
+\paragraph{Heurísticas gulosas}
+
+Dada a equivalência entre o problema do Emparelhamento Induzido Máximo em $G$ e o Conjunto Independente Máximo no grafo transformado $L(G)^2$, as heurísticas gulosas clássicas da literatura de conjuntos independentes são naturalmente adaptadas para este contexto.
+
+O procedimento geral consiste em selecionar iterativamente uma aresta $e \in E$, adicioná-la à solução e remover sua vizinhança induzida do grafo. As variantes diferem no critério de seleção da aresta:
+
+\begin{itemize}
+    \item \textbf{Guloso Aleatório (Random Greedy):} Seleciona a próxima aresta uniformemente ao acaso dentre as disponíveis. \citeonline{duckworth} analisaram o comportamento assintótico desta abordagem em grafos cúbicos aleatórios, demonstrando que, apesar de sua simplicidade, ela fornece uma linha de base (\textit{baseline}) essencial para a avaliação de métodos mais sofisticados.
+    \item \textbf{Guloso de Grau Mínimo (Min-Degree Greedy):} A heurística prioriza a seleção da aresta que possui o \textbf{menor grau induzido} (ou seja, a aresta cuja remoção implica a eliminação do menor número de outras arestas candidatas). Esta abordagem é uma adaptação direta da heurística \textit{Min-Degree} (ou \textit{Greedy}) para o problema do Conjunto Independente Máximo.
+    \citeonline{halldorsson} estabeleceram os fundamentos teóricos para essa estratégia, demonstrando que priorizar vértices de baixo grau fornece garantias de aproximação superiores em grafos esparsos e de grau limitado. No contexto do MIM, essa lógica traduz-se em escolher a aresta $e=(u,v)$ que minimiza a soma dos graus de seus extremos ou o tamanho de sua vizinhança em $L(G)^2$.
+\end{itemize}
+
+\paragraph{Metaheurísticas}
+
+Para superar os ótimos locais frequentemente encontrados pelos métodos gulosos, abordagens iterativas de busca local têm sido aplicadas.
+
+\citeonline{furst} investigaram formalmente o poder da busca local para o Emparelhamento Induzido Máximo. A estratégia analisada consiste em iniciar com um emparelhamento induzido qualquer (ou vazio) e tentar aumentá-lo iterativamente através de melhorias locais simples.
+Eles focaram na análise de grafos $k$-regulares e demonstraram que, embora a busca local possa ficar presa em ótimos locais longe da solução global em grafos gerais, ela oferece garantias de desempenho interessantes para classes específicas (como grafos livres de garras ou $C_4$-free). O algoritmo de busca local proposto tenta adicionar arestas que não violem a restrição induzida e, se necessário, remover um número pequeno de arestas existentes para acomodar a nova inclusão, um processo análogo às trocas (*k-swaps*) em outros problemas combinatórios.
+
