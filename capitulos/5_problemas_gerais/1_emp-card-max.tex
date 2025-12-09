@@ -224,3 +224,34 @@ Uma variação inteligente do método guloso, descrita por \citeonline{drake}, q
 \end{enumerate}
 
 Ao contrário do guloso simples (que escolhe arestas desconexas), o Path Growing tende a cobrir cadeias longas de vértices, o que é estruturalmente vantajoso.
+
+\begin{table}[ht]
+    \centering
+    \caption{Algoritmos para problema de emparelhamento de cardinalidade máxima em grafos gerais}
+    \label{tab:emp_card_max_geral_algos}
+    \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
+    
+    % Structure: l = left align, c = center, X = auto-wrap paragraph
+    \begin{tabularx}{\textwidth}{@{} l l l X @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Complexidade de tempo} & \textbf{Tipo} & \textbf{Descrição} \\
+        \midrule
+        
+        Edmonds & $O(V^3)$ & Exato & 
+        Algoritmo exato (Blossom) que contrai ciclos ímpares temporariamente em super-vértices para identificar caminhos aumentantes. \\
+        \addlinespace 
+
+        Gulosa simples & $O(E)$ & Heurística & 
+        Itera sobre arestas arbitrariamente, selecionando aquelas que conectam dois vértices livres. \\
+        \addlinespace
+
+        Karp-Sipser & $O(E)$ & Heurística & 
+        Prioriza remoção de vértices de grau 1; usa escolha aleatória quando não há folhas. \\
+        \addlinespace
+        
+        Crescimento de caminho & $O(E)$ & Heurística & 
+        Heurística linear que constrói caminhos simples via DFS e seleciona arestas alternadas para garantir um emparelhamento maximal. \\
+        
+        \bottomrule
+    \end{tabularx}
+\end{table}

@@ -1,6 +1,7 @@
 % ----------------------------------------------------------------------------------------------
 % 3.2.1. Problema de atribuição (Assignment Problem)
 % ----------------------------------------------------------------------------------------------
+\newpage
 \subsection{Problema de atribuição (Assignment Problem)}
 \label{sec:assignment_problem}
 
@@ -164,10 +165,10 @@ O primeiro algoritmo, o de caminhos de custo mínimo sucessivos, foi inicialment
     \label{alg:optflow}
 \end{algorithm}
 
- A complexidade do algoritmo é dependente do método utilizado para encontrar o caminho $P$. A implementação padrão utilizaria o algoritmo de Dijkstra, que tem uma complexidade de $O(m + n \log n)$ em uma implementação com filas de prioridade, onde $n$ é o número de vértices e $m$ o número de arestas. Porém, como o grafo residual pode conter arestas com custos negativos, essa implementação não funcionaria corretamente. Para contornar esse problema, temos duas opções principais:
+ A complexidade do algoritmo é dependente do método utilizado para encontrar o caminho $P$. A implementação padrão utilizaria o algoritmo de Dijkstra, que tem uma complexidade de $O(E + V \log V)$ em uma implementação com filas de prioridade, onde $V$ é o número de vértices e $E$ o número de arestas. Porém, como o grafo residual pode conter arestas com custos negativos, essa implementação não funcionaria corretamente. Para contornar esse problema, temos duas opções principais:
 
  \begin{itemize}
-    \item \textbf{Utilizar Bellman-Ford:} A solução mais simples e direta é utilizar, ao invés do algoritmo de Dijkstra, o algoritmo de Bellman-Ford para encontrar o caminho de custo mínimo $P$. O Bellman-Ford é mais lento, com uma complexidade de $O(nm)$, mas lida corretamente com arestas de custo negativo.
+    \item \textbf{Utilizar Bellman-Ford:} A solução mais simples e direta é utilizar, ao invés do algoritmo de Dijkstra, o algoritmo de Bellman-Ford para encontrar o caminho de custo mínimo $P$. O Bellman-Ford é mais lento, com uma complexidade de $O(VE)$, mas lida corretamente com arestas de custo negativo.
     \item \textbf{Utilizar a técnica de Potenciais:} Permite que utilizemos o algoritmo de Dijkstra mesmo na presença de arestas de custo negativo.
     
     A cada iteração do loop, encontra-se o caminho de custo mínimo $P$ utilizando Dijkstra com os custos reduzidos. Após encontrar o caminho, os potenciais são atualizados para todos os vértices $v$ alcançáveis a partir de $s$ no grafo residual, ajustando-os conforme a distância mínima encontrada pelo Dijkstra, de acordo com a fórmula $h(v) \leftarrow h(v) + d(s,v)$, onde $d(s,v)$ é a distância mínima de $s$ até $v$ no grafo residual com custos reduzidos.
@@ -218,7 +219,7 @@ O primeiro algoritmo, o de caminhos de custo mínimo sucessivos, foi inicialment
     \label{alg:optflow_dijkstra}
 \end{algorithm}
 
-A complexidade do algoritmo utilizando Dijkstra com a técnica de potenciais é $O(n (m + n \log n))$, onde $n$ é o número de vértices e $m$ o número de arestas do grafo. Isso ocorre porque, em cada iteração do loop principal, executamos o algoritmo de Dijkstra, que tem complexidade $O(m + n \log n)$, e o número máximo de iterações é limitado por $n$, o número de vértices no grafo bipartido.
+A complexidade do algoritmo utilizando Dijkstra com a técnica de potenciais é $O(V (E + V \log V))$, onde $V$ é o número de vértices e $E$ o número de arestas do grafo. Isso ocorre porque, em cada iteração do loop principal, executamos o algoritmo de Dijkstra, que tem complexidade $O(E + V \log V)$, e o número máximo de iterações é limitado por $V$, o número de vértices no grafo bipartido.
 
 \end{itemize}
 
@@ -231,59 +232,60 @@ Assim como no problema de emparelhamento de cardinalidade máxima, as soluções
 
 Similar à heurística gulosa simples descrita na seção \ref{p:h_gulosa_simples}, com a diferença de que a ordem das arestas não é mais arbitrária, e sim decrescente por peso. Tem a mesma garantia de metade do peso ótimo, mas tem complexidade $O(E \log E)$ por conta da ordenação.
 
-\paragraph{Algoritmo de leilão com $\epsilon$-scaling}
+% É EXATO
+% \paragraph{Algoritmo de leilão com $\epsilon$-scaling}
 
-O Algoritmo de Leilão (\textbf{Auction Algorithm}), descrito em \citeonline{berstekas} e \citeonline{berstekas1988}, resolve o problema da atribuição maximizando o benefício total através de um processo iterativo de lances e aumentos de preços, análogo a um leilão do mundo real.
+% O Algoritmo de Leilão (\textbf{Auction Algorithm}), descrito em \citeonline{berstekas} e \citeonline{berstekas1988}, resolve o problema da atribuição maximizando o benefício total através de um processo iterativo de lances e aumentos de preços, análogo a um leilão do mundo real.
 
-Considere $N$ pessoas e $N$ objetos.
-\begin{itemize}
-    \item $a_{ij}$: O valor (benefício) que a pessoa $i$ atribui ao objeto $j$.
-    \item $p_j$: O preço atual do objeto $j$.
-\end{itemize}
+% Considere $N$ pessoas e $N$ objetos.
+% \begin{itemize}
+%     \item $a_{ij}$: O valor (benefício) que a pessoa $i$ atribui ao objeto $j$.
+%     \item $p_j$: O preço atual do objeto $j$.
+% \end{itemize}
 
-O objetivo de cada pessoa $i$ é maximizar seu próprio \textbf{lucro líquido}:
-\begin{equation}
-    \text{Lucro}_{ij} = a_{ij} - p_j
-\end{equation}
+% O objetivo de cada pessoa $i$ é maximizar seu próprio \textbf{lucro líquido}:
+% \begin{equation}
+%     \text{Lucro}_{ij} = a_{ij} - p_j
+% \end{equation}
 
-Em um equilíbrio de mercado (solução ótima), cada pessoa deve estar designada a um objeto que maximize seu lucro pessoal, e os preços devem ser tais que todos estejam satisfeitos. Isso corresponde, na teoria de dualidade, à condição de \textbf{Folga Complementar}.
+% Em um equilíbrio de mercado (solução ótima), cada pessoa deve estar designada a um objeto que maximize seu lucro pessoal, e os preços devem ser tais que todos estejam satisfeitos. Isso corresponde, na teoria de dualidade, à condição de \textbf{Folga Complementar}.
 
-Se exigirmos que cada pessoa pegue *estritamente* o melhor objeto, o algoritmo pode entrar em um loop infinito de "guerra de preços" com incrementos nulos ou infinitesimais. Para garantir a convergência, Bertsekas introduziu o conceito de $\epsilon$-CS (Folga Complementar Epsilon).
+% Se exigirmos que cada pessoa pegue *estritamente* o melhor objeto, o algoritmo pode entrar em um loop infinito de "guerra de preços" com incrementos nulos ou infinitesimais. Para garantir a convergência, Bertsekas introduziu o conceito de $\epsilon$-CS (Folga Complementar Epsilon).
 
-Uma atribuição é $\epsilon$-ótima se cada pessoa $i$ designada ao objeto $j$ estiver a uma distância $\epsilon$ de seu lucro máximo:
+% Uma atribuição é $\epsilon$-ótima se cada pessoa $i$ designada ao objeto $j$ estiver a uma distância $\epsilon$ de seu lucro máximo:
 
-\begin{equation}
-    (a_{ij} - p_j) \ge \max_{k} (a_{ik} - p_k) - \epsilon
-\end{equation}
+% \begin{equation}
+%     (a_{ij} - p_j) \ge \max_{k} (a_{ik} - p_k) - \epsilon
+% \end{equation}
 
-O Passo do Leilão:
-\begin{enumerate}
-    \item Uma pessoa não designada $i$ escolhe o objeto $j^*$ que oferece o maior lucro.
-    \item Ela calcula a diferença entre o lucro do melhor objeto e o lucro do segundo melhor objeto ($\gamma$).
-    \item Ela faz um lance para o objeto $j^*$, aumentando seu preço $p_{j^*}$ em:
-        $$\Delta p = \gamma + \epsilon$$
-    \item A pessoa $i$ ganha o objeto, e quem estava com ele (se houvesse alguém) torna-se não designado e volta à fila para dar lances.
-\end{enumerate}
+% O Passo do Leilão:
+% \begin{enumerate}
+%     \item Uma pessoa não designada $i$ escolhe o objeto $j^*$ que oferece o maior lucro.
+%     \item Ela calcula a diferença entre o lucro do melhor objeto e o lucro do segundo melhor objeto ($\gamma$).
+%     \item Ela faz um lance para o objeto $j^*$, aumentando seu preço $p_{j^*}$ em:
+%         $$\Delta p = \gamma + \epsilon$$
+%     \item A pessoa $i$ ganha o objeto, e quem estava com ele (se houvesse alguém) torna-se não designado e volta à fila para dar lances.
+% \end{enumerate}
 
-O termo $\epsilon$ é crucial: ele garante que o preço suba pelo menos um valor fixo a cada lance, impedindo loops infinitos e forçando o algoritmo a terminar. A escolha do valor de $\epsilon$ é muito importante pois define a eficiência do algoritmo:
+% O termo $\epsilon$ é crucial: ele garante que o preço suba pelo menos um valor fixo a cada lance, impedindo loops infinitos e forçando o algoritmo a terminar. A escolha do valor de $\epsilon$ é muito importante pois define a eficiência do algoritmo:
 
-\begin{itemize}
-    \item Se $\epsilon$ for \textbf{grande}: O algoritmo termina muito rápido (poucos lances para resolver conflitos), mas a solução é de baixa qualidade (distante do ótimo).
-    \item Se $\epsilon$ for \textbf{pequeno}: A solução é muito próxima ou igual à ótima, mas o algoritmo é lento (muitos incrementos pequenos de preço necessários).
-\end{itemize}
+% \begin{itemize}
+%     \item Se $\epsilon$ for \textbf{grande}: O algoritmo termina muito rápido (poucos lances para resolver conflitos), mas a solução é de baixa qualidade (distante do ótimo).
+%     \item Se $\epsilon$ for \textbf{pequeno}: A solução é muito próxima ou igual à ótima, mas o algoritmo é lento (muitos incrementos pequenos de preço necessários).
+% \end{itemize}
 
-O conceito de $\epsilon$-scaling consiste em um refinamento sucessivo do valor de $\epsilon$:
+% O conceito de $\epsilon$-scaling consiste em um refinamento sucessivo do valor de $\epsilon$:
 
-\begin{enumerate}
-    \item Comece com um $\epsilon$ grande (ex: metade do maior peso da aresta).
-    \item Rode o leilão até convergir (todos emparelhados).
-    \item Reduza o valor de $\epsilon$ (ex: $\epsilon \leftarrow \epsilon / 4$).
-    \item Mantenha os preços ($p_j$) e a atribuição da fase anterior. Reinicie o leilão com o novo $\epsilon$.
-\end{enumerate}
+% \begin{enumerate}
+%     \item Comece com um $\epsilon$ grande (ex: metade do maior peso da aresta).
+%     \item Rode o leilão até convergir (todos emparelhados).
+%     \item Reduza o valor de $\epsilon$ (ex: $\epsilon \leftarrow \epsilon / 4$).
+%     \item Mantenha os preços ($p_j$) e a atribuição da fase anterior. Reinicie o leilão com o novo $\epsilon$.
+% \end{enumerate}
 
-Ao reutilizar os preços, as fases subsequentes convergem muito mais rápido do que se começassem do zero, pois os preços já estão "quase" certos. O processo repete-se até que $\epsilon < 1/N$, momento em que a solução obtida é comprovadamente a ótima inteira (para pesos inteiros).
+% Ao reutilizar os preços, as fases subsequentes convergem muito mais rápido do que se começassem do zero, pois os preços já estão "quase" certos. O processo repete-se até que $\epsilon < 1/N$, momento em que a solução obtida é comprovadamente a ótima inteira (para pesos inteiros).
 
-A complexidade do algoritmo (usando $\epsilon$-scaling) é de $O(N \cdot E \log(C))$, onde $C$ é o maior custo da aresta. Uma melhoria significativa dos algoritmos $O(N^3)$, como o Método Húngaro. Além disso, o algoritmo é paralelizável, pois permite que as pessoas façam lances simultaneamente, sendo ideal para aplicações onde é possível utilizar GPUs ou clusters distribuídos para o processamento.
+% A complexidade do algoritmo (usando $\epsilon$-scaling) é de $O(N \cdot E \log(C))$, onde $C$ é o maior custo da aresta. Uma melhoria significativa dos algoritmos $O(N^3)$, como o Método Húngaro. Além disso, o algoritmo é paralelizável, pois permite que as pessoas façam lances simultaneamente, sendo ideal para aplicações onde é possível utilizar GPUs ou clusters distribuídos para o processamento.
 
 % TODO: (pós TCC I): aproximação via Sinkhorn
 % #### F. Aproximação via Sinkhorn (Soft Assignment)
@@ -291,4 +293,40 @@ A complexidade do algoritmo (usando $\epsilon$-scaling) é de $O(N \cdot E \log(
 % * **Funcionamento:** Relaxa a restrição de "inteiro" (0 ou 1) para contínuo (probabilidade). Aplica normalização iterativa de linhas e colunas na matriz de custos (Algoritmo de Sinkhorn-Knopp).
 % * **Resultado:** Gera uma matriz duplamente estocástica que aproxima a permutação ótima. Uma passagem final gulosa converte isso em uma atribuição discreta.
 % * **Complexidade:** $O(k \cdot N^2)$ onde $k$ é pequeno. Muito rápido em hardware paralelo.
+
+\newpage
+\begin{table}[ht]
+    \centering
+    \caption{Algoritmos para problema de atribuição}
+    \label{tab:atribuicao_algos}
+    \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
+    
+    % Structure: l = left align, c = center, X = auto-wrap paragraph
+    \begin{tabularx}{\textwidth}{@{} l l l X @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Complexidade de tempo} & \textbf{Tipo} & \textbf{Descrição} \\
+        \midrule
+        
+        Método Húngaro & $O(VE)$ & Exato & 
+        Método primal-dual que mantém folga complementar para custo mínimo em bipartidos. \\
+        \addlinespace 
+        
+        Jonker-Volgenant & $O(VE^2)$ & Exato & 
+        Algoritmo primal-dual eficiente que combina redução de custos inicial e busca de caminhos aumentantes com atualização otimizada de duais. \\
+        \addlinespace
+        
+        Custo mínimo (Bellman-Ford) & $O(EV)$ & Exato & 
+        Método de caminhos sucessivos que usa Bellman-Ford para encontrar caminhos na rede residual, suportando custos negativos iniciais. \\
+        \addlinespace
+        
+        Custo mínimo (Dijkstra) & $O(V(E+V \log V))$ & Exato & 
+        Utiliza potenciais de vértices para manter custos reduzidos não-negativos, permitindo o uso do eficiente Dijkstra para aumentos sucessivos. \\
+        \addlinespace
+        
+        Gulosa ordenada & $O(E \log E)$ & Heurística & 
+        Ordena as arestas por peso decrescente e seleciona iterativamente as disponíveis. \\
+
+        \bottomrule
+    \end{tabularx}
+\end{table}
 

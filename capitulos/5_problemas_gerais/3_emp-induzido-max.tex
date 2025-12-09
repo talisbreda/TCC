@@ -57,3 +57,26 @@ Para superar os ótimos locais frequentemente encontrados pelos métodos gulosos
 \citeonline{furst} investigaram formalmente o poder da busca local para o Emparelhamento Induzido Máximo. A estratégia analisada consiste em iniciar com um emparelhamento induzido qualquer (ou vazio) e tentar aumentá-lo iterativamente através de melhorias locais simples.
 Eles focaram na análise de grafos $k$-regulares e demonstraram que, embora a busca local possa ficar presa em ótimos locais longe da solução global em grafos gerais, ela oferece garantias de desempenho interessantes para classes específicas (como grafos livres de garras ou $C_4$-free). O algoritmo de busca local proposto tenta adicionar arestas que não violem a restrição induzida e, se necessário, remover um número pequeno de arestas existentes para acomodar a nova inclusão, um processo análogo às trocas (*k-swaps*) em outros problemas combinatórios.
 
+\begin{table}[ht]
+    \centering
+    \caption{Algoritmos para problema de emparelhamento induzido máximo em grafos gerais}
+    \label{tab:emp_induz_max_gerais}
+    \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
+    
+    % Structure: l = left align, c = center, X = auto-wrap paragraph
+    \begin{tabularx}{\textwidth}{@{} l l l X @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Complexidade de tempo} & \textbf{Tipo} & \textbf{Descrição} \\
+        \midrule
+        
+        Guloso Aleatório & $O(E)$ & Heurística & 
+        Seleciona arestas uniformemente ao acaso e remove suas vizinhanças induzidas. \\
+        \addlinespace 
+
+        Guloso de grau mínimo & $O(E)$ & Heurística & 
+        Seleciona a aresta cuja remoção elimina o menor número de arestas vizinhas. \\
+        
+        \bottomrule
+    \end{tabularx}
+\end{table}
+

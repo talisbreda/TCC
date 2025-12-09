@@ -82,3 +82,34 @@ Similar à heurística descrita na seção \ref{p:h_path_growing_card}, esta tam
 \end{enumerate}
 
 A diferença para a versão de emparelhamento de cardinalidade máxima é o passo 5, onde os pesos são somados para escolher o melhor conjunto. Garante emparelhamento de pelo menos $1/2$ da cardinalidade máxima \cite{drake}.
+
+\begin{table}[ht]
+    \centering
+    \caption{Algoritmos para problema de emparelhamento ponderado máximo em grafos gerais}
+    \label{tab:emp_pond_max_gerais}
+    \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
+    
+    % Structure: l = left align, c = center, X = auto-wrap paragraph
+    \begin{tabularx}{\textwidth}{@{} l l l X @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Complexidade de tempo} & \textbf{Tipo} & \textbf{Descrição} \\
+        \midrule
+        
+        Edmonds & $O(V^3)$ & Exato & 
+        Método primal-dual que gerencia variáveis duais para vértices e blossoms, ajustando preços para encontrar caminhos no grafo de igualdade. \\
+        \addlinespace 
+
+        Edmonds otimizado & $O(EV \log V)$ & Exato & 
+        Melhoria do Edmonds original através de uma série de otimizações \\
+        \addlinespace 
+
+        Gulosa ordenada & $O(E \log E)$ & Heurística & 
+        Ordena as arestas por peso decrescente e seleciona iterativamente as disponíveis. \\
+        \addlinespace
+
+        Crescimento de caminho & $O(E)$ & Heurística & 
+        Heurística que estende caminhos pela aresta mais pesada local e seleciona o subconjunto de arestas (par ou ímpar) de maior soma total. \\
+        
+        \bottomrule
+    \end{tabularx}
+\end{table}

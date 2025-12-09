@@ -16,7 +16,7 @@ Por exemplo. Considere $N$ trabalhadores e $N$ estações de trabalho. $w_{ij}$ 
 
 Métodos de threshold funcionam alternando entre duas fases. A primeira fase consiste em selecionar um valor limite, chamando de \textbf{threshold}, descrito por $c\ast$. Na segunda fase, constrói-se um grafo bipartido com todas as arestas cujo peso é menor ou igual a $c\ast$. Em seguida, verifica-se se existe um emparelhamento perfeito nesse grafo. O menor valor de $c\ast$ que permite um emparelhamento perfeito é a solução ótima para o problema de atribuição gargalo \cite{burkard}.
 
-Para selecionar o valor limite $c\ast$, podemos utilizar uma busca binária entre o menor e o maior peso das arestas do grafo original. A cada iteração, ajustamos o valor de $c\ast$ com base na existência ou não de um emparelhamento perfeito no grafo construído. Esse processo continua até que o valor ótimo seja encontrado. \citeonline{burkard}, que descreve esse método, utiliza um algoritmo baseado em matrizes para decidir se um emparelhamento é perfeito ou não, porém podemos utilizar qualquer algoritmo clássico de emparelhamento em grafos bipartidos, como os definidos na seção \ref{sec:algos_exatos_emp_card_max}, como por exemplo o algoritmo de Hopcroft-Karp. Também segundo o autor, o algoritmo tem uma complexidade de tempo de $O(n^{2.5} / \sqrt{\log n})$.
+Para selecionar o valor limite $c\ast$, podemos utilizar uma busca binária entre o menor e o maior peso das arestas do grafo original. A cada iteração, ajustamos o valor de $c\ast$ com base na existência ou não de um emparelhamento perfeito no grafo construído. Esse processo continua até que o valor ótimo seja encontrado. \citeonline{burkard}, que descreve esse método, utiliza um algoritmo baseado em matrizes para decidir se um emparelhamento é perfeito ou não, porém podemos utilizar qualquer algoritmo clássico de emparelhamento em grafos bipartidos, como os definidos na seção \ref{sec:algos_exatos_emp_card_max}, como por exemplo o algoritmo de Hopcroft-Karp. Também segundo o autor, o algoritmo tem uma complexidade de tempo de $O(V^{2.5} / \sqrt{\log V})$.
 
 \citeonline{lawler} menciona um método de threshold para solução do problema de atribuição gargalo, porém a definição de threshold dele é levemente diferente, referindo-se ao valor dinâmico do rótulo de um vértice durante busca de caminhos. O algoritmo que ele descreve se assemelha mais aos algoritmos de caminhos aumentantes, que serão discutidos na seção \ref{sec:caminhos_aumentantes_min_max}.
 
@@ -232,3 +232,34 @@ Se não escolhermos a aresta $(u,v)$ de peso 10, a próxima melhor opção para 
 % * **Complexidade:** Procurar caminhos de comprimento 3 pode ser feito em $O(E)$.
 % * **Qualidade:** Apenas com caminhos de comprimento 3, a garantia de aproximação sobe para um fator melhor que 1/2.
 % * **Fonte:** **Arkin, E. M., et al. (2006).** *Local search for the maximum cardinality matching problem*.
+
+\begin{table}[ht]
+    \centering
+    \caption{Algoritmos para problema de atribuição gargalo}
+    \label{tab:atribuicao_gargalo_algos}
+    \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
+    
+    % Structure: l = left align, c = center, X = auto-wrap paragraph
+    \begin{tabularx}{\textwidth}{@{} l l l X @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Complexidade de tempo} & \textbf{Tipo} & \textbf{Descrição} \\
+        \midrule
+        
+        Threshold & $O(V^{2.5} / \sqrt{\log V})$ & Exato & 
+        Aplica busca binária sobre os pesos das arestas, testando a existência de emparelhamento perfeito no subgrafo restrito ao limiar. \\
+        \addlinespace 
+        
+        Método Dual & $O(K \cdot E \sqrt{V})$ & Exato & 
+        Expande um limiar inferior iterativamente baseado no Teorema de König, adicionando apenas arestas necessárias para cobrir componentes. \\
+        \addlinespace
+        
+        Caminhos aumentantes & $O(EV)$ & Exato & 
+        Abordagem construtiva que busca caminhos aumentantes minimizando a aresta de peso máximo (gargalo) no trajeto (variação de Dijkstra). \\
+        \addlinespace
+        
+        Construtiva Gulosa & $O(E \log E)$ & Heurística & 
+        Constrói a solução selecionando arestas de baixo peso, usando critérios locais ou de "arrependimento" para evitar gargalos futuros. \\
+        
+        \bottomrule
+    \end{tabularx}
+\end{table}

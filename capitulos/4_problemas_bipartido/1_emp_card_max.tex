@@ -290,3 +290,42 @@ O algoritmo funciona reduzindo dinamicamente o grafo $G=(V,E)$ através da aplic
 \end{enumerate}
 
 Para grafos esparsos, a regra 2 é raramente aplicada, pois a remoção de vértices na regra 1 frequentemente cria novas folhas, provocando um efeito cascata, fazendo com que a maior parte do grafo seja resolvia de maneira ótima. A complexidade do algoritmo é linear ($O(E)$).
+
+\begin{table}[ht]
+    \centering
+    \caption{Algoritmos para emparelhamento de cardinaliade máxima em grafos bipartidos}
+    \label{tab:emp_card_max_bip_algos}
+    \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
+    
+    % Structure: l = left align, c = center, X = auto-wrap paragraph
+    \begin{tabularx}{\textwidth}{@{} l l l X @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Complexidade de tempo} & \textbf{Tipo} & \textbf{Descrição} \\
+        \midrule
+        
+        Caminhos aumentantes & $O(VE)$ & Exato & 
+        Busca iterativa (DFS/BFS) por caminhos alternantes entre vértices livres, invertendo arestas para aumentar a cardinalidade. \\
+        \addlinespace 
+        
+        Edmonds-Karp & $O(VE^2)$ & Exato & 
+        Implementação de Ford-Fulkerson que usa BFS para encontrar sempre o caminho aumentante mais curto (em nº de arestas) na rede residual. \\
+        \addlinespace
+        
+        Dinic & $O(E\sqrt{V})$ & Exato & 
+        Algoritmo de fluxo que constrói grafos de níveis (BFS) e satura múltiplos caminhos simultaneamente via fluxo de bloqueio (DFS). \\
+        \addlinespace
+        
+        Hopcroft-Karp & $O(E\sqrt{V})$ & Exato & 
+        Busca múltiplos caminhos aumentantes disjuntos por fase usando BFS e DFS. \\
+        \addlinespace
+        
+        Gulosa simples & $O(E)$ & Heurística & 
+        Itera sobre arestas arbitrariamente, selecionando aquelas que conectam dois vértices livres. \\
+        \addlinespace
+
+        Karp-Sipser & $O(E)$ & Heurística & 
+        Prioriza remoção de vértices de grau 1; usa escolha aleatória quando não há folhas. \\
+        
+        \bottomrule
+    \end{tabularx}
+\end{table}
