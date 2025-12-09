@@ -193,3 +193,34 @@ O teorema de Tutte-Berge, apesar de não aparecer explicitamente na descrição 
 \end{equation}
 
 Onde $v(G)$ é o tamanho do emparelhamento máximo, e $\mathrm{odd}(G - U)$ é o número de componentes conexos com número ímpar de vértices no grafo resultante após a remoção de $U$. Se o grafo possui um emparelhamento perfeito, o mínimo desta equação é $|V|/2$, o que ocorre se e somente se $odd(G-U) \le |U|$ para todo $U$.
+
+\subsubsection{Heurísticas}
+
+Algumas das heurísticas que resolvem este problema são as mesmas que vimos na seção \ref{sec:emp_card_max_bip}, como a Heurística Gulosa Simples e a Heurística de Karp-Sipser, que também funcionam para grafos gerais. Mas, além dessas, existem outras heurísticas que podem ser utilizadas neste problema.
+
+% \paragraph{Busca local com caminhos curtos}
+
+% É uma maneira de melhorar um emparelhamento maximal (produzido pelo método guloso) é procurar por caminhos aumentantes curtos. Em grafos gerais, algoritmos exatos buscam caminhos aumentantes de qualquer tamanho (lidando com blossoms). A heurística limita essa busca a um tamanho fixo $k$:
+
+% \begin{enumerate}
+%     \item Gere um emparelhamento inicial $M$ (via Guloso).
+%     \item Procure por caminhos aumentantes de comprimento 3 (estrutura: aresta livre - aresta casada - aresta livre).
+%     \item Se encontrar um caminho $u - v - w - z$ onde $(v, w) \in M$, remova $(v, w)$ e adicione $(u, v)$ e $(w, z)$. O emparelhamento aumenta em +1.
+% \end{enumerate}
+
+% Procurar caminhos de comprimento 3 pode ser feito em complexidade de tempo $O(E)$, e há garantia de aproximação com fator acima de $1/2$ (metade) da cardinalidade máxmia
+% Fonte: Arkin, E. M., et al. (2006). Local search for the maximum cardinality matching problem.
+
+\paragraph{Algoritmo de crescimento de caminho (Path Growing)}
+\label{p:h_path_growing_card}
+
+Uma variação inteligente do método guloso, descrita por \citeonline{drake}, que usa DFS e tenta evitar a "miopia" de escolher uma aresta isolada.
+
+\begin{enumerate}
+    \item Escolha um vértice livre inicial $v$.
+    \item Inicie uma busca em profundidade (DFS) para construir um caminho simples o mais longo possível.
+    \item Ao longo desse caminho, selecione arestas alternadas para o emparelhamento (a 1ª sim, a 2ª não, a 3ª sim...).
+    \item Remova os vértices usados e repita.
+\end{enumerate}
+
+Ao contrário do guloso simples (que escolhe arestas desconexas), o Path Growing tende a cobrir cadeias longas de vértices, o que é estruturalmente vantajoso.

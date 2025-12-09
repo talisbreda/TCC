@@ -8,19 +8,17 @@
 O problema de atribuição gargalo, também conhecido como \textbf{Problema de Emparelhamento Min-Max} ou \textbf{Bottleneck Assignment
 problem}, é uma variação do problema de atribuição tradicional. O objetivo deste problema é encontrar, em um grafo bipartido ponderado, um emparelhamento de cardinalidade máxima (maior número possível de arestas) no qual o mínimo dos pesos das arestas do emparelhamento seja maximizado \cite{lawler}.
 
-Por exemplo. Considere $N$ trabalhadores e $N$ estações de trabalho. $w_{ij}$ representa a eficiência do trabalhador i na estação de trabalho j. A eficiência total da produção é limitada pela eficiência do trabalhador menos eficiente.  O objetivo é atribuir trabalhadores às estações de trabalho de forma a maximizar a eficiência mínima entre todas as atribuições. Para resolver este problema, podemos utilizar o método de threshold \cite{lawler}.
-
-\subsubsection{Propriedades}
+Por exemplo. Considere $N$ trabalhadores e $N$ estações de trabalho. $w_{ij}$ representa a eficiência do trabalhador i na estação de trabalho j. A eficiência total da produção é limitada pela eficiência do trabalhador menos eficiente.  O objetivo é atribuir trabalhadores às estações de trabalho de forma a maximizar a eficiência mínima entre todas as atribuições. \cite{lawler}.
 
 \subsubsection{Soluções exatas}
 
 \paragraph{Métodos de threshold}
 
-Métodos de threshold funcionam alternando entre duas fases. A primeira fase consiste em selecionar um valor limite, chamando de \textbf{threshold}, descrito por $c\star$. Na segunda fase, constrói-se um grafo bipartido com todas as arestas cujo peso é menor ou igual a $c\star$. Em seguida, verifica-se se existe um emparelhamento perfeito nesse grafo. O menor valor de $c\star$ que permite um emparelhamento perfeito é a solução ótima para o problema de atribuição gargalo \cite{burkard}.
+Métodos de threshold funcionam alternando entre duas fases. A primeira fase consiste em selecionar um valor limite, chamando de \textbf{threshold}, descrito por $c\ast$. Na segunda fase, constrói-se um grafo bipartido com todas as arestas cujo peso é menor ou igual a $c\ast$. Em seguida, verifica-se se existe um emparelhamento perfeito nesse grafo. O menor valor de $c\ast$ que permite um emparelhamento perfeito é a solução ótima para o problema de atribuição gargalo \cite{burkard}.
 
-Para selecionar o valor limite $c\star$, podemos utilizar uma busca binária entre o menor e o maior peso das arestas do grafo original. A cada iteração, ajustamos o valor de $c\star$ com base na existência ou não de um emparelhamento perfeito no grafo construído. Esse processo continua até que o valor ótimo seja encontrado. Burkard \cite{burkard}, que descreve esse método, utiliza um algoritmo baseado em matrizes para decidir se um emparelhamento é perfeito ou não, porém podemos utilizar qualquer algoritmo clássico de emparelhamento em grafos bipartidos, como os definidos no capítulo \ref{sec:algos_exatos_emp_card_max}, como por exemplo o algoritmo de Hopcroft-Karp.
+Para selecionar o valor limite $c\ast$, podemos utilizar uma busca binária entre o menor e o maior peso das arestas do grafo original. A cada iteração, ajustamos o valor de $c\ast$ com base na existência ou não de um emparelhamento perfeito no grafo construído. Esse processo continua até que o valor ótimo seja encontrado. \citeonline{burkard}, que descreve esse método, utiliza um algoritmo baseado em matrizes para decidir se um emparelhamento é perfeito ou não, porém podemos utilizar qualquer algoritmo clássico de emparelhamento em grafos bipartidos, como os definidos na seção \ref{sec:algos_exatos_emp_card_max}, como por exemplo o algoritmo de Hopcroft-Karp. Também segundo o autor, o algoritmo tem uma complexidade de tempo de $O(n^{2.5} / \sqrt{\log n})$.
 
-Lawler \cite{lawler} menciona um método de threshold para solução do problema de atribuição gargalo, porém a definição de threshold dele é levemente diferente, referindo-se ao valor dinâmico do rótulo de um vértice durante busca de caminhos. O algoritmo que ele descreve se assemelha mais aos algoritmos de caminhos aumentantes, que serão discutidos no capítulo \ref{sec:caminhos_aumentantes_min_max}.
+\citeonline{lawler} menciona um método de threshold para solução do problema de atribuição gargalo, porém a definição de threshold dele é levemente diferente, referindo-se ao valor dinâmico do rótulo de um vértice durante busca de caminhos. O algoritmo que ele descreve se assemelha mais aos algoritmos de caminhos aumentantes, que serão discutidos na seção \ref{sec:caminhos_aumentantes_min_max}.
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
@@ -68,21 +66,21 @@ Lawler \cite{lawler} menciona um método de threshold para solução do problema
 
 \paragraph{Método dual}
 
-Assim como os métodos de threshold, o método dual também define um valor limite $c\star$. No entanto, ao invés de 'chutar' um valor usando busca binária, este método define o valor inicial de $c\star$ como sendo o menor valor possível que ele pode assumir. Olhando para a matriz de custos, esse valor é o máximo entre os mínimos de cada linha e cada coluna da matriz:
+Assim como os métodos de threshold, o método dual também define um valor limite $c\ast$. No entanto, ao invés de 'chutar' um valor usando busca binária, este método define o valor inicial de $c\ast$ como sendo o menor valor possível que ele pode assumir. Olhando para a matriz de custos, esse valor é o máximo entre os mínimos de cada linha e cada coluna da matriz:
 
 \begin{equation}
-    c\star = \max \left\{ \max_{i} (\min_{j} c_{ik}), \max_{j} (\min_{i} c_{kj}) \right\}
+    c\ast = \max \left\{ \max_{i} (\min_{j} c_{ik}), \max_{j} (\min_{i} c_{kj}) \right\}
 \end{equation}
 
-Com o limite definido, verificamos se é possível encontrar um emparelhamento perfeito no grafo bipartido formado pelas arestas cujo peso é menor ou igual a $c\star$, usando os mesmos algoritmos de antes. Se um emparelhamento perfeito for encontrado, então $c\star$ é a solução ótima. Caso contrário, é necessário aumentar o valor de $c\star$, e para isso nos baseamos no teorema de Kőnig. 
+Com o limite definido, verificamos se é possível encontrar um emparelhamento perfeito no grafo bipartido formado pelas arestas cujo peso é menor ou igual a $c\ast$, usando os mesmos algoritmos de antes. Se um emparelhamento perfeito for encontrado, então $c\ast$ é a solução ótima. Caso contrário, é necessário aumentar o valor de $c\ast$, e para isso nos baseamos no teorema de Kőnig, definido na seção \ref{p:teorema_konig}. 
 
-Sabemos que todas as arestas $c_{ij} > c\star$ estão conectadas a um conjunto de linhas $I$ e um conjunto de colunas $J$. Essas linhas e colunas "cobrem" todas as arestas do grafo atual. Para aumentar o valor de $c\star$, precisamos adicionar uma nova aresta que não esteja coberta por esses conjuntos. Procuramos o menor peso entre as arestas não cobertas, ou seja, aquelas que não pertencem às linhas em $I$ nem às colunas em $J$. Esse valor se torna o novo $c\star$:
+Sabemos que todas as arestas $c_{ij} > c\ast$ estão conectadas a um conjunto de linhas $I$ e um conjunto de colunas $J$. Essas linhas e colunas "cobrem" todas as arestas do grafo atual. Para aumentar o valor de $c\ast$, precisamos adicionar uma nova aresta que não esteja coberta por esses conjuntos. Procuramos o menor peso entre as arestas não cobertas, ou seja, aquelas que não pertencem às linhas em $I$ nem às colunas em $J$. Esse valor se torna o novo $c\ast$:
 
 \begin{equation}
-    Novo\space c\star = \min_{i \notin I, j \notin J} c_{ij}
+    Novo\space c\ast = \min_{i \notin I, j \notin J} c_{ij}
 \end{equation}
 
-A partir daqui, o processo se repete. Com o novo valor de $c\star$ e a nova aresta adicionada ao grafo, verificamos novamente a existência de um emparelhamento perfeito. Esse ciclo continua até que um emparelhamento perfeito seja encontrado, momento em que o valor atual de $c\star$ será a solução ótima para o problema de atribuição gargalo.
+A partir daqui, o processo se repete. Com o novo valor de $c\ast$ e a nova aresta adicionada ao grafo, verificamos novamente a existência de um emparelhamento perfeito. Esse ciclo continua até que um emparelhamento perfeito seja encontrado, momento em que o valor atual de $c\ast$ será a solução ótima para o problema de atribuição gargalo.
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
@@ -212,3 +210,25 @@ O algoritmo seleciona, a cada passo, o nó não visitado com o menor rótulo atu
     \caption{Dijkstra modificado para caminhos aumentantes em LBAP \cite{burkard}}
     \label{alg:dijkstra}
 \end{algorithm}
+
+\subsubsection{Heurísticas}
+
+\paragraph{Heurística Construtiva Gulosa}
+
+Diferente do problema de atribuição, onde o guloso simples funciona bem, no problema de gargalo o guloso deve ser adaptado para evitar criar "bicos de garrafa" muito altos no final do processo.
+
+O algoritmo seleciona arestas iterativamente. Para cada vértice livre, ele verifica não apenas a aresta de menor peso incidente, mas também o "custo de oportunidade" de não escolhê-la.
+
+Se não escolhermos a aresta $(u,v)$ de peso 10, a próxima melhor opção para $u$ tem peso 100? Se sim, a prioridade de $(u,v)$ aumenta drasticamente \cite{martello}.
+
+% ### 3. Busca Local com Caminhos Curtos (Local Search)
+
+% Uma maneira de melhorar um emparelhamento maximal (produzido pelo método guloso) é procurar por caminhos aumentantes curtos. Em grafos gerais, algoritmos exatos buscam caminhos aumentantes de *qualquer* tamanho (lidando com *blossoms*). A heurística limita essa busca a um tamanho fixo $k$.
+
+% * **Descrição:**
+%     1.  Gere um emparelhamento inicial $M$ (via Guloso).
+%     2.  Procure por caminhos aumentantes de comprimento 3 (estrutura: aresta livre - aresta casada - aresta livre).
+%     3.  Se encontrar um caminho $u - v - w - z$ onde $(v, w) \in M$, remova $(v, w)$ e adicione $(u, v)$ e $(w, z)$. O emparelhamento aumenta em +1.
+% * **Complexidade:** Procurar caminhos de comprimento 3 pode ser feito em $O(E)$.
+% * **Qualidade:** Apenas com caminhos de comprimento 3, a garantia de aproximação sobe para um fator melhor que 1/2.
+% * **Fonte:** **Arkin, E. M., et al. (2006).** *Local search for the maximum cardinality matching problem*.

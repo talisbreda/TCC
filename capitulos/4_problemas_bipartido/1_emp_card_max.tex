@@ -15,6 +15,7 @@ Um caso especial, mas importante, do MCM é o \textbf{Emparelhamento perfeito}, 
 Antes de continuar para os algoritmos e soluções, é necessário entender algumas propriedades importantes
 
 \paragraph{Emparelhamento máximo vs maximal}
+\label{p:emp_max_maximal}
 
 Um emparelhamento máximo é aquele que contém o maior número possível de arestas, enquanto um emparelhamento maximal é aquele que não pode ser aumentado adicionando mais arestas, mas não necessariamente é o maior possível \cite{manber}.
 
@@ -24,6 +25,7 @@ Um emparelhamento máximo é aquele que contém o maior número possível de are
 Um caminho aumentante $P$ em um grafo $G$ é chamado de caminho aumentante se $P$ tem tamanho ímpar, começa e termina em vértices livres (não cobertos por nenhuma aresta do emparelhamento atual) e alterna entre arestas que pertencem a $M$ e arestas que não pertencem a $M$. A existência de um caminho aumentante indica que o emparelhamento atual não é máximo \cite{schrijver}
 
 \paragraph{Teorema de Kőnig}
+\label{p:teorema_konig}
 
 O teorema de Kőnig estabelece uma relação fundamental entre emparelhamentos e coberturas em grafos bipartidos. Ele afirma que, em qualquer grafo bipartido, o tamanho do maior emparelhamento é igual ao tamanho da menor cobertura de vértices \cite{jungnickel}.
 
@@ -170,8 +172,6 @@ O algoritmo de \textbf{Edmonds-Karp} é p principal método para resolver esse t
 
 \paragraph{Algoritmo de Dinic}
 
-TODO
-
 Outra opção para resolver o problema de fluxo máximo é o algoritmo de Dinic, que é mais eficiente em muitos casos práticos, especialmente em grafos densos. O algoritmo de Dinic utiliza uma combinação de buscas em largura (BFS) para construir níveis na rede residual e buscas em profundidade (DFS) para encontrar caminhos aumentantes dentro desses níveis. O tempo de execução do algoritmo de Dinic é $O(E \sqrt{V})$ para grafos gerais, tornando-o uma escolha preferida para muitos problemas de fluxo máximo \cite{halim}.
 
 Este trabalho não tem uma implementação do algoritmo de Dinic. Ao invés disso, será apresentado o algoritmo de Hopcroft-Karp, que é uma variação especializada do algoritmo de Dinic para o problema de emparelhamento em grafos bipartidos, oferecendo uma solução mais eficiente para este caso específico.
@@ -266,3 +266,27 @@ A seguir, o pseudo-código do algoritmo de Hopcroft-Karp:
 
 \end{algorithm}
 
+\subsubsection{Heurísticas}
+\label{sec:h_emp_card_max_bip}
+
+Por mais que o algoritmo de Hopcroft-Karp descrito em \ref{alg:hopcroft_karp} seja considerado relativamente eficiente, com complexidade $O(E \sqrt{V})$, ele ainda não é tão viável para instâncias muito grandes do problema de emparelhamento de cardinalidade máxima. Por isso, foram propostas alguns métodos aproximados (heurísticas) com o objetivo de resolver o problema com complexidade linear $O(E)$.
+
+\paragraph{Heurística gulosa simples}
+\label{p:h_gulosa_simples}
+
+Um método que itera sobre as arestas do grafo em ordem arbitrária. Se a aresta $(u,v)$ conecta dois vértices livres, adicione essa aresta ao emparelhamento e remova os vértices $u$ e $v$. Tem complexidade de tempo linear $O(E)$ e garante um emparelhamento maximal, que conforme visto na seção \ref{p:emp_max_maximal}, é um emparelhamento ao qual não é possível adicionar mais arestas, mas que não é necessariamente o de maior cardinalidade. A solução também garante um emparelhamento de pelo menos $1/2$ (metade) da cardinalidade máxima \cite{vazirani2001}
+
+\paragraph{Heurística de Karp-Sipser}
+
+Heurística descrita por \citeonline{karp-sipser} para grafos esparsos que toma decisões com base na topologia do grafo ao invés de decisões aleatórias, tornando essas decisões mais seguras.
+
+O algoritmo funciona reduzindo dinamicamente o grafo $G=(V,E)$ através da aplicação repetida de duas regras, nesta ordem de prioridade:
+
+\begin{enumerate}
+    \item \textbf{Redução de folhas de grau 1:} Se existir algum vértice $v$ no grafo atual com \textbf{grau 1} (apenas um vizinho $u$), a aresta $(u, v)$ é selecionada imediatamente para o emparelhamento. Isso é seguro pois, se $u$ é o único vizinho de $v$, ele também é única opção para emparelhar $v$. Se isso não for feito, $v$ ficará isolado.
+    \item \textbf{Escolha Aleatória:} Se \textbf{não} existirem vértices de grau 1 (ou seja, todos os vértices têm grau $\ge 2$), o algoritmo escolhe uma aresta $(u, v)$ aleatoriamente, adiciona ao emparelhamento e remove $u$ e $v$ do grafo. 
+    
+    Em grafos esparsos, isso tende a quebrar ciclos e formar novas folhas (vértices de grau 1), permitindo que o algoritmo volte a usar a regra 1. Porém, em grafos densos, essa escolha aleatória pode comprometer a precisão da solução.
+\end{enumerate}
+
+Para grafos esparsos, a regra 2 é raramente aplicada, pois a remoção de vértices na regra 1 frequentemente cria novas folhas, provocando um efeito cascata, fazendo com que a maior parte do grafo seja resolvia de maneira ótima. A complexidade do algoritmo é linear ($O(E)$).

@@ -51,3 +51,34 @@ Lawler também destaca que a manipulação das variáveis duais das blossoms ($z
 Desenvolvimentos posteriores por \citeonline{galil_micali_gabow} e \citeonline{gabow1990} melhoraram a estrutura de dados para gerenciar a prioridade das atualizações duais e a contração de blossoms, atingindo complexidades próximas a $O(E V \log V)$ ou $O(E \sqrt{V \alpha(E, V)})$ em implementações de escalonamento \cite{schrijver}.
 
 Apesar de ser polinomial (classe P), a implementação de emparelhamento ponderado em grafos gerais é considerada uma das rotinas mais complexas da otimização combinatória clássica, sendo significativamente mais difícil de implementar corretamente do que algoritmos para grafos bipartidos ou fluxo máximo.
+
+
+% #### D. Algoritmos de Crescimento de Caminho (Path Growing)
+% Proposto especificamente para emparelhamento ponderado em grafos gerais para superar a complexidade do algoritmo de Blossom.
+% * **Funcionamento:** Cresce caminhos simples escolhendo sempre a aresta mais pesada disponível localmente. Quando o caminho não pode crescer mais, processa o caminho (selecionando arestas alternadas usando Programação Dinâmica linear) para maximizar o peso local.
+% * **Complexidade:** $O(E)$.
+% * **Garantia:** Aproximação de **1/2**.
+% * **Referência:** **Drake, D. E., & Hougardy, S. (2003).** *A simple approximation algorithm for the weighted matching problem*. Information Processing Letters.
+
+\subsubsection{Heurísticas}
+
+Aqui também podemos utilizar a mesma heurística que usamos para a versão do problema para grafos bipartidos: a Heurística Gulosa Ordenada, descrita na seção \ref{p:gulosa_ordenada}. Mas além dessas, temos:
+
+\paragraph{Algoritmo de Crescimento de Caminho (Path Growing)}
+
+Similar à heurística descrita na seção \ref{p:h_path_growing_card}, esta também faz uso de Path Growing para encontrar um emparelhamento. A vantagem desta é que não é necessário ordenação, tornando possível a execução em tempo linear ($O(E)$). Foi descrito por \citeonline{drake}:
+
+\begin{enumerate}
+    \item O algoritmo constrói caminhos simples disjuntos no grafo.
+    \item Comece em um vértice livre $v$ qualquer. Estenda o caminho escolhendo a aresta de maior peso conectada a $v$ que leve a um vértice ainda não visitado neste caminho.
+    \item Repita até que o caminho não possa crescer mais.
+    \item Dado um caminho $P = (e_1, e_2, e_3, \dots, e_k)$, temos dois emparelhamentos possíveis formados por arestas alternadas:
+    \item 
+        \begin{itemize}
+            \item $M_1 = \{e_1, e_3, e_5, \dots\}$ (Arestas ímpares)
+            \item $M_2 = \{e_2, e_4, e_6, \dots\}$ (Arestas pares)
+        \end{itemize}
+    \item Compare o peso total de $M_1$ e $M_2$. Adicione o conjunto mais pesado à solução final e remova os vértices do grafo.
+\end{enumerate}
+
+A diferença para a versão de emparelhamento de cardinalidade máxima é o passo 5, onde os pesos são somados para escolher o melhor conjunto. Garante emparelhamento de pelo menos $1/2$ da cardinalidade máxima \cite{drake}.
