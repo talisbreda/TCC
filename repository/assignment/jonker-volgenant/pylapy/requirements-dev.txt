@@ -1,0 +1,12 @@
+-e .
+black
+build
+matplotlib
+mypy
+numba
+numpy
+opencv-python
+pylint
+tqdm
+types-tqdm
+twine
