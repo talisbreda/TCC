@@ -35,3 +35,11 @@
 
 # Editor specific
 .vscode/
+
+# Python build artifacts
+__pycache__/
+*.pyc
+
+# Ambientes virtuais (inclusive os versionados por engano nos repositorios externos)
+venv/
+.venv/
