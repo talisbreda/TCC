@@ -19,6 +19,6 @@ seção de comparação (tabela comparando algoritmos e casos de uso pra eles)
 
 colocar \citeonline onde encaixar
 
-teorema de hall e teorema de tutte-berge
+teorema da dualidade: ao meu ver nao é necessário
 
-teorema da dualidade 
+implementar algoritmo de Galil

@@ -48,6 +48,8 @@ emparelhamento máximo em grafos gerais da seguinte forma:
 
 \citeonline{schrijver} detalha que, a depender da forma como o algoritmo é implementado, principalmente no que trata da contração, a complexidade do algoritmo ingênuo pode chegar a $O(V^3)$. No entanto, melhorias subsequentes nesse algoritmo culminaram em uma implementação em $O(E\sqrt{V})$, descrita por \citeonline{vazirani}. No entanto, por conta da complexidade de implementação da solução mais rápida, a maioria das implementações práticas do algoritmo utilizam variantes com complexidade próxima a $O(V^3)$.
 
+% TODO: (sugestão do Maicon) Associar cada método a parte da explicação, para ficar mais claro
+
 % ---------------------------------------------------------
 % 1. MAXMATCH (Main Procedure)
 % ---------------------------------------------------------
@@ -239,6 +241,10 @@ Ao contrário do guloso simples (que escolhe arestas desconexas), o Path Growing
         
         Edmonds & $O(V^3)$ & Exato & 
         Algoritmo exato (Blossom) que contrai ciclos ímpares temporariamente em super-vértices para identificar caminhos aumentantes. \\
+        \addlinespace 
+
+        Micali e Vazirani & $O(E\sqrt{V})$ & Exato & 
+        Variação otimizada do algoritmo de Edmonds que utiliza estruturas de dados avançadas para reduzir drasticamente a complexidade. \\
         \addlinespace 
 
         Gulosa simples & $O(E)$ & Heurística & 

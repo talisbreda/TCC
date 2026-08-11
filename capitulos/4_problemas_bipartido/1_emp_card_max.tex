@@ -29,7 +29,45 @@ Um caminho aumentante $P$ em um grafo $G$ é chamado de caminho aumentante se $P
 
 O teorema de Kőnig estabelece uma relação fundamental entre emparelhamentos e coberturas em grafos bipartidos. Ele afirma que, em qualquer grafo bipartido, o tamanho do maior emparelhamento é igual ao tamanho da menor cobertura de vértices \cite{jungnickel}.
 
-A cobertura de vértices é um conjunto de vértices tal que cada aresta do grafo é incidente a pelo menos um vértice desse conjunto. O teorema de Kőnig é uma ferramenta poderosa para resolver problemas de emparelhamento, utilizado nos algoritmos de Hopcroft-Karp e no método Húngaro.
+A cobertura de vértices é um conjunto de vértices tal que cada aresta do grafo é incidente a pelo menos um vértice desse conjunto. O teorema de Kőnig é uma ferramenta poderosa para resolver problemas de emparelhamento, utilizado nos algoritmos de Hopcroft-Karp e no método Húngaro. A seguir será detalhado um método algorítmico para encontrar a cobertura de vértices mínima a partir de um emparelhamento máximo.
+
+O método é definido pelos seguintes passos \cite{jungnickel}:
+\begin{enumerate}
+    \item Identifica-se o conjunto de vértices livres (não saturados por $M$) na partição esquerda $U$.
+    \item A partir desses vértices, inicia-se uma travessia no grafo (utilizando Busca em Largura ou Profundidade) com regras estritas de alternância: transições do conjunto $U$ para $V$ devem ocorrer exclusivamente através de arestas que \textbf{não} pertencem ao emparelhamento ($E \setminus M$), enquanto as transições de $V$ de volta para $U$ devem utilizar obrigatoriamente as arestas do emparelhamento ($M$).
+    \item Registra-se em um conjunto $Z$ todos os vértices que foram alcançados durante essa busca, tanto da partição $U$ quanto da partição $V$.
+    \item A Cobertura Mínima de Vértices $C$ é construída selecionando-se os vértices de $U$ que \textbf{não} foram visitados e os vértices de $V$ que \textbf{foram} visitados. Matematicamente, a cobertura é dada por $C = (U \setminus Z) \cup (V \cap Z)$.
+\end{enumerate}
+
+Essa extração algorítmica possui complexidade linear em relação ao tamanho do grafo, $O(V + E)$, visto que requer apenas uma travessia simples após o cálculo do emparelhamento. Sua implementação é uma sub-rotina fundamental para métodos exatos de problemas mais complexos, como a atualização de limiares no Método Dual para o problema de atribuição gargalo \cite{cormen}.
+
+\paragraph{Teorema de Hall}
+
+O Teorema de Hall, frequentemente referido como Teorema do Casamento de Hall, é outro resultado estrutural para grafos bipartidos. Enquanto o teorema de König determina a cardinalidade do emparelhamento máximo, o teorema de Hall estabelece a condição necessária e suficiente para a existência de um emparelhamento que cubra integralmente um dos subconjuntos da partição \cite{schrijver}. 
+
+Para um grafo bipartido $G=(U \cup V, E)$, o teorema afirma que existe um emparelhamento cobrindo todo o conjunto $U$ se, e somente se, para qualquer subconjunto $S \subseteq U$, o tamanho de sua vizinhança $N(S)$ (o conjunto de vértices em $V$ adjacentes a pelo menos um vértice em $S$) for maior ou igual ao tamanho de $S$. Matematicamente, exige-se que $|N(S)| \ge |S|$ para todo $S \subseteq U$ \cite{jungnickel}.  Essa propriedade, conhecida como Condição de Hall, é essencial para provar matematicamente a viabilidade de atribuições e identificar gargalos estruturais que impedem a formação de um emparelhamento perfeito, relacionando-se intimamente com os conceitos de cortes mínimos em redes de fluxo.
+
+\paragraph{Teorema de Gallai e Conjunto Independente Máximo}
+
+Um conjunto independente em um grafo é um subconjunto de vértices no qual não existem duas extremidades adjacentes, ou seja, nenhuma aresta conecta dois vértices desse conjunto. O problema de encontrar o Conjunto Independente Máximo (\textit{Maximum Independent Set} - MIS) é classicamente conhecido por pertencer à classe NP-Difícil para grafos gerais \cite{garey-jhonson}. No entanto, quando o grafo é restrito à classe dos grafos bipartidos, o problema pode ser resolvido em tempo polinomial graças à sua profunda relação com os emparelhamentos e coberturas.
+
+A base dessa resolução é o Teorema de Gallai, proposto em 1959. O teorema estabelece que, para qualquer grafo $G=(V, E)$ que não possua vértices isolados, a soma do tamanho da Cobertura Mínima de Vértices (MVC) com o tamanho do Conjunto Independente Máximo (MIS) é sempre igual ao número total de vértices do grafo \cite{schrijver}. 
+
+Matematicamente:
+
+\begin{equation}
+    |MVC| + |MIS| = |V|
+\end{equation}
+
+Pelo Teorema de König, detalhado anteriormente, sabemos que em grafos bipartidos o tamanho da Cobertura Mínima de Vértices é exatamente igual ao tamanho do Emparelhamento Máximo ($|MVC| = |M|$). Consequentemente, o tamanho do Conjunto Independente Máximo pode ser deduzido diretamente do emparelhamento: $|MIS| = |V| - |M|$ \cite{jungnickel}.
+
+Além da equivalência de cardinalidade, o Teorema de Gallai também fornece a dualidade estrutural: o Conjunto Independente Máximo é exatamente o complemento da Cobertura Mínima de Vértices. Portanto, para construir algoritmicamente o Conjunto Independente Máximo em um grafo bipartido, basta executar o seguinte procedimento:
+
+\begin{enumerate}
+    \item Calcula-se o Emparelhamento Máximo utilizando algoritmos como o de Hopcroft-Karp.\
+    \item Extrai-se a Cobertura Mínima de Vértices $C$ através do método de busca por caminhos alternantes a partir dos vértices livres, definido na seção \ref{p:teorema_konig}.\
+    \item O Conjunto Independente Máximo $I$ será composto por todos os vértices do grafo que não pertencem à cobertura. Ou seja, $I = V \setminus C$.
+\end{enumerate}
 
 \subsubsection{Algoritmos exatos}
 \label{sec:algos_exatos_emp_card_max}
@@ -100,6 +138,8 @@ Com isso, temos agora um grafo de fluxo onde o objetivo é encontrar o fluxo má
 
 \paragraph{Algoritmo de Edmonds-Karp}
 \label{p:edmonds-karp}
+
+% TODO: separar BFS 
 
 O algoritmo de \textbf{Edmonds-Karp} é p principal método para resolver esse tipo de problema. Ele é uma especialização do método de Ford-Fulkerson descrito na seção \ref{p:ford_fulkerson} que utiliza uma busca em largura (BFS) para encontrar sempre o camino aumentante mais curto em número de arestas. Tem complexidade de tempo $O(VE^2)$:
 
@@ -183,6 +223,7 @@ O algoritmo de Hopcroft-Karp é um algoritmo eficiente para encontrar o emparelh
 O algoritmo consiste em duas fases principais: a fase de construção de níveis e a fase de busca de caminhos aumentantes. Na fase de construção de níveis, uma busca em largura (BFS) é realizada a partir dos vértices livres no lado esquerdo do grafo bipartido para construir uma camada de níveis que ajuda a identificar os caminhos aumentantes mais curtos. Na fase de busca de caminhos aumentantes, uma busca em profundidade (DFS) é realizada para encontrar todos os caminhos aumentantes possíveis dentro da camada de níveis construída na fase anterior. Esses caminhos são então usados para aumentar o emparelhamento \cite{halim}.
 
 % TODO: melhorar essa explicação
+% Maicon sugeriu explicar mais a fundo 
 
 A seguir, o pseudo-código do algoritmo de Hopcroft-Karp:
 
@@ -329,3 +370,5 @@ Para grafos esparsos, a regra 2 é raramente aplicada, pois a remoção de vért
         \bottomrule
     \end{tabularx}
 \end{table}
+
+% TODO: possivelmente definir aplicações? exemplo: min-path-cover.md

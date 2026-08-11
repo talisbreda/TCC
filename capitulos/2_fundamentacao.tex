@@ -9,10 +9,10 @@
 
 Um \textbf{grafo} $G$ é uma uma estrutura definida por um par $G=(V,E)$, consistindo de um conjunto finito $V$ de elementos 
 chamados \textbf{vértices} (ou \textbf{nós} ou \textbf{pontos}) e um conjunto (ou família) $E$ de pares não ordenados de vértices, 
-chamados de \textbf{arestas} \cite{jungnickel}. O conjunto V é o conjunto de vértices de $G (VG)$ e $E$ é a família de arestas de 
-$G (EG)$.
+chamados de \textbf{arestas} \cite{jungnickel}. O conjunto V é o conjunto de vértices de $G$ e $E$ é a família de arestas de 
+$G$.
 
-No contexto deste projeto, assumimos que as arestas $e={u,v}$ são pares não ordenados de vértices distintos. Se uma aresta $e$ 
+No contexto deste projeto, assumimos que as arestas $e=(u,v)$ são pares não ordenados de vértices distintos. Se uma aresta $e$ 
 conecta os vértices $a$ e $b$, diz-se que $a$ e $b$ são \textbf{adjacentes} ou \textbf{vizinhos}, e que a aresta $e$ é 
 \textbf{incidente} a $a$ e $b$ \cite{schrijver}.
 
@@ -40,17 +40,17 @@ Geralmente, o peso $w(e)$ de uma aresta $e$ é um valor real não negativo que r
 associada àquela aresta \cite{rosen}.
 
 Grafos ponderados podem ser representados por matrizes de adjacência de valor real $A$, onde a entrada $A_{ij}$ 
-é o peso $w_{ij}$ da aresta \cite{path_following_algo}
+é o peso $w_{ij}$ da aresta \cite{path_following_algo}.
 
 % ---------------------------------------------------------------------------------------------------------------------------------
 % 2.1.3. Grafo bipartido
 % ---------------------------------------------------------------------------------------------------------------------------------
 \subsubsection{Grafo bipartido}
 
-Um grafo bipartido é um grafo não direcionado que pode ser facilmente colorido com apenas duas cores \cite{manber}
+Um grafo bipartido é um grafo não direcionado que pode ser facilmente colorido com apenas duas cores \cite{manber}.
 
 Formalmente, um grafo $G=(V,E)$ é chamado \textbf{grafo bipartido} se o conjunto de vértices $V$ puder ser
-particionado em dois subconjuntos disjuntos $V_1$ e $V_2$, chamados calsses de cor, tais que:
+particionado em dois subconjuntos disjuntos $V_1$ e $V_2$, chamados classes de cor, tais que:
 
 \begin{equation}
     V = V_1 \cup V_2 \quad {e} \quad V_1 \cap V_2 = \emptyset
@@ -80,22 +80,22 @@ Antes de discutir os algoritmos de busca, é essencial definir como o grafo $G=(
 
 \begin{itemize}
     \item \textbf{Matriz de adjacência:} Uma matriz $A$ de dimensão $|V| \times |V|$, onde $A_{ij} = 1$ se existe uma aresta $(i,j) \in E$, e $0$ caso contrário. Embora permita verificação de existência de arestas em tempo constante $O(1)$, ela consome espaço $\theta(V^2)$ ,sendo ineficiente para grafos esparsos.
-    \item \textbf{Matriz de adjacência:} Consiste em um array de $|V|$ e listas, onde caad lista $Adj[u]$ contém todos os vértices $v$ tal que $(u,v) \in E$. Esta representação é preferível para grafos esparsos, pois consome espaço $\theta(V+E)$ \cite{cormen}.
+    \item \textbf{Lista de adjacência:} Consiste em uma lista de $|V|$ listas, onde cada lista $Adj[u]$ contém todos os vértices $v$ tal que $(u,v) \in E$. Esta representação é preferível para grafos esparsos, pois consome espaço $\theta(V+E)$ \cite{cormen}.
 \end{itemize}
 
 Para os algoritmos de busca descritos a seguir, assume-se geralmente o uso de listas de adjacência, resultando em complexidades lineares em relação ao tamanho do grafo.
 
 \subsubsection{Busca em largura}
 
-A \textbf{busca em largura}, ou Breadth-First Search (BFS) é um dos algoritmos mais simples e fundamentais para a exploração de grafos. A BFS explora o grafo em "camadas" ou níveis. Dado um vértice fonte $s$, o algoritmo visita primeiro todos os vizinhos de $s$ (camada $L_1$), depois os vizinhos desses vizinhos (camada $L_2$), e assim sucessivamente \cite{kleinberg}.
+A \textbf{busca em largura}, ou Breadth-First Search (BFS) é um dos algoritmos mais simples e fundamentais para a exploração de grafos. A BFS explora o grafo em "camadas"\; ou níveis. Dado um vértice fonte $s$, o algoritmo visita primeiro todos os vizinhos de $s$ (camada $L_1$), depois os vizinhos desses vizinhos (camada $L_2$), e assim sucessivamente \cite{kleinberg}.
 
-O procedimento utiliza uma estrutura de dados do tipo Fila (FIFO) para gerenciar a fronteira de exploração. \citeonline{cormen} descrevem o uso de um sistema de "cores" para monitorar o estado dos vértices: brancos (não descobertos), cinzas (descobertos, mas com vizinhos ainda não explorados) e pretos (totalmente explorados).
+O procedimento utiliza uma estrutura de dados do tipo Fila (FIFO) para gerenciar a fronteira de exploração. \citeonline{cormen} descrevem o uso de um sistema de "cores"\; para monitorar o estado dos vértices: brancos (não descobertos), cinzas (descobertos, mas com vizinhos ainda não explorados) e pretos (totalmente explorados).
 
 \textbf{Propriedades e Complexidade:} A propriedade mais importante da BFS, destacada por \citeonline{dasgupta}, é que ela calcula o caminho mais curto (em número de arestas) de $s$ a todos os outros vértices alcançáveis em grafos não ponderados. A complexidade de tempo da BFS é $O(V+E)$, pois cada vértice é enfileirado no máximo uma vez e cada lista de adjacência é varrida uma única vez.
 
 \subsubsection{Busca em profundidade}
 
-A \textbf{busca em profundidade} ou Depth-First Search (DFS), ao contrário da estratégia por níveis da BFS, a busca em profundidade explora as arestas a partir do vértice mais recentemente descoberto que ainda possui arestas inexploradas. Conforme \citeonline{manber}, a DFS "aprofunda-se" no grafo tanto quanto possível e, quando não há mais para onde ir, realiza o backtracking (retrocesso) para explorar outros caminhos.
+A \textbf{busca em profundidade} ou Depth-First Search (DFS), ao contrário da estratégia por níveis da BFS, a busca em profundidade explora as arestas a partir do vértice mais recentemente descoberto que ainda possui arestas inexploradas. Conforme \citeonline{manber}, a DFS "aprofunda-se" no grafo tanto quanto possível e, quando não há mais para onde ir, realiza o \textit{backtracking} (retrocesso) para explorar outros caminhos.
 
 Computacionalmente, a DFS pode ser implementada de forma recursiva ou utilizando uma Pilha (LIFO). Uma característica crucial da DFS é a classificação temporal dos eventos. \citeonline{cormen} sugerem registrar dois carimbos de tempo para cada vértice $u$:
 
@@ -234,6 +234,8 @@ A complexidade temporal é $\theta(V^3)$. \citeonline{jungnickel} observa que, p
 % Uma técnica avançada, relevante para algoritmos de fluxo de custo mínimo, é a reponderação de arestas para eliminar pesos negativos sem alterar os caminhos mais curtos. O Algoritmo de Johnson combina Bellman-Ford e Dijkstra.
 
 % Conforme descrito por Cormen et al. (2009) e Ahuja et al. (1993), utiliza-se uma função de potencial h:V→R tal que o novo peso da aresta seja w^(u,v)=w(u,v)+h(u)−h(v)≥0. Se o grafo não contiver ciclos negativos, é possível calcular tais potenciais (usando Bellman-Ford uma vez) e subsequentemente rodar Dijkstra para cada vértice, obtendo uma complexidade assintótica melhor que Floyd-Warshall para grafos esparsos: O(V2logV+VE).
+
+% Apresentar antes de entrar em emparelhamento
 
 \subsection{Redes de fluxo em grafos}
 
