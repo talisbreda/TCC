@@ -19,6 +19,19 @@ Fonte original:
     Arquivo: hungarian_algorithm/algorithm.py
     Adaptado para a interface padrão do benchmark (cost_matrix).
 
+Limitação conhecida (bug no repositório original):
+    Em matrizes densas aleatórias a partir de n ≈ 30, find_matching lança
+        AttributeError: 'bool' object has no attribute 'vertices'
+    A causa é um bug em algorithm.py (linhas 352 e 487): quando o subgrafo
+    de igualdade tem uma aresta duplicada ou um vértice sem par no conjunto
+    de emparelhamento M, a biblioteca insere o valor booleano True no lugar
+    de um objeto Edge. O erro ocorre ao tentar acessar True.vertices[0].
+
+    O bug é sensível ao conteúdo da matriz: matrizes com estrutura regular
+    (e.g., Matriz 2 e 3 do benchmark) não o acionam porque o subgrafo de
+    igualdade gerado é mais simples. Não há correção no lado do wrapper —
+    seria necessário corrigir o código-fonte do repositório.
+
 Entrada:
     Matriz de custos n×n (lista de listas). Minimização.
     Para maximização, negar a matriz antes de chamar.

@@ -14,9 +14,21 @@ Descrição:
     Requer numpy. A função retorna a lista de percolações ótimas; o wrapper
     extrai a primeira como atribuição.
 
-    Limitação: o parâmetro max_num_percolation (padrão=10) limita o número
-    de percolações exploradas. Matrizes com muitos zeros podem exigir um
-    valor maior; neste wrapper usamos 20 como margem de segurança.
+    Limitação conhecida (comportamento do repositório original):
+    O parâmetro max_num_percolation (padrão=10 no original) limita o número
+    de percolações exploradas pelo shaker. Quando a redução de linha/coluna
+    produz uma estrutura de zeros que exige mais iterações do que o limite,
+    a função lança:
+        OSError: Not enough percolations has been considered,
+                 set an higher max_num_percolation parameter!
+    Este wrapper usa max_num_percolation=20, o que é suficiente para matrizes
+    pequenas e estruturadas. Para matrizes densas e aleatórias, o erro ocorre
+    a partir de n ≈ 20 (observado no benchmark com seed=42).
+
+    A causa raiz é que o algoritmo usa percolação (busca de atribuições com
+    custo zero na matriz reduzida) em vez de um método de busca de caminho
+    aumentante clássico, o que torna o número de passos necessários
+    dependente do conteúdo da matriz e potencialmente ilimitado.
 
 Fonte original:
     Autor desconhecido — https://github.com/pbertoni/HungarianAlgorithm
