@@ -1,0 +1,27 @@
+# Dependencias dos benchmarks de emparelhamento em grafos.
+# Versoes fixadas para garantir reprodutibilidade dos resultados publicados
+# no capitulo de Metodologia (AC-13).
+#
+# Instalacao: ver README.md
+#
+# Ambiente de referencia das medicoes:
+#   Ubuntu 24.04.2 LTS  |  Python 3.12.3
+
+# Algebra e matrizes -- wrappers Hungaro (hunalgorithm, mayorx) e
+# Gale-Shapley numerico.
+numpy==2.5.2
+
+# Baseline do problema de atribuicao: scipy.optimize.linear_sum_assignment
+# (variante de Jonker-Volgenant). Nucleo em C/Cython.
+scipy==1.18.0
+
+# Baseline de MCM bipartido: networkx.algorithms.bipartite.hopcroft_karp_matching.
+# Python puro -- comparavel de igual para igual com os wrappers do projeto.
+networkx==3.6.1
+
+# Baseline de MCM bipartido: igraph.Graph.maximum_bipartite_matching.
+# Nucleo em C.
+igraph==1.0.0
+
+# Dependencia transitiva do igraph (formatacao de tabelas).
+texttable==1.7.0
