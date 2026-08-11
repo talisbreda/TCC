@@ -13,6 +13,10 @@ ALGORITMOS
   Hopcroft-Karp (sofiat)       O(E·√V)   Exato    BFS em fases + DFS
   Edmonds-Karp (Maxflow-Algs)  O(V·E²)   Exato    Max-flow com BFS
 
+  Baselines de biblioteca (referência de implementações consolidadas):
+  Hopcroft-Karp (NetworkX)     O(E·√V)   Exato    biblioteca pip (Python)
+  Bipartite Matching (igraph)  O(E·√V)   Exato    biblioteca pip (núcleo C)
+
 =============================================================================
 GRAFOS  (idênticos ao benchmark de src_claude/)
 =============================================================================
@@ -22,11 +26,16 @@ GRAFOS  (idênticos ao benchmark de src_claude/)
   Grafo 3 — Denso,   COM emparelhamento perfeito   grau~15   MCM=n
 """
 
+import io
 import sys
 import time
 import importlib.util
 from pathlib import Path
 from collections import defaultdict
+
+# Garante saída UTF-8 no Windows (evita UnicodeEncodeError em terminais CP1252)
+if sys.platform == "win32" and hasattr(sys.stdout, "buffer"):
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 sys.setrecursionlimit(5000)
 
@@ -49,6 +58,10 @@ _hk  = _load("src/mcm/hopcroft-karp/bipartite_mcm_hopcroft_karp_sofiat.py",
              "hk_sofiat")
 _ek  = _load("src/mcm/edmonds-karp/bipartite_mcm_edmonds_karp_maxflow.py",
              "ek_maxflow")
+_nx  = _load("src/mcm/networkx/bipartite_mcm_networkx_hopcroftkarp.py",
+             "nx_hopcroftkarp")
+_ig  = _load("src/mcm/igraph/bipartite_mcm_igraph.py",
+             "ig_matching")
 
 
 # =============================================================================
@@ -123,6 +136,10 @@ ALGORITHMS = [
      lambda n, e: _hk.max_cardinality_matching_hopcroft_karp_sofiat(n, n, e)),
     ("Edmonds-Karp (Maxflow-Algs)","O(V·E²)",  "exato",
      lambda n, e: _ek.max_cardinality_matching_edmonds_karp_maxflow(n, n, e)),
+    ("Hopcroft-Karp (NetworkX)",   "O(E·√V)",  "baseline",
+     lambda n, e: _nx.max_cardinality_matching_networkx_hopcroftkarp(n, n, e)),
+    ("Bipartite Match. (igraph)",  "O(E·√V)",  "baseline",
+     lambda n, e: _ig.max_cardinality_matching_igraph(n, n, e)),
 ]
 
 GRAPHS = [
