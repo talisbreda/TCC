@@ -1,0 +1,22 @@
+# Pre-commit hooks for gale-shapley-algorithm
+# Install: uv run pre-commit install
+# Run all: uvx pre-commit run --all-files
+
+repos:
+  - repo: local
+    hooks:
+      # Auto-format code on commit
+      - id: format
+        name: ruff format
+        entry: uvx ruff format --config=config/ruff.toml src tests
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      # Lint and auto-fix on commit
+      - id: lint
+        name: ruff check
+        entry: uvx ruff check --config=config/ruff.toml --fix src tests
+        language: system
+        types: [python]
+        pass_filenames: false

@@ -1,0 +1,144 @@
+name: ci
+
+on:
+  push:
+    branches:
+    - main
+    - test-me-*
+  pull_request:
+    branches:
+    - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  LANG: en_US.utf-8
+  LC_ALL: en_US.utf-8
+  PYTHONIOENCODING: UTF-8
+  PYTHONWARNDEFAULTENCODING: "1"
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+        fetch-tags: true
+
+    - name: Setup Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.13"
+
+    - name: Setup uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        enable-cache: true
+        cache-dependency-glob: pyproject.toml
+
+    - name: Install dependencies
+      run: uv sync --extra cli --extra gui --extra numeric
+
+    - name: Check code formatting
+      run: uvx --from taskipy task format_check
+
+    - name: Check code quality (lint)
+      run: uvx --from taskipy task lint_check
+
+    - name: Check types
+      run: uvx --from taskipy task typecheck
+
+    - name: Build documentation
+      run: uvx --from taskipy task docs_build
+
+    - name: Store objects inventory for tests
+      uses: actions/upload-artifact@v7
+      with:
+        name: objects.inv
+        path: site/objects.inv
+
+  test:
+    needs: quality
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.12", "3.13"]
+    runs-on: ${{ matrix.os }}
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+        fetch-tags: true
+
+    - name: Setup Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Setup uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        enable-cache: true
+        cache-dependency-glob: pyproject.toml
+
+    - name: Install dependencies
+      run: uv sync --extra cli --extra gui --extra numeric --python ${{ matrix.python-version }}
+
+    - name: Download objects inventory
+      uses: actions/download-artifact@v8
+      with:
+        name: objects.inv
+        path: site/
+
+    - name: Run tests
+      run: uv run --python ${{ matrix.python-version }} pytest -c config/pytest.ini
+
+  test-min-deps:
+    # Verify the declared lower bounds on optional-extra dependencies actually work.
+    # uv's lowest-direct resolution pins each declared dep to its minimum version.
+    needs: quality
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v6
+      with:
+        fetch-depth: 0
+        fetch-tags: true
+
+    - name: Setup Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.12"
+
+    - name: Setup uv
+      uses: astral-sh/setup-uv@v7
+      with:
+        enable-cache: true
+        cache-dependency-glob: pyproject.toml
+
+    - name: Install dependencies (lowest-direct resolution)
+      run: uv sync --extra cli --extra gui --extra numeric --resolution lowest-direct
+
+    - name: Download objects inventory
+      uses: actions/download-artifact@v8
+      with:
+        name: objects.inv
+        path: site/
+
+    - name: Run tests
+      run: uv run pytest -c config/pytest.ini

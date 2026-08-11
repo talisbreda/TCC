@@ -1,0 +1,54 @@
+version: 2
+updates:
+  # Python dependencies resolved by uv from pyproject.toml.
+  - package-ecosystem: "uv"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    groups:
+      uv:
+        patterns: ["*"]
+    commit-message:
+      prefix: "build(deps)"
+      prefix-development: "build(deps-dev)"
+      include: "scope"
+
+  # Frontend npm deps (served by the FastAPI GUI backend).
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    groups:
+      npm_and_yarn:
+        patterns: ["*"]
+    # The frontend has no automated test coverage, so major bumps on icon /
+    # type-system packages that tend to ship breaking renames or removals
+    # are ignored here and should be handled via a targeted PR that reviews
+    # the migration. Minor / patch updates still flow through.
+    ignore:
+      - dependency-name: "lucide-react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "typescript"
+        update-types: ["version-update:semver-major"]
+    commit-message:
+      prefix: "build(deps)"
+      prefix-development: "build(deps-dev)"
+      include: "scope"
+
+  # GitHub Actions version pins.
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 3
+    groups:
+      actions:
+        patterns: ["*"]
+    commit-message:
+      prefix: "ci(deps)"
+      include: "scope"

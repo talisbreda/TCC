@@ -1,0 +1,68 @@
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+dist/
+build/
+sdist/
+wheels/
+MANIFEST
+
+# Virtual environments
+.venv/
+.venvs/
+venv/
+env/
+
+# Tools
+.mypy_cache/
+.dmypy.json
+.pyre/
+.ruff_cache/
+.pytest_cache/
+.hypothesis/
+.tox/
+.nox/
+.pdm.toml
+.pdm-python
+/.pdm-build/
+.cache/
+
+# Coverage
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+
+# Documentation
+/site/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# MacOS
+.DS_Store
+
+# Profiling
+*.prof
+*.pstat
+memray-*.bin
+memray-*.html
+
+# Logs
+*.log
+
+# Openspec
+openspec/
