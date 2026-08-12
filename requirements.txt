@@ -23,5 +23,11 @@ networkx==3.6.1
 # Nucleo em C.
 igraph==1.0.0
 
+# Baseline do problema de atribuicao: lap.lapjv (Jonker-Volgenant).
+# Nucleo em C++. Escolhido entre as cinco implementacoes de JV disponiveis por
+# distribuir wheel pre-compilado -- as demais exigiriam toolchain C++ ou Rust
+# no ambiente de quem for reproduzir os resultados.
+lap==0.5.13
+
 # Dependencia transitiva do igraph (formatacao de tabelas).
 texttable==1.7.0
