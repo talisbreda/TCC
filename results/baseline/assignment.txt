@@ -1,0 +1,222 @@
+
+##################################################################################
+  SEÇÃO 1 — Todos os algoritmos  |  n = [10, 20, 30, 50, 75, 100]
+  (SSP é O(n⁴) no pior caso — tamanhos reduzidos para viabilidade)
+##################################################################################
+
+==================================================================================
+  Matriz 1 — Densa uniforme  | custo in [1,100]
+==================================================================================
+
+      n     min     max     média
+  --------------------------------
+     10       1      99     48.91
+     20       1     100     49.77
+     30       1     100     50.89
+     50       1     100     51.19
+     75       1     100     51.14
+    100       1     100     51.27
+
+  Tempos médios (5 execuções por célula) em milissegundos:
+
+  Algoritmo                    Complexidade Tipo              n=10        n=20        n=30        n=50        n=75       n=100
+  --------------------------------------------------------------------------------
+  Húngaro (munkres)            O(n^3)       exato           0.40ms      2.01ms      4.86ms     15.99ms     52.74ms    109.69ms
+  Húngaro (benchaplin)         O(n^3)       exato          11.78ms    108.15ms     BugAttr     BugAttr   4920.60ms        Erro
+  Húngaro (hunalgorithm)       O(n^3)       exato           2.31ms     BugPerc     BugPerc     BugPerc     BugPerc     BugPerc
+  Húngaro (mayorx/KM)          O(n^3)       exato           1.16ms      2.30ms     10.73ms     12.72ms     22.27ms     29.65ms
+  SSP (flows)                  O(n^4)*      exato           0.52ms      3.03ms      7.74ms     33.94ms    112.47ms    259.63ms
+  SciPy (linear_sum_assg)      O(n^3)       baseline        0.06ms      0.05ms      0.09ms      0.24ms      0.54ms      1.20ms
+
+  Custo encontrado por algoritmo:
+
+  Algoritmo                    Complexidade Tipo              n=10        n=20        n=30        n=50        n=75       n=100
+  --------------------------------------------------------------------------------
+  Húngaro (munkres)            O(n^3)       exato              102         146         168         217         238         244
+  Húngaro (benchaplin)         O(n^3)       exato              102         146     BugAttr     BugAttr         238        Erro
+  Húngaro (hunalgorithm)       O(n^3)       exato              102     BugPerc     BugPerc     BugPerc     BugPerc     BugPerc
+  Húngaro (mayorx/KM)          O(n^3)       exato              102         146         168         217         238         244
+  SSP (flows)                  O(n^4)*      exato              102         146         168         217         238         244
+  SciPy (linear_sum_assg)      O(n^3)       baseline           102         146         168         217         238         244
+
+  Referência (ótimo munkres): n=10: 102  n=20: 146  n=30: 168  n=50: 217  n=75: 238  n=100: 244
+
+==================================================================================
+  Matriz 2 — Permutação barata | ótimo = n
+==================================================================================
+
+      n     min     max     média
+  --------------------------------
+     10       1      99     66.40
+     20       1     100     70.97
+     30       1     100     72.61
+     50       1     100     73.95
+     75       1     100     74.31
+    100       1     100     74.64
+
+  Tempos médios (5 execuções por célula) em milissegundos:
+
+  Algoritmo                    Complexidade Tipo              n=10        n=20        n=30        n=50        n=75       n=100
+  --------------------------------------------------------------------------------
+  Húngaro (munkres)            O(n^3)       exato           0.13ms      0.33ms      0.65ms      1.65ms      3.47ms      6.06ms
+  Húngaro (benchaplin)         O(n^3)       exato           2.41ms      8.15ms     20.57ms     49.10ms    114.84ms    212.52ms
+  Húngaro (hunalgorithm)       O(n^3)       exato           0.22ms      0.37ms      0.73ms      1.84ms      4.07ms      7.03ms
+  Húngaro (mayorx/KM)          O(n^3)       exato           0.47ms      0.82ms      1.25ms      2.16ms      3.47ms      6.03ms
+  SSP (flows)                  O(n^4)*      exato           0.43ms      2.45ms      7.10ms     28.51ms     98.53ms    235.41ms
+  SciPy (linear_sum_assg)      O(n^3)       baseline        0.05ms      0.04ms      0.08ms      0.18ms      0.36ms      0.61ms
+
+  Custo encontrado por algoritmo:
+
+  Algoritmo                    Complexidade Tipo              n=10        n=20        n=30        n=50        n=75       n=100
+  --------------------------------------------------------------------------------
+  Húngaro (munkres)            O(n^3)       exato               10          20          30          50          75         100
+  Húngaro (benchaplin)         O(n^3)       exato               10          20          30          50          75         100
+  Húngaro (hunalgorithm)       O(n^3)       exato               10          20          30          50          75         100
+  Húngaro (mayorx/KM)          O(n^3)       exato               10          20          30          50          75         100
+  SSP (flows)                  O(n^4)*      exato               10          20          30          50          75         100
+  SciPy (linear_sum_assg)      O(n^3)       baseline            10          20          30          50          75         100
+
+  Referência (ótimo munkres): n=10: 10  n=20: 20  n=30: 30  n=50: 50  n=75: 75  n=100: 100
+
+==================================================================================
+  Matriz 3 — Estruturada     | custo = |i-j|+1
+==================================================================================
+
+      n     min     max     média
+  --------------------------------
+     10       1      10      4.30
+     20       1      20      7.65
+     30       1      30     10.99
+     50       1      50     17.66
+     75       1      75     26.00
+    100       1     100     34.33
+
+  Tempos médios (5 execuções por célula) em milissegundos:
+
+  Algoritmo                    Complexidade Tipo              n=10        n=20        n=30        n=50        n=75       n=100
+  --------------------------------------------------------------------------------
+  Húngaro (munkres)            O(n^3)       exato           0.13ms      0.34ms      0.64ms      1.63ms      3.51ms      6.10ms
+  Húngaro (benchaplin)         O(n^3)       exato           2.39ms      8.19ms     20.31ms     48.86ms    110.71ms    209.02ms
+  Húngaro (hunalgorithm)       O(n^3)       exato           0.22ms      0.37ms      0.71ms      1.79ms      3.92ms      6.88ms
+  Húngaro (mayorx/KM)          O(n^3)       exato           0.47ms      0.81ms      1.28ms      2.18ms      3.46ms      4.92ms
+  SSP (flows)                  O(n^4)*      exato           0.43ms      2.46ms      7.06ms     29.04ms     98.75ms    236.63ms
+  SciPy (linear_sum_assg)      O(n^3)       baseline        0.05ms      0.04ms      0.08ms      0.17ms      0.35ms      0.60ms
+
+  Custo encontrado por algoritmo:
+
+  Algoritmo                    Complexidade Tipo              n=10        n=20        n=30        n=50        n=75       n=100
+  --------------------------------------------------------------------------------
+  Húngaro (munkres)            O(n^3)       exato               10          20          30          50          75         100
+  Húngaro (benchaplin)         O(n^3)       exato               10          20          30          50          75         100
+  Húngaro (hunalgorithm)       O(n^3)       exato               10          20          30          50          75         100
+  Húngaro (mayorx/KM)          O(n^3)       exato               10          20          30          50          75         100
+  SSP (flows)                  O(n^4)*      exato               10          20          30          50          75         100
+  SciPy (linear_sum_assg)      O(n^3)       baseline            10          20          30          50          75         100
+
+  Referência (ótimo munkres): n=10: 10  n=20: 20  n=30: 30  n=50: 50  n=75: 75  n=100: 100
+
+##################################################################################
+  SEÇÃO 2 — Apenas algoritmos Húngaros  |  n = [50, 100, 150, 200, 250]
+##################################################################################
+
+==================================================================================
+  Matriz 1 — Densa uniforme  | custo in [1,100]
+==================================================================================
+
+      n     min     max     média
+  --------------------------------
+     50       1     100     51.19
+    100       1     100     51.27
+    150       1     100     50.78
+    200       1     100     50.55
+    250       1     100     50.64
+
+  Tempos médios (5 execuções por célula) em milissegundos:
+
+  Algoritmo                    Complexidade Tipo              n=50       n=100       n=150       n=200       n=250
+  --------------------------------------------------------------------------------
+  Húngaro (munkres)            O(n^3)       exato          15.70ms     97.67ms    241.94ms    441.72ms    692.30ms
+  Húngaro (benchaplin)         O(n^3)       exato          BugAttr        Erro     BugAttr     BugAttr     BugAttr
+  Húngaro (hunalgorithm)       O(n^3)       exato          BugPerc     BugPerc     BugPerc     BugPerc     BugPerc
+  Húngaro (mayorx/KM)          O(n^3)       exato          12.62ms     29.79ms     59.46ms     59.03ms     88.48ms
+  SciPy (linear_sum_assg)      O(n^3)       baseline        0.26ms      0.90ms      2.36ms      3.72ms      5.46ms
+
+  Custo encontrado por algoritmo:
+
+  Algoritmo                    Complexidade Tipo              n=50       n=100       n=150       n=200       n=250
+  --------------------------------------------------------------------------------
+  Húngaro (munkres)            O(n^3)       exato              217         244         258         275         300
+  Húngaro (benchaplin)         O(n^3)       exato          BugAttr        Erro     BugAttr     BugAttr     BugAttr
+  Húngaro (hunalgorithm)       O(n^3)       exato          BugPerc     BugPerc     BugPerc     BugPerc     BugPerc
+  Húngaro (mayorx/KM)          O(n^3)       exato              217         244         258         275         300
+  SciPy (linear_sum_assg)      O(n^3)       baseline           217         244         258         275         300
+
+  Referência (ótimo munkres): n=50: 217  n=100: 244  n=150: 258  n=200: 275  n=250: 300
+
+==================================================================================
+  Matriz 2 — Permutação barata | ótimo = n
+==================================================================================
+
+      n     min     max     média
+  --------------------------------
+     50       1     100     73.95
+    100       1     100     74.64
+    150       1     100     74.67
+    200       1     100     74.65
+    250       1     100     74.77
+
+  Tempos médios (5 execuções por célula) em milissegundos:
+
+  Algoritmo                    Complexidade Tipo              n=50       n=100       n=150       n=200       n=250
+  --------------------------------------------------------------------------------
+  Húngaro (munkres)            O(n^3)       exato           1.65ms      5.96ms     13.68ms     25.71ms     41.68ms
+  Húngaro (benchaplin)         O(n^3)       exato          51.28ms    212.44ms    524.57ms   1017.96ms   1705.09ms
+  Húngaro (hunalgorithm)       O(n^3)       exato           1.95ms      7.02ms     16.17ms     27.86ms     45.41ms
+  Húngaro (mayorx/KM)          O(n^3)       exato           2.20ms      4.87ms     11.14ms     12.92ms     21.03ms
+  SciPy (linear_sum_assg)      O(n^3)       baseline        0.22ms      0.66ms      1.42ms      2.32ms      3.59ms
+
+  Custo encontrado por algoritmo:
+
+  Algoritmo                    Complexidade Tipo              n=50       n=100       n=150       n=200       n=250
+  --------------------------------------------------------------------------------
+  Húngaro (munkres)            O(n^3)       exato               50         100         150         200         250
+  Húngaro (benchaplin)         O(n^3)       exato               50         100         150         200         250
+  Húngaro (hunalgorithm)       O(n^3)       exato               50         100         150         200         250
+  Húngaro (mayorx/KM)          O(n^3)       exato               50         100         150         200         250
+  SciPy (linear_sum_assg)      O(n^3)       baseline            50         100         150         200         250
+
+  Referência (ótimo munkres): n=50: 50  n=100: 100  n=150: 150  n=200: 200  n=250: 250
+
+==================================================================================
+  Matriz 3 — Estruturada     | custo = |i-j|+1
+==================================================================================
+
+      n     min     max     média
+  --------------------------------
+     50       1      50     17.66
+    100       1     100     34.33
+    150       1     150     51.00
+    200       1     200     67.67
+    250       1     250     84.33
+
+  Tempos médios (5 execuções por célula) em milissegundos:
+
+  Algoritmo                    Complexidade Tipo              n=50       n=100       n=150       n=200       n=250
+  --------------------------------------------------------------------------------
+  Húngaro (munkres)            O(n^3)       exato           1.60ms      5.97ms     13.39ms     25.41ms     38.82ms
+  Húngaro (benchaplin)         O(n^3)       exato          57.59ms    213.76ms    520.17ms   1001.16ms   1778.48ms
+  Húngaro (hunalgorithm)       O(n^3)       exato           1.93ms      6.90ms     15.78ms     27.05ms     43.73ms
+  Húngaro (mayorx/KM)          O(n^3)       exato           2.23ms      4.93ms      8.44ms     12.84ms     17.14ms
+  SciPy (linear_sum_assg)      O(n^3)       baseline        0.19ms      0.60ms      1.32ms      2.25ms      3.49ms
+
+  Custo encontrado por algoritmo:
+
+  Algoritmo                    Complexidade Tipo              n=50       n=100       n=150       n=200       n=250
+  --------------------------------------------------------------------------------
+  Húngaro (munkres)            O(n^3)       exato               50         100         150         200         250
+  Húngaro (benchaplin)         O(n^3)       exato               50         100         150         200         250
+  Húngaro (hunalgorithm)       O(n^3)       exato               50         100         150         200         250
+  Húngaro (mayorx/KM)          O(n^3)       exato               50         100         150         200         250
+  SciPy (linear_sum_assg)      O(n^3)       baseline            50         100         150         200         250
+
+  Referência (ótimo munkres): n=50: 50  n=100: 100  n=150: 150  n=200: 200  n=250: 250

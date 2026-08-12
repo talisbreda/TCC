@@ -1,0 +1,8 @@
+Celulas cortadas por orcamento de 120s na captura do baseline.
+Aparecem como "Erro" na tabela, mas nao sao erro do algoritmo:
+o codigo nao terminou dentro do limite adotado para a captura.
+
+  Húngaro (benchaplin)
+  Húngaro (benchaplin)
+  Húngaro (benchaplin)
+  Húngaro (benchaplin)

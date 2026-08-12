@@ -1,0 +1,127 @@
+==================================================================================
+  BENCHMARK — PROBLEMA DO CASAMENTO ESTÁVEL (STABLE MARRIAGE)
+  Gale-Shapley men-optimal | Todos os algoritmos | Todos os perfis
+==================================================================================
+
+##################################################################################
+  SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]
+  (OOP tem alto sobrecusto por objeto — tamanhos reduzidos)
+##################################################################################
+
+==================================================================================
+  Perfil 1 — Aleatório       | permutações uniformes
+==================================================================================
+
+  Tempos médios (5 execuções por célula) em milissegundos:
+
+  Algoritmo                    Complexidade Tipo            n=25        n=50        n=75       n=100
+  --------------------------------------------------------------------------------
+  Gale-Shapley (OOP/pip)       O(n²)†       exato         7.80ms     98.21ms    330.87ms    734.86ms
+  Gale-Shapley (numérico/pip)  O(n²)        exato         0.55ms      1.56ms      3.44ms      5.60ms
+  Gale-Shapley (Lattas/dict)   O(n³)*       exato         0.34ms      1.34ms      2.93ms      5.20ms
+
+  Pares bloqueantes (0 = estável) | =ref se concorda com numérico:
+
+  Algoritmo                    Complexidade Tipo            n=25        n=50        n=75       n=100
+  --------------------------------------------------------------------------------
+  Gale-Shapley (OOP/pip)       O(n²)†       exato         0 =ref      0 =ref      0 =ref      0 =ref
+  Gale-Shapley (numérico/pip)  O(n²)        exato         0 =ref      0 =ref      0 =ref      0 =ref
+  Gale-Shapley (Lattas/dict)   O(n³)*       exato         0 =ref      0 =ref      0 =ref      0 =ref
+
+==================================================================================
+  Perfil 2 — Correlacionado  | ranking de popularidade
+==================================================================================
+
+  Tempos médios (5 execuções por célula) em milissegundos:
+
+  Algoritmo                    Complexidade Tipo            n=25        n=50        n=75       n=100
+  --------------------------------------------------------------------------------
+  Gale-Shapley (OOP/pip)       O(n²)†       exato        47.51ms    628.39ms   2962.10ms   9098.41ms
+  Gale-Shapley (numérico/pip)  O(n²)        exato         0.85ms      2.77ms      6.28ms     11.11ms
+  Gale-Shapley (Lattas/dict)   O(n³)*       exato         0.68ms      3.54ms     10.44ms     23.30ms
+
+  Pares bloqueantes (0 = estável) | =ref se concorda com numérico:
+
+  Algoritmo                    Complexidade Tipo            n=25        n=50        n=75       n=100
+  --------------------------------------------------------------------------------
+  Gale-Shapley (OOP/pip)       O(n²)†       exato         0 =ref      0 =ref      0 =ref      0 =ref
+  Gale-Shapley (numérico/pip)  O(n²)        exato         0 =ref      0 =ref      0 =ref      0 =ref
+  Gale-Shapley (Lattas/dict)   O(n³)*       exato         0 =ref      0 =ref      0 =ref      0 =ref
+
+==================================================================================
+  Perfil 3 — Cíclico         | deslocamento estruturado
+==================================================================================
+
+  Tempos médios (5 execuções por célula) em milissegundos:
+
+  Algoritmo                    Complexidade Tipo            n=25        n=50        n=75       n=100
+  --------------------------------------------------------------------------------
+  Gale-Shapley (OOP/pip)       O(n²)†       exato         2.44ms     15.08ms     47.08ms    106.69ms
+  Gale-Shapley (numérico/pip)  O(n²)        exato         0.44ms      1.36ms      3.04ms      5.27ms
+  Gale-Shapley (Lattas/dict)   O(n³)*       exato         0.23ms      0.78ms      1.96ms      3.74ms
+
+  Pares bloqueantes (0 = estável) | =ref se concorda com numérico:
+
+  Algoritmo                    Complexidade Tipo            n=25        n=50        n=75       n=100
+  --------------------------------------------------------------------------------
+  Gale-Shapley (OOP/pip)       O(n²)†       exato         0 =ref      0 =ref      0 =ref      0 =ref
+  Gale-Shapley (numérico/pip)  O(n²)        exato         0 =ref      0 =ref      0 =ref      0 =ref
+  Gale-Shapley (Lattas/dict)   O(n³)*       exato         0 =ref      0 =ref      0 =ref      0 =ref
+
+##################################################################################
+  SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]
+##################################################################################
+
+==================================================================================
+  Perfil 1 — Aleatório       | permutações uniformes
+==================================================================================
+
+  Tempos médios (5 execuções por célula) em milissegundos:
+
+  Algoritmo                    Complexidade Tipo           n=100       n=200       n=300       n=400
+  --------------------------------------------------------------------------------
+  Gale-Shapley (numérico/pip)  O(n²)        exato         5.68ms     22.22ms     51.69ms    101.84ms
+  Gale-Shapley (Lattas/dict)   O(n³)*       exato         5.30ms     21.55ms     55.89ms    116.26ms
+
+  Pares bloqueantes (0 = estável) | =ref se concorda com numérico:
+
+  Algoritmo                    Complexidade Tipo           n=100       n=200       n=300       n=400
+  --------------------------------------------------------------------------------
+  Gale-Shapley (numérico/pip)  O(n²)        exato         0 =ref      0 =ref      0 =ref      0 =ref
+  Gale-Shapley (Lattas/dict)   O(n³)*       exato         0 =ref      0 =ref      0 =ref      0 =ref
+
+==================================================================================
+  Perfil 2 — Correlacionado  | ranking de popularidade
+==================================================================================
+
+  Tempos médios (5 execuções por célula) em milissegundos:
+
+  Algoritmo                    Complexidade Tipo           n=100       n=200       n=300       n=400
+  --------------------------------------------------------------------------------
+  Gale-Shapley (numérico/pip)  O(n²)        exato        11.13ms     44.18ms    103.74ms    197.41ms
+  Gale-Shapley (Lattas/dict)   O(n³)*       exato        23.40ms    148.34ms    527.04ms   1228.02ms
+
+  Pares bloqueantes (0 = estável) | =ref se concorda com numérico:
+
+  Algoritmo                    Complexidade Tipo           n=100       n=200       n=300       n=400
+  --------------------------------------------------------------------------------
+  Gale-Shapley (numérico/pip)  O(n²)        exato         0 =ref      0 =ref      0 =ref      0 =ref
+  Gale-Shapley (Lattas/dict)   O(n³)*       exato         0 =ref      0 =ref      0 =ref      0 =ref
+
+==================================================================================
+  Perfil 3 — Cíclico         | deslocamento estruturado
+==================================================================================
+
+  Tempos médios (5 execuções por célula) em milissegundos:
+
+  Algoritmo                    Complexidade Tipo           n=100       n=200       n=300       n=400
+  --------------------------------------------------------------------------------
+  Gale-Shapley (numérico/pip)  O(n²)        exato         5.29ms     20.84ms     48.22ms     90.63ms
+  Gale-Shapley (Lattas/dict)   O(n³)*       exato         3.09ms     13.54ms     30.78ms     58.13ms
+
+  Pares bloqueantes (0 = estável) | =ref se concorda com numérico:
+
+  Algoritmo                    Complexidade Tipo           n=100       n=200       n=300       n=400
+  --------------------------------------------------------------------------------
+  Gale-Shapley (numérico/pip)  O(n²)        exato         0 =ref      0 =ref      0 =ref      0 =ref
+  Gale-Shapley (Lattas/dict)   O(n³)*       exato         0 =ref      0 =ref      0 =ref      0 =ref

@@ -1,0 +1,61 @@
+problema,secao,instancia,algoritmo,n,qualidade
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (OOP/pip),25,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (OOP/pip),50,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (OOP/pip),75,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (OOP/pip),100,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (numérico/pip),25,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (numérico/pip),50,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (numérico/pip),75,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (numérico/pip),100,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (Lattas/dict),25,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (Lattas/dict),50,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (Lattas/dict),75,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (Lattas/dict),100,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (OOP/pip),25,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (OOP/pip),50,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (OOP/pip),75,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (OOP/pip),100,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (numérico/pip),25,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (numérico/pip),50,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (numérico/pip),75,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (numérico/pip),100,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (Lattas/dict),25,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (Lattas/dict),50,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (Lattas/dict),75,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (Lattas/dict),100,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (OOP/pip),25,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (OOP/pip),50,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (OOP/pip),75,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (OOP/pip),100,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (numérico/pip),25,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (numérico/pip),50,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (numérico/pip),75,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (numérico/pip),100,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (Lattas/dict),25,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (Lattas/dict),50,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (Lattas/dict),75,0 =ref
+stable-marriage,"SEÇÃO 1 — Todos os algoritmos  |  n = [25, 50, 75, 100]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (Lattas/dict),100,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (numérico/pip),100,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (numérico/pip),200,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (numérico/pip),300,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (numérico/pip),400,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (Lattas/dict),100,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (Lattas/dict),200,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (Lattas/dict),300,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (Lattas/dict),400,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (numérico/pip),100,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (numérico/pip),200,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (numérico/pip),300,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (numérico/pip),400,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (Lattas/dict),100,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (Lattas/dict),200,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (Lattas/dict),300,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (Lattas/dict),400,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (numérico/pip),100,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (numérico/pip),200,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (numérico/pip),300,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (numérico/pip),400,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (Lattas/dict),100,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (Lattas/dict),200,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (Lattas/dict),300,0 =ref
+stable-marriage,"SEÇÃO 2 — Apenas rápidos (numérico + Lattas)  |  n = [100, 200, 300, 400]",Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (Lattas/dict),400,0 =ref
