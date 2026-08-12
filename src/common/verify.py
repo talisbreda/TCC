@@ -146,12 +146,35 @@ def gravar_csv(registros, caminho):
 
 
 def ler_csv(caminho):
-    """Le um baseline canonico como dicionario chave -> qualidade."""
+    """
+    Le um baseline canonico como dicionario chave -> qualidade.
+
+    A chave OMITE a secao de proposito. As secoes existem por viabilidade de
+    execucao (separar algoritmos lentos dos rapidos), nao por semantica: a
+    qualidade e funcao de (instancia, algoritmo, n) e nao da secao. Verificado
+    no baseline de atribuicao, onde 30 chaves aparecem nas duas secoes e todas
+    concordam.
+
+    Omitir a secao e o que torna a verificacao robusta a mudanca de layout --
+    o harness novo nao reproduz as strings de cabecalho do formato antigo.
+    """
+    mapa = {}
+    conflitos = []
     with open(caminho, newline="", encoding="utf-8") as f:
-        return {
-            (l["problema"], l["secao"], l["instancia"], l["algoritmo"], l["n"]): l["qualidade"]
-            for l in csv.DictReader(f)
-        }
+        for l in csv.DictReader(f):
+            chave = (l["problema"], l["instancia"], l["algoritmo"], l["n"])
+            anterior = mapa.get(chave)
+            if anterior is not None and anterior != l["qualidade"]:
+                conflitos.append((chave, anterior, l["qualidade"]))
+            mapa[chave] = l["qualidade"]
+
+    if conflitos:
+        detalhe = "; ".join(f"{c}: {a!r} != {d!r}" for c, a, d in conflitos[:5])
+        raise ValueError(
+            f"{caminho}: mesma chave com qualidades diferentes em secoes "
+            f"distintas -- a premissa da comparacao esta quebrada. {detalhe}"
+        )
+    return mapa
 
 
 def comparar(caminho_antes, caminho_depois):
