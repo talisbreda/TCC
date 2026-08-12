@@ -73,7 +73,6 @@ def medir(spec, instancia, *, runs, timeout_ms):
         try:
             resultado = funcao(instancia)
         except Exception as e:            # noqa: BLE001 - classificado abaixo
-            decorrido = (time.perf_counter() - inicio) * 1000
             rotulo = spec.rotulo_de_bug(e)
             if rotulo:
                 return [], None, BUG_CONHECIDO, rotulo
@@ -179,6 +178,8 @@ def executar_suite(problema, specs, instancias, tamanhos, *,
                         algorithm_key=spec.key, kind=spec.kind,
                         language=spec.language, instance=rotulo_instancia,
                         n=n, seed=seed, runs=0,
+                        complexity_time=spec.complexity_time,
+                        complexity_space=spec.complexity_space,
                         status=TIMEOUT,
                         detail="pulado: excedeu o orcamento num tamanho menor",
                     ))
@@ -199,6 +200,8 @@ def executar_suite(problema, specs, instancias, tamanhos, *,
                     algorithm_key=spec.key, kind=spec.kind,
                     language=spec.language, instance=rotulo_instancia,
                     n=n, seed=seed, runs=len(amostras),
+                    complexity_time=spec.complexity_time,
+                    complexity_space=spec.complexity_space,
                     time_median_ms=_mediana_ms(amostras),
                     time_samples_ms=amostras,
                     quality=qualidade, status=status, detail=detalhe,

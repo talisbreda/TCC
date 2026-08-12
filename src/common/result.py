@@ -65,6 +65,12 @@ class ResultRecord:
     n: int
     seed: Optional[int] = None
 
+    # Copiadas do AlgorithmSpec para que o CSV seja autossuficiente: o AC-02
+    # exige a complexidade teorica ao lado do tempo medido, e quem le o CSV nao
+    # tem acesso aos specs.
+    complexity_time: str = ""
+    complexity_space: str = ""
+
     runs: int = 0
     time_median_ms: Optional[float] = None
     time_samples_ms: List[float] = field(default_factory=list)
