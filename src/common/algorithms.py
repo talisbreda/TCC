@@ -16,7 +16,7 @@ algoritmo na lista principal alterava a composicao da secao em silencio. Com
 """
 
 from dataclasses import dataclass
-from typing import Callable, Optional
+from typing import Callable, Optional, Tuple
 
 # Garantia de otimalidade do metodo.
 EXATO = "exato"
@@ -54,6 +54,12 @@ class AlgorithmSpec:
                            exigida pelo AC-23. Vazio para reimplementacoes.
         notes            : ressalva a exibir junto do algoritmo, ex. a zona
                            cinzenta dos lacos Python sobre arrays NumPy.
+        known_bugs       : defeitos documentados do wrapper, como pares
+                           (tipo_de_excecao, rotulo). Ex.:
+                           ((AttributeError, "BugAttr"),). O harness usa isso
+                           para distinguir "defeito conhecido do repositorio"
+                           de "erro inesperado" -- os primeiros sao resultado
+                           do trabalho (AC-03), nao falha da medicao.
         instrumented_fn  : variante instrumentada com contadores de operacoes.
                            Condicional (AC-14) e ainda pendente de decisao; o
                            tempo NUNCA e medido nesta variante, porque contar
@@ -69,7 +75,20 @@ class AlgorithmSpec:
     fn: Callable
     source_url: str = ""
     notes: str = ""
+    known_bugs: Tuple[Tuple[type, str], ...] = ()
     instrumented_fn: Optional[Callable] = None
+
+    def rotulo_de_bug(self, excecao):
+        """
+        Rotulo do defeito conhecido correspondente a excecao, ou None.
+
+        A ordem de `known_bugs` importa quando ha tipos relacionados por
+        heranca: vence o primeiro que casar.
+        """
+        for tipo, rotulo in self.known_bugs:
+            if isinstance(excecao, tipo):
+                return rotulo
+        return None
 
     def __post_init__(self):
         if self.kind not in TIPOS:

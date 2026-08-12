@@ -109,10 +109,13 @@ class ResultRecord:
         """
         if self.status == BUG_CONHECIDO:
             return self.detail or "Erro"
-        if self.status == TIMEOUT:
-            return "timeout"
         if self.status == ERRO:
             return "Erro"
+        # Em timeout ainda pode haver qualidade: o aquecimento concluiu, so
+        # excedeu o orcamento. O resultado e valido -- o que falta e a medicao
+        # de tempo. Reporta-lo preserva cobertura na verificacao do AC-17.
+        if self.status == TIMEOUT and self.quality is None:
+            return "timeout"
         if self.quality is None:
             return ""
         if float(self.quality).is_integer():
