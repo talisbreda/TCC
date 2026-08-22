@@ -124,6 +124,9 @@ class ResultRecord:
             return "timeout"
         if self.quality is None:
             return ""
+        # Qualidade textual (casamento estavel: "0 =ref") passa direto.
+        if isinstance(self.quality, str):
+            return self.quality
         if float(self.quality).is_integer():
             return str(int(self.quality))
         return str(self.quality)

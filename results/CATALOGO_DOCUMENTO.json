@@ -1,0 +1,846 @@
+[
+ {
+  "arquivo": "/home/talis.breda/ufsc/tcc-att/TCC/capitulos/3_taxonomia.tex",
+  "typos": [
+   {
+    "linha": 18,
+    "erro": "Hungaro",
+    "correcao": "Húngaro"
+   }
+  ],
+  "erros_tecnicos": [],
+  "nomenclatura": [
+   {
+    "termo": "Grafos Gerais / grafos não bipartidos",
+    "linha": 20,
+    "observacao": "O item usa o rótulo 'Grafos Gerais' e no corpo do texto refere-se a 'grafos não bipartidos' como sinônimo. Uso coerente, mas vale padronizar a terminologia (grafos gerais x não bipartidos) para alinhar com o restante do TCC."
+   },
+   {
+    "termo": "Tipo de Atribuição",
+    "linha": 11,
+    "observacao": "O título da subseção promete classificar por 'Tipo de Atribuição', mas o conteúdo trata apenas da estrutura do grafo (bipartido, geral, multigrafo). O eixo de atribuição não é desenvolvido no texto."
+   }
+  ],
+  "todos_e_feedback": [],
+  "placeholders": [],
+  "estrutura": {
+   "tem_tabela_resumo": false,
+   "secoes": [
+    "\\section{Taxonomia dos problemas} (linha 7)",
+    "\\subsection{Classificação Baseada na Estrutura do Grafo e Tipo de Atribuição} (linha 11)"
+   ],
+   "resumo": "Capítulo curto (23 linhas) que classifica os problemas de emparelhamento em um único eixo: a estrutura do grafo subjacente. Apresenta uma lista (itemize) com três categorias — Grafos Bipartidos (resolvíveis de forma exata via algoritmo Húngaro e fluxo em redes), Grafos Gerais/não bipartidos (mais complexos, frequentemente resolvidos por aproximação/heurística) e Multigrafos (explicitamente fora do escopo do trabalho). Não há tabela-resumo de algoritmos."
+  },
+  "notas_metodologia_resultados": [
+   "O capítulo declara explicitamente que Multigrafos NÃO serão abordados neste trabalho (linha 22) — delimitação de escopo que deve ser consistente com Metodologia/Resultados.",
+   "Afirma que grafos bipartidos podem ser resolvidos de forma exata com algoritmo Húngaro e algoritmos de fluxo em redes (linha 17-18); e que grafos gerais frequentemente usam algoritmos aproximados ou heurísticas (linha 20). Essas afirmações introduzem implicitamente o eixo 'exato x aproximado x heurístico' que a TASK-26 pretende formalizar — a Metodologia/Resultados precisará sustentar quais algoritmos foram de fato implementados/testados por categoria."
+  ]
+ },
+ {
+  "arquivo": "/home/talis.breda/ufsc/tcc-att/TCC/capitulos/4_problemas_bipartido/4_casamento_estavel.tex",
+  "typos": [
+   {
+    "linha": 15,
+    "erro": "VariaçÕes",
+    "correcao": "Variações (Õ maiúsculo no meio da palavra; está em comentário)"
+   },
+   {
+    "linha": 39,
+    "erro": "que continue livre",
+    "correcao": "que continua livre (concordância verbal — indicativo, não subjuntivo)"
+   }
+  ],
+  "erros_tecnicos": [],
+  "nomenclatura": [
+   {
+    "termo": "casamento estável vs emparelhamento estável",
+    "linha": 28,
+    "observacao": "O título da subseção e o texto usam 'emparelhamento estável' (linha 5, 7), mas a linha 28 chama o algoritmo de 'algoritmo de casamento estável'. O nome do arquivo é casamento_estavel. Uso alternado de 'casamento'/'emparelhamento' para o mesmo conceito ao longo do documento."
+   },
+   {
+    "termo": "noivos vs comprometida vs engaged",
+    "linha": 38,
+    "observacao": "O texto em português usa 'noivos' (linha 38) e 'comprometida'/'comprometidos' (linhas 39, 43) para o mesmo estado, enquanto o pseudocódigo (em inglês) usa 'engaged'. Terminologia mista entre prosa e pseudocódigo, mas coerente dentro de cada."
+   }
+  ],
+  "todos_e_feedback": [
+   {
+    "linha": 15,
+    "conteudo": "Comentário LaTeX: '% VariaçÕes do problema: Stable Roommates problem, Hospitais e Residentes, etc.' — as variações (Stable Roommates, Hospitais/Residentes) estão APENAS em comentário, não desenvolvidas no corpo do texto. Lembrete/TODO implícito de expandir essas variações."
+   }
+  ],
+  "placeholders": [],
+  "estrutura": {
+   "tem_tabela_resumo": false,
+   "secoes": [
+    "Problema do emparelhamento estável (subsection)",
+    "Descrição do problema (subsubsection)",
+    "Propriedades (subsubsection)",
+    "Algoritmo de Gale-Shapley (subsubsection)"
+   ],
+   "resumo": "O capítulo apresenta o Problema do Emparelhamento Estável (Stable Marriage Problem), suas propriedades (estabilidade, existência, otimalidade para quem propõe, pessimismo para quem recebe, não-unicidade) e descreve o algoritmo de Gale-Shapley em prosa e pseudocódigo. NÃO possui tabela-resumo de algoritmos, diferentemente dos outros problemas (TASK-31)."
+  },
+  "notas_metodologia_resultados": []
+ },
+ {
+  "arquivo": "/home/talis.breda/ufsc/tcc-att/TCC/capitulos/6_trabalhos_futuros.tex",
+  "typos": [],
+  "erros_tecnicos": [],
+  "nomenclatura": [
+   {
+    "termo": "ambiente computacional padronizado / framework de testes",
+    "linha": 7,
+    "observacao": "O mesmo artefato e nomeado de duas formas na mesma frase ('ambiente computacional padronizado (framework de testes)'). Nao e erro, mas convem fixar um termo unico e usa-lo de forma consistente no restante da monografia (Metodologia/Resultados)."
+   }
+  ],
+  "todos_e_feedback": [],
+  "placeholders": [
+   {
+    "linha": 5,
+    "texto": "N problemas — 'aprofundamento teórico dos N problemas de emparelhamento'. Placeholder literal (letra N como quantidade). TASK-29."
+   },
+   {
+    "linha": 5,
+    "texto": "M abordagens — 'investigação de M abordagens heurísticas'. Placeholder literal (letra M como quantidade). TASK-29."
+   },
+   {
+    "linha": 7,
+    "texto": "X instâncias — 'conjunto de X instâncias de teste'. Placeholder literal (letra X como quantidade). TASK-29."
+   }
+  ],
+  "estrutura": {
+   "tem_tabela_resumo": false,
+   "secoes": [
+    "\\section{Trabalhos futuros}"
+   ],
+   "resumo": "Capitulo curto (dois paragrafos, sem subsecoes nem tabela-resumo) que descreve as proximas etapas: aprofundar o estudo dos problemas de emparelhamento, investigar abordagens heuristicas e compara-las com os algoritmos exatos por meio de um ambiente de testes padronizado."
+  },
+  "notas_metodologia_resultados": [
+   "PROMESSA (linha 5): estabelecer analise comparativa rigorosa entre heuristicas e algoritmos exatos consagrados na literatura — precisa ser sustentada em Metodologia/Resultados.",
+   "PROMESSA (linha 5): investigar abordagens heuristicas e incluir novos problemas de emparelhamento.",
+   "AMBIENTE DE TESTES DESCRITO COMO FUTURO (linha 7): 'sera desenvolvido um ambiente computacional padronizado (framework de testes), onde os algoritmos serao implementados' — o ambiente/harness ja existe no projeto; o texto usa tempo futuro ('sera desenvolvido', 'serao implementados', 'serao submetidos'). Deve ser reescrito para refletir que o ambiente ja existe.",
+   "AMBIENTE DE TESTES / METODOLOGIA (linha 7): submeter os algoritmos a instancias de teste 'com topologias e dimensoes variadas' — descreve o protocolo experimental que precisa constar na Metodologia.",
+   "RESULTADOS (linha 7): classificar as solucoes heuristicas pela relacao entre eficiencia computacional (tempo de execucao) e qualidade da solucao (proximidade do otimo), usando os algoritmos exatos como referencia — metrica prometida que os Resultados devem apresentar."
+  ]
+ },
+ {
+  "arquivo": "/home/talis.breda/ufsc/tcc-att/TCC/capitulos/5_problemas_gerais/3_emp-induzido-max.tex",
+  "typos": [
+   {
+    "linha": 3,
+    "erro": "complexiade",
+    "correcao": "complexidade"
+   },
+   {
+    "linha": 3,
+    "erro": "pertence à classe os problemas NP-difíceis",
+    "correcao": "pertence à classe dos problemas NP-difíceis"
+   },
+   {
+    "linha": 35,
+    "erro": "garey-jhonson (chave de citação)",
+    "correcao": "garey-johnson — grafia correta do sobrenome Johnson; verificar a chave no arquivo .bib para não quebrar a referência"
+   }
+  ],
+  "erros_tecnicos": [],
+  "nomenclatura": [
+   {
+    "termo": "NP-difícil / NP-Difícil",
+    "linha": 3,
+    "observacao": "Capitalização inconsistente ao longo do texto: 'NP-difíceis' (linha 3) vs 'NP-Difícil' (linhas 20, 22, 39). Padronizar a grafia."
+   },
+   {
+    "termo": "Grafo de Linha / grafo de linha",
+    "linha": 31,
+    "observacao": "Grafado com iniciais maiúsculas em 'Grafo de Linha' (linhas 31, 32) mas em minúsculas em 'grafo transformado' e outros contextos. Padronizar capitalização do conceito."
+   },
+   {
+    "termo": "Emparelhamento Induzido Máximo / MIM / Emparelhamento Forte / Strong Matching",
+    "linha": 3,
+    "observacao": "O problema é introduzido com quatro nomes (MIM, Maximum Induced Matching, Emparelhamento Forte, Strong Matching). Consistência mantida ao longo do texto, apenas verificar que a sigla MIM seja sempre a forma usada após a introdução."
+   }
+  ],
+  "todos_e_feedback": [
+   {
+    "linha": 24,
+    "conteudo": "% TODO: INCLUIR FUNDAMENTACAO SOBRE PROBLEMA DO CONJUNTO INDEPENDENTE — a subseção 'Redução ao Problema do Conjunto Independente' existe e usa o Conjunto Independente Máximo (MIS), mas não há uma fundamentação/definição própria do problema do Conjunto Independente. O TODO segue pendente: falta introduzir formalmente o que é o problema do Conjunto Independente antes de usá-lo na redução."
+   }
+  ],
+  "placeholders": [],
+  "estrutura": {
+   "tem_tabela_resumo": true,
+   "secoes": [
+    "Emparelhamento induzido máximo (subsection)",
+    "Propriedades (subsubsection)",
+    "Complexidade computacional (subsubsection)",
+    "Redução ao Problema do Conjunto Independente (subsubsection)",
+    "Abordagens de solução e heurísticas (subsubsection)",
+    "Heurísticas gulosas (paragraph)",
+    "Metaheurísticas (paragraph)"
+   ],
+   "resumo": "O capítulo apresenta o Emparelhamento Induzido Máximo (MIM), destacando sua NP-dificuldade (mesmo em grafos bipartidos de grau máximo 3), a redução ao Conjunto Independente Máximo via quadrado do grafo de linha L(G)^2, e descreve heurísticas gulosas (Guloso Aleatório e Guloso de Grau Mínimo) e metaheurísticas de busca local. Descreve heurísticas: sim. Tabela-resumo de algoritmos: sim (Tabela tab:emp_induz_max_gerais), porém lista apenas os dois algoritmos gulosos, sem incluir a busca local/metaheurística discutida no texto."
+  },
+  "notas_metodologia_resultados": [
+   "Linha 48: o texto afirma que o Guloso Aleatório fornece uma 'linha de base (baseline) essencial para a avaliação de métodos mais sofisticados' — isso implica que Metodologia/Resultados precisarão sustentar uma comparação entre o baseline e métodos mais sofisticados.",
+   "Tabela (linhas 60-81): dois algoritmos são classificados como 'Heurística' (Guloso Aleatório e Guloso de grau mínimo), presumivelmente candidatos a implementação/teste nos capítulos de Metodologia/Resultados.",
+   "A metaheurística de busca local (parágrafo 'Metaheurísticas', linhas 53-58) é discutida no texto mas NÃO aparece na tabela-resumo de algoritmos — decidir se será implementada/avaliada e, em caso afirmativo, incluí-la na tabela para consistência.",
+   "Linhas 72 e 76: a tabela atribui complexidade O(E) a ambas as heurísticas gulosas — essa complexidade precisará ser justificada/sustentada quando os algoritmos forem descritos na Metodologia."
+  ]
+ },
+ {
+  "arquivo": "/home/talis.breda/ufsc/tcc-att/TCC/capitulos/5_problemas_gerais/2_emp-pond-max.tex",
+  "typos": [],
+  "erros_tecnicos": [
+   {
+    "linha": 84,
+    "problema": "Afirma que o algoritmo de Path Growing (Drake-Hougardy) 'Garante emparelhamento de pelo menos 1/2 da cardinalidade máxima'. Para o problema PONDERADO, a garantia de aproximação 1/2 e sobre o PESO total (peso do emparelhamento >= 1/2 do peso otimo), nao sobre a cardinalidade. Inclusive o proprio comentario da linha 60 registra 'Garantia: Aproximacao de 1/2' referente ao peso.",
+    "correcao_sugerida": "Trocar 'cardinalidade máxima' por 'peso máximo': 'Garante emparelhamento de peso pelo menos 1/2 do peso máximo (ótimo)'."
+   },
+   {
+    "linha": 84,
+    "problema": "O texto afirma que 'A diferença para a versão de emparelhamento de cardinalidade máxima é o passo 5, onde os pesos são somados'. Na lista enumerada (linhas 71-82), o item que soma/compara os pesos ('Compare o peso total de M1 e M2') é o passo 6; o passo 5 (linha 76) contém apenas o itemize com as definições de M1 e M2.",
+    "correcao_sugerida": "Corrigir a referência para 'passo 6' (ou reestruturar a lista para que a comparação de pesos seja de fato o passo 5)."
+   }
+  ],
+  "nomenclatura": [
+   {
+    "termo": "Emparelhamento ponderado máximo / Emparelhamento de Peso Máximo / emparelhamento ponderado",
+    "linha": 1,
+    "observacao": "O mesmo problema aparece com nomes variados: título 'Emparelhamento ponderado máximo' (linha 1), 'Emparelhamento de Peso Máximo (Maximum Weight Matching)' (linha 3) e 'emparelhamento ponderado' ao longo do texto. Recomenda-se fixar um termo canônico em português."
+   },
+   {
+    "termo": "Algoritmo de Edmonds Ponderado / Algoritmo de Blossom Ponderado / Algoritmo de Edmonds para Emparelhamento Ponderado / Edmonds otimizado",
+    "linha": 39,
+    "observacao": "O algoritmo exato é referido por múltiplos nomes (linhas 39, 41, 98 'Edmonds', 102 'Edmonds otimizado'). Consistente na intenção, mas a tabela usa 'Edmonds'/'Edmonds otimizado' enquanto o texto usa 'Algoritmo de Blossom Ponderado'."
+   },
+   {
+    "termo": "admissível / justa / tight",
+    "linha": 21,
+    "observacao": "Três termos usados como sinônimos para a mesma condição de aresta (custo reduzido nulo). São introduzidos explicitamente como equivalentes na linha 21, mas depois o texto alterna entre 'admissíveis' (linhas 30, 45) e 'arestas de igualdade / grafo de igualdade' (linha 99), o que pode confundir."
+   },
+   {
+    "termo": "folga / slack",
+    "linha": 33,
+    "observacao": "Usa 'folga' (linhas 33, 45), 'slack' (linha 45) e 'folga mínima' de forma intercambiável para o mesmo conceito; considerar padronizar."
+   }
+  ],
+  "todos_e_feedback": [
+   {
+    "linha": 56,
+    "conteudo": "Bloco comentado (linhas 56-61) descrevendo 'D. Algoritmos de Crescimento de Caminho (Path Growing)' com funcionamento, complexidade O(E), garantia 1/2 e referência Drake & Hougardy (2003). Conteúdo de rascunho comentado que foi parcialmente reaproveitado na subseção Heurísticas."
+   }
+  ],
+  "placeholders": [],
+  "estrutura": {
+   "tem_tabela_resumo": true,
+   "secoes": [
+    "Emparelhamento ponderado máximo (subsection)",
+    "Formulação poliédrica e Restrições de Blossom (subsubsection)",
+    "A abordagem Primal-Dual (subsubsection)",
+    "O algoritmo de Edmonds Ponderado (subsubsection)",
+    "Otimizações (subsubsection)",
+    "Heurísticas (subsubsection)",
+    "Algoritmo de Crescimento de Caminho / Path Growing (paragraph)"
+   ],
+   "resumo": "O capítulo trata do emparelhamento de peso máximo em grafos gerais (Edmonds ponderado): apresenta a formulação poliédrica com desigualdades de blossom, a abordagem primal-dual (variáveis duais y_v e z_B, arestas admissíveis, ajuste de delta), a evolução de complexidade (Edmonds O(V^4), Lawler O(V^3), otimizações de Galil-Micali-Gabow/Gabow) e heurísticas (gulosa ordenada e Path Growing). Encerra com tabela-resumo (tab:emp_pond_max_gerais)."
+  },
+  "notas_metodologia_resultados": [
+   "NÃO há qualquer menção a van Rantwijk nem à implementação concreta usada no projeto. O capítulo descreve o algoritmo de Edmonds ponderado apenas teoricamente; se a Metodologia/Resultados usar a conhecida implementação de van Rantwijk (mwmatching.py) ou a de networkx/lap, essa origem precisará ser introduzida e justificada, pois aqui não é citada.",
+   "Linha 43/45: afirma que a implementação O(V^3) de Lawler 'por muito tempo foi o padrão em livros didáticos' — se a implementação testada no TCC seguir Lawler O(V^3), convém alinhar com o que efetivamente foi implementado/medido.",
+   "Linhas 98-111 (tabela): lista Edmonds O(V^3), Edmonds otimizado O(EV log V), Gulosa ordenada O(E log E) e Crescimento de caminho O(E) como candidatos — esses são os algoritmos que a Metodologia/Resultados presumivelmente precisará implementar e comparar (exato vs. heurísticas).",
+   "Linha 65/69: promete reutilizar a Heurística Gulosa Ordenada (seção p:gulosa_ordenada) e o Path Growing (seção p:h_path_growing_card) — dependência de que essas heurísticas realmente foram implementadas e são comparáveis nos resultados.",
+   "Linha 51: cita complexidades de otimizações (O(EV log V), O(E sqrt(V alpha(E,V)))) que servem de baseline teórico; se não forem implementadas, deixar claro que ficam fora do escopo experimental."
+  ]
+ },
+ {
+  "arquivo": "/home/talis.breda/ufsc/tcc-att/TCC/capitulos/1_introducao.tex",
+  "typos": [
+   {
+    "linha": 34,
+    "erro": "comparações consistentes",
+    "correcao": "comparações consistentes. (falta o ponto final que encerra o item da lista)"
+   }
+  ],
+  "erros_tecnicos": [
+   {
+    "linha": 14,
+    "problema": "Colisão de notação: o grafo é definido como $G=(V,E)$, mas logo em seguida o mesmo símbolo $V$ é reutilizado para nomear um dos conjuntos da bipartição ($U$ e $V$). O leitor fica sem saber se $V$ é o conjunto de todos os vértices ou apenas uma das partes.",
+    "correcao_sugerida": "Usar símbolos distintos para a bipartição, por exemplo $V = A \\cup B$ (com $A$ e $B$ disjuntos), reservando $V$ para o conjunto de vértices do grafo."
+   }
+  ],
+  "nomenclatura": [
+   {
+    "termo": "$V$ (conjunto de vértices vs. parte da bipartição)",
+    "linha": 14,
+    "observacao": "$V$ designa tanto o conjunto de vértices de $G=(V,E)$ quanto uma das partes disjuntas da bipartição ($U$ e $V$), gerando ambiguidade. O mesmo padrão $U$/$V$ aparece no parágrafo comentado da linha 4."
+   },
+   {
+    "termo": "Problema da Atribuição Quadrática (QAP)",
+    "linha": 18,
+    "observacao": "No texto ativo aparece como 'Problema da Atribuição Quadrática (QAP)' (linha 18); no parágrafo comentado (linha 8) aparece como 'Problema de Atribuição Quadrática(QAP)' — grafia e preposição divergentes ('da' vs 'de') e sem espaço antes do parêntese. Padronizar caso o trecho comentado seja reaproveitado."
+   }
+  ],
+  "todos_e_feedback": [
+   {
+    "linha": 26,
+    "conteudo": "TASK-25 (pedido do orientador): o objetivo geral mistura 'implementar' e 'comparar' num mesmo verbo composto ('levantar, organizar, implementar e comparar'). Precisa ser reescrito para separar claramente (a) implementar os algoritmos de (b) criar o ambiente de testes e testar/comparar. TEXTO ATUAL: 'Este trabalho tem como objetivo principal levantar, organizar, implementar e comparar problemas de emparelhamento em grafos para diversos casos de uso, além de comparar diferentes métodos computacionais presentes na literatura para a solução desses problemas.'"
+   },
+   {
+    "linha": 33,
+    "conteudo": "TASK-25: o objetivo específico já embute a comparação/teste dentro do objetivo de implementação. TEXTO ATUAL: 'Implementar os algoritmos descritos, a fim de comparar a complexidade de tempo e espaço, bem como a qualidade das soluções encontradas.' Deveria ficar restrito ao ato de implementar os algoritmos, movendo a comparação para o item do ambiente de testes."
+   },
+   {
+    "linha": 34,
+    "conteudo": "TASK-25: TEXTO ATUAL: 'Criar um ambiente de testes unificado para testar os algoritmos implementados, a fim de reduzir variabilidade nos resultados e proporcionar comparações consistentes'. Este item já isola parcialmente o ambiente de testes; alinhar a redação com a linha 33 para que 'implementar' e 'testar/comparar' fiquem em objetivos distintos e não sobrepostos."
+   },
+   {
+    "linha": 4,
+    "conteudo": "Bloco de parágrafos antigos comentados (linhas 4 a 12): versões anteriores da introdução mantidas como comentário LaTeX. Contêm variações de texto (definição de emparelhamento, aplicações, QAP, GOAT) que foram substituídas pelo texto ativo. Decidir se remove ou reaproveita antes da entrega."
+   }
+  ],
+  "placeholders": [],
+  "estrutura": {
+   "tem_tabela_resumo": false,
+   "secoes": [
+    "\\section{Introdução}",
+    "\\subsection{Objetivos}",
+    "\\subsubsection{Objetivo geral}",
+    "\\subsubsection{Objetivos específicos}",
+    "\\subsection{Delimitação do estudo}"
+   ],
+   "resumo": "O capítulo introduz formalmente o conceito de emparelhamento em grafos, apresenta aplicações (biologia computacional, redes sociais, visão computacional), esclarece que emparelhamento de cardinalidade/peso máximo está em P enquanto variações como Emparelhamento 3D e QAP são NP-Difíceis, e então declara os objetivos (geral e específicos) e a delimitação do estudo (exclui multigrafos e hipergrafos). Não há tabela-resumo de algoritmos."
+  },
+  "notas_metodologia_resultados": [
+   "Promete implementar os algoritmos descritos na literatura (objetivo geral, linha 26; específico, linha 33) — precisará ser sustentado na Metodologia/Resultados com as implementações concretas.",
+   "Promete comparar complexidade de tempo e espaço e a qualidade das soluções encontradas (linha 33) — exige medições e critérios de comparação nos capítulos de Metodologia/Resultados.",
+   "Promete criar um ambiente de testes unificado para reduzir variabilidade e proporcionar comparações consistentes (linha 34) — descreve o ambiente de testes/harness que deverá ser detalhado na Metodologia.",
+   "Promete mapear/classificar variações de problemas e métodos computacionais por vantagens, limitações e casos de uso (linhas 31-32) — base para uma taxonomia/tabela-resumo esperada em capítulos posteriores.",
+   "Objetivo geral e o texto (linha 20) prometem uma 'comparação detalhada' entre aplicações e limitações dos métodos — deve resultar em análise comparativa nos Resultados.",
+   "Delimitação (linha 40) restringe o escopo a grafos menos complexos, excluindo multigrafos e hipergrafos — deve ser respeitada na seleção de problemas/algoritmos da Metodologia."
+  ]
+ },
+ {
+  "arquivo": "/home/talis.breda/ufsc/tcc-att/TCC/capitulos/4_problemas_bipartido/2_atribuicao.tex",
+  "typos": [
+   {
+    "linha": 125,
+    "erro": "Finalmente, As arestas",
+    "correcao": "Finalmente, as arestas"
+   }
+  ],
+  "erros_tecnicos": [
+   {
+    "linha": 316,
+    "problema": "Jonker-Volgenant listado com complexidade O(VE^2). O algoritmo de Jonker-Volgenant para o problema de atribuicao linear tem complexidade O(n^3) (equivalente a O(V^3) no grafo bipartido completo). O(VE^2) esta incorreto.",
+    "correcao_sugerida": "Trocar por $O(n^3)$ (ou $O(V^3)$), consistente com a complexidade classica do algoritmo LAP."
+   },
+   {
+    "linha": 312,
+    "problema": "Metodo Hungaro listado com complexidade O(VE). O metodo Hungaro tem complexidade O(n^3). A notacao O(VE) e ambigua e inconsistente com o restante do texto/tabela; para o grafo bipartido completo (E ~ n^2, V ~ n) daria O(n^3), mas escrito como O(VE) fica inconsistente e induz a erro.",
+    "correcao_sugerida": "Trocar por $O(n^3)$ (ou $O(V^3)$) para consistencia."
+   },
+   {
+    "linha": 320,
+    "problema": "Linha 'Custo minimo (Bellman-Ford)' listada com complexidade O(EV). Essa e a complexidade de UMA execucao de Bellman-Ford, nao do algoritmo de caminhos de custo minimo sucessivos completo. Como sao necessarias ate V (n) iteracoes/aumentos, a complexidade total e O(V^2 E). Isso e inconsistente com a linha do Dijkstra (linha 324), que corretamente inclui o fator V externo: O(V(E+V log V)).",
+    "correcao_sugerida": "Trocar por $O(V^2 E)$ (isto e, $V$ iteracoes x $O(VE)$ por Bellman-Ford)."
+   }
+  ],
+  "nomenclatura": [
+   {
+    "termo": "N vs n vs V",
+    "linha": 10,
+    "observacao": "A descricao do problema usa $N$ para o numero de trabalhadores/tarefas (linha 10); o pseudo-codigo do metodo Hungaro usa $n$ (linhas 33, 37); as tabelas e analises de complexidade usam $V$ (numero de vertices). Tres notacoes para a mesma quantidade de tamanho do problema. A complexidade correta seria O(n^3)/O(V^3) mas a tabela mistura V e E."
+   },
+   {
+    "termo": "Metodo Hungaro vs Algoritmo Hungaro",
+    "linha": 89,
+    "observacao": "O texto e o paragrafo usam 'Metodo Hungaro' (linhas 17, 19), mas a legenda do algoritmo usa 'Algoritmo Hungaro' (linha 89). Padronizar o nome."
+   },
+   {
+    "termo": "j vs j'",
+    "linha": 53,
+    "observacao": "No pseudo-codigo do metodo Hungaro alternam-se $j$ e $j'$ (ex. linhas 53-57) sem que $j'$ seja explicitamente definido no texto; o vertice-coluna aparece ora como $j$ ora como $j'$. Pode confundir o leitor."
+   }
+  ],
+  "todos_e_feedback": [
+   {
+    "linha": 16,
+    "conteudo": "Linha comentada duplicando o titulo: % \\paragraph{Metodo Hungaro}"
+   },
+   {
+    "linha": 27,
+    "conteudo": "% TODO: detalhar melhor e explicar as linhas (referente ao pseudo-codigo do Hungaro) - atende ao pedido do orientador de detalhar o Hungaro"
+   },
+   {
+    "linha": 119,
+    "conteudo": "% TODO: adicionar pseudo-codigo do algoritmo Jonker-Volgenant"
+   },
+   {
+    "linha": 120,
+    "conteudo": "% Referencia do TODO: 'A Shortest Augmenting Path Algorithm for Dense and Sparse Linear Assignment Problems'"
+   },
+   {
+    "linha": 129,
+    "conteudo": "% TODO: Incluir tambem Out-of-kilter, Simplex, e cost-scaling"
+   },
+   {
+    "linha": 237,
+    "conteudo": "% E EXATO (comentario do revisor/autor indicando que o Algoritmo de Leilao com epsilon-scaling e exato, nao heuristica - ele esta na secao de Heuristicas comentado)"
+   },
+   {
+    "linha": 238,
+    "conteudo": "Todo o bloco do Algoritmo de Leilao com epsilon-scaling (linhas 238-290) esta comentado, incluindo equacoes e analise de complexidade O(N.E log(C))."
+   },
+   {
+    "linha": 292,
+    "conteudo": "% TODO: (pos TCC I): aproximacao via Sinkhorn - com esboco comentado (Soft Assignment, complexidade O(k.N^2))"
+   }
+  ],
+  "placeholders": [],
+  "estrutura": {
+   "tem_tabela_resumo": true,
+   "secoes": [
+    "Descricao do problema",
+    "Propriedades (VAZIA - sem conteudo entre linhas 12 e 14)",
+    "Algoritmos exatos",
+    "Metodo Hungaro (paragrafo, com pseudo-codigo HUNGARIAN e AUGMENT)",
+    "Jonker-Volgenant (paragrafo, sem pseudo-codigo)",
+    "Reducao para problema de fluxo de custo minimo (paragrafo, com OPTFLOW e OPTFLOW_DIJKSTRA)",
+    "Heuristicas",
+    "Heuristica gulosa ordenada (paragrafo)"
+   ],
+   "resumo": "O capitulo apresenta o problema de atribuicao (assignment problem) como emparelhamento ponderado de custo minimo, cobrindo algoritmos exatos (Metodo Hungaro com pseudo-codigo, Jonker-Volgenant, e reducao a fluxo de custo minimo via Bellman-Ford e via Dijkstra com potenciais) e uma heuristica gulosa ordenada, encerrando com uma tabela-resumo comparando complexidades. A subsecao 'Propriedades' esta vazia. Ha tabela-resumo (Tabela 'Algoritmos para problema de atribuicao', linha 300) com 5 algoritmos: Metodo Hungaro, Jonker-Volgenant, Custo minimo (Bellman-Ford), Custo minimo (Dijkstra) e Gulosa ordenada."
+  },
+  "notas_metodologia_resultados": [
+   "Linha 111 e 117: afirma que Jonker-Volgenant foi 'desenvolvido para superar o desempenho pratico do metodo Hungaro' e e 'escolha preferida... especialmente quando comparado ao metodo Hungaro tradicional' - promete comparacao de desempenho pratico entre JV e Hungaro a ser sustentada em Metodologia/Resultados.",
+   "Linha 230: afirma que as solucoes exatas, apesar de polinomiais, sao 'inviaveis para instancias muito grandes' - claim empirico a ser demonstrado nos resultados.",
+   "Linha 235: heuristica gulosa ordenada tem 'a mesma garantia de metade do peso otimo' (fator de aproximacao 1/2) - garantia teorica que idealmente deve ser verificada/mencionada nos resultados.",
+   "Linha 230: menciona que heuristicas objetivam resolver o problema em tempo ate mesmo linear O(E) - meta de desempenho a validar.",
+   "Nao ha descricao de ambiente de testes neste capitulo; as comparacoes de complexidade da tabela (linhas 300-333) sao os candidatos naturais a serem confrontados empiricamente na Metodologia/Resultados."
+  ]
+ },
+ {
+  "arquivo": "/home/talis.breda/ufsc/tcc-att/TCC/capitulos/5_problemas_gerais/1_emp-card-max.tex",
+  "typos": [
+   {
+    "linha": 23,
+    "erro": "cíclos",
+    "correcao": "ciclos (sem acento)"
+   },
+   {
+    "linha": 213,
+    "erro": "máxmia",
+    "correcao": "máxima (dentro de bloco comentado)"
+   }
+  ],
+  "erros_tecnicos": [
+   {
+    "linha": 79,
+    "problema": "Na condição de parada do laço Repeat aparece 'for all $y \\in CA(v)$', mas o vértice processado é $x$ (removido de $Q$ na linha 74) e todo o laço itera sobre $CA(x)$. A variável $v$ não está definida nesse escopo do MAXMATCH — inconsistência de notação.",
+    "correcao_sugerida": "Trocar $CA(v)$ por $CA(x)$ na condição de parada do Repeat."
+   }
+  ],
+  "nomenclatura": [
+   {
+    "termo": "Blossom / Flor / flor / blossom",
+    "linha": 22,
+    "observacao": "Mesmo conceito com capitalização e idioma inconsistentes: 'Flor (Blossom)' (l.22), 'Blossom' (l.24, 42, 84), 'flor' (l.26, 45), 'blossom' itálico (l.28). Padronizar."
+   },
+   {
+    "termo": "Micali e Vazirani / vazirani",
+    "linha": 49,
+    "observacao": "O algoritmo $O(E\\sqrt{V})$ é atribuído no texto apenas a '\\citeonline{vazirani}' (l.49), enquanto a tabela (l.246) o nomeia 'Micali e Vazirani'. Nomear ambos também no texto corrido."
+   },
+   {
+    "termo": "Crescimento de caminho / Path Growing",
+    "linha": 216,
+    "observacao": "Título 'crescimento de caminho (Path Growing)' (l.216) e tabela 'Crescimento de caminho' (l.258). Consistente; registrando o par pt/en."
+   }
+  ],
+  "todos_e_feedback": [
+   {
+    "linha": 51,
+    "conteudo": "% TODO: (sugestão do Maicon) Associar cada método a parte da explicação. AINDA ABERTO — os 4 procedimentos (MAXMATCH, BLOSSOM, CONTRACT, AUGMENT, l.56-187) são apresentados em bloco sem vincular cada um aos passos numerados de 'O algoritmo de Edmonds' (l.40-47). Pedido de Maicon (p.36) NÃO atendido."
+   },
+   {
+    "linha": 246,
+    "conteudo": "Feedback TASK-28 / p.39 (mencionar MICALI e VAZIRANI): ATENDIDO. 'Micali e Vazirani' consta na tabela-resumo (l.246) com $O(E\\sqrt{V})$ e a referência \\citeonline{vazirani} é usada no texto (l.49)."
+   },
+   {
+    "linha": 203,
+    "conteudo": "Bloco comentado 'Busca local com caminhos curtos' (l.203-214), heurística inteira comentada com fonte 'Arkin, E. M., et al. (2006)' (l.214). Decidir se entra no texto ou é removida."
+   }
+  ],
+  "placeholders": [],
+  "estrutura": {
+   "tem_tabela_resumo": true,
+   "secoes": [
+    "Descrição (subsubsection)",
+    "Propriedades (subsubsection)",
+    "Ciclos ímpares (paragraph)",
+    "Flor (Blossom) (paragraph)",
+    "O algoritmo de Edmonds (subsubsection)",
+    "Teorema de Tutte-Berge (paragraph)",
+    "Heurísticas (subsubsection)",
+    "Algoritmo de crescimento de caminho / Path Growing (paragraph)"
+   ],
+   "resumo": "Capítulo trata do emparelhamento de cardinalidade máxima em grafos gerais: ciclos ímpares, estrutura de Blossom e teorema da contração de Edmonds, o algoritmo de Edmonds em 4 procedimentos de pseudocódigo, o teorema/fórmula de Tutte-Berge como certificado de otimalidade, e heurísticas (Gulosa, Karp-Sipser, Path Growing). Contém tabela-resumo (tab:emp_card_max_geral_algos, l.230) com 5 algoritmos: Edmonds O(V^3), Micali e Vazirani O(E√V), Gulosa simples O(E), Karp-Sipser O(E), Crescimento de caminho O(E)."
+  },
+  "notas_metodologia_resultados": [
+   "Linha 49: afirma que 'a maioria das implementações práticas utilizam variantes com complexidade próxima a $O(V^3)$' e que a versão $O(E\\sqrt{V})$ é evitada por complexidade de implementação — afirmação a ser sustentada/citada na Metodologia ou usada para justificar os algoritmos escolhidos.",
+   "A tabela-resumo (l.230) lista 5 algoritmos (Edmonds/Blossom, Micali-Vazirani, Gulosa simples, Karp-Sipser, Crescimento de caminho). Se algum for implementado/comparado, Metodologia/Resultados precisarão sustentar essas complexidades e o desempenho relativo.",
+   "Heurísticas Gulosa Simples e Karp-Sipser são reaproveitadas da seção bipartida (l.201) e Path Growing (drake) é apresentada como heurística linear (l.216-228) — candidatas naturais a implementação/benchmark nos Resultados.",
+   "Não há descrição de ambiente de testes neste capítulo (apenas referências teóricas); promessas de comparação empírica dependem da Metodologia."
+  ]
+ },
+ {
+  "arquivo": "/home/talis.breda/ufsc/tcc-att/TCC/capitulos/4_problemas_bipartido/1_emp_card_max.tex",
+  "typos": [
+   {
+    "linha": 79,
+    "erro": "maximo",
+    "correcao": "máximo (faltando acento)"
+   },
+   {
+    "linha": 144,
+    "erro": "é p principal método",
+    "correcao": "é o principal método"
+   },
+   {
+    "linha": 144,
+    "erro": "camino aumentante",
+    "correcao": "caminho aumentante"
+   },
+   {
+    "linha": 313,
+    "erro": "foram propostas alguns métodos",
+    "correcao": "foram propostos alguns métodos (concordância de gênero: métodos é masculino)"
+   },
+   {
+    "linha": 328,
+    "erro": "ele também é única opção",
+    "correcao": "ele também é a única opção (falta o artigo 'a')"
+   },
+   {
+    "linha": 333,
+    "erro": "resolvia de maneira ótima",
+    "correcao": "resolvida de maneira ótima"
+   },
+   {
+    "linha": 337,
+    "erro": "cardinaliade máxima",
+    "correcao": "cardinalidade máxima (na legenda da tabela)"
+   },
+   {
+    "linha": 52,
+    "erro": "garey-jhonson",
+    "correcao": "garey-johnson (chave de citação com sobrenome 'Johnson' grafado errado; verificar consistência com o .bib)"
+   }
+  ],
+  "erros_tecnicos": [
+   {
+    "linha": 79,
+    "problema": "Enunciado do Lema de Berge está incorreto: afirma que 'um grafo G é máximo se e somente se não existe nenhum caminho aumentante em G'. O lema de Berge trata de um EMPARELHAMENTO ser máximo, não de um grafo.",
+    "correcao_sugerida": "Reformular: 'um emparelhamento M é máximo se, e somente se, não existe nenhum caminho aumentante em G em relação a M'."
+   },
+   {
+    "linha": 215,
+    "problema": "Afirma que o algoritmo de Dinic tem complexidade O(E√V) 'para grafos gerais'. Essa é a cota para redes de capacidade unitária / emparelhamento bipartido. Para grafos gerais Dinic é O(V²E).",
+    "correcao_sugerida": "Corrigir para: Dinic é O(V²E) em grafos gerais, e O(E√V) no caso especial de redes de capacidade unitária (como a redução do emparelhamento bipartido). A tabela (linha 355) lista Dinic como O(E√V) sem essa ressalva; convém deixar claro que é o caso de capacidade unitária."
+   }
+  ],
+  "nomenclatura": [
+   {
+    "termo": "MCM vs MCBM",
+    "linha": 9,
+    "observacao": "O problema é introduzido como 'MCM' (linha 9), mas o algoritmo e o pseudo-código passam a usar a sigla 'MCBM' (linhas 104, 113, 119, 125) sem que 'MCBM' (Maximum Cardinality Bipartite Matching) seja definida no texto."
+   },
+   {
+    "termo": "Kőnig vs König",
+    "linha": 27,
+    "observacao": "Grafia inconsistente do mesmo nome: 'Kőnig' com acento agudo duplo nas linhas 27 e 30, e 'König' com trema nas linhas 48, 54 e 62. Padronizar."
+   },
+   {
+    "termo": "grafo de níveis / camada de níveis / grafo em camadas (layered graph)",
+    "linha": 223,
+    "observacao": "A estrutura de níveis do Hopcroft-Karp/Dinic é chamada de 'camada de níveis' (linha 223) e 'grafos de níveis' (linha 355). Uniformizar a terminologia (ex.: 'grafo em camadas' ou 'grafo de níveis')."
+   }
+  ],
+  "todos_e_feedback": [
+   {
+    "linha": 142,
+    "conteudo": "% TODO: separar BFS — pedido de extrair a BFS do algoritmo de Edmonds-Karp em rotina própria. NÃO atendido: a BFS ainda está embutida no laço principal (linhas 182-196)."
+   },
+   {
+    "linha": 225,
+    "conteudo": "% TODO: melhorar essa explicação"
+   },
+   {
+    "linha": 226,
+    "conteudo": "% Maicon sugeriu explicar mais a fundo — corresponde ao pedido do orientador (Maicon, p.20) de detalhar Hopcroft-Karp quase linha a linha. NÃO atendido: o pseudo-código (linhas 230-308) é apresentado sem explicação linha a linha; há apenas a descrição em prosa das duas fases (linhas 221-223)."
+   },
+   {
+    "linha": 374,
+    "conteudo": "% TODO: possivelmente definir aplicações? exemplo: min-path-cover.md"
+   },
+   {
+    "linha": 67,
+    "conteudo": "Barra invertida solta ao final da linha ('...Hopcroft-Karp.\\'), também na linha 68 ('...\\ref{p:teorema_konig}.\\'). Gera espaço escapado indevido; remover."
+   }
+  ],
+  "placeholders": [],
+  "estrutura": {
+   "tem_tabela_resumo": true,
+   "secoes": [
+    "subsection: Emparelhamento de cardinalidade máxima",
+    "subsubsection: Descrição do problema",
+    "subsubsection: Propriedades",
+    "paragraph: Emparelhamento máximo vs maximal",
+    "paragraph: Caminhos aumentantes",
+    "paragraph: Teorema de Kőnig",
+    "paragraph: Teorema de Hall",
+    "paragraph: Teorema de Gallai e Conjunto Independente Máximo",
+    "subsubsection: Algoritmos exatos",
+    "paragraph: Algoritmo do caminho aumentante",
+    "paragraph: Redução ao problema de fluxo máximo",
+    "paragraph: Algoritmo de Edmonds-Karp",
+    "paragraph: Algoritmo de Dinic",
+    "paragraph: Algoritmo de Hopcroft-Karp",
+    "subsubsection: Heurísticas",
+    "paragraph: Heurística gulosa simples",
+    "paragraph: Heurística de Karp-Sipser",
+    "tabela-resumo: tab:emp_card_max_bip_algos (linhas 335-372)"
+   ],
+   "resumo": "O capítulo cobre o problema de emparelhamento de cardinalidade máxima em grafos bipartidos: define o problema (MCM) e o emparelhamento perfeito, apresenta propriedades estruturais (máximo vs maximal, caminhos aumentantes, teoremas de König, Hall e Gallai com extração de MVC/MIS), detalha algoritmos exatos (caminho aumentante, redução a fluxo máximo, Edmonds-Karp, Dinic, Hopcroft-Karp) com pseudo-código, e heurísticas lineares (gulosa simples e Karp-Sipser), fechando com uma tabela comparativa. A tabela-resumo (tab:emp_card_max_bip_algos) usa tabularx de largura \\textwidth com 4 colunas — Algoritmo | Complexidade de tempo | Tipo | Descrição — booktabs (toprule/midrule/bottomrule), \\arraystretch 1.2, \\addlinespace entre linhas e coluna Tipo classificada em Exato/Heurística; é o formato a replicar nos outros capítulos."
+  },
+  "notas_metodologia_resultados": [
+   "Linha 217: o texto declara explicitamente que 'Este trabalho não tem uma implementação do algoritmo de Dinic' e que será apresentado o Hopcroft-Karp em seu lugar — Metodologia/Resultados devem refletir que Dinic não é implementado, apenas Hopcroft-Karp.",
+   "Linha 137: afirma que para o fluxo máximo 'podemos utilizar algoritmos clássicos como o de Edmonds-Karp' e apresenta seu pseudo-código (linhas 146-211), sugerindo que Edmonds-Karp será implementado/testado como via de solução via redução a fluxo — precisa ser sustentado.",
+   "A tabela comparativa (linhas 335-372) lista seis algoritmos com complexidades (caminho aumentante O(VE), Edmonds-Karp O(VE²), Dinic O(E√V), Hopcroft-Karp O(E√V), gulosa O(E), Karp-Sipser O(E)); se o TCC compara desempenho, os experimentos de Resultados precisam cobrir esses algoritmos (ou justificar exclusões, como Dinic).",
+   "Linhas 318 e 333: afirmações quantitativas sobre as heurísticas — gulosa simples garante pelo menos 1/2 da cardinalidade máxima; Karp-Sipser resolve a maior parte de grafos esparsos de forma ótima — são alegações que a avaliação empírica (Resultados) pode/precisa verificar.",
+   "Linha 42: menciona que a extração de MVC é sub-rotina para o 'Método Dual para o problema de atribuição gargalo' — referência futura (forward reference) que deve ser honrada no capítulo correspondente."
+  ]
+ },
+ {
+  "arquivo": "/home/talis.breda/ufsc/tcc-att/TCC/capitulos/2_fundamentacao.tex",
+  "typos": [
+   {
+    "linha": 10,
+    "erro": "uma uma estrutura",
+    "correcao": "uma estrutura"
+   },
+   {
+    "linha": 122,
+    "erro": "camino",
+    "correcao": "caminho"
+   },
+   {
+    "linha": 246,
+    "erro": "$c(u,v) \\geq o$",
+    "correcao": "$c(u,v) \\geq 0$ (o zero foi digitado como a letra 'o')"
+   },
+   {
+    "linha": 278,
+    "erro": "corretudo",
+    "correcao": "corretude"
+   },
+   {
+    "linha": 278,
+    "erro": "caminhhos",
+    "correcao": "caminhos"
+   },
+   {
+    "linha": 325,
+    "erro": "rede direcionada one cada aresta",
+    "correcao": "rede direcionada onde cada aresta"
+   },
+   {
+    "linha": 351,
+    "erro": "rede resiual",
+    "correcao": "rede residual"
+   },
+   {
+    "linha": 351,
+    "erro": "ciclo e custo negativo",
+    "correcao": "ciclo de custo negativo"
+   }
+  ],
+  "erros_tecnicos": [
+   {
+    "linha": 339,
+    "problema": "Na equacao de conservacao/balanco de fluxo do problema de custo minimo, o balanco e escrito para o no i (somatorios sobre f(i,j) e f(k,i)), mas o caso do sorvedouro usa a condicao 'se j = t'. O indice do caso deveria ser o mesmo no do balanco (i), nao j.",
+    "correcao_sugerida": "Trocar '-F & \\text{se } j = t' por '-F & \\text{se } i = t'."
+   },
+   {
+    "linha": 351,
+    "problema": "O enunciado do teorema dos ciclos negativos esta trocado: afirma que 'um fluxo f e uma solucao VIAVEL se e somente se ... a rede residual nao contem ciclo de custo negativo'. A ausencia de ciclo negativo residual caracteriza a OTIMALIDADE de um fluxo viavel, nao a sua viabilidade.",
+    "correcao_sugerida": "Reformular: 'Um fluxo viavel f e OTIMO se e somente se a rede residual G(f) nao contem nenhum ciclo de custo negativo.'"
+   },
+   {
+    "linha": 330,
+    "problema": "A rede de custo minimo e definida como G=(V,E) na linha 325, mas o somatorio da funcao objetivo (e a restricao na linha 336) itera sobre o conjunto A ('$\\sum_{(u,v)\\in A}$'). A e o conjunto de arcos definido para digrafos na linha 27, criando inconsistencia com E.",
+    "correcao_sugerida": "Uniformizar o conjunto de arestas: usar E (ou A) de forma consistente em toda a subsecao de fluxo de custo minimo."
+   },
+   {
+    "linha": 82,
+    "problema": "Uso de \\theta (Theta minusculo) para denotar limite assintotico justo. A notacao convencional para cota justa e Theta maiusculo (\\Theta). Ocorre tambem nas linhas 83, 115 e 210.",
+    "correcao_sugerida": "Substituir \\theta por \\Theta nas cotas assintoticas justas (linhas 82, 83, 115, 210)."
+   }
+  ],
+  "nomenclatura": [
+   {
+    "termo": "custo de aresta em fluxo de custo minimo (w vs gamma)",
+    "linha": 360,
+    "observacao": "O custo unitario da aresta e denotado por $w(u,v)$ nas linhas 325 e 330, mas na secao de potenciais/custos reduzidos passa a ser denotado por $\\gamma(u,v)$ e $\\gamma'(u,v)$ (linha 360). Mesma grandeza, dois simbolos diferentes."
+   },
+   {
+    "termo": "matching / emparelhamento",
+    "linha": 367,
+    "observacao": "Os termos 'matching' (ingles) e 'emparelhamento' (portugues) sao usados de forma intercambiavel ao longo do capitulo (titulo linha 367 vs uso de 'matching' nas linhas 369-382). Verificar se e intencional e padronizar."
+   },
+   {
+    "termo": "peso vs custo vs comprimento (funcao w)",
+    "linha": 37,
+    "observacao": "A funcao $w$ e apresentada como 'funcao de peso (ou funcao de custo, ou funcao de comprimento)'; ao longo do texto aparece ora como peso (caminhos minimos) ora como custo (fluxo). E declarado como sinonimo, mas convem garantir consistencia."
+   }
+  ],
+  "todos_e_feedback": [
+   {
+    "linha": 70,
+    "conteudo": "% TODO: teorema da integralidade (pendente de escrita, ao final da subsecao de grafo bipartido)"
+   },
+   {
+    "linha": 71,
+    "conteudo": "% TODO: Mendelsohn-Dulmage (pendente de escrita)"
+   },
+   {
+    "linha": 232,
+    "conteudo": "Bloco comentado (linhas 232-238) contendo a subsecao '2.7.5 Reponderacao e Algoritmo de Johnson' (Bellman-Ford + Dijkstra) ainda nao integrada ao texto."
+   },
+   {
+    "linha": 238,
+    "conteudo": "% Apresentar antes de entrar em emparelhamento — nota do autor indicando que a secao de Johnson deve ser posicionada ANTES da subsecao de redes de fluxo/emparelhamento."
+   },
+   {
+    "linha": 88,
+    "conteudo": "Observacao (sem marcador literal): a subsecao 'Busca em largura' nao possui bloco de pseudocodigo/algoritmo, ao contrario de Dijkstra, Bellman-Ford, Floyd-Warshall e Ford-Fulkerson. Se o orientador pediu a BFS em funcao separada, falta o bloco \\begin{algorithm} correspondente."
+   }
+  ],
+  "placeholders": [],
+  "estrutura": {
+   "tem_tabela_resumo": false,
+   "secoes": [
+    "2.1 Definições sobre grafos",
+    "Grafo direcionado",
+    "Grafo ponderado",
+    "Grafo bipartido",
+    "2.2 Busca em grafos",
+    "Representação computacional",
+    "Busca em largura (BFS)",
+    "Busca em profundidade (DFS)",
+    "2.3 Caminhos mais curtos",
+    "Princípio do relaxamento e subestrutura ótima",
+    "Algoritmo de Dijkstra",
+    "Algoritmo de Bellman-Ford",
+    "Algoritmo de Floyd-Warshall",
+    "2.4 Redes de fluxo em grafos",
+    "Definições básicas",
+    "O problema do fluxo máximo (Corte, Redes residuais, Caminhos aumentantes)",
+    "Fluxo de custo mínimo (Condições de otimalidade e ciclos negativos, Potenciais de vértices e custos reduzidos)",
+    "2.5 Problema Geral do Emparelhamento",
+    "Matching em grafos bipartidos",
+    "Formulação geral (emparelhamento e otimização)"
+   ],
+   "resumo": "Capitulo de fundamentacao teorica que cobre definicoes de grafos (direcionado, ponderado, bipartido), algoritmos de busca (BFS/DFS), caminhos minimos (Dijkstra, Bellman-Ford, Floyd-Warshall), redes de fluxo (fluxo maximo, corte minimo, fluxo de custo minimo, potenciais/custos reduzidos) e o problema de emparelhamento (bipartido, ponderado e QAP), com pseudocodigo para os principais algoritmos. Nao ha tabela-resumo comparativa dos algoritmos."
+  },
+  "notas_metodologia_resultados": [
+   "Linha 242: o capitulo afirma apresentar 'os teoremas centrais que sustentam os algoritmos utilizados neste trabalho' — a Metodologia/Resultados precisa efetivamente empregar/implementar esses algoritmos de fluxo.",
+   "Linha 362 (referencia \\ref{p:reduction_to_minimal_flow}): anuncia que potenciais e custos reduzidos serao usados no algoritmo de caminhos sucessivos para o problema de atribuicao em secao posterior — essa secao/label deve existir e ser sustentada adiante.",
+   "Linhas 395-396: promete ligar matching ponderado bipartido ao problema de atribuicao e ao metodo Hungaro — implementacao/comparacao esperada em Metodologia/Resultados.",
+   "Linhas 412-413: afirma que matching maximo bipartido se resolve via reducao a fluxo em redes — reforca que a abordagem por fluxo sera a implementada e avaliada.",
+   "Bloco comentado do Algoritmo de Johnson (linhas 232-238): decisao pendente sobre inclui-lo; se incluido, entra no rol de algoritmos que podem precisar de sustentacao experimental. O capitulo nao descreve ambiente de testes (sem hardware/dataset)."
+  ]
+ },
+ {
+  "arquivo": "/home/talis.breda/ufsc/tcc-att/TCC/capitulos/4_problemas_bipartido/3_min-max.tex",
+  "typos": [
+   {
+    "linha": 15,
+    "erro": "selecionar um valor limite, chamando de threshold",
+    "correcao": "selecionar um valor limite, chamado de threshold"
+   }
+  ],
+  "erros_tecnicos": [
+   {
+    "linha": 72,
+    "problema": "Formula de c* com indices quebrados: em $\\max_i(\\min_j c_{ik})$ e $\\max_j(\\min_i c_{kj})$ o indice k fica livre (nao pertence a nenhum max/min) e o indice interno (j no primeiro, i no segundo) nao aparece na entrada c. Os indices nao fecham.",
+    "correcao_sugerida": "Usar a forma correta (identica a da l. 140): $c\\ast = \\max\\{\\max_i \\min_j c_{ij},\\ \\max_j \\min_i c_{ij}\\}$"
+   },
+   {
+    "linha": 11,
+    "problema": "Inconsistencia entre a definicao do problema e os metodos de solucao. A descricao (l. 9 e 11) define maximizar o MINIMO dos pesos, tratando w_ij como 'eficiencia' (max-min). Ja todos os algoritmos (threshold, dual, caminhos aumentantes, l. 17 em diante) operam sobre uma matriz de CUSTOS c_ij buscando o menor c* que admite emparelhamento perfeito, ou seja, MINIMIZAM o peso maximo (min-max). Sao formulacoes opostas do mesmo problema.",
+    "correcao_sugerida": "Alinhar a descricao aos algoritmos: ou apresentar o problema como min-max de custos desde o inicio, ou explicitar/converter coerentemente a versao de eficiencia (max-min) e ajustar os algoritmos."
+   }
+  ],
+  "nomenclatura": [
+   {
+    "termo": "LBAP",
+    "linha": 63,
+    "observacao": "Sigla usada apenas nas legendas/nomes dos algoritmos (l. 63, 113, 163, 210) e nunca expandida nem definida no texto corrido (Linear Bottleneck Assignment Problem). TASK-30: escolher um nome principal e definir a sigla uma unica vez."
+   },
+   {
+    "termo": "Nome do problema (atribuicao gargalo / Min-Max / Bottleneck Assignment problem)",
+    "linha": 8,
+    "observacao": "Tres nomes na mesma frase (l. 8). 'atribuicao gargalo' tambem em l. 4, 17, 75, 83, 238; 'Emparelhamento Min-Max' em l. 2 e 8; 'Bottleneck Assignment problem' em l. 8; 'problema de gargalo' em l. 218. TASK-30 pede UM nome principal com os sinonimos citados apenas uma vez."
+   },
+   {
+    "termo": "eficiencia (w_ij) vs custo (c_ij)",
+    "linha": 11,
+    "observacao": "A descricao (l. 11) chama w_ij de 'eficiencia' e maximiza o minimo; todos os algoritmos (l. 17+) usam matriz de custos c_ij e minimizam o maximo. Mesmo objeto, dois nomes e dois sentidos opostos."
+   },
+   {
+    "termo": "c\\ast vs c^*",
+    "linha": 15,
+    "observacao": "No texto corrido usa-se $c\\ast$ (l. 15, 17, 19, 69, 72, 75, 77, 80, 83), renderizado com asterisco na linha, enquanto nos pseudocodigos usa-se $c^*$ sobrescrito (l. 28 em diante). Padronizar a notacao."
+   },
+   {
+    "termo": "bicos de garrafa vs gargalo",
+    "linha": 218,
+    "observacao": "Usa 'bicos de garrafa' para designar bottleneck; o termo adotado no restante do capitulo e 'gargalo'. Padronizar para 'gargalo'."
+   },
+   {
+    "termo": "N vs n",
+    "linha": 11,
+    "observacao": "O exemplo usa $N$ trabalhadores e $N$ estacoes (l. 11), mas os pseudocodigos usam $n$ para a mesma quantidade (matriz $n\\times n$, l. 28, 90). Padronizar."
+   }
+  ],
+  "todos_e_feedback": [
+   {
+    "linha": 224,
+    "conteudo": "Secao inteira de heuristica comentada (l. 224-234): 'Busca Local com Caminhos Curtos (Local Search)' com descricao, complexidade O(E), qualidade de aproximacao e fonte (Arkin et al., 2006). Decidir se entra no texto ou e removida; se entrar, deveria constar tambem na tabela-resumo."
+   }
+  ],
+  "placeholders": [],
+  "estrutura": {
+   "tem_tabela_resumo": true,
+   "secoes": [
+    "\\subsection Problema de atribuicao gargalo",
+    "\\subsubsection Descricao do problema",
+    "\\subsubsection Solucoes exatas",
+    "\\paragraph Metodos de threshold",
+    "\\paragraph Metodo dual",
+    "\\paragraph Metodo de caminhos aumentantes",
+    "\\subsubsection Heuristicas",
+    "\\paragraph Heuristica Construtiva Gulosa",
+    "Tabela tab:atribuicao_gargalo_algos (resumo de algoritmos)"
+   ],
+   "resumo": "Apresenta o problema de atribuicao gargalo (bottleneck/min-max) em grafos bipartidos ponderados, cobrindo tres solucoes exatas (metodo de threshold com busca binaria, metodo dual baseado no teorema de Konig, e caminhos aumentantes com Dijkstra modificado) e uma heuristica construtiva gulosa, com pseudocodigos e uma tabela-resumo de complexidades."
+  },
+  "notas_metodologia_resultados": [
+   "A tabela tab:atribuicao_gargalo_algos (l. 236-265) lista 4 algoritmos com complexidades de tempo: Threshold O(V^{2.5}/sqrt(log V)), Metodo Dual O(K*E*sqrt(V)), Caminhos aumentantes O(EV) e Construtiva Gulosa O(E log E). Se algum for implementado/comparado, essas complexidades precisarao ser sustentadas/verificadas na Metodologia.",
+   "A complexidade O(V^{2.5}/sqrt(log V)) e atribuida ao metodo de verificacao de emparelhamento perfeito (l. 19) e reaproveitada para o Threshold na tabela; convem confirmar a fonte e o custo total do laco de busca binaria (fator log dos pesos) na Metodologia.",
+   "A heuristica gulosa (l. 216-222) descreve um criterio de 'custo de oportunidade'/arrependimento para evitar gargalos futuros, mas nao quantifica garantia de aproximacao nem qualidade empirica — a ser avaliado em Resultados caso implementada.",
+   "O capitulo nao descreve ambiente de testes nem promete explicitamente experimentos; qualquer comparacao entre os metodos exatos e a heuristica ficaria a cargo dos capitulos de Metodologia/Resultados."
+  ]
+ }
+]

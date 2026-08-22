@@ -97,7 +97,7 @@ Três achados distintos sobre o mesmo wrapper, todos só visíveis executando:
 
 ## Pendências de observação (preencher ao migrar)
 - [x] Atribuição: expoentes registrados (seção G); benchaplin não-determinístico (seção F)
-- [ ] Casamento estável: OOP × numérico × Lattas, efeito do perfil de
+- [x] Casamento estável: expoentes registrados (seção I); OOP confirma super-quadrático prático
       preferência na contenção (TASK-12)
 - [ ] Confirmar todos os números na **rodada definitiva** (máquina final)
 
@@ -168,3 +168,27 @@ diretamente o objetivo (c)/(d) do trabalho.
   timeout) pressupõe monotonicidade, que o benchaplin viola (trava em n=100,
   falha rápido em n=150+). Desligado no benchmark de atribuição para não
   esconder as células `BugAttr` dos tamanhos maiores.
+
+## I. Expoente empírico — casamento estável (Perfil 1, TASK-12)
+
+| Algoritmo | Teórico | Medido | r² |
+|---|---|---|---|
+| Gale-Shapley (OOP/pip) | O(n²)† | 3.29 | 0.996 |
+| Gale-Shapley (numérico/pip) | O(n²) | 1.91 | 0.997 |
+| Gale-Shapley (Lattas/dict) | O(n³)* | 2.10 | 0.999 |
+
+- **OOP mede ~3.3, muito acima do O(n²) teórico** — e isto CONFIRMA a ressalva
+  já anotada no código: o sobrecusto por objeto (reconstrução das listas de
+  livres a cada rodada) a torna praticamente super-quadrática, "inviável acima
+  de n≈100". O medido valida a teoria da anotação, não a contradiz.
+- **numérico ≈1.9 bate com O(n²)** — a implementação vetorizada (NumPy) realiza
+  a complexidade teórica.
+- **Lattas ≈2.1, abaixo do O(n³)\* de pior caso** — o `.index()` em lista a cada
+  rejeição não domina nos perfis testados.
+- Reforço da leitura geral: o expoente medido tende a ficar ABAIXO do teórico
+  (pior caso conservador), EXCETO quando há sobrecusto de implementação (OOP),
+  em que fica ACIMA — dois modos de divergência previsto×medido, ambos
+  interpretáveis.
+
+Nota: os três algoritmos produzem "0 =ref" em todas as células (emparelhamento
+men-optimal único por teorema) — a qualidade não distingue; só tempo e expoente.

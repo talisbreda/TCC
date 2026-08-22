@@ -191,7 +191,12 @@ def executar_suite(problema, specs, instancias, tamanhos, *,
         runs            : repeticoes cronometradas por celula, alem do
                           aquecimento
         timeout_ms      : orcamento por execucao
-        qualidade_fn    : extrai da saida do algoritmo o numero comparavel
+        qualidade_fn    : recebe (resultado, instancia) e devolve o valor
+                          comparavel -- numero (MCM, atribuicao) ou string
+                          (casamento estavel, cuja "qualidade" e estabilidade +
+                          concordancia com a referencia). Recebe a instancia
+                          porque alguns criterios (pares bloqueantes) dependem
+                          dela, nao so da saida do algoritmo.
         chave_referencia: `key` do algoritmo tomado como otimo de referencia
         seed            : semente usada pelos construtores, apenas registrada
         escalonar_timeout: se True (D5), um timeout num tamanho pula os maiores
@@ -243,7 +248,7 @@ def executar_suite(problema, specs, instancias, tamanhos, *,
 
                 qualidade = None
                 if resultado is not None and status in (OK, TIMEOUT):
-                    qualidade = qualidade_fn(resultado)
+                    qualidade = qualidade_fn(resultado, instancia)
 
                 da_celula.append(ResultRecord(
                     problem=problema, algorithm=spec.name,

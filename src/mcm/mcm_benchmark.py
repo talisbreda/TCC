@@ -150,7 +150,7 @@ def run_benchmark():
 
     registros = executar_suite(
         "mcm", SPECS, instancias, SIZES,
-        runs=RUNS, qualidade_fn=lambda r: r[0],
+        runs=RUNS, qualidade_fn=lambda r, _inst: r[0],
         chave_referencia="hk", seed=42,
     )
 

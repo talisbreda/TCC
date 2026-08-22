@@ -127,7 +127,7 @@ def run_benchmark():
     instancias = [(rotulo, builder) for rotulo, builder in COSTS]
 
     # Custo total (minimizacao); referencia = munkres.
-    comum = dict(runs=RUNS, timeout_ms=TIMEOUT_MS, qualidade_fn=lambda r: r[0],
+    comum = dict(runs=RUNS, timeout_ms=TIMEOUT_MS, qualidade_fn=lambda r, _inst: r[0],
                  chave_referencia="munkres", seed=42, escalonar_timeout=False)
 
     registros = executar_suite("assignment", SPECS, instancias, SIZES, **comum)
