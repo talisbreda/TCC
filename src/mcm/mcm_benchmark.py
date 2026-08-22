@@ -1,78 +1,69 @@
 """
-Benchmark Comparativo — Emparelhamento de Cardinalidade Máxima (MCM)
-em Grafos Bipartidos — Algoritmos Externos
+Benchmark — Emparelhamento de Cardinalidade Maxima (MCM) em Grafos Bipartidos.
 
-Executa os 3 wrappers de algoritmos obtidos de repositórios externos nos
-MESMOS grafos, permitindo comparação direta de tempo e qualidade de solução.
+Migrado para o harness compartilhado (`src/common/`). As responsabilidades de
+medicao, gravacao e formatacao vivem agora no harness; este arquivo so declara
+o que e especifico do MCM: os construtores de grafo e a lista de algoritmos.
 
-=============================================================================
-ALGORITMOS
-=============================================================================
+Saidas (AC-15): tabelas no terminal, `results/mcm.csv` (dados brutos),
+`results/mcm-qualidade.csv` (canonico, para o AC-17), `results/mcm-crescimento.csv`
+(expoente empirico) e as tabelas LaTeX em `results/tex/`.
 
-  Aug. Paths (wbchristerson)   O(V·E)    Exato    BFS por vértice livre
-  Hopcroft-Karp (sofiat)       O(E·√V)   Exato    BFS em fases + DFS
-  Edmonds-Karp (Maxflow-Algs)  O(V·E²)   Exato    Max-flow com BFS
-
-  Baselines de biblioteca (referência de implementações consolidadas):
-  Hopcroft-Karp (NetworkX)     O(E·√V)   Exato    biblioteca pip (Python)
-  Bipartite Matching (igraph)  O(E·√V)   Exato    biblioteca pip (núcleo C)
-
-=============================================================================
-GRAFOS  (idênticos ao benchmark de src_claude/)
-=============================================================================
-
-  Grafo 1 — Esparso, SEM emparelhamento perfeito   grau~2.2  MCM=80%n
-  Grafo 2 — Esparso, COM emparelhamento perfeito   grau=2    MCM=n
-  Grafo 3 — Denso,   COM emparelhamento perfeito   grau~15   MCM=n
+Nomes de algoritmo e rotulos de grafo sao identicos aos da versao anterior de
+proposito: sao a chave de comparacao contra o baseline pre-migracao
+(`results/baseline/mcm-qualidade.csv`).
 """
 
 import io
+import random
 import sys
-import time
-import importlib.util
-from pathlib import Path
 from collections import defaultdict
+from pathlib import Path
 
-# Garante saída UTF-8 no Windows (evita UnicodeEncodeError em terminais CP1252)
+# src/ nao e pacote e os diretorios tem hifens: poe src/ no path para importar
+# `common`.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from common.algorithms import AlgorithmSpec, EXATO, BASELINE, PYTHON, C  # noqa: E402
+from common.harness import executar_suite  # noqa: E402
+from common import report, growth  # noqa: E402
+from common.loader import carregar_funcao  # noqa: E402
+
+# Saida UTF-8 no Windows (mantida por custo zero; ver results/ambiente.md).
 if sys.platform == "win32" and hasattr(sys.stdout, "buffer"):
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
-sys.setrecursionlimit(5000)
-
-_ROOT = Path(__file__).parent.parent.parent   # TCC/
+_RESULTS = Path(__file__).resolve().parent.parent.parent / "results"
 
 
 # =============================================================================
-# Importação dos wrappers via importlib (diretórios com hífens)
+# Wrappers
 # =============================================================================
 
-def _load(rel_path, module_name):
-    spec = importlib.util.spec_from_file_location(module_name, _ROOT / rel_path)
-    mod  = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(mod)
-    return mod
-
-_aug = _load("src/mcm/augmenting/bipartite_mcm_augmenting_paths_wbchristerson.py",
-             "aug_wbchristerson")
-_hk  = _load("src/mcm/hopcroft-karp/bipartite_mcm_hopcroft_karp_sofiat.py",
-             "hk_sofiat")
-_ek  = _load("src/mcm/edmonds-karp/bipartite_mcm_edmonds_karp_maxflow.py",
-             "ek_maxflow")
-_nx  = _load("src/mcm/networkx/bipartite_mcm_networkx_hopcroftkarp.py",
-             "nx_hopcroftkarp")
-_ig  = _load("src/mcm/igraph/bipartite_mcm_igraph.py",
-             "ig_matching")
+_aug = carregar_funcao(
+    "src/mcm/augmenting/bipartite_mcm_augmenting_paths_wbchristerson.py",
+    "max_cardinality_matching_augmenting_paths_wbchristerson")
+_hk = carregar_funcao(
+    "src/mcm/hopcroft-karp/bipartite_mcm_hopcroft_karp_sofiat.py",
+    "max_cardinality_matching_hopcroft_karp_sofiat")
+_ek = carregar_funcao(
+    "src/mcm/edmonds-karp/bipartite_mcm_edmonds_karp_maxflow.py",
+    "max_cardinality_matching_edmonds_karp_maxflow")
+_nx = carregar_funcao(
+    "src/mcm/networkx/bipartite_mcm_networkx_hopcroftkarp.py",
+    "max_cardinality_matching_networkx_hopcroftkarp")
+_ig = carregar_funcao(
+    "src/mcm/igraph/bipartite_mcm_igraph.py",
+    "max_cardinality_matching_igraph")
 
 
 # =============================================================================
-# Construtores de grafo  (idênticos ao src_claude/mcm_benchmark.py)
+# Construtores de grafo (identicos a versao anterior)
 # =============================================================================
 
 def build_graph_1(n, seed=42):
-    a_left  = int(n * 0.8)
-    a_right = int(n * 0.6)
-    b_left  = n - a_left
-    b_right = n - a_right
+    a_left, a_right = int(n * 0.8), int(n * 0.6)
+    b_left, b_right = n - a_left, n - a_right
     edges = set()
     for i in range(a_left):
         edges.add((i, i % a_right))
@@ -95,7 +86,6 @@ def build_graph_2(n, seed=42):
 
 
 def build_graph_3(n, seed=42, avg_degree=15):
-    import random
     rng = random.Random(seed)
     edges = set((i, i) for i in range(n))
     target = n * avg_degree
@@ -104,125 +94,76 @@ def build_graph_3(n, seed=42, avg_degree=15):
     return list(edges)
 
 
-# =============================================================================
-# Estatísticas
-# =============================================================================
-
 def graph_stats(n, edges):
     dl = defaultdict(int)
-    dr = defaultdict(int)
-    for u, v in edges:
+    for u, _ in edges:
         dl[u] += 1
-        dr[v] += 1
-    degs_l = [dl[i] for i in range(n)]
     return {
-        "edges":   len(edges),
-        "deg_avg": sum(degs_l) / len(degs_l),
+        "edges": len(edges),
+        "deg_avg": sum(dl[i] for i in range(n)) / n,
         "density": len(edges) / (n * n) * 100,
     }
 
 
 # =============================================================================
-# Benchmark
+# Configuracao
 # =============================================================================
 
 SIZES = [50, 100, 150, 200, 250]
-RUNS  = 5
+RUNS = 5
 
-ALGORITHMS = [
-    ("Aug. Paths (wbchristerson)", "O(V·E)",   "exato",
-     lambda n, e: _aug.max_cardinality_matching_augmenting_paths_wbchristerson(n, n, e)),
-    ("Hopcroft-Karp (sofiat)",     "O(E·√V)",  "exato",
-     lambda n, e: _hk.max_cardinality_matching_hopcroft_karp_sofiat(n, n, e)),
-    ("Edmonds-Karp (Maxflow-Algs)","O(V·E²)",  "exato",
-     lambda n, e: _ek.max_cardinality_matching_edmonds_karp_maxflow(n, n, e)),
-    ("Hopcroft-Karp (NetworkX)",   "O(E·√V)",  "baseline",
-     lambda n, e: _nx.max_cardinality_matching_networkx_hopcroftkarp(n, n, e)),
-    ("Bipartite Match. (igraph)",  "O(E·√V)",  "baseline",
-     lambda n, e: _ig.max_cardinality_matching_igraph(n, n, e)),
+# A instancia carrega n junto das arestas: o construtor recebe n e devolve
+# (n, edges); cada fn desempacota para a interface (n_left, n_right, edges).
+def _inst(builder):
+    return lambda n: (n, builder(n))
+
+
+SPECS = [
+    AlgorithmSpec("aug", "Aug. Paths (wbchristerson)", "O(V·E)", "O(V+E)",
+                  EXATO, PYTHON, lambda inst: _aug(inst[0], inst[0], inst[1]),
+                  source_url="https://github.com/wbchristerson/perfect-matchings"),
+    AlgorithmSpec("hk", "Hopcroft-Karp (sofiat)", "O(E·√V)", "O(V+E)",
+                  EXATO, PYTHON, lambda inst: _hk(inst[0], inst[0], inst[1]),
+                  source_url="https://github.com/sofiat-olaosebikan/hopcroftkarp"),
+    # O wrapper Edmonds-Karp monta uma matriz de capacidade (V+2)x(V+2):
+    # espaco O(V^2), diferente dos demais.
+    AlgorithmSpec("ek", "Edmonds-Karp (Maxflow-Algs)", "O(V·E²)", "O(V²)",
+                  EXATO, PYTHON, lambda inst: _ek(inst[0], inst[0], inst[1])),
+    # NetworkX e Python puro (D8): kind=baseline, language=python.
+    AlgorithmSpec("nx", "Hopcroft-Karp (NetworkX)", "O(E·√V)", "O(V+E)",
+                  BASELINE, PYTHON, lambda inst: _nx(inst[0], inst[0], inst[1]),
+                  source_url="https://networkx.org/"),
+    AlgorithmSpec("ig", "Bipartite Match. (igraph)", "O(E·√V)", "O(V+E)",
+                  BASELINE, C, lambda inst: _ig(inst[0], inst[0], inst[1]),
+                  source_url="https://igraph.org/python/"),
 ]
 
 GRAPHS = [
     ("Grafo 1 — Esparso | SEM perfeito | MCM = 80% de n", build_graph_1),
-    ("Grafo 2 — Esparso | COM perfeito | MCM = n",         build_graph_2),
-    ("Grafo 3 — Denso   | COM perfeito | MCM = n",         build_graph_3),
+    ("Grafo 2 — Esparso | COM perfeito | MCM = n", build_graph_2),
+    ("Grafo 3 — Denso   | COM perfeito | MCM = n", build_graph_3),
 ]
 
 
 def run_benchmark():
-    for g_name, g_builder in GRAPHS:
-        sep = "=" * 78
-        print(f"\n{sep}")
-        print(f"  {g_name}")
-        print(sep)
+    instancias = [(rotulo, _inst(builder)) for rotulo, builder in GRAPHS]
 
-        print(f"\n  {'n':>5}  {'|E|':>7}  {'grau médio':>11}  {'densidade':>10}")
-        print(f"  {'-'*38}")
-        for n in SIZES:
-            edges = g_builder(n)
-            s = graph_stats(n, edges)
-            print(f"  {n:>5}  {s['edges']:>7,}  {s['deg_avg']:>11.2f}  {s['density']:>9.3f}%")
+    registros = executar_suite(
+        "mcm", SPECS, instancias, SIZES,
+        runs=RUNS, qualidade_fn=lambda r: r[0],
+        chave_referencia="hk", seed=42,
+    )
 
-        # Ótimo de referência (Hopcroft-Karp sofiat)
-        opts = {}
-        for n in SIZES:
-            edges = g_builder(n)
-            opt, _, _ = _hk.max_cardinality_matching_hopcroft_karp_sofiat(n, n, edges)
-            opts[n] = opt
+    report.imprimir_tabelas(registros, "mcm")
+    report.gravar_csv(registros, _RESULTS / "mcm.csv")
+    report.gravar_qualidade_canonica(registros, _RESULTS / "mcm-qualidade.csv")
+    report.gravar_tabelas_latex(registros, _RESULTS / "tex", "mcm")
+    growth.gravar_crescimento_csv(registros, _RESULTS / "mcm-crescimento.csv")
+    return registros
 
-        # Tabela de tempos
-        print(f"\n  Tempos médios ({RUNS} execuções por célula) em milissegundos:\n")
-        col_w = 13
-        header = "".join(f"{'n='+str(n):>{col_w}}" for n in SIZES)
-        print(f"  {'Algoritmo':<30} {'Complexidade':<12} {'Tipo':<10}{header}")
-        print(f"  {'-'*80}")
-
-        for alg_name, complexity, alg_type, alg_fn in ALGORITHMS:
-            row = f"  {alg_name:<30} {complexity:<12} {alg_type:<10}"
-            for n in SIZES:
-                edges = g_builder(n)
-                try:
-                    t0 = time.perf_counter()
-                    for _ in range(RUNS):
-                        result = alg_fn(n, edges)
-                    elapsed = (time.perf_counter() - t0) / RUNS * 1000
-                    cell = f"{elapsed:.2f}ms"
-                except RecursionError:
-                    cell = "RecErr"
-                row += f"{cell:>{col_w}}"
-            print(row)
-
-        # Tabela de MCM encontrado
-        print(f"\n  MCM encontrado por algoritmo:\n")
-        print(f"  {'Algoritmo':<30} {'Complexidade':<12} {'Tipo':<10}{header}")
-        print(f"  {'-'*80}")
-
-        for alg_name, complexity, alg_type, alg_fn in ALGORITHMS:
-            row = f"  {alg_name:<30} {complexity:<12} {alg_type:<10}"
-            for n in SIZES:
-                edges = g_builder(n)
-                opt   = opts[n]
-                try:
-                    result = alg_fn(n, edges)
-                    mcm    = result[0]
-                    gap    = opt - mcm
-                    cell   = f"{mcm}" if gap == 0 else f"{mcm}(-{gap})"
-                except RecursionError:
-                    cell = "RecErr"
-                row += f"{cell:>{col_w}}"
-            print(row)
-
-        print(f"\n  Referência (ótimo): " +
-              "  ".join(f"n={n}: {opts[n]}" for n in SIZES))
-
-
-# =============================================================================
-# Main
-# =============================================================================
 
 if __name__ == "__main__":
     print("=" * 78)
-    print("  BENCHMARK — MCM EM GRAFOS BIPARTIDOS (ALGORITMOS EXTERNOS)")
-    print("  Todos os algoritmos | Todos os grafos | Tamanhos n = 50..250")
+    print("  BENCHMARK — MCM EM GRAFOS BIPARTIDOS")
     print("=" * 78)
     run_benchmark()
