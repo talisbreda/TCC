@@ -96,7 +96,75 @@ Três achados distintos sobre o mesmo wrapper, todos só visíveis executando:
 ---
 
 ## Pendências de observação (preencher ao migrar)
-- [ ] Atribuição: expoentes previsto×medido dos húngaros e do SSP (TASK-11)
+- [x] Atribuição: expoentes registrados (seção G); benchaplin não-determinístico (seção F)
 - [ ] Casamento estável: OOP × numérico × Lattas, efeito do perfil de
       preferência na contenção (TASK-12)
 - [ ] Confirmar todos os números na **rodada definitiva** (máquina final)
+
+---
+
+## F. ACHADO PRINCIPAL — não-determinismo do `benchaplin` (AC-03)
+
+Descoberto ao migrar o benchmark de atribuição para o harness (TASK-11). É o
+achado mais forte do trabalho até aqui.
+
+**O `benchaplin`, sobre a MESMA matriz, produz resultados diferentes em processos
+diferentes.** Em `build_cost_1(75)` (matriz densa, seed fixa): retornou o custo
+correto **238 em 4 de 6 processos** e falhou com `AttributeError` (`BugAttr`) nos
+outros 2. Com `PYTHONHASHSEED=0` fixo, falha consistentemente (3/3).
+
+**Causa:** o bug depende da **ordem de iteração de um conjunto/dicionário de
+objetos**, que o Python randomiza por processo (hash de objetos = `id()`, que
+varia com o endereço de memória). Não é aleatoriedade do algoritmo — é o próprio
+defeito sendo disparado ou não conforme a ordem em que as arestas são visitadas.
+
+**Três desfechos possíveis para a mesma entrada**, todos observados:
+1. retorna o custo correto (238);
+2. falha rápido com `AttributeError`;
+3. entra num caminho lento e não conclui (a célula n=100 densa que rodou 1h30).
+
+**Por que isso é forte para a tese:** ilustra de forma vívida que *implementar e
+medir revela o que catalogar não revela*. Um levantamento bibliográfico jamais
+apontaria que esta implementação pública do método Húngaro é não-determinística
+— o comportamento só emerge executando o código repetidamente. Reforça
+diretamente o objetivo (c)/(d) do trabalho.
+
+**Consequências metodológicas:**
+- A verificação de não-regressão (AC-17) **exclui o benchaplin** da comparação
+  estrita, tratando-o como não-determinístico conhecido (`verify.py` ganhou esse
+  suporte). Os 5 algoritmos determinísticos batem exatos entre baseline e
+  harness — a migração não introduziu regressão.
+- **Reprodutibilidade:** a rodada definitiva deve fixar `PYTHONHASHSEED` (ver
+  `ambiente.md`). O valor escolhido determina o desfecho do benchaplin nas
+  células de fronteira; reportar o desfecho sob o seed fixado E a observação de
+  que ele varia com o seed.
+
+## G. Expoente empírico — atribuição (matriz densa, TASK-11)
+
+| Algoritmo | Teórico | Medido | r² |
+|---|---|---|---|
+| Húngaro (munkres) | O(n³) | 2.30 | 0.998 |
+| Húngaro (mayorx/KM) | O(n³) | 1.39 | 0.979 |
+| SSP (flows) | O(n⁴)* | 2.75 | 0.997 |
+| SciPy (linear_sum_assg) | O(n³) | 1.84 | 0.974 |
+
+- **munkres ≈2.3** fica abaixo do cúbico teórico na faixa medida — o termo n³ só
+  domina em n maior; nos tamanhos testados o comportamento ainda é sub-cúbico.
+- **mayorx e SciPy crescem devagar (~1.4–1.8)** — implementações vetorizadas
+  (NumPy) e compilada (C) escondem constante, mas o expoente também sai baixo na
+  faixa, indicando que não atingiram o regime assintótico.
+- **SSP ≈2.75**: o pior caso O(n⁴) não se materializa nas matrizes densas
+  testadas (o número de aumentos fica bem abaixo do pior caso).
+- Leitura para a discussão: nos tamanhos práticos, o expoente medido costuma
+  ficar **abaixo** do teórico — a complexidade de pior caso é conservadora.
+
+## H. Refinamento do harness na migração da atribuição (Metodologia)
+
+- **Timeout duro por SIGALRM.** O timeout "mole" original (medir o aquecimento e
+  só então checar) fazia a célula patológica do benchaplin rodar 90 min antes de
+  ser marcada. Como a máquina de medição é Linux, o aquecimento passou a rodar
+  sob `SIGALRM`, cortando em tempo real. Refina D5 sem revogá-la.
+- **Escalonamento desligável.** O escalonamento (pular tamanhos maiores após um
+  timeout) pressupõe monotonicidade, que o benchaplin viola (trava em n=100,
+  falha rápido em n=150+). Desligado no benchmark de atribuição para não
+  esconder as células `BugAttr` dos tamanhos maiores.

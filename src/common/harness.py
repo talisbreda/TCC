@@ -37,9 +37,11 @@ medicao.
 """
 
 import gc
+import signal
 import statistics
 import sys
 import time
+from contextlib import contextmanager
 
 from .result import ResultRecord, OK, TIMEOUT, ERRO, BUG_CONHECIDO
 
@@ -47,6 +49,38 @@ from .result import ResultRecord, OK, TIMEOUT, ERRO, BUG_CONHECIDO
 # recursiva; antes so o benchmark de MCM elevava o limite, e apenas para si.
 # Registrar o valor na Metodologia, por ser parametro de execucao.
 LIMITE_RECURSAO = 5000
+
+# Interrupcao dura do aquecimento por SIGALRM, disponivel em Unix.
+#
+# Refinamento da decisao D5: o escalonamento continua valendo (pular tamanhos
+# maiores apos um timeout), mas o aquecimento de uma celula patologica nao pode
+# rodar ate o fim -- um wrapper do problema de atribuicao consumia 90 min numa
+# unica celula. D5 evitava a interrupcao por questao de PORTABILIDADE; como a
+# maquina de medicao e Linux (decisao registrada), o alarme e aplicavel. Fora de
+# Unix, cai no comportamento mole: mede o aquecimento e so entao verifica.
+_TEM_ALARME = hasattr(signal, "setitimer")
+
+
+class _Interrompido(Exception):
+    pass
+
+
+@contextmanager
+def _alarme(timeout_ms):
+    if not _TEM_ALARME:
+        yield
+        return
+
+    def _disparar(signum, frame):
+        raise _Interrompido()
+
+    anterior = signal.signal(signal.SIGALRM, _disparar)
+    signal.setitimer(signal.ITIMER_REAL, timeout_ms / 1000.0)
+    try:
+        yield
+    finally:
+        signal.setitimer(signal.ITIMER_REAL, 0)
+        signal.signal(signal.SIGALRM, anterior)
 
 
 def _mediana_ms(amostras):
@@ -69,9 +103,17 @@ def medir(spec, instancia, *, runs, timeout_ms):
     gc.disable()
     try:
         # Aquecimento: descartado da estatistica, serve de sonda do orcamento.
+        # Rodado sob alarme duro para que uma celula patologica nao consuma
+        # minutos aqui. O alarme envolve SO o aquecimento -- as repeticoes
+        # cronometradas rodam limpas, sem o custo de syscall do setitimer, que
+        # poluiria medidas de sub-milissegundo.
         inicio = time.perf_counter()
         try:
-            resultado = funcao(instancia)
+            with _alarme(timeout_ms):
+                resultado = funcao(instancia)
+        except _Interrompido:
+            return ([], None, TIMEOUT,
+                    f"aquecimento interrompido em {timeout_ms:.0f} ms")
         except Exception as e:            # noqa: BLE001 - classificado abaixo
             rotulo = spec.rotulo_de_bug(e)
             if rotulo:
@@ -79,6 +121,8 @@ def medir(spec, instancia, *, runs, timeout_ms):
             return [], None, ERRO, f"{type(e).__name__}: {e}"[:120]
         aquecimento_ms = (time.perf_counter() - inicio) * 1000
 
+        # Fallback para plataformas sem SIGALRM: o aquecimento rodou ate o fim,
+        # so entao verificamos o orcamento.
         if aquecimento_ms > timeout_ms:
             return ([], resultado, TIMEOUT,
                     f"aquecimento levou {aquecimento_ms:.0f} ms, "
@@ -133,7 +177,7 @@ def _aplicar_referencia(registros, chave_referencia):
 
 def executar_suite(problema, specs, instancias, tamanhos, *,
                    runs=5, timeout_ms=120_000, qualidade_fn,
-                   chave_referencia=None, seed=None):
+                   chave_referencia=None, seed=None, escalonar_timeout=True):
     """
     Executa a matriz algoritmos x instancias x tamanhos.
 
@@ -150,6 +194,12 @@ def executar_suite(problema, specs, instancias, tamanhos, *,
         qualidade_fn    : extrai da saida do algoritmo o numero comparavel
         chave_referencia: `key` do algoritmo tomado como otimo de referencia
         seed            : semente usada pelos construtores, apenas registrada
+        escalonar_timeout: se True (D5), um timeout num tamanho pula os maiores
+                          daquele algoritmo na mesma instancia. Desligar quando a
+                          monotonicidade nao vale -- um wrapper bugado pode
+                          travar num tamanho e falhar rapido em outro maior (caso
+                          do `benchaplin`: trava em n=100, lanca AttributeError
+                          em n=150+). Ai o escalonamento esconderia o defeito.
 
     Retorno:
         lista de ResultRecord, uma por celula.
@@ -188,7 +238,7 @@ def executar_suite(problema, specs, instancias, tamanhos, *,
                 amostras, resultado, status, detalhe = medir(
                     spec, instancia, runs=runs, timeout_ms=timeout_ms)
 
-                if status == TIMEOUT:
+                if status == TIMEOUT and escalonar_timeout:
                     estourados.add(spec.key)
 
                 qualidade = None

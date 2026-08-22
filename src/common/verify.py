@@ -177,21 +177,29 @@ def ler_csv(caminho):
     return mapa
 
 
-def comparar(caminho_antes, caminho_depois):
+def comparar(caminho_antes, caminho_depois, nao_deterministicos=()):
     """
-    Compara dois baselines canonicos. Retorna a lista de divergencias; lista
-    vazia significa ausencia de regressao.
+    Compara dois baselines canonicos.
+
+    Retorna (regressoes, ruido), ambas listas de (chave, antes, depois). Uma
+    divergencia numa celula de um algoritmo listado em `nao_deterministicos` vai
+    para `ruido` -- nao e regressao da migracao, e variacao inerente do proprio
+    algoritmo entre execucoes. `regressoes` vazia significa ausencia de
+    regressao real.
+
+    O algoritmo e o 3o campo da chave (problema, instancia, algoritmo, n).
     """
     antes = ler_csv(caminho_antes)
     depois = ler_csv(caminho_depois)
+    nd = set(nao_deterministicos)
 
-    divergencias = []
+    regressoes, ruido = [], []
     for chave in sorted(set(antes) | set(depois)):
         a = antes.get(chave)
         d = depois.get(chave)
         if a != d:
-            divergencias.append((chave, a, d))
-    return divergencias
+            (ruido if chave[2] in nd else regressoes).append((chave, a, d))
+    return regressoes, ruido
 
 
 def main(argv):
@@ -204,12 +212,18 @@ def main(argv):
         return 0
 
     if len(argv) >= 4 and argv[1] == "comparar":
-        divergencias = comparar(argv[2], argv[3])
-        if not divergencias:
-            print("Sem regressao: as qualidades sao identicas.")
+        # args extras apos os dois CSVs sao nomes de algoritmos nao-deterministicos
+        nd = argv[4:]
+        regressoes, ruido = comparar(argv[2], argv[3], nao_deterministicos=nd)
+        if ruido:
+            print(f"Nao-determinismo conhecido ({len(ruido)} celula(s), nao conta como regressao):")
+            for chave, a, d in ruido:
+                print(f"  {chave[1][:30]} | {chave[2]} n={chave[3]}: {a!r} -> {d!r}")
+        if not regressoes:
+            print("Sem regressao: as qualidades dos algoritmos deterministicos sao identicas.")
             return 0
-        print(f"REGRESSAO: {len(divergencias)} divergencia(s).")
-        for chave, a, d in divergencias:
+        print(f"REGRESSAO: {len(regressoes)} divergencia(s).")
+        for chave, a, d in regressoes:
             print(f"  {chave}: antes={a!r} depois={d!r}")
         return 1
 

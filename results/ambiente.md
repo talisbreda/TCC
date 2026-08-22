@@ -75,10 +75,26 @@ congela junto com a maquina, entao o tempo suspenso **nao** e contabilizado. O
 problema e o estado apos retomar -- caches frios e governador de frequencia
 reajustando afetam a celula que estava em execucao.
 
+### 4. Aleatoriedade de hash entre processos (`PYTHONHASHSEED`)
+
+Descoberto na migração do benchmark de atribuição: o wrapper `benchaplin` é
+**não-determinístico entre processos** — sobre a mesma matriz, ora retorna o
+custo correto, ora falha com `AttributeError`, conforme a ordem de iteração de
+um conjunto de objetos, que o Python randomiza por processo.
+
+**Mitigação:** fixar `PYTHONHASHSEED` na rodada definitiva, para que os
+resultados sejam reproduzíveis. O valor escolhido determina o desfecho do
+benchaplin nas células de fronteira; a Metodologia deve reportar o desfecho sob
+o seed fixado **e** a observação de que ele varia com o seed.
+
+```bash
+PYTHONHASHSEED=0 taskset -c 0 .venv/bin/python src/assignment/assignment_benchmark.py
+```
+
 ## Procedimento da rodada definitiva
 
 1. Fechar aplicacoes pesadas (navegador, IDE)
 2. Fixar o governador em `performance`
-3. Executar cada benchmark com `taskset -c 0`
+3. Executar cada benchmark com `PYTHONHASHSEED=0 taskset -c 0`
 4. Nao suspender a maquina
 5. Restaurar o governador
