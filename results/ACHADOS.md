@@ -240,3 +240,21 @@ Com `PYTHONHASHSEED=0`, os algoritmos determinísticos reproduzem o baseline
 exatamente. As únicas divergências restantes são as células de fronteira do
 `benchaplin` (não-determinístico), corretamente classificadas como ruído
 conhecido pela verificação, não como regressão.
+
+## L. Atribuição gargalo — segundo algoritmo (AC-19, TASK-19)
+
+Implementado o algoritmo de **caminhos aumentantes** (Dijkstra de gargalo,
+construtivo), a partir do pseudo-código do capítulo. Verificado contra o
+Threshold existente em 500 matrizes (uniformes, estruturadas, com empates): custo
+gargalo idêntico em 100% dos casos, atribuições válidas. Antes o gargalo tinha um
+único algoritmo e nenhum benchmark; agora tem dois exatos comparados.
+
+| Algoritmo | Teórico | Expoente medido (densa) | r² |
+|---|---|---|---|
+| Threshold (busca binária) | O(n³ log n) | 2.56 | 0.993 |
+| Caminhos aumentantes | O(n³) | 2.51 | 0.994 |
+
+- Os dois crescem de forma quase idêntica (~n^2.5) na faixa medida — o fator
+  log n do Threshold não se destaca empiricamente nesses tamanhos.
+- Ambos exatos: a qualidade (custo gargalo) coincide sempre; a comparação
+  interessante é de tempo/crescimento.
