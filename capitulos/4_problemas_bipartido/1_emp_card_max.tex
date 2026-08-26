@@ -76,7 +76,7 @@ Por ser em um ambiente mais restrito, o problema de emparelhamento de cardinalid
 
 \paragraph{Algoritmo do caminho aumentante}
 
-O algoritmo de caminho aumentante se baseia em um lema proposto por Claude Berge, que afirma que um grafo G é maximo se e somente se não existe nenhum caminho aumentante em G. Este algoritmo é uma implementação direta deste lema, onde se busca repetidamente por caminhos aumentantes e se aumenta o emparelhamento até que nenhum caminho aumentante possa ser encontrado \cite{lawler}.
+O algoritmo de caminho aumentante se baseia em um lema proposto por Claude Berge, que afirma que um grafo G é máximo se e somente se não existe nenhum caminho aumentante em G. Este algoritmo é uma implementação direta deste lema, onde se busca repetidamente por caminhos aumentantes e se aumenta o emparelhamento até que nenhum caminho aumentante possa ser encontrado \cite{lawler}.
 
 Começamos com um emparelhamento vazio $M=\emptyset$. Escolhemos um vértice livre $u$ no lado esquerdo do grafo bipartido e tentamos encontrar um caminho aumentante $P$ que começa em $u$ e termina em um vértice livre no lado direito do grafo, respeitando a regra da alternância entre arestas em $M$ e arestas fora de $M$. Se um caminho aumentante for encontrado, atualizamos o emparelhamento $M$ invertendo as arestas ao longo do caminho $P$. Repetimos esse processo até que não seja possível encontrar mais caminhos aumentantes. O emparelhamento resultante será o emparelhamento de cardinalidade máxima \cite{halim}.
 
@@ -141,7 +141,7 @@ Com isso, temos agora um grafo de fluxo onde o objetivo é encontrar o fluxo má
 
 % TODO: separar BFS 
 
-O algoritmo de \textbf{Edmonds-Karp} é p principal método para resolver esse tipo de problema. Ele é uma especialização do método de Ford-Fulkerson descrito na seção \ref{p:ford_fulkerson} que utiliza uma busca em largura (BFS) para encontrar sempre o camino aumentante mais curto em número de arestas. Tem complexidade de tempo $O(VE^2)$:
+O algoritmo de \textbf{Edmonds-Karp} é o principal método para resolver esse tipo de problema. Ele é uma especialização do método de Ford-Fulkerson descrito na seção \ref{p:ford_fulkerson} que utiliza uma busca em largura (BFS) para encontrar sempre o caminho aumentante mais curto em número de arestas. Tem complexidade de tempo $O(VE^2)$:
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
@@ -310,7 +310,7 @@ A seguir, o pseudo-código do algoritmo de Hopcroft-Karp:
 \subsubsection{Heurísticas}
 \label{sec:h_emp_card_max_bip}
 
-Por mais que o algoritmo de Hopcroft-Karp descrito em \ref{alg:hopcroft_karp} seja considerado relativamente eficiente, com complexidade $O(E \sqrt{V})$, ele ainda não é tão viável para instâncias muito grandes do problema de emparelhamento de cardinalidade máxima. Por isso, foram propostas alguns métodos aproximados (heurísticas) com o objetivo de resolver o problema com complexidade linear $O(E)$.
+Por mais que o algoritmo de Hopcroft-Karp descrito em \ref{alg:hopcroft_karp} seja considerado relativamente eficiente, com complexidade $O(E \sqrt{V})$, ele ainda não é tão viável para instâncias muito grandes do problema de emparelhamento de cardinalidade máxima. Por isso, foram propostos alguns métodos aproximados (heurísticas) com o objetivo de resolver o problema com complexidade linear $O(E)$.
 
 \paragraph{Heurística gulosa simples}
 \label{p:h_gulosa_simples}
@@ -324,17 +324,17 @@ Heurística descrita por \citeonline{karp-sipser} para grafos esparsos que toma 
 O algoritmo funciona reduzindo dinamicamente o grafo $G=(V,E)$ através da aplicação repetida de duas regras, nesta ordem de prioridade:
 
 \begin{enumerate}
-    \item \textbf{Redução de folhas de grau 1:} Se existir algum vértice $v$ no grafo atual com \textbf{grau 1} (apenas um vizinho $u$), a aresta $(u, v)$ é selecionada imediatamente para o emparelhamento. Isso é seguro pois, se $u$ é o único vizinho de $v$, ele também é única opção para emparelhar $v$. Se isso não for feito, $v$ ficará isolado.
+    \item \textbf{Redução de folhas de grau 1:} Se existir algum vértice $v$ no grafo atual com \textbf{grau 1} (apenas um vizinho $u$), a aresta $(u, v)$ é selecionada imediatamente para o emparelhamento. Isso é seguro pois, se $u$ é o único vizinho de $v$, ele também é a única opção para emparelhar $v$. Se isso não for feito, $v$ ficará isolado.
     \item \textbf{Escolha Aleatória:} Se \textbf{não} existirem vértices de grau 1 (ou seja, todos os vértices têm grau $\ge 2$), o algoritmo escolhe uma aresta $(u, v)$ aleatoriamente, adiciona ao emparelhamento e remove $u$ e $v$ do grafo. 
     
     Em grafos esparsos, isso tende a quebrar ciclos e formar novas folhas (vértices de grau 1), permitindo que o algoritmo volte a usar a regra 1. Porém, em grafos densos, essa escolha aleatória pode comprometer a precisão da solução.
 \end{enumerate}
 
-Para grafos esparsos, a regra 2 é raramente aplicada, pois a remoção de vértices na regra 1 frequentemente cria novas folhas, provocando um efeito cascata, fazendo com que a maior parte do grafo seja resolvia de maneira ótima. A complexidade do algoritmo é linear ($O(E)$).
+Para grafos esparsos, a regra 2 é raramente aplicada, pois a remoção de vértices na regra 1 frequentemente cria novas folhas, provocando um efeito cascata, fazendo com que a maior parte do grafo seja resolvida de maneira ótima. A complexidade do algoritmo é linear ($O(E)$).
 
 \begin{table}[ht]
     \centering
-    \caption{Algoritmos para emparelhamento de cardinaliade máxima em grafos bipartidos}
+    \caption{Algoritmos para emparelhamento de cardinalidade máxima em grafos bipartidos}
     \label{tab:emp_card_max_bip_algos}
     \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
     

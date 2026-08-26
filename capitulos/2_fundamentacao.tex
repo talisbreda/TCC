@@ -7,7 +7,7 @@
 \subsection{Definições sobre grafos}
 
 
-Um \textbf{grafo} $G$ é uma uma estrutura definida por um par $G=(V,E)$, consistindo de um conjunto finito $V$ de elementos 
+Um \textbf{grafo} $G$ é uma estrutura definida por um par $G=(V,E)$, consistindo de um conjunto finito $V$ de elementos 
 chamados \textbf{vértices} (ou \textbf{nós} ou \textbf{pontos}) e um conjunto (ou família) $E$ de pares não ordenados de vértices, 
 chamados de \textbf{arestas} \cite{jungnickel}. O conjunto V é o conjunto de vértices de $G$ e $E$ é a família de arestas de 
 $G$.
@@ -119,7 +119,7 @@ A complexidade da DFS, assim como a BFS, é $\theta(V+E)$ para grafos representa
 
 O problema de encontrar o caminho mais curto entre dois vértices em um grafo é um dos problemas de otimização combinatória mais estudados, servindo como sub-rotina para diversas aplicações, incluindo roteamento de redes e algoritmos de fluxo.
 
-Seja $G=(V,E)$ um grafo ponderado com uma função de peso $w : E \rightarrow \mathbb{R}$. O peso de um caminho $p = \langle v_0, v_1 \dots, v_k \rangle$ é a soma dos pesos de suas arestas constituintes: $w(p) = \sum_{i=1}^{k}w(v_{i-1},v_i)$. O \textbf{caminho mais curto} de um vértice $u$ a um vértice $v$ é definido como qualquer camino $p$ com peso mínimo $\delta(u,v)$ \cite{cormen}.
+Seja $G=(V,E)$ um grafo ponderado com uma função de peso $w : E \rightarrow \mathbb{R}$. O peso de um caminho $p = \langle v_0, v_1 \dots, v_k \rangle$ é a soma dos pesos de suas arestas constituintes: $w(p) = \sum_{i=1}^{k}w(v_{i-1},v_i)$. O \textbf{caminho mais curto} de um vértice $u$ a um vértice $v$ é definido como qualquer caminho $p$ com peso mínimo $\delta(u,v)$ \cite{cormen}.
 
 \subsubsection{Princípio do relaxamento e subestrutura ótima}
 
@@ -243,7 +243,7 @@ A teoria dos fluxos em redes é um ramo fundamental da otimização combinatóri
 
 \subsubsection{Definições básicas}
 
-Uma rede de fluxo é definida por um grafo direcionado $G = (V, E)$, onde $V$ é o conjunto de vértices e $E$ é o conjunto de arestas. Distinguem-se dois vértices especiais: a \textbf{fonte} $s\in V$. que produz o fluxo, e o \textbf{sorvedouro} $t\in V$, que o consome. Para cada aresta $(u, v) \in E$, associa-se uma capacidade não-negativa $c(u,v) \geq o$, que limita a quantidade de fluxo que pode atravessar aquela aresta. Um \textbf{fluxo} em $G$ é uma função $f \space : \space E \rightarrow \mathbb{R}^+$ que satisfaz as seguintes propriedades \cite{cormen}:
+Uma rede de fluxo é definida por um grafo direcionado $G = (V, E)$, onde $V$ é o conjunto de vértices e $E$ é o conjunto de arestas. Distinguem-se dois vértices especiais: a \textbf{fonte} $s\in V$. que produz o fluxo, e o \textbf{sorvedouro} $t\in V$, que o consome. Para cada aresta $(u, v) \in E$, associa-se uma capacidade não-negativa $c(u,v) \geq 0$, que limita a quantidade de fluxo que pode atravessar aquela aresta. Um \textbf{fluxo} em $G$ é uma função $f \space : \space E \rightarrow \mathbb{R}^+$ que satisfaz as seguintes propriedades \cite{cormen}:
 
 \begin{itemize}
     \item \textbf{Restrição de capacidade:} O fluxo em uma aresta não pode exceder a sua capacidade.
@@ -275,7 +275,7 @@ O \textbf{corte mínimo} de uma rede $N$ é um corte cuja capacidade é a menor 
     \textit{O valor máximo do fluxo de uma rede $N$ é igual à capacidade do corte mínimo em $N$ \cite{jungnickel}}
 \end{quotation}
 
-Este teorema é fundamental para a compreensão e corretudo dos algoritmos de caminhhos aumentantes.
+Este teorema é fundamental para a compreensão e corretude dos algoritmos de caminhos aumentantes.
 
 \paragraph{Redes residuais}
 
@@ -322,7 +322,7 @@ O método de Ford-Fulkerson, que é base dos principais algoritmos de resoluçã
 
 \subsubsection{Fluxo de custo mínimo}
 
-Uma outra variação dos problemas em redes de fluxo em grafos é o problema do fluxo de custo mínimo. Essa variação considera, além das capacidades disponíveis, uma dimensão econômica. Seja $G=(V, E)$ uma rede direcionada one cada aresta $(u,v)$ possui uma capacidade $c(u,v)$ e um custo unitário $w(u,v)$. O objetivo é transmitir uma quantidade de fluxo pré-determinada $F$ da fonte $s$ ao sorvedouro $t$ com o menor custo total possível.
+Uma outra variação dos problemas em redes de fluxo em grafos é o problema do fluxo de custo mínimo. Essa variação considera, além das capacidades disponíveis, uma dimensão econômica. Seja $G=(V, E)$ uma rede direcionada onde cada aresta $(u,v)$ possui uma capacidade $c(u,v)$ e um custo unitário $w(u,v)$. O objetivo é transmitir uma quantidade de fluxo pré-determinada $F$ da fonte $s$ ao sorvedouro $t$ com o menor custo total possível.
 
 A formulação linear do problema é dada por \citeonline{ahuja}. O primeiro objetivo é minimizar o custo total do fluxo, que segue a fórmula:
 
@@ -348,7 +348,7 @@ Além desta, é importante lembrar da equação \ref{eq:capacity_restraint}, que
 O critério fundamental para verificar se uma solução é ótima é o \textbf{teorema dos ciclos negativos}:
 
 \begin{quotation}
-    Um fluxo $f$ é uma solução viável para o problema do fluxo de custo mínimo se e somente se ele satisfaz a condição de otimalidade de ciclo negativo: a rede resiual $G(f)$ não contém um ciclo e custo negativo \cite{ahuja}
+    Um fluxo $f$ é uma solução viável para o problema do fluxo de custo mínimo se e somente se ele satisfaz a condição de otimalidade de ciclo negativo: a rede residual $G(f)$ não contém um ciclo de custo negativo \cite{ahuja}
 \end{quotation}
 
 Este teorema é a base dos algoritmos de \textbf{cancelamento de ciclos} (Cycle Canceling), que iterativamente identificam ciclos negativos na rede residual e enviam fluxo através deles para reduzir o custo total da função objetivo até que nenhum ciclo negativo reste.

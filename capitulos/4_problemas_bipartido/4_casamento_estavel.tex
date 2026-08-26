@@ -12,7 +12,7 @@ Imagine dois conjuntos distintos de mesmo tamanho, $N$ homens e $N$ mulheres. Ca
 
 O problema pode ser resolvido utilizando o algoritmo de Gale-Shapley, que usa um processo iterativo de propostas e rejeições para garantir que o emparelhamento final seja estável.
 
-% VariaçÕes do problema: Stable Roommates problem, Hospitais e Residentes, etc.
+% Variações do problema: Stable Roommates problem, Hospitais e Residentes, etc.
 \subsubsection{Propriedades}
 
 \begin{itemize}
@@ -36,7 +36,7 @@ Enquanto existir um homem $h$ que ainda não propôs a todas as mulheres em sua 
     \item A decisão da mulher $m$ é tomada com base em suas preferências:
     \begin{itemize}
         \item Se $m$ não estiver comprometida, ela aceita a proposta de $h$. Eles ficam "noivos".
-        \item Se $m$ já estiver comprometida com outro homem $h'$, ela compara $h$ e $h'$. Se $m$ preferir $h$ a $h'$, ela rejeita $h'$ (que fica livre) e aceita a proposta de $h$. Caso contrário, ela rejeita $h$ (que continue livre e tenta a próxima da sua lista).
+        \item Se $m$ já estiver comprometida com outro homem $h'$, ela compara $h$ e $h'$. Se $m$ preferir $h$ a $h'$, ela rejeita $h'$ (que fica livre) e aceita a proposta de $h$. Caso contrário, ela rejeita $h$ (que continua livre e tenta a próxima da sua lista).
     \end{itemize}
 \end{enumerate}
 

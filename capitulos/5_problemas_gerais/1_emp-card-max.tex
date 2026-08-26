@@ -21,7 +21,7 @@ No entanto, em grafos gerais, a presença de ciclos de comprimento ímpar quebra
 
 \paragraph{Flor (Blossom)}
 
-A solução para lidar com cíclos ímpares foi proposta por \citeonline{edmonds}, e consiste em uma estrutura denominada \textbf{Blossom}.
+A solução para lidar com ciclos ímpares foi proposta por \citeonline{edmonds}, e consiste em uma estrutura denominada \textbf{Blossom}.
 
 Uma Blossom $B$ é definida como um ciclo de comprimento ímpar $2k+1$, onde $k$ arestas pertencem ao emparelhamento $M$, de tal forma que existe apenas um vértice $v_B$ no ciclo (a base da flor) que não é coberto por uma aresta de $M$ dentro do próprio ciclo. A base $v_B$ é conectada ao resto do grafo por um caminho alternante de comprimento par (o \textbf{caule} ou \textit{stem}).
 
@@ -210,7 +210,7 @@ Algumas das heurísticas que resolvem este problema são as mesmas que vimos na 
 %     \item Se encontrar um caminho $u - v - w - z$ onde $(v, w) \in M$, remova $(v, w)$ e adicione $(u, v)$ e $(w, z)$. O emparelhamento aumenta em +1.
 % \end{enumerate}
 
-% Procurar caminhos de comprimento 3 pode ser feito em complexidade de tempo $O(E)$, e há garantia de aproximação com fator acima de $1/2$ (metade) da cardinalidade máxmia
+% Procurar caminhos de comprimento 3 pode ser feito em complexidade de tempo $O(E)$, e há garantia de aproximação com fator acima de $1/2$ (metade) da cardinalidade máxima
 % Fonte: Arkin, E. M., et al. (2006). Local search for the maximum cardinality matching problem.
 
 \paragraph{Algoritmo de crescimento de caminho (Path Growing)}
