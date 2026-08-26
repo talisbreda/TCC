@@ -38,21 +38,29 @@ pip install -r requirements.txt
 Cada problema tem um benchmark proprio, executavel de forma independente:
 
 ```bash
-python src/mcm/mcm_benchmark.py                          # ~45 s
-python src/stable-marriage/stable_marriage_benchmark.py  # ~2 min
-python src/assignment/assignment_benchmark.py            # dezenas de minutos (ver nota)
+python src/mcm/mcm_benchmark.py                          # MCM bipartido (~1 min)
+python src/stable-marriage/stable_marriage_benchmark.py  # casamento estável (~2 min)
+python src/bottleneck/bottleneck_benchmark.py            # atribuição gargalo
+python src/general/general_benchmark.py                  # grafos gerais (card. + peso)
+python src/mim/mim_benchmark.py                          # emparelhamento induzido máximo
+python src/assignment/assignment_benchmark.py            # atribuição (dezenas de min; ver nota)
 ```
+
+Cada benchmark grava em `results/`: `<problema>.csv` (dados brutos),
+`<problema>-qualidade.csv` (canônico, para a verificação de não-regressão),
+`<problema>-crescimento.csv` (expoente empírico) e tabelas LaTeX em
+`results/tex/` prontas para `\input` no documento.
 
 Os tempos sao de referencia, medidos no ambiente descrito abaixo. Cada benchmark
 executa todos os algoritmos do seu problema sobre as **mesmas** instancias e
 imprime duas tabelas: tempos de execucao e qualidade da solucao encontrada.
 
-> **Nota sobre o benchmark de atribuicao.** O tempo total e dominado por um
-> unico wrapper, o `benchaplin`, sobre as matrizes densas aleatorias: onde os
-> demais algoritmos levam milissegundos, ele leva minutos por celula (em n=100,
-> mais de 6 minutos para as 5 repeticoes). Nao ha timeout: uma celula lenta roda
-> ate o fim. Se quiser uma execucao rapida, remova o `benchaplin` da lista
-> `ALGORITHMS_ALL` no topo do arquivo.
+> **Nota sobre o benchmark de atribuicao.** O tempo e dominado pelo wrapper
+> `benchaplin` nas matrizes densas aleatorias: numa celula ele pode levar minutos
+> onde os demais levam milissegundos. O harness aplica um timeout por celula
+> (SIGALRM, em Linux), entao a suite conclui mesmo assim -- a celula estourada e
+> marcada como `timeout`. O `benchaplin` tambem e NAO-DETERMINISTICO entre
+> processos (ver `results/ambiente.md`); fixe `PYTHONHASHSEED` para reproduzir.
 
 Como a saida e redirecionada para arquivo o Python usa buffer de bloco, e o
 progresso so aparece em lotes. Use `python -u` para acompanhar em tempo real.
