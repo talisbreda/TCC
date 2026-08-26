@@ -309,15 +309,15 @@ Similar à heurística gulosa simples descrita na seção \ref{p:h_gulosa_simple
         \textbf{Algoritmo} & \textbf{Complexidade de tempo} & \textbf{Tipo} & \textbf{Descrição} \\
         \midrule
         
-        Método Húngaro & $O(VE)$ & Exato & 
+        Método Húngaro & $O(n^3)$ & Exato & 
         Método primal-dual que mantém folga complementar para custo mínimo em bipartidos. \\
         \addlinespace 
         
-        Jonker-Volgenant & $O(VE^2)$ & Exato & 
+        Jonker-Volgenant & $O(n^3)$ & Exato & 
         Algoritmo primal-dual eficiente que combina redução de custos inicial e busca de caminhos aumentantes com atualização otimizada de duais. \\
         \addlinespace
         
-        Custo mínimo (Bellman-Ford) & $O(EV)$ & Exato & 
+        Custo mínimo (Bellman-Ford) & $O(V^2E)$ & Exato & 
         Método de caminhos sucessivos que usa Bellman-Ford para encontrar caminhos na rede residual, suportando custos negativos iniciais. \\
         \addlinespace
         
