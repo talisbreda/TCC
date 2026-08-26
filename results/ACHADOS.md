@@ -258,3 +258,33 @@ gargalo idêntico em 100% dos casos, atribuições válidas. Antes o gargalo tin
   log n do Threshold não se destaca empiricamente nesses tamanhos.
 - Ambos exatos: a qualidade (custo gargalo) coincide sempre; a comparação
   interessante é de tempo/crescimento.
+
+## M. Emparelhamento em grafos gerais (AC-20, TASK-20/21/22/23)
+
+Três algoritmos externos/próprios, cobrindo os dois problemas dos capítulos de
+grafos gerais, todos em Python puro:
+
+**Cardinalidade máxima:** Blossom/Edmonds (vendorizado de adharshkamath/
+Edmonds-Algorithm — escolhido após um agente testar 3 candidatos; o yorkyer
+falhou 2/200 contra o NetworkX). Verificado 137/137 vs NetworkX. No benchmark, 0
+divergências vs NetworkX.
+
+**Peso máximo:** van Rantwijk (`mwmatching.py`, vendorizado intacto). Verificado
+47/47 vs NetworkX; 0 divergências no benchmark. **Ressalva de linhagem (D9):** o
+`max_weight_matching` do NetworkX é um PORT deste mesmo código — comparar os dois
+mede engenharia de biblioteca, não duas abordagens. Declarado no wrapper e a
+declarar no capítulo.
+
+**Heurística Path Growing** (Drake-Hougardy, 1/2-aproximação, implementada à
+mão, verificada com pior razão 0.502 em 300 grafos):
+
+| Instância | Razão vs ótimo (min) | Razão (média) |
+|---|---|---|
+| Peso — esparso (grau ~3) | 0.782 | 0.846 |
+| Peso — denso (p=0.3) | 0.839 | 0.896 |
+
+- Na prática o Path Growing entrega ~0.78–0.90 do peso ótimo, bem acima da
+  garantia teórica de 0.5 — um segundo exemplo (junto do MCM) de que a heurística
+  rende muito mais que o pior caso.
+- Fecha também o item "algoritmo de Galil" do `todo.md`: van Rantwijk é da
+  família Edmonds/Galil O(n³).
