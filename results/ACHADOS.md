@@ -288,3 +288,27 @@ mão, verificada com pior razão 0.502 em 300 grafos):
   rende muito mais que o pior caso.
 - Fecha também o item "algoritmo de Galil" do `todo.md`: van Rantwijk é da
   família Edmonds/Galil O(n³).
+
+## N. Emparelhamento induzido máximo — NP-difícil (AC-21, TASK-24)
+
+Exato (redução a Conjunto Independente Máximo no grafo de conflitos + branch-and-
+bound) verificado contra força bruta em 200 grafos. Duas heurísticas: guloso
+aleatório e guloso de grau mínimo. Protocolo de dois regimes.
+
+**Regime pequeno (n ≤ 40, razão vs ótimo do exato):**
+
+| Heurística | Razão (min) | Razão (média) |
+|---|---|---|
+| Guloso aleatório | 0.500 | 0.703 |
+| Guloso grau mínimo | 0.750 | 0.955 |
+
+- **Grau mínimo domina** (~0.96 do ótimo em média) — escolher a aresta que
+  bloqueia menos opções futuras é muito melhor que a escolha aleatória (~0.70).
+- É o eixo qualidade×tempo num problema NP-difícil: nenhum exato escala, mas a
+  heurística de grau mínimo entrega quase-ótimo a custo polinomial.
+
+**Regime grande (n até 400):** ótimo inatingível; as heurísticas são comparadas
+contra o melhor conhecido (máximo entre elas por célula), declaradamente NÃO o
+ótimo. O exato do MIM é viável até ~n=40 em grafos esparsos (70 ms), inviável
+além — o que justifica empiricamente a NP-dificuldade e a necessidade das
+heurísticas.
