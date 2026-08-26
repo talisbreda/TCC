@@ -193,13 +193,16 @@ def comparar(caminho_antes, caminho_depois, nao_deterministicos=()):
     depois = ler_csv(caminho_depois)
     nd = set(nao_deterministicos)
 
+    # A regressao e verificada apenas sobre as chaves do BASELINE: algoritmos
+    # novos (presentes so em `depois`) sao cobertura nova, nao regressao.
     regressoes, ruido = [], []
-    for chave in sorted(set(antes) | set(depois)):
-        a = antes.get(chave)
-        d = depois.get(chave)
+    for chave in sorted(antes):
+        a = antes[chave]
+        d = depois.get(chave)  # None = celula do baseline sumiu (regressao real)
         if a != d:
             (ruido if chave[2] in nd else regressoes).append((chave, a, d))
-    return regressoes, ruido
+    novos = sorted(set(depois) - set(antes))
+    return regressoes, ruido, novos
 
 
 def main(argv):
@@ -214,7 +217,10 @@ def main(argv):
     if len(argv) >= 4 and argv[1] == "comparar":
         # args extras apos os dois CSVs sao nomes de algoritmos nao-deterministicos
         nd = argv[4:]
-        regressoes, ruido = comparar(argv[2], argv[3], nao_deterministicos=nd)
+        regressoes, ruido, novos = comparar(argv[2], argv[3], nao_deterministicos=nd)
+        if novos:
+            algs = sorted({c[2] for c in novos})
+            print(f"Cobertura nova ({len(novos)} celula(s)): {', '.join(algs)}")
         if ruido:
             print(f"Nao-determinismo conhecido ({len(ruido)} celula(s), nao conta como regressao):")
             for chave, a, d in ruido:

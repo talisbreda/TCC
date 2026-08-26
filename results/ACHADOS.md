@@ -95,7 +95,7 @@ Três achados distintos sobre o mesmo wrapper, todos só visíveis executando:
 
 ---
 
-## Pendências de observação (preencher ao migrar)
+
 - [x] Atribuição: expoentes registrados (seção G); benchaplin não-determinístico (seção F)
 - [x] Casamento estável: expoentes registrados (seção I); OOP confirma super-quadrático prático
       preferência na contenção (TASK-12)
@@ -192,3 +192,51 @@ diretamente o objetivo (c)/(d) do trabalho.
 
 Nota: os três algoritmos produzem "0 =ref" em todas as células (emparelhamento
 men-optimal único por teorema) — a qualidade não distingue; só tempo e expoente.
+
+## J. Eixo exato × heurística — MCM (AC-18, TASK-13)
+
+Heurísticas implementadas à mão (gulosa simples e Karp-Sipser), verificadas
+independentemente: 800 checagens de força bruta sem falha, KS ótimo em todas as
+florestas testadas, e contra Hopcroft-Karp a pior razão foi gulosa 0.756 / KS
+0.971 em grafos aleatórios grandes.
+
+Razão de qualidade (heurística / ótimo) nos grafos do benchmark:
+
+| Heurística | Grafo 1 (esparso) | Grafo 2 (c/ perfeito) | Grafo 3 (denso) |
+|---|---|---|---|
+| Gulosa | 0.925–0.958 | **0.850–0.860** | 0.930–0.942 |
+| Karp-Sipser | **1.000** | **1.000** | 0.996–0.999 |
+
+- **Karp-Sipser encontra o ótimo exato** nos grafos esparsos e fica a <0.5% no
+  denso — confirma empiricamente a força da regra do grau 1 (a fase determinística
+  do algoritmo já casa quase tudo em grafos esparsos).
+- **A gulosa perde de forma visível**, sobretudo no Grafo 2 (~15% abaixo do
+  ótimo): a ordem de varredura das arestas a prende em emparelhamentos maximais
+  pequenos.
+- É o **trade-off qualidade × custo** central do objetivo (d): a gulosa é O(E)
+  mas sacrifica qualidade; KS é O(V·E) e entrega qualidade ~ótima. Ambas muito
+  mais baratas que os exatos.
+
+Nota metodológica: a razão de qualidade sai automaticamente do harness
+(`quality_ratio`), com Hopcroft-Karp (sofiat) como referência de ótimo.
+
+## K. Jonker-Volgenant nominal (AC-24, TASK-14)
+
+Wrapper da biblioteca `lap` (`lap.lapjv`, núcleo C++) adicionado ao benchmark de
+atribuição. Antes, o JV só aparecia implícito dentro do SciPy; agora tem linha
+própria na tabela de compilados.
+
+- Verificado contra SciPy em 120 matrizes adversariais (negativos, empates,
+  estruturadas): custo idêntico em todos os casos. No benchmark, 27/27 células
+  batem com o SciPy — o esperado, já que ambos resolvem o LAP de forma exata.
+- Valor para o trabalho: permite comparar **duas implementações compiladas
+  independentes do mesmo problema** (SciPy usa uma variante de shortest
+  augmenting path; `lap` implementa Jonker-Volgenant clássico) — comparação de
+  qualidade de implementação a algoritmo fixo, sem a ressalva Python×C.
+
+## Reprodutibilidade confirmada
+
+Com `PYTHONHASHSEED=0`, os algoritmos determinísticos reproduzem o baseline
+exatamente. As únicas divergências restantes são as células de fronteira do
+`benchaplin` (não-determinístico), corretamente classificadas como ruído
+conhecido pela verificação, não como regressão.

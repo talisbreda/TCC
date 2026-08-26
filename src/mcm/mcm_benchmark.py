@@ -24,7 +24,7 @@ from pathlib import Path
 # `common`.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from common.algorithms import AlgorithmSpec, EXATO, BASELINE, PYTHON, C  # noqa: E402
+from common.algorithms import AlgorithmSpec, EXATO, HEURISTICA, BASELINE, PYTHON, C  # noqa: E402
 from common.harness import executar_suite  # noqa: E402
 from common import report, growth  # noqa: E402
 from common.loader import carregar_funcao  # noqa: E402
@@ -55,6 +55,12 @@ _nx = carregar_funcao(
 _ig = carregar_funcao(
     "src/mcm/igraph/bipartite_mcm_igraph.py",
     "max_cardinality_matching_igraph")
+_greedy = carregar_funcao(
+    "src/mcm/heuristics/bipartite_mcm_greedy.py",
+    "max_cardinality_matching_greedy")
+_ks = carregar_funcao(
+    "src/mcm/heuristics/bipartite_mcm_karp_sipser.py",
+    "max_cardinality_matching_karp_sipser")
 
 
 # =============================================================================
@@ -136,6 +142,12 @@ SPECS = [
     AlgorithmSpec("ig", "Bipartite Match. (igraph)", "O(E·√V)", "O(V+E)",
                   BASELINE, C, lambda inst: _ig(inst[0], inst[0], inst[1]),
                   source_url="https://igraph.org/python/"),
+    # Heuristicas: criam o eixo exato x heuristica (AC-18). Implementadas a mao,
+    # com fonte bibliografica no cabecalho de cada arquivo.
+    AlgorithmSpec("greedy", "Gulosa", "O(E)", "O(V)",
+                  HEURISTICA, PYTHON, lambda inst: _greedy(inst[0], inst[0], inst[1])),
+    AlgorithmSpec("ks", "Karp-Sipser", "O(V·E)", "O(V+E)",
+                  HEURISTICA, PYTHON, lambda inst: _ks(inst[0], inst[0], inst[1])),
 ]
 
 GRAPHS = [

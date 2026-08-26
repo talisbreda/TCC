@@ -55,6 +55,8 @@ _ssp = carregar_funcao("src/assignment/ssp/assignment_ssp_flows.py",
                        "assignment_ssp_flows")
 _scipy = carregar_funcao("src/assignment/scipy/assignment_scipy_linear_sum.py",
                          "assignment_scipy_linear_sum")
+_jv = carregar_funcao("src/assignment/jonker-volgenant/assignment_jv_lap.py",
+                      "assignment_jv_lap")
 
 
 # =============================================================================
@@ -111,6 +113,10 @@ SPECS = [
     AlgorithmSpec("scipy", "SciPy (linear_sum_assg)", "O(n^3)", "O(n²)",
                   BASELINE, C, lambda m: _scipy(m),
                   source_url="https://scipy.org/"),
+    # Jonker-Volgenant nominal (antes so aparecia implicito dentro do SciPy).
+    AlgorithmSpec("jv", "Jonker-Volgenant (lap)", "O(n^3)", "O(n²)",
+                  BASELINE, C, lambda m: _jv(m),
+                  source_url="https://github.com/gatagat/lap"),
 ]
 
 COSTS = [
@@ -119,7 +125,7 @@ COSTS = [
     ("Matriz 3 — Estruturada     | custo = |i-j|+1", build_cost_3),
 ]
 
-_CHAVES_SECAO_2 = ("munkres", "benchaplin", "hunalg", "mayorx", "scipy")  # sem SSP
+_CHAVES_SECAO_2 = ("munkres", "benchaplin", "hunalg", "mayorx", "scipy", "jv")  # sem SSP
 
 
 def run_benchmark():
