@@ -158,23 +158,30 @@ qualidade que alcança é, aliás, um pouco superior nos grafos densos.
 
 Sendo NP-difícil, o emparelhamento induzido máximo tem perfil distinto: o
 algoritmo exato só é viável em instâncias pequenas, e a qualidade das heurísticas
-é o eixo central. Apresentam-se as duas densidades avaliadas.
+é o eixo central. Apresentam-se as três densidades avaliadas.
 
 \input{results/tex/mim-grafo-esparso-grau-3-tempo-python}
 \input{results/tex/mim-grafo-esparso-grau-3-qualidade}
 \input{results/tex/mim-grafo-medio-grau-6-tempo-python}
 \input{results/tex/mim-grafo-medio-grau-6-qualidade}
+\input{results/tex/mim-grafo-denso-grau-12-tempo-python}
+\input{results/tex/mim-grafo-denso-grau-12-qualidade}
 
 O algoritmo exato, que reduz o problema a conjunto independente máximo no grafo de
-conflitos, resolve instâncias pequenas em poucos milissegundos, mas seu custo
-cresce rapidamente e o torna inviável além de algumas dezenas de vértices --- o
-que justifica empiricamente a necessidade das heurísticas. A comparação entre
-densidades é elucidativa: em grafos esparsos, a heurística de grau mínimo alcança
-o ótimo, e mesmo a escolha aleatória fica razoavelmente próxima; já nos grafos
-mais densos, a qualidade de ambas cai, e a distância entre elas aumenta. A
-heurística de grau mínimo mantém-se consistentemente superior à aleatória, ao
-custo de um tempo consideravelmente maior, por manter e atualizar o grafo de
-conflitos.
+conflitos, resolve as instâncias pequenas em poucos milissegundos --- inclusive
+nas densas, em que o emparelhamento induzido máximo é pequeno e a poda é eficaz
+---, mas seu custo cresce rapidamente e o torna inviável além de algumas dezenas
+de vértices, o que justifica empiricamente a necessidade das heurísticas. A
+comparação entre densidades revela um comportamento não-monótono digno de nota: a
+heurística de grau mínimo alcança o ótimo tanto nos grafos esparsos quanto nos
+densos, mas tem sua pior qualidade na densidade \textit{intermediária}. A
+explicação é que, em grafos muito densos, quase toda aresta conflita com as
+demais, de modo que o emparelhamento induzido é pequeno e fácil de acertar; é na
+densidade média que há mais espaço para escolhas localmente boas mas globalmente
+subótimas. A escolha aleatória, por sua vez, degrada-se de forma mais acentuada
+com o aumento da densidade. Em todos os casos, a heurística de grau mínimo é
+consistentemente superior à aleatória, ao custo de um tempo maior, por manter e
+atualizar o grafo de conflitos.
 
 % ---------------------------------------------------------------------------
 \subsection{Defeitos em implementações públicas}

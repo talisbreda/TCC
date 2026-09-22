@@ -50,6 +50,10 @@ def build_medio(n, seed=42):
     return _grafo(n, 6.0, seed)
 
 
+def build_denso(n, seed=42):
+    return _grafo(n, 12.0, seed)
+
+
 SIZES_PEQ = [10, 15, 20, 25, 30, 40]      # com exato
 SIZES_GRA = [50, 100, 200, 400]           # heurísticas só
 RUNS = 5
@@ -67,6 +71,7 @@ SPECS_GRA = SPECS_PEQ[1:]   # só as heurísticas
 INST = [
     ("Grafo esparso (grau ~3)", build_esparso),
     ("Grafo médio (grau ~6)", build_medio),
+    ("Grafo denso (grau ~12)", build_denso),
 ]
 
 

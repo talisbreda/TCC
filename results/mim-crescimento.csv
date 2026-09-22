@@ -1,7 +1,10 @@
 problem,instance,algorithm,kind,language,complexity_time,expoente_empirico,r2,n_pontos
-mim-pequeno,Grafo esparso (grau ~3),Exato (MIS conflitos),exato,python,exp.,4.1781,0.8908,6
-mim-pequeno,Grafo esparso (grau ~3),Guloso aleatório,heuristica,python,O(E²),1.8340,0.9873,10
-mim-pequeno,Grafo esparso (grau ~3),Guloso grau mínimo,heuristica,python,O(E²),2.0575,0.9978,10
-mim-pequeno,Grafo médio (grau ~6),Exato (MIS conflitos),exato,python,exp.,3.9202,0.9158,6
-mim-pequeno,Grafo médio (grau ~6),Guloso aleatório,heuristica,python,O(E²),1.7346,0.9940,10
-mim-pequeno,Grafo médio (grau ~6),Guloso grau mínimo,heuristica,python,O(E²),2.1137,0.9961,10
+mim-pequeno,Grafo esparso (grau ~3),Exato (MIS conflitos),exato,python,exp.,4.1837,0.9030,6
+mim-pequeno,Grafo esparso (grau ~3),Guloso aleatório,heuristica,python,O(E²),1.8249,0.9840,10
+mim-pequeno,Grafo esparso (grau ~3),Guloso grau mínimo,heuristica,python,O(E²),2.0596,0.9978,10
+mim-pequeno,Grafo médio (grau ~6),Exato (MIS conflitos),exato,python,exp.,3.9420,0.9164,6
+mim-pequeno,Grafo médio (grau ~6),Guloso aleatório,heuristica,python,O(E²),1.7276,0.9933,10
+mim-pequeno,Grafo médio (grau ~6),Guloso grau mínimo,heuristica,python,O(E²),2.1100,0.9956,10
+mim-pequeno,Grafo denso (grau ~12),Exato (MIS conflitos),exato,python,exp.,3.1007,0.9900,6
+mim-pequeno,Grafo denso (grau ~12),Guloso aleatório,heuristica,python,O(E²),1.7171,0.9910,10
+mim-pequeno,Grafo denso (grau ~12),Guloso grau mínimo,heuristica,python,O(E²),2.2964,0.9908,10

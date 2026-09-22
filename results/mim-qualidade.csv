@@ -35,6 +35,24 @@ mim-pequeno,,Grafo médio (grau ~6),Guloso grau mínimo,30,5
 mim-pequeno,,Grafo médio (grau ~6),Exato (MIS conflitos),40,8
 mim-pequeno,,Grafo médio (grau ~6),Guloso aleatório,40,6
 mim-pequeno,,Grafo médio (grau ~6),Guloso grau mínimo,40,7
+mim-pequeno,,Grafo denso (grau ~12),Exato (MIS conflitos),10,1
+mim-pequeno,,Grafo denso (grau ~12),Guloso aleatório,10,1
+mim-pequeno,,Grafo denso (grau ~12),Guloso grau mínimo,10,1
+mim-pequeno,,Grafo denso (grau ~12),Exato (MIS conflitos),15,2
+mim-pequeno,,Grafo denso (grau ~12),Guloso aleatório,15,1
+mim-pequeno,,Grafo denso (grau ~12),Guloso grau mínimo,15,2
+mim-pequeno,,Grafo denso (grau ~12),Exato (MIS conflitos),20,3
+mim-pequeno,,Grafo denso (grau ~12),Guloso aleatório,20,1
+mim-pequeno,,Grafo denso (grau ~12),Guloso grau mínimo,20,3
+mim-pequeno,,Grafo denso (grau ~12),Exato (MIS conflitos),25,3
+mim-pequeno,,Grafo denso (grau ~12),Guloso aleatório,25,2
+mim-pequeno,,Grafo denso (grau ~12),Guloso grau mínimo,25,3
+mim-pequeno,,Grafo denso (grau ~12),Exato (MIS conflitos),30,4
+mim-pequeno,,Grafo denso (grau ~12),Guloso aleatório,30,3
+mim-pequeno,,Grafo denso (grau ~12),Guloso grau mínimo,30,4
+mim-pequeno,,Grafo denso (grau ~12),Exato (MIS conflitos),40,5
+mim-pequeno,,Grafo denso (grau ~12),Guloso aleatório,40,4
+mim-pequeno,,Grafo denso (grau ~12),Guloso grau mínimo,40,5
 mim-grande,,Grafo esparso (grau ~3),Guloso aleatório,50,10
 mim-grande,,Grafo esparso (grau ~3),Guloso grau mínimo,50,11
 mim-grande,,Grafo esparso (grau ~3),Guloso aleatório,100,18
@@ -51,3 +69,11 @@ mim-grande,,Grafo médio (grau ~6),Guloso aleatório,200,30
 mim-grande,,Grafo médio (grau ~6),Guloso grau mínimo,200,39
 mim-grande,,Grafo médio (grau ~6),Guloso aleatório,400,55
 mim-grande,,Grafo médio (grau ~6),Guloso grau mínimo,400,72
+mim-grande,,Grafo denso (grau ~12),Guloso aleatório,50,4
+mim-grande,,Grafo denso (grau ~12),Guloso grau mínimo,50,6
+mim-grande,,Grafo denso (grau ~12),Guloso aleatório,100,9
+mim-grande,,Grafo denso (grau ~12),Guloso grau mínimo,100,14
+mim-grande,,Grafo denso (grau ~12),Guloso aleatório,200,20
+mim-grande,,Grafo denso (grau ~12),Guloso grau mínimo,200,25
+mim-grande,,Grafo denso (grau ~12),Guloso aleatório,400,35
+mim-grande,,Grafo denso (grau ~12),Guloso grau mínimo,400,55
