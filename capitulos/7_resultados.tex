@@ -17,12 +17,14 @@ tempos frente à complexidade teórica.
 % ---------------------------------------------------------------------------
 \subsection{Cardinalidade máxima em grafos bipartidos}
 
-A Tabela~\ref{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-python} apresenta os
-tempos dos algoritmos em Python para o grafo denso, e a
+As Tabelas~\ref{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-python}
+e~\ref{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-c} apresentam os tempos dos
+algoritmos para o grafo denso, separados por linguagem de implementação, e a
 Tabela~\ref{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-qualidade}, a qualidade das
 soluções.
 
 \input{results/tex/mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-python}
+\input{results/tex/mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-c}
 \input{results/tex/mcm-grafo-3-denso-com-perfeito-mcm-n-qualidade}
 
 Entre os algoritmos exatos, a diferença de desempenho é de mais de duas ordens de
@@ -31,8 +33,8 @@ reconstrói a busca a cada aumento, é dramaticamente mais lento que o
 Hopcroft-Karp, que agrupa os caminhos aumentantes em fases. Essa distância
 confirma na prática o que a complexidade assintótica prevê e ilustra por que, em
 grafos maiores, a escolha do algoritmo importa muito mais do que a constante de
-implementação. A implementação de núcleo compilado (igraph), reportada à parte,
-é a mais rápida de todas, como esperado.
+implementação. A implementação de núcleo compilado (igraph), na tabela dos
+compilados, é a mais rápida de todas, como esperado.
 
 Quanto às heurísticas, os resultados evidenciam o compromisso central entre
 qualidade e tempo. A heurística gulosa é a mais rápida de todo o conjunto, porém
@@ -49,10 +51,13 @@ Os tempos dos algoritmos para a matriz densa constam na
 Tabela~\ref{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
 (interpretados) e na
 Tabela~\ref{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-c}
-(compilados).
+(compilados); a Tabela~\ref{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-qualidade}
+traz a qualidade, na qual se veem também as células em que dois dos algoritmos
+falham.
 
 \input{results/tex/assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
 \input{results/tex/assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-c}
+\input{results/tex/assignment-matriz-1-densa-uniforme-custo-in-1-100-qualidade}
 
 Todos os algoritmos que concluem atingem o custo ótimo, de modo que a comparação
 recai sobre o tempo. Entre as quatro implementações do método Húngaro, obtidas de
@@ -69,9 +74,12 @@ em parte das instâncias densas; como esse é um resultado relevante por si só,
 \subsection{Atribuição gargalo}
 
 A Tabela~\ref{tab:bottleneck-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
-compara os dois algoritmos exatos para a matriz densa.
+compara os tempos dos dois algoritmos exatos para a matriz densa, e a
+Tabela~\ref{tab:bottleneck-matriz-1-densa-uniforme-custo-in-1-100-qualidade}, o
+custo gargalo que encontram.
 
 \input{results/tex/bottleneck-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
+\input{results/tex/bottleneck-matriz-1-densa-uniforme-custo-in-1-100-qualidade}
 
 Ambos produzem sempre o mesmo custo gargalo ótimo, o que serve também como
 verificação cruzada de corretude. O método de caminhos aumentantes, construtivo,
@@ -85,9 +93,12 @@ instância.
 
 A Tabela~\ref{tab:stable-marriage-perfil-1-aleatorio-permutacoes-uniformes-tempo-python}
 apresenta os tempos das três variantes de Gale-Shapley para preferências
-aleatórias.
+aleatórias, e a
+Tabela~\ref{tab:stable-marriage-perfil-1-aleatorio-permutacoes-uniformes-qualidade},
+a verificação de estabilidade e de concordância entre elas.
 
 \input{results/tex/stable-marriage-perfil-1-aleatorio-permutacoes-uniformes-tempo-python}
+\input{results/tex/stable-marriage-perfil-1-aleatorio-permutacoes-uniformes-qualidade}
 
 Pela unicidade do emparelhamento estável ótimo para os pretendentes, as três
 variantes produzem exatamente o mesmo resultado; a qualidade, portanto, não as
@@ -103,12 +114,14 @@ avaliados.
 
 Para cardinalidade máxima, comparam-se o algoritmo de Blossom e a biblioteca
 NetworkX
-(Tabela~\ref{tab:general-cardinalidade-esparso-grau-3-tempo-python}); para peso
-máximo, a implementação de van Rantwijk, a mesma biblioteca e a heurística Path
-Growing (Tabela~\ref{tab:general-peso-esparso-grau-3-tempo-python} e
-Tabela~\ref{tab:general-peso-esparso-grau-3-qualidade}).
+(Tabelas~\ref{tab:general-cardinalidade-esparso-grau-3-tempo-python}
+e~\ref{tab:general-cardinalidade-esparso-grau-3-qualidade}); para peso máximo, a
+implementação de van Rantwijk, a mesma biblioteca e a heurística Path Growing
+(Tabelas~\ref{tab:general-peso-esparso-grau-3-tempo-python}
+e~\ref{tab:general-peso-esparso-grau-3-qualidade}).
 
 \input{results/tex/general-cardinalidade-esparso-grau-3-tempo-python}
+\input{results/tex/general-cardinalidade-esparso-grau-3-qualidade}
 \input{results/tex/general-peso-esparso-grau-3-tempo-python}
 \input{results/tex/general-peso-esparso-grau-3-qualidade}
 

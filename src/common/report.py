@@ -170,7 +170,7 @@ def gravar_qualidade_canonica(registros, caminho):
 
 def _tabela_latex(registros, tamanhos, titulo, rotulo, coluna_fn, com_espaco):
     linhas = [
-        r"\begin{table}[ht]",
+        r"\begin{table}[H]",
         r"    \centering",
         f"    \\caption{{{titulo}}}",
         f"    \\label{{{rotulo}}}",
