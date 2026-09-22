@@ -5,53 +5,39 @@
 % ==================================================================================================================================
 \section{Metodologia}
 
-Este capítulo descreve o ambiente de testes construído para cumprir os objetivos
-de \textit{implementar} e \textit{comparar} os algoritmos apresentados nos
-capítulos anteriores. São detalhados a arquitetura do ambiente, a interface
-padrão definida para cada problema, a origem e a forma de adaptação de cada
-algoritmo, os geradores de instância, o protocolo de medição e os critérios de
-comparação adotados, além da especificação da máquina utilizada. O objetivo é
-que os resultados apresentados no capítulo seguinte sejam reprodutíveis e que as
-comparações sejam metodologicamente defensáveis.
+Este capítulo descreve o ambiente de testes construído para \textit{implementar}
+e \textit{comparar} os algoritmos dos capítulos anteriores. São apresentados a
+arquitetura do ambiente, a interface padrão de cada problema, a origem e a
+adaptação de cada algoritmo, os geradores de instância, o protocolo de medição,
+os critérios de comparação e a máquina utilizada, de modo que os resultados do
+capítulo seguinte sejam reprodutíveis e as comparações, defensáveis.
 
 % ---------------------------------------------------------------------------
 \subsection{Arquitetura do ambiente de testes}
 
-O ambiente foi organizado em três camadas, com separação estrita entre código de
-terceiros e código próprio:
-
-\begin{itemize}
-    \item \textbf{Código externo intacto.} Cada algoritmo obtido de um
-    repositório público é mantido em sua forma original, sem modificação. Essa
-    camada é a garantia de que o código medido é exatamente o código publicado
-    por seus autores, o que é essencial para a validade das comparações e para
-    a análise de eventuais defeitos.
-
-    \item \textbf{Adaptadores (\textit{wrappers}).} Para cada algoritmo há um
-    adaptador que traduz sua interface particular para a \textbf{interface
-    padrão} do problema correspondente. Cada adaptador documenta, em seu
-    cabeçalho, a complexidade assintótica, o tipo do método, a descrição do
-    algoritmo e a fonte de origem com o respectivo endereço.
-
-    \item \textbf{Ambiente de medição compartilhado.} Um único módulo de
-    orquestração --- responsável pela geração de instâncias, cronometragem,
-    verificação e gravação de resultados --- é utilizado por todos os problemas.
-    Centralizar essa lógica evita divergências entre os experimentos e garante
-    que todos os algoritmos sejam submetidos ao mesmo protocolo.
-\end{itemize}
-
-A separação entre as duas primeiras camadas permite ainda que múltiplas
-implementações de um mesmo algoritmo, obtidas de autores diferentes, sejam
-comparadas entre si sob condições idênticas.
+O ambiente é organizado em três camadas, com separação estrita entre código de
+terceiros e código próprio. Na primeira, cada algoritmo obtido de um repositório
+público é mantido \textbf{intacto}, garantindo que o código medido é exatamente
+o publicado por seus autores --- condição essencial para a validade das
+comparações e para a análise de eventuais defeitos. Na segunda, um
+\textbf{adaptador} (\textit{wrapper}) por algoritmo traduz sua interface
+particular para a \textbf{interface padrão} do problema, documentando em seu
+cabeçalho a complexidade, o tipo do método e a fonte de origem. Na terceira, um
+único \textbf{módulo de medição} --- responsável por geração de instâncias,
+cronometragem, verificação e gravação --- é compartilhado por todos os problemas,
+o que garante que todos os algoritmos sejam submetidos ao mesmo protocolo. A
+separação entre as duas primeiras camadas permite ainda comparar, sob condições
+idênticas, múltiplas implementações de um mesmo algoritmo obtidas de autores
+diferentes.
 
 % ---------------------------------------------------------------------------
 \subsection{Interface padrão dos problemas}
 
-Cada problema possui uma interface padrão, à qual todos os seus algoritmos são
-adaptados. A padronização é o que torna a comparação justa: todo algoritmo de um
-mesmo problema recebe exatamente a mesma instância e produz a saída no mesmo
-formato, de modo que a única variável entre eles é o próprio método. A
-Tabela~\ref{tab:interfaces} resume as interfaces.
+Cada problema possui uma interface padrão à qual todos os seus algoritmos são
+adaptados (Tabela~\ref{tab:interfaces}). É ela que torna a comparação justa: todo
+algoritmo de um mesmo problema recebe exatamente a mesma instância e produz a
+saída no mesmo formato, de modo que a única variável entre eles é o próprio
+método.
 
 \begin{table}[H]
     \centering
@@ -75,177 +61,95 @@ Tabela~\ref{tab:interfaces} resume as interfaces.
 \end{table}
 
 % ---------------------------------------------------------------------------
-\subsection{Origem e adaptação dos algoritmos}
-\label{sec:origem_algoritmos}
-
-Em coerência com o objetivo de comparar métodos \textit{presentes na
-literatura}, a maior parte dos algoritmos foi obtida de implementações públicas
-já existentes, e não reescrita. Adaptar código consolidado, em vez de
-reimplementá-lo, reduz o risco de introduzir erros próprios e permite avaliar a
-qualidade das implementações efetivamente disponíveis para uso. As fontes de
-cada algoritmo estão registradas na Seção~\ref{sec:proveniencia}.
-
-Quatro estratégias de adaptação foram empregadas, conforme a natureza do código
-de origem:
-
-\begin{enumerate}
-    \item \textbf{Carregamento direto.} Quando o código original é utilizável na
-    linguagem do projeto, o adaptador apenas o carrega e converte os formatos de
-    entrada e saída. Foi o caso mais comum.
-
-    \item \textbf{Encapsulamento de biblioteca.} Para os métodos disponíveis em
-    bibliotecas maduras (utilizadas como referência), o adaptador encapsula a
-    chamada à biblioteca.
-
-    \item \textbf{Reimplementação fiel.} Quando o código original não é
-    utilizável diretamente --- por estar em outra linguagem, em uma versão
-    antiga da linguagem, ou por conter efeitos colaterais que impedem seu uso
-    como função pura --- o algoritmo foi reimplementado seguindo fielmente a
-    lógica original, com a fonte documentada no cabeçalho do adaptador.
-
-    \item \textbf{Implementação própria a partir da fonte bibliográfica.} As
-    heurísticas e alguns algoritmos exatos para os quais não havia implementação
-    pública adequada foram implementados diretamente, citando-se a referência
-    bibliográfica do algoritmo. Trata-se de algoritmos de descrição curta, cuja
-    reimplementação é mais confiável do que a busca por um repositório de
-    qualidade incerta.
-\end{enumerate}
-
-Toda implementação nova ou reimplementada foi verificada contra uma referência
-independente antes de ser incorporada, conforme descrito na
-Seção~\ref{sec:verificacao}.
-
-% ---------------------------------------------------------------------------
 \subsection{Geradores de instância}
 
-Para cada problema, as instâncias são geradas por construtores parametrizados
-pelo tamanho $n$ e por uma semente fixa, o que torna cada instância
-determinística e reprodutível. Foram definidas famílias de instâncias com
-características distintas, de modo a expor o comportamento dos algoritmos sob
-diferentes estruturas de entrada:
-
-\begin{itemize}
-    \item \textbf{Cardinalidade máxima (bipartido):} um grafo esparso sem
-    emparelhamento perfeito, um grafo esparso com emparelhamento perfeito, e um
-    grafo denso.
-
-    \item \textbf{Atribuição (linear e gargalo):} uma matriz densa com custos
-    uniformemente aleatórios, uma matriz estruturada (custo em função da
-    distância entre índices) e uma matriz com poucos valores distintos, que
-    provoca muitos empates.
-
-    \item \textbf{Casamento estável:} preferências uniformemente aleatórias,
-    preferências correlacionadas (um \textit{ranking} de popularidade
-    compartilhado, que gera alta contenção) e preferências cíclicas
-    (estruturadas, que provocam muitas rejeições).
-
-    \item \textbf{Grafos gerais e emparelhamento induzido máximo:} grafos gerais
-    aleatórios de densidade controlada (esparsos e densos), com pesos
-    uniformemente aleatórios no caso ponderado.
-\end{itemize}
+As instâncias são geradas por construtores parametrizados pelo tamanho $n$ e por
+uma semente fixa, o que as torna determinísticas e reprodutíveis. Para cada
+problema definiram-se famílias com características distintas, de modo a expor o
+comportamento dos algoritmos sob diferentes estruturas de entrada: para
+cardinalidade máxima em grafos bipartidos, grafos esparsos (com e sem
+emparelhamento perfeito) e densos; para atribuição linear e gargalo, matrizes
+densas aleatórias, matrizes estruturadas (custo em função da distância entre
+índices) e matrizes com poucos valores distintos (muitos empates); para
+casamento estável, preferências aleatórias, correlacionadas (\textit{ranking} de
+popularidade compartilhado, que gera contenção) e cíclicas; e, para grafos gerais
+e emparelhamento induzido máximo, grafos aleatórios de densidade controlada,
+ponderados quando aplicável.
 
 % ---------------------------------------------------------------------------
 \subsection{Protocolo de medição}
 \label{sec:protocolo}
 
-A medição de tempo de algoritmos é sensível a diversos fatores externos ao
-próprio método. O protocolo a seguir foi adotado para reduzir essas fontes de
-ruído:
+A medição de tempo é sensível a fatores externos ao próprio método; o protocolo a
+seguir reduz essas fontes de ruído. Uma \textbf{execução de aquecimento} é
+descartada, por pagar custos não recorrentes (importações, alocação inicial,
+caches frios); ela serve apenas para aferir o orçamento de tempo e fornecer o
+resultado usado na verificação de qualidade. O \textbf{coletor de lixo é
+desligado} durante as repetições cronometradas --- para que uma coleta não
+apareça como lentidão do algoritmo --- e reativado entre as células. Cada célula
+é medida em várias repetições, das quais se reporta a \textbf{mediana}, robusta a
+interrupções momentâneas do sistema, ao contrário da média. Todos os algoritmos
+de um problema recebem \textbf{as mesmas instâncias}. Por fim, um \textbf{limite
+de tempo por célula} impede que um único algoritmo defeituoso inviabilize toda a
+suíte --- situação efetivamente observada e discutida no capítulo de resultados:
+se o aquecimento excede o limite, a célula é marcada como estourada e os tamanhos
+maiores daquele algoritmo são omitidos.
 
-\begin{itemize}
-    \item \textbf{Execução de aquecimento descartada.} A primeira execução de
-    cada célula (algoritmo sobre uma instância) paga custos não recorrentes ---
-    importações tardias, alocação inicial e caches frios --- e não entra na
-    estatística. Ela serve apenas para aferir o orçamento de tempo e para
-    fornecer o resultado usado na verificação de qualidade.
-
-    \item \textbf{Coletor de lixo desligado durante a medição.} Uma coleta de
-    lixo disparada no meio de uma repetição apareceria como lentidão do
-    algoritmo. O coletor é desligado durante as repetições cronometradas e
-    reativado, com coleta explícita, entre as células, para que o consumo de
-    memória não cresça indefinidamente.
-
-    \item \textbf{Mediana em vez de média.} Cada célula é medida em múltiplas
-    repetições e reporta-se a \textbf{mediana} dos tempos. A mediana é robusta a
-    valores extremos causados por interrupções momentâneas do sistema
-    operacional, ao contrário da média.
-
-    \item \textbf{Instâncias idênticas.} Todos os algoritmos de um problema são
-    medidos sobre exatamente as mesmas instâncias, geradas com a mesma semente.
-
-    \item \textbf{Limite de tempo por célula.} Cada execução tem um orçamento de
-    tempo máximo. Se o aquecimento de uma célula excede o limite, a célula é
-    marcada como estourada e os tamanhos maiores daquele algoritmo, na mesma
-    família de instâncias, são omitidos. Essa salvaguarda é necessária porque um
-    único algoritmo defeituoso pode, sozinho, inviabilizar toda a suíte de
-    testes --- situação efetivamente observada e discutida no capítulo de
-    resultados.
-\end{itemize}
-
-Uma limitação deliberada deste protocolo deve ser registrada: o limite de tempo
-é aplicado por escalonamento, e não por interrupção instantânea a cada operação.
-A verificação do orçamento ocorre em torno da execução de aquecimento; uma célula
-patológica é interrompida ao ultrapassar o limite, mas não instantaneamente. Essa
-escolha evita o sobrecusto que uma verificação a cada passo introduziria na
-própria região cronometrada.
+Registra-se uma limitação deliberada: o limite de tempo é aplicado em torno da
+execução de aquecimento, não a cada operação. Uma célula patológica é
+interrompida ao ultrapassar o limite, mas não instantaneamente --- escolha que
+evita o sobrecusto de uma verificação passo a passo na própria região
+cronometrada.
 
 % ---------------------------------------------------------------------------
 \subsection{Critérios de comparação}
 \label{sec:criterios}
 
-A comparação de tempo de execução entre implementações escritas em linguagens
-diferentes é intrinsecamente injusta: parte da diferença medida reflete a
-linguagem e sua forma de execução, não o algoritmo. Para que as comparações
-sejam válidas, adotaram-se quatro critérios complementares.
+Comparar tempo de execução entre implementações em linguagens diferentes é
+intrinsecamente injusto: parte da diferença reflete a linguagem, não o algoritmo.
+Para que as comparações sejam válidas, adotaram-se quatro critérios
+complementares.
 
-\paragraph{Separação por linguagem de implementação.} As implementações em
-linguagem interpretada e as implementações com núcleo compilado são apresentadas
-em \textbf{tabelas separadas}, nunca em um mesmo ranking de tempo. As
-bibliotecas com núcleo compilado servem para validar a corretude e para indicar
-a ordem de grandeza do estado da prática, não como concorrentes diretas em tempo
-de execução.
+Primeiro, as implementações em linguagem interpretada e as de núcleo compilado
+são apresentadas em \textbf{tabelas separadas}, nunca num mesmo ranking de tempo;
+as de núcleo compilado servem para validar a corretude e indicar a ordem de
+grandeza do estado da prática. Vale notar que nem toda biblioteca é compilada:
+algumas bibliotecas maduras usadas como referência são escritas na mesma
+linguagem interpretada dos demais algoritmos, e nesses casos a comparação de
+tempo contra elas é legítima. Há ainda uma zona intermediária --- algoritmos que
+são laços na linguagem interpretada operando sobre vetores de uma biblioteca
+numérica de núcleo compilado; classificam-se como interpretados, com essa
+característica declarada. Segundo, as tabelas trazem a \textbf{complexidade
+assintótica} de tempo e espaço ao lado do tempo medido, permitindo confrontar o
+previsto com o observado. Terceiro, para cada algoritmo estima-se o
+\textbf{expoente empírico de crescimento} --- a inclinação da reta ajustada ao
+gráfico do logaritmo do tempo pelo logaritmo do tamanho ---, que, ao contrário do
+tempo absoluto, é \textbf{comparável entre linguagens}, pois a diferença de
+linguagem afeta a constante (a posição da reta), não a inclinação; reporta-se
+também a qualidade do ajuste.
 
-Um ponto merece registro: nem toda biblioteca é código compilado. Algumas
-bibliotecas maduras utilizadas como referência são escritas na mesma linguagem
-interpretada dos demais algoritmos; nesses casos, a comparação de tempo contra
-elas é legítima, e configura um resultado mais forte --- uma implementação
-obtida de repositório frente a uma biblioteca consolidada, ambas sujeitas ao
-mesmo custo de interpretação.
-
-\paragraph{Zona intermediária.} Alguns algoritmos são laços na linguagem
-interpretada que operam sobre vetores de uma biblioteca numérica de núcleo
-compilado. Nesses casos, o algoritmo em si é interpretado, enquanto as operações
-sobre vetores são compiladas. Essas implementações são classificadas como
-interpretadas, mas essa característica intermediária é declarada explicitamente,
-pois afeta a leitura dos tempos.
-
-\paragraph{Complexidade assintótica.} As tabelas de resultados apresentam, ao
-lado do tempo medido, a complexidade assintótica de tempo e de espaço de cada
-algoritmo. Isso permite confrontar o comportamento previsto pela teoria com o
-observado na prática.
-
-\paragraph{Expoente empírico de crescimento.} Para cada algoritmo, ajusta-se uma
-reta ao gráfico do logaritmo do tempo em função do logaritmo do tamanho da
-entrada. A inclinação dessa reta estima empiricamente o expoente de crescimento
-do tempo. Diferentemente do tempo absoluto, esse expoente é \textbf{comparável
-entre linguagens}, pois a diferença de linguagem afeta a constante multiplicativa
-(a posição da reta), não a inclinação. Reporta-se também o coeficiente de
-determinação do ajuste, que indica o quão próximo de uma reta os pontos
-efetivamente estão.
-
-Para os problemas com algoritmos exatos, a \textbf{qualidade} da solução é
-idêntica entre eles (todos atingem o ótimo), e a comparação se concentra no
-tempo. Para os problemas em que há heurísticas, cada heurística reporta a
-\textbf{razão} entre a qualidade que encontra e a do algoritmo exato de
-referência, o que caracteriza o compromisso entre qualidade e tempo.
+Nos problemas com apenas algoritmos exatos, a qualidade da solução é idêntica
+entre eles e a comparação recai sobre o tempo. Nos problemas com heurísticas,
+cada heurística reporta a \textbf{razão} entre a qualidade que encontra e a do
+algoritmo exato de referência, caracterizando o compromisso entre qualidade e
+tempo.
 
 % ---------------------------------------------------------------------------
 \subsection{Ambiente de execução e reprodutibilidade}
 \label{sec:ambiente}
 
-Todos os resultados apresentados no próximo capítulo foram obtidos em uma única
-máquina, cuja especificação consta na Tabela~\ref{tab:maquina}. Medir tudo no
-mesmo ambiente é o que torna os tempos comparáveis entre si.
+Todos os resultados foram obtidos numa única máquina
+(Tabela~\ref{tab:maquina}); medir tudo no mesmo ambiente é o que torna os tempos
+comparáveis. Três características dela exigiram cuidados, todos documentados para
+permitir reprodução. Por ser um \textbf{processador híbrido} (núcleos de
+desempenho e de eficiência, não equivalentes), a execução foi fixada a um núcleo
+de desempenho, evitando que a migração entre núcleos alterasse o tempo sem
+mudança no código. Como a \textbf{frequência varia} dinamicamente com a carga, o
+regulador foi fixado no modo de desempenho, com a máquina conectada à energia e
+sem aplicações concorrentes. E, como a \textbf{ordem de iteração de coleções de
+objetos} em Python é aleatorizada por processo --- e um dos algoritmos se mostrou
+sensível a ela, conforme o capítulo de resultados ---, a semente de aleatorização
+foi fixada, tornando as execuções reprodutíveis.
 
 \begin{table}[H]
     \centering
@@ -267,55 +171,25 @@ mesmo ambiente é o que torna os tempos comparáveis entre si.
     \end{tabularx}
 \end{table}
 
-Três características desta máquina exigiram cuidados adicionais, todos
-documentados para permitir a reprodução dos resultados:
-
-\begin{itemize}
-    \item \textbf{Processador híbrido.} Os núcleos não são equivalentes: alguns
-    priorizam desempenho e outros, eficiência. Como o sistema operacional pode
-    migrar o processo entre eles durante a execução, alterando o tempo do mesmo
-    algoritmo sem qualquer mudança no código, a execução foi fixada a um núcleo
-    de desempenho.
-
-    \item \textbf{Escalonamento de frequência.} A frequência do processador
-    varia dinamicamente conforme a carga, o que introduz variação entre
-    repetições. Durante as medições, o regulador de frequência foi fixado no
-    modo de desempenho, e a máquina foi mantida conectada à energia e sem outras
-    aplicações de uso intensivo.
-
-    \item \textbf{Reprodutibilidade da execução.} A ordem de iteração de
-    coleções de objetos em Python é aleatorizada a cada processo. Como um dos
-    algoritmos avaliados se mostrou sensível a essa ordem (conforme discutido no
-    capítulo de resultados), a semente de aleatorização foi fixada, tornando as
-    execuções reprodutíveis.
-\end{itemize}
-
 % ---------------------------------------------------------------------------
-\subsection{Verificação de corretude}
-\label{sec:verificacao}
-
-Nenhuma implementação foi incorporada ao ambiente sem verificação independente.
-Cada algoritmo novo ou reimplementado foi confrontado com uma referência
-confiável sobre um grande número de instâncias aleatórias e casos de borda:
-os métodos exatos foram comparados a soluções obtidas por força bruta (em
-instâncias pequenas) e a bibliotecas consolidadas; as heurísticas foram
-verificadas quanto à validade da solução, quanto a não superarem o ótimo e
-quanto a respeitarem suas garantias teóricas de aproximação.
-
-Além disso, os benchmarks já existentes ao início deste trabalho foram migrados
-para o ambiente de medição unificado sob uma salvaguarda de não-regressão: a
-saída de qualidade de cada benchmark foi registrada antes da migração, e exigiu-se
-que a nova execução reproduzisse exatamente os mesmos resultados de qualidade,
-de modo que a unificação do ambiente não alterasse nenhuma conclusão.
-
-% ---------------------------------------------------------------------------
-\subsection{Proveniência dos algoritmos}
+\subsection{Origem, adaptação e verificação dos algoritmos}
 \label{sec:proveniencia}
 
-A Tabela~\ref{tab:proveniencia} registra, para cada algoritmo comparado, seu
-tipo, a estratégia de adaptação empregada (Seção~\ref{sec:origem_algoritmos}) e
-sua origem. As implementações próprias citam a referência bibliográfica do
-algoritmo; as demais indicam o repositório ou a biblioteca de origem.
+Em coerência com o objetivo de comparar métodos \textit{presentes na literatura},
+a maior parte dos algoritmos foi obtida de implementações públicas, e não
+reescrita: adaptar código consolidado reduz o risco de erros próprios e permite
+avaliar a qualidade das implementações efetivamente disponíveis. Conforme a
+natureza do código de origem, empregaram-se quatro estratégias de adaptação:
+\textbf{(i)} carregamento direto, quando o original é utilizável na linguagem do
+projeto; \textbf{(ii)} encapsulamento, para métodos disponíveis em bibliotecas
+maduras; \textbf{(iii)} reimplementação fiel, quando o original não é utilizável
+diretamente --- por estar em outra linguagem ou versão, ou por conter efeitos
+colaterais ---, seguindo a lógica original com a fonte documentada; e
+\textbf{(iv)} implementação própria a partir da fonte bibliográfica, para as
+heurísticas e alguns exatos sem implementação pública adequada, algoritmos de
+descrição curta cuja reimplementação é mais confiável que um repositório de
+qualidade incerta. A Tabela~\ref{tab:proveniencia} registra o tipo e a origem de
+cada algoritmo.
 
 \begin{table}[H]
     \centering
@@ -368,10 +242,18 @@ algoritmo; as demais indicam o repositório ou a biblioteca de origem.
     \end{tabularx}
 \end{table}
 
-Os endereços completos dos repositórios e das bibliotecas estão registrados no
-cabeçalho de cada adaptador, no código-fonte do ambiente de testes. A biblioteca
-NetworkX merece uma ressalva de linhagem: sua rotina de emparelhamento de peso
-máximo em grafos gerais é uma adaptação do mesmo código de van Rantwijk também
-avaliado de forma independente; comparar as duas mede, portanto, o efeito da
-engenharia de biblioteca sobre um mesmo algoritmo e código de origem, e não duas
-abordagens distintas.
+Os endereços completos constam no cabeçalho de cada adaptador, no código-fonte.
+Cabe uma ressalva de linhagem: a rotina de emparelhamento de peso máximo em
+grafos gerais do NetworkX é uma adaptação do mesmo código de van Rantwijk também
+avaliado de forma independente; compará-las mede o efeito da engenharia de
+biblioteca sobre um mesmo algoritmo, e não duas abordagens distintas.
+
+Por fim, nenhuma implementação própria ou reimplementada foi incorporada sem
+\textbf{verificação independente}: os métodos exatos foram confrontados com
+soluções por força bruta (em instâncias pequenas) e com bibliotecas
+consolidadas; as heurísticas, quanto à validade da solução, a não superarem o
+ótimo e a respeitarem suas garantias de aproximação. Além disso, os benchmarks
+já existentes ao início do trabalho foram migrados para o ambiente unificado sob
+uma salvaguarda de não-regressão: a qualidade de saída de cada um foi registrada
+antes da migração e exigiu-se que a nova execução a reproduzisse exatamente, de
+modo que a unificação não alterasse nenhuma conclusão.
