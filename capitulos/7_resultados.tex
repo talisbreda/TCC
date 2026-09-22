@@ -6,155 +6,175 @@
 \section{Resultados e discussão}
 
 Este capítulo apresenta e discute os resultados obtidos com o ambiente de testes
-descrito no capítulo anterior. Cada problema é analisado quanto ao tempo de
-execução e, quando há heurísticas, quanto à qualidade da solução. As tabelas de
-tempo separam as implementações em linguagem interpretada das de núcleo
-compilado, conforme justificado na Seção~\ref{sec:criterios}, e todos os valores
-são gerados diretamente a partir dos dados medidos. Ao final, discutem-se os
-defeitos encontrados em implementações públicas e o crescimento empírico dos
-tempos frente à complexidade teórica.
+descrito no capítulo anterior. Para cada problema, apresentam-se \textbf{todas as
+famílias de instância} definidas na Seção~\ref{sec:protocolo}, de modo a expor
+como a estrutura da entrada afeta o desempenho e a qualidade --- um efeito que,
+como se verá, chega a inverter a ordem entre algoritmos. As tabelas de tempo
+separam as implementações em linguagem interpretada das de núcleo compilado,
+conforme a Seção~\ref{sec:criterios}, e seguem sempre a mesma ordem: tempo em
+Python, tempo compilado (quando houver) e qualidade. Todos os valores são gerados
+diretamente a partir dos dados medidos. Ao final, discutem-se os defeitos
+encontrados em implementações públicas e o crescimento empírico dos tempos frente
+à complexidade teórica.
 
 % ---------------------------------------------------------------------------
 \subsection{Cardinalidade máxima em grafos bipartidos}
 
-As Tabelas~\ref{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-python}
-e~\ref{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-c} apresentam os tempos dos
-algoritmos para o grafo denso, separados por linguagem de implementação, e a
-Tabela~\ref{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-qualidade}, a qualidade das
-soluções.
+As tabelas a seguir apresentam tempo e qualidade para os três grafos: dois
+esparsos (um sem e um com emparelhamento perfeito) e um denso.
 
+\input{results/tex/mcm-grafo-1-esparso-sem-perfeito-mcm-80-de-n-tempo-python}
+\input{results/tex/mcm-grafo-1-esparso-sem-perfeito-mcm-80-de-n-tempo-c}
+\input{results/tex/mcm-grafo-1-esparso-sem-perfeito-mcm-80-de-n-qualidade}
+\input{results/tex/mcm-grafo-2-esparso-com-perfeito-mcm-n-tempo-python}
+\input{results/tex/mcm-grafo-2-esparso-com-perfeito-mcm-n-tempo-c}
+\input{results/tex/mcm-grafo-2-esparso-com-perfeito-mcm-n-qualidade}
 \input{results/tex/mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-python}
 \input{results/tex/mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-c}
 \input{results/tex/mcm-grafo-3-denso-com-perfeito-mcm-n-qualidade}
 
-Entre os algoritmos exatos, a diferença de desempenho é de mais de duas ordens de
-grandeza: o Edmonds-Karp, que reduz o emparelhamento a um problema de fluxo e
-reconstrói a busca a cada aumento, é dramaticamente mais lento que o
-Hopcroft-Karp, que agrupa os caminhos aumentantes em fases. Essa distância
-confirma na prática o que a complexidade assintótica prevê e ilustra por que, em
-grafos maiores, a escolha do algoritmo importa muito mais do que a constante de
-implementação. A implementação de núcleo compilado (igraph), na tabela dos
-compilados, é a mais rápida de todas, como esperado.
+Entre os algoritmos exatos, a hierarquia de desempenho é a mesma nas três
+instâncias: o Edmonds-Karp, que reduz o emparelhamento a um problema de fluxo, é
+mais de duas ordens de grandeza mais lento que o Hopcroft-Karp, que agrupa os
+caminhos aumentantes em fases. A distância é ainda maior no grafo denso, onde o
+número de arestas amplifica o custo de reconstruir a busca a cada aumento. A
+implementação de núcleo compilado (igraph) é a mais rápida em todas as instâncias,
+como esperado.
 
-Quanto às heurísticas, os resultados evidenciam o compromisso central entre
-qualidade e tempo. A heurística gulosa é a mais rápida de todo o conjunto, porém
-não atinge o ótimo em todas as instâncias. A heurística de Karp-Sipser, ao custo
-de um tempo comparável ao dos exatos mais eficientes, encontra o ótimo em todas
-as instâncias avaliadas --- reflexo da regra dos vértices de grau um, que fixa
-escolhas comprovadamente ótimas e, em grafos esparsos, chega a dispensar o passo
-guloso.
+Quanto às heurísticas, o compromisso entre qualidade e tempo se confirma, mas com
+uma nuance revelada pela variação entre instâncias: a heurística gulosa, embora
+seja a mais rápida de todo o conjunto, tem sua pior qualidade não no grafo denso,
+e sim no grafo esparso com emparelhamento perfeito, em que a ordem de varredura
+das arestas mais facilmente a prende em um emparelhamento maximal pequeno. A
+heurística de Karp-Sipser, por sua vez, encontra o ótimo em todas as instâncias
+esparsas e fica a menos de meio ponto percentual dele no grafo denso ---
+resultado da regra dos vértices de grau um, que domina em grafos esparsos.
 
 % ---------------------------------------------------------------------------
 \subsection{Atribuição linear}
 
-Os tempos dos algoritmos para a matriz densa constam na
-Tabela~\ref{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
-(interpretados) e na
-Tabela~\ref{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-c}
-(compilados); a Tabela~\ref{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-qualidade}
-traz a qualidade, na qual se veem também as células em que dois dos algoritmos
-falham.
+Apresentam-se as três matrizes de custo: densa uniforme (aleatória), permutação
+barata e estruturada.
 
 \input{results/tex/assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
 \input{results/tex/assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-c}
 \input{results/tex/assignment-matriz-1-densa-uniforme-custo-in-1-100-qualidade}
+\input{results/tex/assignment-matriz-2-permutacao-barata-otimo-n-tempo-python}
+\input{results/tex/assignment-matriz-2-permutacao-barata-otimo-n-tempo-c}
+\input{results/tex/assignment-matriz-2-permutacao-barata-otimo-n-qualidade}
+\input{results/tex/assignment-matriz-3-estruturada-custo-i-j-1-tempo-python}
+\input{results/tex/assignment-matriz-3-estruturada-custo-i-j-1-tempo-c}
+\input{results/tex/assignment-matriz-3-estruturada-custo-i-j-1-qualidade}
 
 Todos os algoritmos que concluem atingem o custo ótimo, de modo que a comparação
 recai sobre o tempo. Entre as quatro implementações do método Húngaro, obtidas de
-autores distintos para exatamente o mesmo algoritmo, observa-se uma variação de
-mais de uma ordem de grandeza --- evidência de que a qualidade da implementação,
-e não apenas o algoritmo, determina o desempenho na prática. As implementações de
-núcleo compilado (SciPy e Jonker-Volgenant) são, novamente, as mais rápidas.
+autores distintos para exatamente o mesmo algoritmo, observa-se variação de mais
+de uma ordem de grandeza --- evidência de que a qualidade da implementação, e não
+apenas o algoritmo, determina o desempenho na prática. As implementações de núcleo
+compilado (SciPy e Jonker-Volgenant) são as mais rápidas em todas as matrizes.
 
-Duas das implementações do Húngaro apresentam defeitos que impedem sua conclusão
-em parte das instâncias densas; como esse é um resultado relevante por si só, ele
-é tratado em conjunto na Seção~\ref{sec:defeitos}.
+O ponto mais instrutivo, porém, só aparece ao comparar as instâncias: os defeitos
+das implementações \texttt{benchaplin} e \texttt{hunalgorithm} manifestam-se
+\textbf{exclusivamente na matriz densa aleatória}. Nas matrizes estruturadas, que
+produzem padrões de custo mais regulares, ambas concluem normalmente. Essa
+sensibilidade ao conteúdo da entrada --- em que a mesma implementação ora funciona,
+ora falha, conforme a estrutura da matriz --- é discutida em conjunto na
+Seção~\ref{sec:defeitos}.
 
 % ---------------------------------------------------------------------------
 \subsection{Atribuição gargalo}
 
-A Tabela~\ref{tab:bottleneck-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
-compara os tempos dos dois algoritmos exatos para a matriz densa, e a
-Tabela~\ref{tab:bottleneck-matriz-1-densa-uniforme-custo-in-1-100-qualidade}, o
-custo gargalo que encontram.
+Apresentam-se as três matrizes de custo, para os dois algoritmos exatos.
 
 \input{results/tex/bottleneck-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
 \input{results/tex/bottleneck-matriz-1-densa-uniforme-custo-in-1-100-qualidade}
+\input{results/tex/bottleneck-matriz-2-estruturada-custo-i-j-1-tempo-python}
+\input{results/tex/bottleneck-matriz-2-estruturada-custo-i-j-1-qualidade}
+\input{results/tex/bottleneck-matriz-3-poucos-valores-muitos-empates-tempo-python}
+\input{results/tex/bottleneck-matriz-3-poucos-valores-muitos-empates-qualidade}
 
-Ambos produzem sempre o mesmo custo gargalo ótimo, o que serve também como
-verificação cruzada de corretude. O método de caminhos aumentantes, construtivo,
-mostra-se consistentemente mais rápido que o método de \textit{threshold}, que
-repete uma verificação de emparelhamento perfeito a cada passo da busca binária
-sobre o limiar. A vantagem do método construtivo cresce com o tamanho da
-instância.
+Ambos os algoritmos produzem sempre o mesmo custo gargalo ótimo, o que também
+serve como verificação cruzada de corretude. O tempo, no entanto, revela o
+achado mais interessante deste problema, e que ilustra bem por que vale examinar
+todas as instâncias: \textbf{a ordem entre os dois algoritmos se inverte conforme
+a matriz}. Nas matrizes densa e estruturada, o método de caminhos aumentantes,
+construtivo, é muito mais rápido que o de \textit{threshold}. Na matriz com
+poucos valores distintos, contudo, o \textit{threshold} passa a ser o mais
+rápido: como sua busca binária opera sobre o conjunto de valores distintos da
+matriz, poucos valores tornam essa busca curtíssima, enquanto o método construtivo
+não se beneficia da mesma forma. A conclusão de qual método é preferível, portanto,
+depende da estrutura esperada da entrada --- uma nuance que uma única instância
+representativa teria ocultado.
 
 % ---------------------------------------------------------------------------
 \subsection{Casamento estável}
 
-A Tabela~\ref{tab:stable-marriage-perfil-1-aleatorio-permutacoes-uniformes-tempo-python}
-apresenta os tempos das três variantes de Gale-Shapley para preferências
-aleatórias, e a
-Tabela~\ref{tab:stable-marriage-perfil-1-aleatorio-permutacoes-uniformes-qualidade},
-a verificação de estabilidade e de concordância entre elas.
+Apresentam-se os três perfis de preferência: aleatório, correlacionado e cíclico.
 
 \input{results/tex/stable-marriage-perfil-1-aleatorio-permutacoes-uniformes-tempo-python}
 \input{results/tex/stable-marriage-perfil-1-aleatorio-permutacoes-uniformes-qualidade}
+\input{results/tex/stable-marriage-perfil-2-correlacionado-ranking-de-popul-tempo-python}
+\input{results/tex/stable-marriage-perfil-2-correlacionado-ranking-de-popul-qualidade}
+\input{results/tex/stable-marriage-perfil-3-ciclico-deslocamento-estruturad-tempo-python}
+\input{results/tex/stable-marriage-perfil-3-ciclico-deslocamento-estruturad-qualidade}
 
 Pela unicidade do emparelhamento estável ótimo para os pretendentes, as três
-variantes produzem exatamente o mesmo resultado; a qualidade, portanto, não as
-distingue. A variante orientada a objetos, embora teoricamente quadrática,
-mostra-se substancialmente mais lenta e inviável nos tamanhos maiores, por conta
-do sobrecusto de reconstruir estruturas a cada rodada --- comportamento
-quantificado adiante, na análise de crescimento empírico. As variantes que operam
-sobre vetores e dicionários escalam sem dificuldade até os maiores tamanhos
-avaliados.
+variantes produzem exatamente o mesmo resultado em todos os perfis --- o que as
+tabelas de qualidade confirmam, com estabilidade e concordância em todas as
+células. A qualidade, portanto, não as distingue, e a comparação recai sobre o
+tempo. A variante orientada a objetos, embora teoricamente quadrática, é
+substancialmente mais lenta e inviável nos tamanhos maiores, em todos os perfis,
+por conta do sobrecusto de reconstruir estruturas a cada rodada --- comportamento
+quantificado na Seção~\ref{sec:crescimento}. As variantes que operam sobre vetores
+e dicionários escalam sem dificuldade até os maiores tamanhos avaliados.
 
 % ---------------------------------------------------------------------------
 \subsection{Emparelhamento em grafos gerais}
 
-Para cardinalidade máxima, comparam-se o algoritmo de Blossom e a biblioteca
-NetworkX
-(Tabelas~\ref{tab:general-cardinalidade-esparso-grau-3-tempo-python}
-e~\ref{tab:general-cardinalidade-esparso-grau-3-qualidade}); para peso máximo, a
-implementação de van Rantwijk, a mesma biblioteca e a heurística Path Growing
-(Tabelas~\ref{tab:general-peso-esparso-grau-3-tempo-python}
-e~\ref{tab:general-peso-esparso-grau-3-qualidade}).
+Cobrem-se os dois problemas de grafos gerais --- cardinalidade máxima e peso
+máximo ---, cada um em uma instância esparsa e uma densa.
 
 \input{results/tex/general-cardinalidade-esparso-grau-3-tempo-python}
 \input{results/tex/general-cardinalidade-esparso-grau-3-qualidade}
+\input{results/tex/general-cardinalidade-denso-p-0-3-tempo-python}
+\input{results/tex/general-cardinalidade-denso-p-0-3-qualidade}
 \input{results/tex/general-peso-esparso-grau-3-tempo-python}
 \input{results/tex/general-peso-esparso-grau-3-qualidade}
+\input{results/tex/general-peso-denso-p-0-3-tempo-python}
+\input{results/tex/general-peso-denso-p-0-3-qualidade}
 
-No caso ponderado, um resultado é digno de nota: a implementação independente de
-van Rantwijk é mais rápida que a rotina correspondente do NetworkX, ainda que
-esta última seja uma adaptação daquele mesmo código. A comparação, portanto, não
-opõe duas abordagens, e sim uma implementação a um descendente empacotado dela;
-a diferença observada mede o efeito das camadas de generalidade que a biblioteca
-acrescenta. A heurística Path Growing, por sua vez, é ordens de grandeza mais
-rápida que os exatos e entrega uma fração elevada do peso ótimo, bem acima da sua
-garantia teórica de metade --- mais um exemplo de que, na prática, a heurística
-rende muito mais do que o seu pior caso.
+No caso ponderado, um resultado é digno de nota e mantém-se nas duas densidades:
+a implementação independente de van Rantwijk é mais rápida que a rotina
+correspondente do NetworkX, ainda que esta seja uma adaptação daquele mesmo
+código. A comparação, portanto, não opõe duas abordagens, e sim uma implementação
+a um descendente empacotado dela; a diferença mede o efeito das camadas de
+generalidade que a biblioteca acrescenta. A heurística Path Growing é ordens de
+grandeza mais rápida que os exatos e entrega uma fração elevada do peso ótimo em
+ambas as densidades, sempre bem acima da sua garantia teórica de metade; a
+qualidade que alcança é, aliás, um pouco superior nos grafos densos.
 
 % ---------------------------------------------------------------------------
 \subsection{Emparelhamento induzido máximo}
 
-Sendo NP-difícil, o emparelhamento induzido máximo tem um perfil distinto dos
-demais problemas: o algoritmo exato só é viável em instâncias pequenas, e a
-qualidade das heurísticas passa a ser o eixo central da comparação. A
-Tabela~\ref{tab:mim-grafo-esparso-grau-3-tempo-python} traz os tempos e a
-Tabela~\ref{tab:mim-grafo-esparso-grau-3-qualidade}, a qualidade.
+Sendo NP-difícil, o emparelhamento induzido máximo tem perfil distinto: o
+algoritmo exato só é viável em instâncias pequenas, e a qualidade das heurísticas
+é o eixo central. Apresentam-se as duas densidades avaliadas.
 
 \input{results/tex/mim-grafo-esparso-grau-3-tempo-python}
 \input{results/tex/mim-grafo-esparso-grau-3-qualidade}
+\input{results/tex/mim-grafo-medio-grau-6-tempo-python}
+\input{results/tex/mim-grafo-medio-grau-6-qualidade}
 
 O algoritmo exato, que reduz o problema a conjunto independente máximo no grafo de
 conflitos, resolve instâncias pequenas em poucos milissegundos, mas seu custo
 cresce rapidamente e o torna inviável além de algumas dezenas de vértices --- o
-que justifica empiricamente a necessidade das heurísticas. Entre estas, evidencia-se
-um compromisso claro: a heurística de grau mínimo encontra soluções de qualidade
-consistentemente superior à da escolha aleatória, ao custo de um tempo bem maior,
-por manter e atualizar o grafo de conflitos. Nas instâncias pequenas, em que o
-ótimo é conhecido, a heurística de grau mínimo chega muito próximo dele.
+que justifica empiricamente a necessidade das heurísticas. A comparação entre
+densidades é elucidativa: em grafos esparsos, a heurística de grau mínimo alcança
+o ótimo, e mesmo a escolha aleatória fica razoavelmente próxima; já nos grafos
+mais densos, a qualidade de ambas cai, e a distância entre elas aumenta. A
+heurística de grau mínimo mantém-se consistentemente superior à aleatória, ao
+custo de um tempo consideravelmente maior, por manter e atualizar o grafo de
+conflitos.
 
 % ---------------------------------------------------------------------------
 \subsection{Defeitos em implementações públicas}
@@ -163,23 +183,24 @@ por manter e atualizar o grafo de conflitos. Nas instâncias pequenas, em que o
 Um resultado que só emerge da execução repetida dos algoritmos --- e que um
 levantamento puramente bibliográfico não revelaria --- diz respeito à
 confiabilidade de implementações públicas de algoritmos clássicos. Duas das
-quatro implementações do método Húngaro avaliadas apresentam defeitos.
+quatro implementações do método Húngaro avaliadas apresentam defeitos, ambos
+manifestados apenas nas matrizes densas aleatórias, como visto nas tabelas de
+qualidade da atribuição.
 
-A primeira (\texttt{hunalgorithm}) falha de forma determinística em matrizes
-densas a partir de um certo tamanho, por exceder um limite interno de iterações
-previsto em seu próprio código; matrizes estruturadas, que produzem padrões mais
-simples, não acionam o problema.
+A primeira (\texttt{hunalgorithm}) falha de forma determinística a partir de um
+certo tamanho, por exceder um limite interno de iterações previsto em seu próprio
+código.
 
 A segunda (\texttt{benchaplin}) é mais notável, por ser \textbf{não-determinística
 entre execuções}. Sobre exatamente a mesma matriz de entrada, a implementação ora
 retorna o custo ótimo correto, ora falha com um erro de tipo, ora ingressa em um
 caminho de execução tão lento que não conclui em tempo praticável. A causa é a
 dependência do defeito quanto à ordem de iteração de uma coleção de objetos, que a
-linguagem aleatoriza a cada processo. Trata-se de três desfechos distintos para a
-mesma entrada, todos observados. Além de ilustrar de forma vívida o valor de
+linguagem aleatoriza a cada processo. São três desfechos distintos para a mesma
+entrada, todos observados. Além de ilustrar de forma vívida o valor de
 \textit{implementar e medir} sobre apenas catalogar, esse comportamento tem uma
-consequência metodológica registrada no capítulo anterior: a fixação da semente
-de aleatorização foi necessária justamente para tornar os resultados
+consequência metodológica: a fixação da semente de aleatorização, descrita no
+capítulo anterior, foi necessária justamente para tornar os resultados
 reprodutíveis.
 
 Optou-se por \textbf{reportar} esses defeitos, e não corrigi-los: como o objeto de
@@ -193,10 +214,10 @@ apagaria um resultado legítimo sobre a qualidade do que se encontra publicado.
 Como o tempo absoluto não é comparável entre linguagens, a análise de crescimento
 apoia-se no expoente empírico definido na Seção~\ref{sec:criterios}: a inclinação
 da reta ajustada ao gráfico do tempo pelo tamanho, em escala logarítmica. As
-Figuras~\ref{fig:cresc-mcm} e~\ref{fig:cresc-assignment} apresentam esses
-gráficos para dois problemas representativos, e as
+Figuras~\ref{fig:cresc-mcm} e~\ref{fig:cresc-assignment} apresentam esses gráficos
+para o grafo e a matriz densos, e as
 Tabelas~\ref{tab:exp-mcm} a~\ref{tab:exp-general-weight} confrontam o expoente
-medido com a complexidade teórica de cada algoritmo.
+medido com a complexidade teórica.
 
 \input{results/tex/fig-mcm}
 
