@@ -1,0 +1,14 @@
+\begin{table}[ht]
+    \centering
+    \caption{Qualidade da solução — Cardinalidade — denso (p=0.3)}
+    \label{tab:general-cardinalidade-denso-p-0-3-qualidade}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l rrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} \\
+        \midrule
+        Blossom (Edmonds) & exato & $O(V^{3})$ & 5 & 10 & 15 & 25 & 37 & 50 \\
+        NetworkX (cardinalidade) & baseline & $O(V^{3})$ & 5 & 10 & 15 & 25 & 37 & 50 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

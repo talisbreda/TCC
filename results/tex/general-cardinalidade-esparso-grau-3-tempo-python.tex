@@ -1,0 +1,14 @@
+\begin{table}[ht]
+    \centering
+    \caption{Tempo de execução em Python — Cardinalidade — esparso (grau \textasciitilde{}3) (mediana, ms)}
+    \label{tab:general-cardinalidade-esparso-grau-3-tempo-python}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l l rrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} \\
+        \midrule
+        Blossom (Edmonds) & exato & $O(V^{3})$ & $O(V^{2})$ & 1.66 & 3.21 & 3.97 & 20.36 & 43.90 & 103.46 \\
+        NetworkX (cardinalidade) & baseline & $O(V^{3})$ & $O(V+E)$ & 0.40 & 0.63 & 0.74 & 1.41 & 2.28 & 3.15 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

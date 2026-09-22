@@ -1,0 +1,15 @@
+\begin{table}[ht]
+    \centering
+    \caption{Qualidade da solução — Perfil 3 — Cíclico         \textbar{} deslocamento estruturado}
+    \label{tab:stable-marriage-perfil-3-ciclico-deslocamento-estruturad-qualidade}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l rrrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=25$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=200$} & \textbf{$n=300$} & \textbf{$n=400$} \\
+        \midrule
+        Gale-Shapley (OOP/pip) & exato & $O(n^{2})$† & 0 =ref & 0 =ref & 0 =ref & 0 =ref & — & — & — \\
+        Gale-Shapley (numérico/pip) & exato & $O(n^{2})$ & 0 =ref & 0 =ref & 0 =ref & 0 =ref & 0 =ref & 0 =ref & 0 =ref \\
+        Gale-Shapley (Lattas/dict) & exato & $O(n^{3})$* & 0 =ref & 0 =ref & 0 =ref & 0 =ref & 0 =ref & 0 =ref & 0 =ref \\
+        \bottomrule
+    \end{tabular}
+\end{table}

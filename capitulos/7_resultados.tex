@@ -1,0 +1,212 @@
+%!TeX root = ../main.tex
+
+% ==================================================================================================================================
+% 7. Resultados e discussão
+% ==================================================================================================================================
+\section{Resultados e discussão}
+
+Este capítulo apresenta e discute os resultados obtidos com o ambiente de testes
+descrito no capítulo anterior. Cada problema é analisado quanto ao tempo de
+execução e, quando há heurísticas, quanto à qualidade da solução. As tabelas de
+tempo separam as implementações em linguagem interpretada das de núcleo
+compilado, conforme justificado na Seção~\ref{sec:criterios}, e todos os valores
+são gerados diretamente a partir dos dados medidos. Ao final, discutem-se os
+defeitos encontrados em implementações públicas e o crescimento empírico dos
+tempos frente à complexidade teórica.
+
+% ---------------------------------------------------------------------------
+\subsection{Cardinalidade máxima em grafos bipartidos}
+
+A Tabela~\ref{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-python} apresenta os
+tempos dos algoritmos em Python para o grafo denso, e a
+Tabela~\ref{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-qualidade}, a qualidade das
+soluções.
+
+\input{results/tex/mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-python}
+\input{results/tex/mcm-grafo-3-denso-com-perfeito-mcm-n-qualidade}
+
+Entre os algoritmos exatos, a diferença de desempenho é de mais de duas ordens de
+grandeza: o Edmonds-Karp, que reduz o emparelhamento a um problema de fluxo e
+reconstrói a busca a cada aumento, é dramaticamente mais lento que o
+Hopcroft-Karp, que agrupa os caminhos aumentantes em fases. Essa distância
+confirma na prática o que a complexidade assintótica prevê e ilustra por que, em
+grafos maiores, a escolha do algoritmo importa muito mais do que a constante de
+implementação. A implementação de núcleo compilado (igraph), reportada à parte,
+é a mais rápida de todas, como esperado.
+
+Quanto às heurísticas, os resultados evidenciam o compromisso central entre
+qualidade e tempo. A heurística gulosa é a mais rápida de todo o conjunto, porém
+não atinge o ótimo em todas as instâncias. A heurística de Karp-Sipser, ao custo
+de um tempo comparável ao dos exatos mais eficientes, encontra o ótimo em todas
+as instâncias avaliadas --- reflexo da regra dos vértices de grau um, que fixa
+escolhas comprovadamente ótimas e, em grafos esparsos, chega a dispensar o passo
+guloso.
+
+% ---------------------------------------------------------------------------
+\subsection{Atribuição linear}
+
+Os tempos dos algoritmos para a matriz densa constam na
+Tabela~\ref{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
+(interpretados) e na
+Tabela~\ref{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-c}
+(compilados).
+
+\input{results/tex/assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
+\input{results/tex/assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-c}
+
+Todos os algoritmos que concluem atingem o custo ótimo, de modo que a comparação
+recai sobre o tempo. Entre as quatro implementações do método Húngaro, obtidas de
+autores distintos para exatamente o mesmo algoritmo, observa-se uma variação de
+mais de uma ordem de grandeza --- evidência de que a qualidade da implementação,
+e não apenas o algoritmo, determina o desempenho na prática. As implementações de
+núcleo compilado (SciPy e Jonker-Volgenant) são, novamente, as mais rápidas.
+
+Duas das implementações do Húngaro apresentam defeitos que impedem sua conclusão
+em parte das instâncias densas; como esse é um resultado relevante por si só, ele
+é tratado em conjunto na Seção~\ref{sec:defeitos}.
+
+% ---------------------------------------------------------------------------
+\subsection{Atribuição gargalo}
+
+A Tabela~\ref{tab:bottleneck-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
+compara os dois algoritmos exatos para a matriz densa.
+
+\input{results/tex/bottleneck-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
+
+Ambos produzem sempre o mesmo custo gargalo ótimo, o que serve também como
+verificação cruzada de corretude. O método de caminhos aumentantes, construtivo,
+mostra-se consistentemente mais rápido que o método de \textit{threshold}, que
+repete uma verificação de emparelhamento perfeito a cada passo da busca binária
+sobre o limiar. A vantagem do método construtivo cresce com o tamanho da
+instância.
+
+% ---------------------------------------------------------------------------
+\subsection{Casamento estável}
+
+A Tabela~\ref{tab:stable-marriage-perfil-1-aleatorio-permutacoes-uniformes-tempo-python}
+apresenta os tempos das três variantes de Gale-Shapley para preferências
+aleatórias.
+
+\input{results/tex/stable-marriage-perfil-1-aleatorio-permutacoes-uniformes-tempo-python}
+
+Pela unicidade do emparelhamento estável ótimo para os pretendentes, as três
+variantes produzem exatamente o mesmo resultado; a qualidade, portanto, não as
+distingue. A variante orientada a objetos, embora teoricamente quadrática,
+mostra-se substancialmente mais lenta e inviável nos tamanhos maiores, por conta
+do sobrecusto de reconstruir estruturas a cada rodada --- comportamento
+quantificado adiante, na análise de crescimento empírico. As variantes que operam
+sobre vetores e dicionários escalam sem dificuldade até os maiores tamanhos
+avaliados.
+
+% ---------------------------------------------------------------------------
+\subsection{Emparelhamento em grafos gerais}
+
+Para cardinalidade máxima, comparam-se o algoritmo de Blossom e a biblioteca
+NetworkX
+(Tabela~\ref{tab:general-cardinalidade-esparso-grau-3-tempo-python}); para peso
+máximo, a implementação de van Rantwijk, a mesma biblioteca e a heurística Path
+Growing (Tabela~\ref{tab:general-peso-esparso-grau-3-tempo-python} e
+Tabela~\ref{tab:general-peso-esparso-grau-3-qualidade}).
+
+\input{results/tex/general-cardinalidade-esparso-grau-3-tempo-python}
+\input{results/tex/general-peso-esparso-grau-3-tempo-python}
+\input{results/tex/general-peso-esparso-grau-3-qualidade}
+
+No caso ponderado, um resultado é digno de nota: a implementação independente de
+van Rantwijk é mais rápida que a rotina correspondente do NetworkX, ainda que
+esta última seja uma adaptação daquele mesmo código. A comparação, portanto, não
+opõe duas abordagens, e sim uma implementação a um descendente empacotado dela;
+a diferença observada mede o efeito das camadas de generalidade que a biblioteca
+acrescenta. A heurística Path Growing, por sua vez, é ordens de grandeza mais
+rápida que os exatos e entrega uma fração elevada do peso ótimo, bem acima da sua
+garantia teórica de metade --- mais um exemplo de que, na prática, a heurística
+rende muito mais do que o seu pior caso.
+
+% ---------------------------------------------------------------------------
+\subsection{Emparelhamento induzido máximo}
+
+Sendo NP-difícil, o emparelhamento induzido máximo tem um perfil distinto dos
+demais problemas: o algoritmo exato só é viável em instâncias pequenas, e a
+qualidade das heurísticas passa a ser o eixo central da comparação. A
+Tabela~\ref{tab:mim-grafo-esparso-grau-3-tempo-python} traz os tempos e a
+Tabela~\ref{tab:mim-grafo-esparso-grau-3-qualidade}, a qualidade.
+
+\input{results/tex/mim-grafo-esparso-grau-3-tempo-python}
+\input{results/tex/mim-grafo-esparso-grau-3-qualidade}
+
+O algoritmo exato, que reduz o problema a conjunto independente máximo no grafo de
+conflitos, resolve instâncias pequenas em poucos milissegundos, mas seu custo
+cresce rapidamente e o torna inviável além de algumas dezenas de vértices --- o
+que justifica empiricamente a necessidade das heurísticas. Entre estas, evidencia-se
+um compromisso claro: a heurística de grau mínimo encontra soluções de qualidade
+consistentemente superior à da escolha aleatória, ao custo de um tempo bem maior,
+por manter e atualizar o grafo de conflitos. Nas instâncias pequenas, em que o
+ótimo é conhecido, a heurística de grau mínimo chega muito próximo dele.
+
+% ---------------------------------------------------------------------------
+\subsection{Defeitos em implementações públicas}
+\label{sec:defeitos}
+
+Um resultado que só emerge da execução repetida dos algoritmos --- e que um
+levantamento puramente bibliográfico não revelaria --- diz respeito à
+confiabilidade de implementações públicas de algoritmos clássicos. Duas das
+quatro implementações do método Húngaro avaliadas apresentam defeitos.
+
+A primeira (\texttt{hunalgorithm}) falha de forma determinística em matrizes
+densas a partir de um certo tamanho, por exceder um limite interno de iterações
+previsto em seu próprio código; matrizes estruturadas, que produzem padrões mais
+simples, não acionam o problema.
+
+A segunda (\texttt{benchaplin}) é mais notável, por ser \textbf{não-determinística
+entre execuções}. Sobre exatamente a mesma matriz de entrada, a implementação ora
+retorna o custo ótimo correto, ora falha com um erro de tipo, ora ingressa em um
+caminho de execução tão lento que não conclui em tempo praticável. A causa é a
+dependência do defeito quanto à ordem de iteração de uma coleção de objetos, que a
+linguagem aleatoriza a cada processo. Trata-se de três desfechos distintos para a
+mesma entrada, todos observados. Além de ilustrar de forma vívida o valor de
+\textit{implementar e medir} sobre apenas catalogar, esse comportamento tem uma
+consequência metodológica registrada no capítulo anterior: a fixação da semente
+de aleatorização foi necessária justamente para tornar os resultados
+reprodutíveis.
+
+Optou-se por \textbf{reportar} esses defeitos, e não corrigi-los: como o objeto de
+estudo é o conjunto de implementações efetivamente disponíveis, corrigi-los
+apagaria um resultado legítimo sobre a qualidade do que se encontra publicado.
+
+% ---------------------------------------------------------------------------
+\subsection{Crescimento empírico frente à complexidade teórica}
+\label{sec:crescimento}
+
+Como o tempo absoluto não é comparável entre linguagens, a análise de crescimento
+apoia-se no expoente empírico definido na Seção~\ref{sec:criterios}: a inclinação
+da reta ajustada ao gráfico do tempo pelo tamanho, em escala logarítmica. As
+Figuras~\ref{fig:cresc-mcm} e~\ref{fig:cresc-assignment} apresentam esses
+gráficos para dois problemas representativos, e as
+Tabelas~\ref{tab:exp-mcm} a~\ref{tab:exp-general-weight} confrontam o expoente
+medido com a complexidade teórica de cada algoritmo.
+
+\input{results/tex/fig-mcm}
+
+\input{results/tex/fig-assignment}
+
+Os expoentes medidos são, em geral, coerentes com a teoria. O caso mais nítido é
+o do Edmonds-Karp, cujo expoente próximo de três acompanha o comportamento cúbico
+previsto e o separa visivelmente dos demais na Figura~\ref{fig:cresc-mcm}. Nas
+implementações de núcleo compilado, a reta situa-se muito abaixo das
+interpretadas, mas com inclinação semelhante --- exatamente o efeito esperado: a
+linguagem altera a constante (a posição da reta), não o expoente (a inclinação).
+
+\input{results/tex/exp-mcm}
+\input{results/tex/exp-assignment}
+
+Observa-se ainda que, nos tamanhos avaliados, o expoente medido frequentemente
+fica \textit{abaixo} do previsto pela complexidade de pior caso, que é
+conservadora: o pior caso raramente se materializa nas instâncias típicas. A
+exceção reveladora é a variante orientada a objetos do Gale-Shapley
+(Tabela~\ref{tab:exp-stable-marriage}), cujo expoente medido supera o teórico: o
+sobrecusto de implementação a torna, na prática, super-quadrática, confirmando por
+medição a ressalva já registrada sobre ela.
+
+\input{results/tex/exp-stable-marriage}
+\input{results/tex/exp-bottleneck}
+\input{results/tex/exp-general-weight}

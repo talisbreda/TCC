@@ -1,0 +1,17 @@
+\begin{table}[ht]
+    \centering
+    \caption{Tempo de execução em Python — Matriz 3 — Estruturada     \textbar{} custo = \textbar{}i-j\textbar{}+1 (mediana, ms)}
+    \label{tab:assignment-matriz-3-estruturada-custo-i-j-1-tempo-python}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l l rrrrrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
+        \midrule
+        Húngaro (munkres) & exato & $O(n^{3})$ & $O(n^{2})$ & 0.10 & 0.32 & 0.62 & 1.64 & 3.38 & 5.96 & 13.21 & 23.29 & 36.16 \\
+        Húngaro (benchaplin) & exato & $O(n^{3})$ & $O(n^{2})$ & 2.15 & 7.58 & 15.80 & 41.51 & 91.39 & 170.36 & 396.75 & 726.02 & 1157.10 \\
+        Húngaro (hunalgorithm) & exato & $O(n^{3})$ & $O(n^{2})$ & 0.13 & 0.36 & 0.71 & 1.78 & 4.31 & 7.31 & 16.45 & 27.90 & 43.83 \\
+        Húngaro (mayorx/KM) & exato & $O(n^{3})$ & $O(n^{2})$ & 0.41 & 0.80 & 1.21 & 2.12 & 3.40 & 4.83 & 8.27 & 12.35 & 17.01 \\
+        SSP (flows) & exato & $O(n^{4})$* & $O(n^{2})$ & 0.39 & 2.17 & 6.28 & 26.00 & 87.68 & 214.55 & — & — & — \\
+        \bottomrule
+    \end{tabular}
+\end{table}

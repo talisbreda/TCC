@@ -1,0 +1,15 @@
+\begin{table}[ht]
+    \centering
+    \caption{Qualidade da solução — Grafo esparso (grau \textasciitilde{}3)}
+    \label{tab:mim-grafo-esparso-grau-3-qualidade}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l rrrrrrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=10$} & \textbf{$n=15$} & \textbf{$n=20$} & \textbf{$n=25$} & \textbf{$n=30$} & \textbf{$n=40$} & \textbf{$n=50$} & \textbf{$n=100$} & \textbf{$n=200$} & \textbf{$n=400$} \\
+        \midrule
+        Exato (MIS conflitos) & exato & $exp.$ & 2 & 3 & 5 & 5 & 8 & 10 & — & — & — & — \\
+        Guloso aleatório & heuristica & $O(E^{2})$ & 2 & 2 & 3 & 3 & 5 & 7 & 10 & 18 & 41 & 75 \\
+        Guloso grau mínimo & heuristica & $O(E^{2})$ & 2 & 3 & 5 & 5 & 8 & 10 & 11 & 25 & 49 & 93 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

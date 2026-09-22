@@ -1,0 +1,15 @@
+\begin{table}[ht]
+    \centering
+    \caption{Tempo de execução em Python — Grafo médio (grau \textasciitilde{}6) (mediana, ms)}
+    \label{tab:mim-grafo-medio-grau-6-tempo-python}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l l rrrrrrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=15$} & \textbf{$n=20$} & \textbf{$n=25$} & \textbf{$n=30$} & \textbf{$n=40$} & \textbf{$n=50$} & \textbf{$n=100$} & \textbf{$n=200$} & \textbf{$n=400$} \\
+        \midrule
+        Exato (MIS conflitos) & exato & $exp.$ & $O(E^{2})$ & 0.37 & 1.11 & 2.52 & 4.63 & 10.67 & 133.19 & — & — & — & — \\
+        Guloso aleatório & heuristica & $O(E^{2})$ & $O(V+E)$ & 0.06 & 0.10 & 0.17 & 0.25 & 0.28 & 0.40 & 0.61 & 2.49 & 9.09 & 33.41 \\
+        Guloso grau mínimo & heuristica & $O(E^{2})$ & $O(E^{2})$ & 0.48 & 1.56 & 3.47 & 5.39 & 5.94 & 11.18 & 21.39 & 73.90 & 332.31 & 1599.06 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

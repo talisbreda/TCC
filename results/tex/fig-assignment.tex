@@ -1,0 +1,26 @@
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \begin{loglogaxis}[
+            width=0.88\textwidth, height=7.2cm,
+            xlabel={$n$}, ylabel={tempo mediano (ms)},
+            legend pos=north west, legend cell align=left,
+            legend style={font=\scriptsize}, grid=both, font=\footnotesize,
+            log basis x=10, log basis y=10]
+            \addplot+[mark=*] table[x=n,y=t,col sep=comma] {results/plot/assignment-munkres.csv};
+            \addlegendentry{Húngaro (munkres)}
+            \addplot+[mark=square*] table[x=n,y=t,col sep=comma] {results/plot/assignment-mayorx.csv};
+            \addlegendentry{Húngaro (mayorx)}
+            \addplot+[mark=triangle*] table[x=n,y=t,col sep=comma] {results/plot/assignment-ssp.csv};
+            \addlegendentry{Caminhos mín.\ sucessivos}
+            \addplot+[mark=diamond*] table[x=n,y=t,col sep=comma] {results/plot/assignment-scipy.csv};
+            \addlegendentry{SciPy (compilado)}
+            \addplot+[mark=o] table[x=n,y=t,col sep=comma] {results/plot/assignment-jv.csv};
+            \addlegendentry{Jonker-Volgenant (compilado)}
+        \end{loglogaxis}
+    \end{tikzpicture}
+    \caption{Tempo de execução em escala log-log para a matriz densa (atribuição
+    linear). As duas implementações de núcleo compilado situam-se bem abaixo das
+    interpretadas, mas com inclinação semelhante.}
+    \label{fig:cresc-assignment}
+\end{figure}

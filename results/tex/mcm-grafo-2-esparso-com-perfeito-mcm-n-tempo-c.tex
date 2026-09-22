@@ -1,0 +1,13 @@
+\begin{table}[ht]
+    \centering
+    \caption{Tempo de execução em compilado (C/C++) — Grafo 2 — Esparso \textbar{} COM perfeito \textbar{} MCM = n (mediana, ms)}
+    \label{tab:mcm-grafo-2-esparso-com-perfeito-mcm-n-tempo-c}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l l rrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=50$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
+        \midrule
+        Bipartite Match. (igraph) & baseline & $O(E \cdot \sqrt{V})$ & $O(V+E)$ & 0.08 & 0.13 & 0.20 & 0.25 & 0.31 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

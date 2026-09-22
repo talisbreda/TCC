@@ -1,0 +1,14 @@
+\begin{table}[ht]
+    \centering
+    \caption{Tempo de execução em Python — Matriz 1 — Densa uniforme  \textbar{} custo in [1,100] (mediana, ms)}
+    \label{tab:bottleneck-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l l rrrrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} \\
+        \midrule
+        Threshold (busca binária) & exato & $O(n^{3} log n)$ & $O(n^{2})$ & 0.10 & 0.50 & 1.44 & 4.48 & 13.50 & 32.06 & 109.54 & 257.24 \\
+        Caminhos aumentantes & exato & $O(n^{3})$ & $O(n^{2})$ & 0.05 & 0.23 & 0.62 & 2.10 & 5.43 & 11.32 & 32.65 & 68.21 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

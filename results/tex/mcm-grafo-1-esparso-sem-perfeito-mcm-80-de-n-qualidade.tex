@@ -1,0 +1,19 @@
+\begin{table}[ht]
+    \centering
+    \caption{Qualidade da solução — Grafo 1 — Esparso \textbar{} SEM perfeito \textbar{} MCM = 80\% de n}
+    \label{tab:mcm-grafo-1-esparso-sem-perfeito-mcm-80-de-n-qualidade}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l rrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=50$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
+        \midrule
+        Aug. Paths (wbchristerson) & exato & $O(V \cdot E)$ & 40 & 80 & 120 & 160 & 200 \\
+        Hopcroft-Karp (sofiat) & exato & $O(E \cdot \sqrt{V})$ & 40 & 80 & 120 & 160 & 200 \\
+        Edmonds-Karp (Maxflow-Algs) & exato & $O(V \cdot E^{2})$ & 40 & 80 & 120 & 160 & 200 \\
+        Hopcroft-Karp (NetworkX) & baseline & $O(E \cdot \sqrt{V})$ & 40 & 80 & 120 & 160 & 200 \\
+        Bipartite Match. (igraph) & baseline & $O(E \cdot \sqrt{V})$ & 40 & 80 & 120 & 160 & 200 \\
+        Gulosa & heuristica & $O(E)$ & 37 & 76 & 116 & 156 & 195 \\
+        Karp-Sipser & heuristica & $O(V \cdot E)$ & 40 & 80 & 120 & 160 & 200 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

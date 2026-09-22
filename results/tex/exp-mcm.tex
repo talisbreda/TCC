@@ -1,0 +1,20 @@
+\begin{table}[H]
+    \centering
+    \caption{Expoente empírico de crescimento --- Grafo 3 — Denso   | COM perfeito | MCM = n}
+    \label{tab:exp-mcm}
+    \renewcommand{\arraystretch}{1.25}
+    \footnotesize
+    \begin{tabularx}{\textwidth}{@{} X l c c @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Compl.\ teórica} & \textbf{Expoente medido} & \textbf{$R^2$} \\
+        \midrule
+        Aug. Paths (wbchristerson) & $O(V \cdot E)$ & 2.61 & 0.917 \\
+        Hopcroft-Karp (sofiat) & $O(E \cdot \sqrt{V})$ & 1.20 & 0.996 \\
+        Edmonds-Karp (Maxflow-Algs) & $O(V \cdot E^{2})$ & 2.79 & 0.999 \\
+        Hopcroft-Karp (NetworkX) & $O(E \cdot \sqrt{V})$ & 1.09 & 0.999 \\
+        Bipartite Match. (igraph) & $O(E \cdot \sqrt{V})$ & 1.05 & 0.994 \\
+        Gulosa & $O(E)$ & 1.00 & 1.000 \\
+        Karp-Sipser & $O(V \cdot E)$ & 1.68 & 0.983 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}

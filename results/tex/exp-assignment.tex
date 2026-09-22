@@ -1,0 +1,19 @@
+\begin{table}[H]
+    \centering
+    \caption{Expoente empírico de crescimento --- Matriz 1 — Densa uniforme  | custo in [1,100]}
+    \label{tab:exp-assignment}
+    \renewcommand{\arraystretch}{1.25}
+    \footnotesize
+    \begin{tabularx}{\textwidth}{@{} X l c c @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Compl.\ teórica} & \textbf{Expoente medido} & \textbf{$R^2$} \\
+        \midrule
+        Húngaro (munkres) & $O(n^{3})$ & 2.36 & 0.999 \\
+        Húngaro (benchaplin) & $O(n^{3})$ & 3.22 & 0.998 \\
+        Húngaro (mayorx/KM) & $O(n^{3})$ & 1.39 & 0.980 \\
+        SSP (flows) & $O(n^{4})*$ & 2.71 & 0.998 \\
+        SciPy (linear\_sum\_assg) & $O(n^{3})$ & 1.86 & 0.994 \\
+        Jonker-Volgenant (lap) & $O(n^{3})$ & 1.65 & 0.987 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}

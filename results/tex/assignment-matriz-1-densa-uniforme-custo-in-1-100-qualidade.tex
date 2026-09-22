@@ -1,0 +1,19 @@
+\begin{table}[ht]
+    \centering
+    \caption{Qualidade da solução — Matriz 1 — Densa uniforme  \textbar{} custo in [1,100]}
+    \label{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-qualidade}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l rrrrrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
+        \midrule
+        Húngaro (munkres) & exato & $O(n^{3})$ & 102 & 146 & 168 & 217 & 238 & 244 & 258 & 275 & 300 \\
+        Húngaro (benchaplin) & exato & $O(n^{3})$ & 102 & 146 & 168 & BugAttr & BugAttr & BugAttr & BugAttr & BugAttr & BugAttr \\
+        Húngaro (hunalgorithm) & exato & $O(n^{3})$ & 102 & BugPerc & BugPerc & BugPerc & BugPerc & BugPerc & BugPerc & BugPerc & BugPerc \\
+        Húngaro (mayorx/KM) & exato & $O(n^{3})$ & 102 & 146 & 168 & 217 & 238 & 244 & 258 & 275 & 300 \\
+        SSP (flows) & exato & $O(n^{4})$* & 102 & 146 & 168 & 217 & 238 & 244 & — & — & — \\
+        SciPy (linear\_sum\_assg) & baseline & $O(n^{3})$ & 102 & 146 & 168 & 217 & 238 & 244 & 258 & 275 & 300 \\
+        Jonker-Volgenant (lap) & baseline & $O(n^{3})$ & 102 & 146 & 168 & 217 & 238 & 244 & 258 & 275 & 300 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

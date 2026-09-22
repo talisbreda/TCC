@@ -1,0 +1,19 @@
+\begin{table}[ht]
+    \centering
+    \caption{Qualidade da solução — Grafo 3 — Denso   \textbar{} COM perfeito \textbar{} MCM = n}
+    \label{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-qualidade}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l rrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=50$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
+        \midrule
+        Aug. Paths (wbchristerson) & exato & $O(V \cdot E)$ & 50 & 100 & 150 & 200 & 250 \\
+        Hopcroft-Karp (sofiat) & exato & $O(E \cdot \sqrt{V})$ & 50 & 100 & 150 & 200 & 250 \\
+        Edmonds-Karp (Maxflow-Algs) & exato & $O(V \cdot E^{2})$ & 50 & 100 & 150 & 200 & 250 \\
+        Hopcroft-Karp (NetworkX) & baseline & $O(E \cdot \sqrt{V})$ & 50 & 100 & 150 & 200 & 250 \\
+        Bipartite Match. (igraph) & baseline & $O(E \cdot \sqrt{V})$ & 50 & 100 & 150 & 200 & 250 \\
+        Gulosa & heuristica & $O(E)$ & 47 & 93 & 142 & 191 & 235 \\
+        Karp-Sipser & heuristica & $O(V \cdot E)$ & 50 & 100 & 150 & 200 & 249 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

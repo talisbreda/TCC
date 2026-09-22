@@ -1,0 +1,22 @@
+problem,instance,algorithm,kind,language,complexity_time,expoente_empirico,r2,n_pontos
+mcm,Grafo 1 — Esparso | SEM perfeito | MCM = 80% de n,Aug. Paths (wbchristerson),exato,python,O(V·E),1.9463,1.0000,5
+mcm,Grafo 1 — Esparso | SEM perfeito | MCM = 80% de n,Hopcroft-Karp (sofiat),exato,python,O(E·√V),0.9867,0.9999,5
+mcm,Grafo 1 — Esparso | SEM perfeito | MCM = 80% de n,Edmonds-Karp (Maxflow-Algs),exato,python,O(V·E²),2.9045,0.9995,5
+mcm,Grafo 1 — Esparso | SEM perfeito | MCM = 80% de n,Hopcroft-Karp (NetworkX),baseline,python,O(E·√V),0.9469,0.9900,5
+mcm,Grafo 1 — Esparso | SEM perfeito | MCM = 80% de n,Bipartite Match. (igraph),baseline,c,O(E·√V),0.7812,0.9951,5
+mcm,Grafo 1 — Esparso | SEM perfeito | MCM = 80% de n,Gulosa,heuristica,python,O(E),0.9971,0.9976,5
+mcm,Grafo 1 — Esparso | SEM perfeito | MCM = 80% de n,Karp-Sipser,heuristica,python,O(V·E),1.6687,0.9975,5
+mcm,Grafo 2 — Esparso | COM perfeito | MCM = n,Aug. Paths (wbchristerson),exato,python,O(V·E),2.3424,0.9207,5
+mcm,Grafo 2 — Esparso | COM perfeito | MCM = n,Hopcroft-Karp (sofiat),exato,python,O(E·√V),1.0946,0.9707,5
+mcm,Grafo 2 — Esparso | COM perfeito | MCM = n,Edmonds-Karp (Maxflow-Algs),exato,python,O(V·E²),2.9097,0.9995,5
+mcm,Grafo 2 — Esparso | COM perfeito | MCM = n,Hopcroft-Karp (NetworkX),baseline,python,O(E·√V),1.0713,0.9779,5
+mcm,Grafo 2 — Esparso | COM perfeito | MCM = n,Bipartite Match. (igraph),baseline,c,O(E·√V),0.8177,0.9943,5
+mcm,Grafo 2 — Esparso | COM perfeito | MCM = n,Gulosa,heuristica,python,O(E),0.8185,0.9926,5
+mcm,Grafo 2 — Esparso | COM perfeito | MCM = n,Karp-Sipser,heuristica,python,O(V·E),1.6322,0.9955,5
+mcm,Grafo 3 — Denso   | COM perfeito | MCM = n,Aug. Paths (wbchristerson),exato,python,O(V·E),2.6119,0.9174,5
+mcm,Grafo 3 — Denso   | COM perfeito | MCM = n,Hopcroft-Karp (sofiat),exato,python,O(E·√V),1.1962,0.9963,5
+mcm,Grafo 3 — Denso   | COM perfeito | MCM = n,Edmonds-Karp (Maxflow-Algs),exato,python,O(V·E²),2.7850,0.9992,5
+mcm,Grafo 3 — Denso   | COM perfeito | MCM = n,Hopcroft-Karp (NetworkX),baseline,python,O(E·√V),1.0910,0.9993,5
+mcm,Grafo 3 — Denso   | COM perfeito | MCM = n,Bipartite Match. (igraph),baseline,c,O(E·√V),1.0542,0.9943,5
+mcm,Grafo 3 — Denso   | COM perfeito | MCM = n,Gulosa,heuristica,python,O(E),0.9983,0.9996,5
+mcm,Grafo 3 — Denso   | COM perfeito | MCM = n,Karp-Sipser,heuristica,python,O(V·E),1.6811,0.9825,5

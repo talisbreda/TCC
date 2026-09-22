@@ -1,0 +1,15 @@
+\begin{table}[ht]
+    \centering
+    \caption{Tempo de execução em Python — Peso — denso (p=0.3) (mediana, ms)}
+    \label{tab:general-peso-denso-p-0-3-tempo-python}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l l rrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} \\
+        \midrule
+        van Rantwijk (mwmatching) & exato & $O(V^{3})$ & $O(V+E)$ & 0.25 & 0.87 & 2.20 & 4.83 & 16.68 & 26.68 \\
+        NetworkX (peso máximo) & baseline & $O(V^{3})$ & $O(V+E)$ & 0.59 & 2.38 & 5.83 & 13.56 & 41.85 & 78.35 \\
+        Path Growing & heuristica & $O(E)$ & $O(V+E)$ & 0.03 & 0.08 & 0.15 & 0.36 & 0.78 & 1.35 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

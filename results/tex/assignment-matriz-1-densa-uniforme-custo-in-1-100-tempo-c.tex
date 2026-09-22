@@ -1,0 +1,14 @@
+\begin{table}[ht]
+    \centering
+    \caption{Tempo de execução em compilado (C/C++) — Matriz 1 — Densa uniforme  \textbar{} custo in [1,100] (mediana, ms)}
+    \label{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-c}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l l rrrrrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
+        \midrule
+        SciPy (linear\_sum\_assg) & baseline & $O(n^{3})$ & $O(n^{2})$ & 0.02 & 0.04 & 0.08 & 0.23 & 0.51 & 0.84 & 2.19 & 3.68 & 5.48 \\
+        Jonker-Volgenant (lap) & baseline & $O(n^{3})$ & $O(n^{2})$ & 0.02 & 0.05 & 0.07 & 0.17 & 0.36 & 0.61 & 1.36 & 2.31 & 3.73 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

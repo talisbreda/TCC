@@ -1,0 +1,18 @@
+\begin{table}[ht]
+    \centering
+    \caption{Tempo de execução em Python — Grafo 1 — Esparso \textbar{} SEM perfeito \textbar{} MCM = 80\% de n (mediana, ms)}
+    \label{tab:mcm-grafo-1-esparso-sem-perfeito-mcm-80-de-n-tempo-python}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l l rrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=50$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
+        \midrule
+        Aug. Paths (wbchristerson) & exato & $O(V \cdot E)$ & $O(V+E)$ & 3.65 & 13.93 & 30.60 & 54.24 & 83.43 \\
+        Hopcroft-Karp (sofiat) & exato & $O(E \cdot \sqrt{V})$ & $O(V+E)$ & 0.55 & 1.10 & 1.64 & 2.16 & 2.73 \\
+        Edmonds-Karp (Maxflow-Algs) & exato & $O(V \cdot E^{2})$ & $O(V^{2})$ & 9.56 & 65.27 & 216.18 & 519.03 & 1024.37 \\
+        Hopcroft-Karp (NetworkX) & baseline & $O(E \cdot \sqrt{V})$ & $O(V+E)$ & 0.57 & 1.20 & 1.55 & 2.02 & 2.80 \\
+        Gulosa & heuristica & $O(E)$ & $O(V)$ & 0.01 & 0.01 & 0.02 & 0.03 & 0.03 \\
+        Karp-Sipser & heuristica & $O(V \cdot E)$ & $O(V+E)$ & 0.16 & 0.44 & 0.88 & 1.50 & 2.30 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

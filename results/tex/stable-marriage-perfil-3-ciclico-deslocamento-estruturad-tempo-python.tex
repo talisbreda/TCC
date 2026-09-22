@@ -1,0 +1,15 @@
+\begin{table}[ht]
+    \centering
+    \caption{Tempo de execução em Python — Perfil 3 — Cíclico         \textbar{} deslocamento estruturado (mediana, ms)}
+    \label{tab:stable-marriage-perfil-3-ciclico-deslocamento-estruturad-tempo-python}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l l rrrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=25$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=200$} & \textbf{$n=300$} & \textbf{$n=400$} \\
+        \midrule
+        Gale-Shapley (OOP/pip) & exato & $O(n^{2})$† & $O(n^{2})$ & 2.44 & 14.89 & 46.06 & 104.25 & — & — & — \\
+        Gale-Shapley (numérico/pip) & exato & $O(n^{2})$ & $O(n^{2})$ & 0.39 & 1.35 & 3.00 & 5.16 & 20.25 & 47.17 & 88.20 \\
+        Gale-Shapley (Lattas/dict) & exato & $O(n^{3})$* & $O(n^{2})$ & 0.21 & 0.74 & 1.60 & 2.80 & 10.95 & 27.22 & 51.22 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

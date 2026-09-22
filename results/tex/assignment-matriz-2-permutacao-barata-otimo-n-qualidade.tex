@@ -1,0 +1,19 @@
+\begin{table}[ht]
+    \centering
+    \caption{Qualidade da solução — Matriz 2 — Permutação barata \textbar{} ótimo = n}
+    \label{tab:assignment-matriz-2-permutacao-barata-otimo-n-qualidade}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l rrrrrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
+        \midrule
+        Húngaro (munkres) & exato & $O(n^{3})$ & 10 & 20 & 30 & 50 & 75 & 100 & 150 & 200 & 250 \\
+        Húngaro (benchaplin) & exato & $O(n^{3})$ & 10 & 20 & 30 & 50 & 75 & 100 & 150 & 200 & 250 \\
+        Húngaro (hunalgorithm) & exato & $O(n^{3})$ & 10 & 20 & 30 & 50 & 75 & 100 & 150 & 200 & 250 \\
+        Húngaro (mayorx/KM) & exato & $O(n^{3})$ & 10 & 20 & 30 & 50 & 75 & 100 & 150 & 200 & 250 \\
+        SSP (flows) & exato & $O(n^{4})$* & 10 & 20 & 30 & 50 & 75 & 100 & — & — & — \\
+        SciPy (linear\_sum\_assg) & baseline & $O(n^{3})$ & 10 & 20 & 30 & 50 & 75 & 100 & 150 & 200 & 250 \\
+        Jonker-Volgenant (lap) & baseline & $O(n^{3})$ & 10 & 20 & 30 & 50 & 75 & 100 & 150 & 200 & 250 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

@@ -1,0 +1,217 @@
+problema,secao,instancia,algoritmo,n,qualidade
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (munkres),10,102
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (benchaplin),10,102
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (hunalgorithm),10,102
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (mayorx/KM),10,102
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SSP (flows),10,102
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SciPy (linear_sum_assg),10,102
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Jonker-Volgenant (lap),10,102
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (munkres),20,146
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (benchaplin),20,146
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (hunalgorithm),20,BugPerc
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (mayorx/KM),20,146
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SSP (flows),20,146
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SciPy (linear_sum_assg),20,146
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Jonker-Volgenant (lap),20,146
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (munkres),30,168
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (benchaplin),30,168
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (hunalgorithm),30,BugPerc
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (mayorx/KM),30,168
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SSP (flows),30,168
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SciPy (linear_sum_assg),30,168
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Jonker-Volgenant (lap),30,168
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (munkres),50,217
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (benchaplin),50,BugAttr
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (hunalgorithm),50,BugPerc
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (mayorx/KM),50,217
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SSP (flows),50,217
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SciPy (linear_sum_assg),50,217
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Jonker-Volgenant (lap),50,217
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (munkres),75,238
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (benchaplin),75,BugAttr
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (hunalgorithm),75,BugPerc
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (mayorx/KM),75,238
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SSP (flows),75,238
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SciPy (linear_sum_assg),75,238
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Jonker-Volgenant (lap),75,238
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (munkres),100,244
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (benchaplin),100,BugAttr
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (hunalgorithm),100,BugPerc
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (mayorx/KM),100,244
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SSP (flows),100,244
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SciPy (linear_sum_assg),100,244
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Jonker-Volgenant (lap),100,244
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (munkres),10,10
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (benchaplin),10,10
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (hunalgorithm),10,10
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (mayorx/KM),10,10
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SSP (flows),10,10
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SciPy (linear_sum_assg),10,10
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Jonker-Volgenant (lap),10,10
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (munkres),20,20
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (benchaplin),20,20
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (hunalgorithm),20,20
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (mayorx/KM),20,20
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SSP (flows),20,20
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SciPy (linear_sum_assg),20,20
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Jonker-Volgenant (lap),20,20
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (munkres),30,30
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (benchaplin),30,30
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (hunalgorithm),30,30
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (mayorx/KM),30,30
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SSP (flows),30,30
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SciPy (linear_sum_assg),30,30
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Jonker-Volgenant (lap),30,30
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (munkres),50,50
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (benchaplin),50,50
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (hunalgorithm),50,50
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (mayorx/KM),50,50
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SSP (flows),50,50
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SciPy (linear_sum_assg),50,50
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Jonker-Volgenant (lap),50,50
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (munkres),75,75
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (benchaplin),75,75
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (hunalgorithm),75,75
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (mayorx/KM),75,75
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SSP (flows),75,75
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SciPy (linear_sum_assg),75,75
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Jonker-Volgenant (lap),75,75
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (munkres),100,100
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (benchaplin),100,100
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (hunalgorithm),100,100
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (mayorx/KM),100,100
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SSP (flows),100,100
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SciPy (linear_sum_assg),100,100
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Jonker-Volgenant (lap),100,100
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (munkres),10,10
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (benchaplin),10,10
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (hunalgorithm),10,10
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (mayorx/KM),10,10
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SSP (flows),10,10
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SciPy (linear_sum_assg),10,10
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Jonker-Volgenant (lap),10,10
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (munkres),20,20
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (benchaplin),20,20
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (hunalgorithm),20,20
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (mayorx/KM),20,20
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SSP (flows),20,20
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SciPy (linear_sum_assg),20,20
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Jonker-Volgenant (lap),20,20
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (munkres),30,30
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (benchaplin),30,30
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (hunalgorithm),30,30
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (mayorx/KM),30,30
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SSP (flows),30,30
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SciPy (linear_sum_assg),30,30
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Jonker-Volgenant (lap),30,30
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (munkres),50,50
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (benchaplin),50,50
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (hunalgorithm),50,50
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (mayorx/KM),50,50
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SSP (flows),50,50
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SciPy (linear_sum_assg),50,50
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Jonker-Volgenant (lap),50,50
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (munkres),75,75
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (benchaplin),75,75
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (hunalgorithm),75,75
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (mayorx/KM),75,75
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SSP (flows),75,75
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SciPy (linear_sum_assg),75,75
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Jonker-Volgenant (lap),75,75
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (munkres),100,100
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (benchaplin),100,100
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (hunalgorithm),100,100
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (mayorx/KM),100,100
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SSP (flows),100,100
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SciPy (linear_sum_assg),100,100
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Jonker-Volgenant (lap),100,100
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (munkres),50,217
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (benchaplin),50,BugAttr
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (hunalgorithm),50,BugPerc
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (mayorx/KM),50,217
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SciPy (linear_sum_assg),50,217
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Jonker-Volgenant (lap),50,217
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (munkres),100,244
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (benchaplin),100,BugAttr
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (hunalgorithm),100,BugPerc
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (mayorx/KM),100,244
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SciPy (linear_sum_assg),100,244
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Jonker-Volgenant (lap),100,244
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (munkres),150,258
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (benchaplin),150,BugAttr
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (hunalgorithm),150,BugPerc
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (mayorx/KM),150,258
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SciPy (linear_sum_assg),150,258
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Jonker-Volgenant (lap),150,258
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (munkres),200,275
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (benchaplin),200,BugAttr
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (hunalgorithm),200,BugPerc
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (mayorx/KM),200,275
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SciPy (linear_sum_assg),200,275
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Jonker-Volgenant (lap),200,275
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (munkres),250,300
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (benchaplin),250,BugAttr
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (hunalgorithm),250,BugPerc
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Húngaro (mayorx/KM),250,300
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",SciPy (linear_sum_assg),250,300
+assignment,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Jonker-Volgenant (lap),250,300
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (munkres),50,50
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (benchaplin),50,50
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (hunalgorithm),50,50
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (mayorx/KM),50,50
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SciPy (linear_sum_assg),50,50
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Jonker-Volgenant (lap),50,50
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (munkres),100,100
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (benchaplin),100,100
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (hunalgorithm),100,100
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (mayorx/KM),100,100
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SciPy (linear_sum_assg),100,100
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Jonker-Volgenant (lap),100,100
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (munkres),150,150
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (benchaplin),150,150
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (hunalgorithm),150,150
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (mayorx/KM),150,150
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SciPy (linear_sum_assg),150,150
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Jonker-Volgenant (lap),150,150
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (munkres),200,200
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (benchaplin),200,200
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (hunalgorithm),200,200
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (mayorx/KM),200,200
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SciPy (linear_sum_assg),200,200
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Jonker-Volgenant (lap),200,200
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (munkres),250,250
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (benchaplin),250,250
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (hunalgorithm),250,250
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Húngaro (mayorx/KM),250,250
+assignment,,Matriz 2 — Permutação barata | ótimo = n,SciPy (linear_sum_assg),250,250
+assignment,,Matriz 2 — Permutação barata | ótimo = n,Jonker-Volgenant (lap),250,250
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (munkres),50,50
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (benchaplin),50,50
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (hunalgorithm),50,50
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (mayorx/KM),50,50
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SciPy (linear_sum_assg),50,50
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Jonker-Volgenant (lap),50,50
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (munkres),100,100
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (benchaplin),100,100
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (hunalgorithm),100,100
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (mayorx/KM),100,100
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SciPy (linear_sum_assg),100,100
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Jonker-Volgenant (lap),100,100
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (munkres),150,150
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (benchaplin),150,150
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (hunalgorithm),150,150
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (mayorx/KM),150,150
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SciPy (linear_sum_assg),150,150
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Jonker-Volgenant (lap),150,150
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (munkres),200,200
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (benchaplin),200,200
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (hunalgorithm),200,200
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (mayorx/KM),200,200
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SciPy (linear_sum_assg),200,200
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Jonker-Volgenant (lap),200,200
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (munkres),250,250
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (benchaplin),250,250
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (hunalgorithm),250,250
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Húngaro (mayorx/KM),250,250
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,SciPy (linear_sum_assg),250,250
+assignment,,Matriz 3 — Estruturada     | custo = |i-j|+1,Jonker-Volgenant (lap),250,250

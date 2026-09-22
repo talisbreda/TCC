@@ -1,0 +1,61 @@
+problema,secao,instancia,algoritmo,n,qualidade
+general-card,,Cardinalidade — esparso (grau ~3),Blossom (Edmonds),10,5
+general-card,,Cardinalidade — esparso (grau ~3),NetworkX (cardinalidade),10,5
+general-card,,Cardinalidade — esparso (grau ~3),Blossom (Edmonds),20,9
+general-card,,Cardinalidade — esparso (grau ~3),NetworkX (cardinalidade),20,9
+general-card,,Cardinalidade — esparso (grau ~3),Blossom (Edmonds),30,13
+general-card,,Cardinalidade — esparso (grau ~3),NetworkX (cardinalidade),30,13
+general-card,,Cardinalidade — esparso (grau ~3),Blossom (Edmonds),50,23
+general-card,,Cardinalidade — esparso (grau ~3),NetworkX (cardinalidade),50,23
+general-card,,Cardinalidade — esparso (grau ~3),Blossom (Edmonds),75,31
+general-card,,Cardinalidade — esparso (grau ~3),NetworkX (cardinalidade),75,31
+general-card,,Cardinalidade — esparso (grau ~3),Blossom (Edmonds),100,43
+general-card,,Cardinalidade — esparso (grau ~3),NetworkX (cardinalidade),100,43
+general-card,,Cardinalidade — denso (p=0.3),Blossom (Edmonds),10,5
+general-card,,Cardinalidade — denso (p=0.3),NetworkX (cardinalidade),10,5
+general-card,,Cardinalidade — denso (p=0.3),Blossom (Edmonds),20,10
+general-card,,Cardinalidade — denso (p=0.3),NetworkX (cardinalidade),20,10
+general-card,,Cardinalidade — denso (p=0.3),Blossom (Edmonds),30,15
+general-card,,Cardinalidade — denso (p=0.3),NetworkX (cardinalidade),30,15
+general-card,,Cardinalidade — denso (p=0.3),Blossom (Edmonds),50,25
+general-card,,Cardinalidade — denso (p=0.3),NetworkX (cardinalidade),50,25
+general-card,,Cardinalidade — denso (p=0.3),Blossom (Edmonds),75,37
+general-card,,Cardinalidade — denso (p=0.3),NetworkX (cardinalidade),75,37
+general-card,,Cardinalidade — denso (p=0.3),Blossom (Edmonds),100,50
+general-card,,Cardinalidade — denso (p=0.3),NetworkX (cardinalidade),100,50
+general-weight,,Peso — esparso (grau ~3),van Rantwijk (mwmatching),10,309
+general-weight,,Peso — esparso (grau ~3),NetworkX (peso máximo),10,309
+general-weight,,Peso — esparso (grau ~3),Path Growing,10,278
+general-weight,,Peso — esparso (grau ~3),van Rantwijk (mwmatching),20,604
+general-weight,,Peso — esparso (grau ~3),NetworkX (peso máximo),20,604
+general-weight,,Peso — esparso (grau ~3),Path Growing,20,510
+general-weight,,Peso — esparso (grau ~3),van Rantwijk (mwmatching),30,790
+general-weight,,Peso — esparso (grau ~3),NetworkX (peso máximo),30,790
+general-weight,,Peso — esparso (grau ~3),Path Growing,30,732
+general-weight,,Peso — esparso (grau ~3),van Rantwijk (mwmatching),50,1284
+general-weight,,Peso — esparso (grau ~3),NetworkX (peso máximo),50,1284
+general-weight,,Peso — esparso (grau ~3),Path Growing,50,1030
+general-weight,,Peso — esparso (grau ~3),van Rantwijk (mwmatching),75,1907
+general-weight,,Peso — esparso (grau ~3),NetworkX (peso máximo),75,1907
+general-weight,,Peso — esparso (grau ~3),Path Growing,75,1492
+general-weight,,Peso — esparso (grau ~3),van Rantwijk (mwmatching),100,2929
+general-weight,,Peso — esparso (grau ~3),NetworkX (peso máximo),100,2929
+general-weight,,Peso — esparso (grau ~3),Path Growing,100,2407
+general-weight,,Peso — denso (p=0.3),van Rantwijk (mwmatching),10,309
+general-weight,,Peso — denso (p=0.3),NetworkX (peso máximo),10,309
+general-weight,,Peso — denso (p=0.3),Path Growing,10,278
+general-weight,,Peso — denso (p=0.3),van Rantwijk (mwmatching),20,765
+general-weight,,Peso — denso (p=0.3),NetworkX (peso máximo),20,765
+general-weight,,Peso — denso (p=0.3),Path Growing,20,642
+general-weight,,Peso — denso (p=0.3),van Rantwijk (mwmatching),30,1279
+general-weight,,Peso — denso (p=0.3),NetworkX (peso máximo),30,1279
+general-weight,,Peso — denso (p=0.3),Path Growing,30,1215
+general-weight,,Peso — denso (p=0.3),van Rantwijk (mwmatching),50,2247
+general-weight,,Peso — denso (p=0.3),NetworkX (peso máximo),50,2247
+general-weight,,Peso — denso (p=0.3),Path Growing,50,1934
+general-weight,,Peso — denso (p=0.3),van Rantwijk (mwmatching),75,3429
+general-weight,,Peso — denso (p=0.3),NetworkX (peso máximo),75,3429
+general-weight,,Peso — denso (p=0.3),Path Growing,75,3113
+general-weight,,Peso — denso (p=0.3),van Rantwijk (mwmatching),100,4710
+general-weight,,Peso — denso (p=0.3),NetworkX (peso máximo),100,4710
+general-weight,,Peso — denso (p=0.3),Path Growing,100,4329

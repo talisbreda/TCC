@@ -1,0 +1,53 @@
+problema,secao,instancia,algoritmo,n,qualidade
+mim-pequeno,,Grafo esparso (grau ~3),Exato (MIS conflitos),10,2
+mim-pequeno,,Grafo esparso (grau ~3),Guloso aleatório,10,2
+mim-pequeno,,Grafo esparso (grau ~3),Guloso grau mínimo,10,2
+mim-pequeno,,Grafo esparso (grau ~3),Exato (MIS conflitos),15,3
+mim-pequeno,,Grafo esparso (grau ~3),Guloso aleatório,15,2
+mim-pequeno,,Grafo esparso (grau ~3),Guloso grau mínimo,15,3
+mim-pequeno,,Grafo esparso (grau ~3),Exato (MIS conflitos),20,5
+mim-pequeno,,Grafo esparso (grau ~3),Guloso aleatório,20,3
+mim-pequeno,,Grafo esparso (grau ~3),Guloso grau mínimo,20,5
+mim-pequeno,,Grafo esparso (grau ~3),Exato (MIS conflitos),25,5
+mim-pequeno,,Grafo esparso (grau ~3),Guloso aleatório,25,3
+mim-pequeno,,Grafo esparso (grau ~3),Guloso grau mínimo,25,5
+mim-pequeno,,Grafo esparso (grau ~3),Exato (MIS conflitos),30,8
+mim-pequeno,,Grafo esparso (grau ~3),Guloso aleatório,30,5
+mim-pequeno,,Grafo esparso (grau ~3),Guloso grau mínimo,30,8
+mim-pequeno,,Grafo esparso (grau ~3),Exato (MIS conflitos),40,10
+mim-pequeno,,Grafo esparso (grau ~3),Guloso aleatório,40,7
+mim-pequeno,,Grafo esparso (grau ~3),Guloso grau mínimo,40,10
+mim-pequeno,,Grafo médio (grau ~6),Exato (MIS conflitos),10,2
+mim-pequeno,,Grafo médio (grau ~6),Guloso aleatório,10,1
+mim-pequeno,,Grafo médio (grau ~6),Guloso grau mínimo,10,2
+mim-pequeno,,Grafo médio (grau ~6),Exato (MIS conflitos),15,3
+mim-pequeno,,Grafo médio (grau ~6),Guloso aleatório,15,2
+mim-pequeno,,Grafo médio (grau ~6),Guloso grau mínimo,15,3
+mim-pequeno,,Grafo médio (grau ~6),Exato (MIS conflitos),20,4
+mim-pequeno,,Grafo médio (grau ~6),Guloso aleatório,20,3
+mim-pequeno,,Grafo médio (grau ~6),Guloso grau mínimo,20,3
+mim-pequeno,,Grafo médio (grau ~6),Exato (MIS conflitos),25,4
+mim-pequeno,,Grafo médio (grau ~6),Guloso aleatório,25,3
+mim-pequeno,,Grafo médio (grau ~6),Guloso grau mínimo,25,4
+mim-pequeno,,Grafo médio (grau ~6),Exato (MIS conflitos),30,6
+mim-pequeno,,Grafo médio (grau ~6),Guloso aleatório,30,5
+mim-pequeno,,Grafo médio (grau ~6),Guloso grau mínimo,30,5
+mim-pequeno,,Grafo médio (grau ~6),Exato (MIS conflitos),40,8
+mim-pequeno,,Grafo médio (grau ~6),Guloso aleatório,40,6
+mim-pequeno,,Grafo médio (grau ~6),Guloso grau mínimo,40,7
+mim-grande,,Grafo esparso (grau ~3),Guloso aleatório,50,10
+mim-grande,,Grafo esparso (grau ~3),Guloso grau mínimo,50,11
+mim-grande,,Grafo esparso (grau ~3),Guloso aleatório,100,18
+mim-grande,,Grafo esparso (grau ~3),Guloso grau mínimo,100,25
+mim-grande,,Grafo esparso (grau ~3),Guloso aleatório,200,41
+mim-grande,,Grafo esparso (grau ~3),Guloso grau mínimo,200,49
+mim-grande,,Grafo esparso (grau ~3),Guloso aleatório,400,75
+mim-grande,,Grafo esparso (grau ~3),Guloso grau mínimo,400,93
+mim-grande,,Grafo médio (grau ~6),Guloso aleatório,50,7
+mim-grande,,Grafo médio (grau ~6),Guloso grau mínimo,50,8
+mim-grande,,Grafo médio (grau ~6),Guloso aleatório,100,15
+mim-grande,,Grafo médio (grau ~6),Guloso grau mínimo,100,19
+mim-grande,,Grafo médio (grau ~6),Guloso aleatório,200,30
+mim-grande,,Grafo médio (grau ~6),Guloso grau mínimo,200,39
+mim-grande,,Grafo médio (grau ~6),Guloso aleatório,400,55
+mim-grande,,Grafo médio (grau ~6),Guloso grau mínimo,400,72

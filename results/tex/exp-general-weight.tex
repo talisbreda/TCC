@@ -1,0 +1,16 @@
+\begin{table}[H]
+    \centering
+    \caption{Expoente empírico de crescimento --- Peso — esparso (grau ~3)}
+    \label{tab:exp-general-weight}
+    \renewcommand{\arraystretch}{1.25}
+    \footnotesize
+    \begin{tabularx}{\textwidth}{@{} X l c c @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Compl.\ teórica} & \textbf{Expoente medido} & \textbf{$R^2$} \\
+        \midrule
+        van Rantwijk (mwmatching) & $O(V^{3})$ & 1.40 & 0.989 \\
+        NetworkX (peso máximo) & $O(V^{3})$ & 1.36 & 0.990 \\
+        Path Growing & $O(E)$ & 0.88 & 0.998 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}

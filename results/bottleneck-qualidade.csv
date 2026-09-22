@@ -1,0 +1,49 @@
+problema,secao,instancia,algoritmo,n,qualidade
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),10,26
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,10,26
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),20,18
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,20,18
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),30,18
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,30,18
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),50,13
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,50,13
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),75,8
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,75,8
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),100,7
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,100,7
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),150,5
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,150,5
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),200,4
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,200,4
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),10,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,10,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),20,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,20,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),30,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,30,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),50,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,50,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),75,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,75,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),100,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,100,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),150,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,150,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),200,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,200,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),10,5
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,10,5
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),20,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,20,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),30,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,30,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),50,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,50,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),75,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,75,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),100,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,100,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),150,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,150,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),200,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,200,1

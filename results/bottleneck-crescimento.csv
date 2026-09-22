@@ -1,0 +1,7 @@
+problem,instance,algorithm,kind,language,complexity_time,expoente_empirico,r2,n_pontos
+bottleneck,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),exato,python,O(n³ log n),2.6068,0.9962,8
+bottleneck,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,exato,python,O(n³),2.4059,0.9989,8
+bottleneck,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),exato,python,O(n³ log n),2.8364,0.9972,8
+bottleneck,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,exato,python,O(n³),1.9297,0.9989,8
+bottleneck,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),exato,python,O(n³ log n),2.7456,0.9976,8
+bottleneck,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,exato,python,O(n³),2.7801,0.9999,8

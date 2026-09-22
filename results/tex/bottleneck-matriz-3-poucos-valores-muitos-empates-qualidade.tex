@@ -1,0 +1,14 @@
+\begin{table}[ht]
+    \centering
+    \caption{Qualidade da solução — Matriz 3 — Poucos valores  \textbar{} muitos empates}
+    \label{tab:bottleneck-matriz-3-poucos-valores-muitos-empates-qualidade}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l rrrrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} \\
+        \midrule
+        Threshold (busca binária) & exato & $O(n^{3} log n)$ & 5 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+        Caminhos aumentantes & exato & $O(n^{3})$ & 5 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+        \bottomrule
+    \end{tabular}
+\end{table}

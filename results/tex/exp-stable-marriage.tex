@@ -1,0 +1,16 @@
+\begin{table}[H]
+    \centering
+    \caption{Expoente empírico de crescimento --- Perfil 1 — Aleatório       | permutações uniformes}
+    \label{tab:exp-stable-marriage}
+    \renewcommand{\arraystretch}{1.25}
+    \footnotesize
+    \begin{tabularx}{\textwidth}{@{} X l c c @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Compl.\ teórica} & \textbf{Expoente medido} & \textbf{$R^2$} \\
+        \midrule
+        Gale-Shapley (OOP/pip) & $O(n^{2})†$ & 3.28 & 0.996 \\
+        Gale-Shapley (numérico/pip) & $O(n^{2})$ & 1.94 & 0.999 \\
+        Gale-Shapley (Lattas/dict) & $O(n^{3})*$ & 2.07 & 0.999 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}

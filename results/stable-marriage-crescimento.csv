@@ -1,0 +1,10 @@
+problem,instance,algorithm,kind,language,complexity_time,expoente_empirico,r2,n_pontos
+stable-marriage,Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (OOP/pip),exato,python,O(n²)†,3.2838,0.9956,4
+stable-marriage,Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (numérico/pip),exato,python,O(n²),1.9368,0.9987,8
+stable-marriage,Perfil 1 — Aleatório       | permutações uniformes,Gale-Shapley (Lattas/dict),exato,python,O(n³)*,2.0690,0.9992,8
+stable-marriage,Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (OOP/pip),exato,python,O(n²)†,3.8150,0.9999,4
+stable-marriage,Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (numérico/pip),exato,python,O(n²),1.9962,0.9996,8
+stable-marriage,Perfil 2 — Correlacionado  | ranking de popularidade,Gale-Shapley (Lattas/dict),exato,python,O(n³)*,2.7063,0.9984,8
+stable-marriage,Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (OOP/pip),exato,python,O(n²)†,2.7051,0.9996,4
+stable-marriage,Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (numérico/pip),exato,python,O(n²),1.9614,0.9991,8
+stable-marriage,Perfil 3 — Cíclico         | deslocamento estruturado,Gale-Shapley (Lattas/dict),exato,python,O(n³)*,1.9829,0.9985,8

@@ -1,0 +1,15 @@
+\begin{table}[H]
+    \centering
+    \caption{Expoente empírico de crescimento --- Matriz 1 — Densa uniforme  | custo in [1,100]}
+    \label{tab:exp-bottleneck}
+    \renewcommand{\arraystretch}{1.25}
+    \footnotesize
+    \begin{tabularx}{\textwidth}{@{} X l c c @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Compl.\ teórica} & \textbf{Expoente medido} & \textbf{$R^2$} \\
+        \midrule
+        Threshold (busca binária) & $O(n^{3} log n)$ & 2.61 & 0.996 \\
+        Caminhos aumentantes & $O(n^{3})$ & 2.41 & 0.999 \\
+        \bottomrule
+    \end{tabularx}
+\end{table}

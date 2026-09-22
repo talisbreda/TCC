@@ -1,0 +1,15 @@
+\begin{table}[ht]
+    \centering
+    \caption{Qualidade da solução — Peso — esparso (grau \textasciitilde{}3)}
+    \label{tab:general-peso-esparso-grau-3-qualidade}
+    \renewcommand{\arraystretch}{1.2}
+    \begin{tabular}{@{} l l l rrrrrr @{}}
+        \toprule
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} \\
+        \midrule
+        van Rantwijk (mwmatching) & exato & $O(V^{3})$ & 309 & 604 & 790 & 1284 & 1907 & 2929 \\
+        NetworkX (peso máximo) & baseline & $O(V^{3})$ & 309 & 604 & 790 & 1284 & 1907 & 2929 \\
+        Path Growing & heuristica & $O(E)$ & 278 & 510 & 732 & 1030 & 1492 & 2407 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
