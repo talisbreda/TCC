@@ -3,6 +3,8 @@
     \caption{Tempo de execução em Python — Perfil 1 — Aleatório       \textbar{} permutações uniformes (mediana, ms)}
     \label{tab:stable-marriage-perfil-1-aleatorio-permutacoes-uniformes-tempo-python}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l l rrrrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=25$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=200$} & \textbf{$n=300$} & \textbf{$n=400$} \\
@@ -11,5 +13,6 @@
         Gale-Shapley (numérico/pip) & exato & $O(n^{2})$ & $O(n^{2})$ & 0.44 & 1.57 & 3.36 & 5.52 & 21.70 & 50.59 & 95.89 \\
         Gale-Shapley (Lattas/dict) & exato & $O(n^{3})$* & $O(n^{2})$ & 0.31 & 1.29 & 2.85 & 5.08 & 20.07 & 52.20 & 100.25 \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}

@@ -3,6 +3,8 @@
     \caption{Tempo de execução em Python — Matriz 3 — Estruturada     \textbar{} custo = \textbar{}i-j\textbar{}+1 (mediana, ms)}
     \label{tab:assignment-matriz-3-estruturada-custo-i-j-1-tempo-python}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l l rrrrrrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
@@ -13,5 +15,6 @@
         Húngaro (mayorx/KM) & exato & $O(n^{3})$ & $O(n^{2})$ & 0.41 & 0.80 & 1.21 & 2.12 & 3.40 & 4.83 & 8.27 & 12.35 & 17.01 \\
         SSP (flows) & exato & $O(n^{4})$* & $O(n^{2})$ & 0.39 & 2.17 & 6.28 & 26.00 & 87.68 & 214.55 & — & — & — \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}

@@ -175,6 +175,8 @@ def _tabela_latex(registros, tamanhos, titulo, rotulo, coluna_fn, com_espaco):
         f"    \\caption{{{titulo}}}",
         f"    \\label{{{rotulo}}}",
         r"    \renewcommand{\arraystretch}{1.2}",
+        r"    \footnotesize",
+        r"    \adjustbox{max width=\textwidth}{%",
     ]
 
     n_colunas = "r" * len(tamanhos)
@@ -212,7 +214,7 @@ def _tabela_latex(registros, tamanhos, titulo, rotulo, coluna_fn, com_espaco):
         ]
         linhas.append("        " + " & ".join(celulas) + r" \\")
 
-    linhas += [r"        \bottomrule", r"    \end{tabular}", r"\end{table}", ""]
+    linhas += [r"        \bottomrule", r"    \end{tabular}%", r"    }", r"\end{table}", ""]
     return "\n".join(linhas)
 
 

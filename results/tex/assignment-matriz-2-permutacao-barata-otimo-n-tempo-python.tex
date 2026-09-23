@@ -3,6 +3,8 @@
     \caption{Tempo de execução em Python — Matriz 2 — Permutação barata \textbar{} ótimo = n (mediana, ms)}
     \label{tab:assignment-matriz-2-permutacao-barata-otimo-n-tempo-python}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l l rrrrrrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
@@ -13,5 +15,6 @@
         Húngaro (mayorx/KM) & exato & $O(n^{3})$ & $O(n^{2})$ & 0.42 & 0.80 & 1.23 & 2.12 & 3.39 & 4.84 & 8.22 & 12.34 & 17.08 \\
         SSP (flows) & exato & $O(n^{4})$* & $O(n^{2})$ & 0.40 & 2.15 & 6.23 & 25.72 & 86.22 & 212.71 & — & — & — \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}

@@ -3,11 +3,14 @@
     \caption{Tempo de execução em compilado (C/C++) — Grafo 3 — Denso   \textbar{} COM perfeito \textbar{} MCM = n (mediana, ms)}
     \label{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-c}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l l rrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=50$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
         \midrule
         Bipartite Match. (igraph) & baseline & $O(E \cdot \sqrt{V})$ & $O(V+E)$ & 0.20 & 0.36 & 0.61 & 0.85 & 1.01 \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}

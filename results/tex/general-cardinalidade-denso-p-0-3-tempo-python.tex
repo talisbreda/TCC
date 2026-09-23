@@ -3,6 +3,8 @@
     \caption{Tempo de execução em Python — Cardinalidade — denso (p=0.3) (mediana, ms)}
     \label{tab:general-cardinalidade-denso-p-0-3-tempo-python}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l l rrrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} \\
@@ -10,5 +12,6 @@
         Blossom (Edmonds) & exato & $O(V^{3})$ & $O(V^{2})$ & 1.60 & 13.79 & 35.81 & 342.60 & 2862.65 & 9526.65 \\
         NetworkX (cardinalidade) & baseline & $O(V^{3})$ & $O(V+E)$ & 0.38 & 0.47 & 1.07 & 1.94 & 12.25 & 7.46 \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}

@@ -3,6 +3,8 @@
     \caption{Qualidade da solução — Cardinalidade — esparso (grau \textasciitilde{}3)}
     \label{tab:general-cardinalidade-esparso-grau-3-qualidade}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l rrrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} \\
@@ -10,5 +12,6 @@
         Blossom (Edmonds) & exato & $O(V^{3})$ & 5 & 9 & 13 & 23 & 31 & 43 \\
         NetworkX (cardinalidade) & baseline & $O(V^{3})$ & 5 & 9 & 13 & 23 & 31 & 43 \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}

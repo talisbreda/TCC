@@ -3,6 +3,8 @@
     \caption{Qualidade da solução — Matriz 1 — Densa uniforme  \textbar{} custo in [1,100]}
     \label{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-qualidade}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l rrrrrrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
@@ -15,5 +17,6 @@
         SciPy (linear\_sum\_assg) & baseline & $O(n^{3})$ & 102 & 146 & 168 & 217 & 238 & 244 & 258 & 275 & 300 \\
         Jonker-Volgenant (lap) & baseline & $O(n^{3})$ & 102 & 146 & 168 & 217 & 238 & 244 & 258 & 275 & 300 \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}

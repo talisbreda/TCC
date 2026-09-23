@@ -3,6 +3,8 @@
     \caption{Tempo de execução em Python — Grafo denso (grau \textasciitilde{}12) (mediana, ms)}
     \label{tab:mim-grafo-denso-grau-12-tempo-python}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l l rrrrrrrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=15$} & \textbf{$n=20$} & \textbf{$n=25$} & \textbf{$n=30$} & \textbf{$n=40$} & \textbf{$n=50$} & \textbf{$n=100$} & \textbf{$n=200$} & \textbf{$n=400$} \\
@@ -11,5 +13,6 @@
         Guloso aleatório & heuristica & $O(E^{2})$ & $O(V+E)$ & 0.07 & 0.14 & 0.20 & 0.29 & 0.38 & 1.06 & 0.77 & 2.82 & 11.87 & 39.37 \\
         Guloso grau mínimo & heuristica & $O(E^{2})$ & $O(E^{2})$ & 0.85 & 4.00 & 8.80 & 14.85 & 23.40 & 48.81 & 74.74 & 326.03 & 1314.14 & 6086.44 \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}

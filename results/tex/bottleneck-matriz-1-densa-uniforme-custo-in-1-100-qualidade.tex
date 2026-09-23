@@ -3,6 +3,8 @@
     \caption{Qualidade da solução — Matriz 1 — Densa uniforme  \textbar{} custo in [1,100]}
     \label{tab:bottleneck-matriz-1-densa-uniforme-custo-in-1-100-qualidade}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l rrrrrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} \\
@@ -10,5 +12,6 @@
         Threshold (busca binária) & exato & $O(n^{3} log n)$ & 26 & 18 & 18 & 13 & 8 & 7 & 5 & 4 \\
         Caminhos aumentantes & exato & $O(n^{3})$ & 26 & 18 & 18 & 13 & 8 & 7 & 5 & 4 \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}

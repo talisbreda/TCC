@@ -3,6 +3,8 @@
     \caption{Tempo de execução em Python — Matriz 3 — Poucos valores  \textbar{} muitos empates (mediana, ms)}
     \label{tab:bottleneck-matriz-3-poucos-valores-muitos-empates-tempo-python}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l l rrrrrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} \\
@@ -10,5 +12,6 @@
         Threshold (busca binária) & exato & $O(n^{3} log n)$ & $O(n^{2})$ & 0.05 & 0.27 & 0.80 & 2.97 & 9.97 & 23.25 & 79.08 & 188.72 \\
         Caminhos aumentantes & exato & $O(n^{3})$ & $O(n^{2})$ & 0.06 & 0.42 & 1.33 & 5.26 & 15.55 & 35.09 & 111.08 & 253.58 \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}

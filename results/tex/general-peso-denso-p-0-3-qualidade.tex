@@ -3,6 +3,8 @@
     \caption{Qualidade da solução — Peso — denso (p=0.3)}
     \label{tab:general-peso-denso-p-0-3-qualidade}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l rrrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} \\
@@ -11,5 +13,6 @@
         NetworkX (peso máximo) & baseline & $O(V^{3})$ & 309 & 765 & 1279 & 2247 & 3429 & 4710 \\
         Path Growing & heuristica & $O(E)$ & 278 & 642 & 1215 & 1934 & 3113 & 4329 \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}

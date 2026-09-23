@@ -1,5 +1,6 @@
 \begin{figure}[H]
     \centering
+    \adjustbox{max width=\textwidth}{%
     \begin{tikzpicture}
         \begin{loglogaxis}[
             width=0.88\textwidth, height=7.2cm,
@@ -18,7 +19,8 @@
             \addplot+[mark=o] table[x=n,y=t,col sep=comma] {results/plot/assignment-jv.csv};
             \addlegendentry{Jonker-Volgenant (compilado)}
         \end{loglogaxis}
-    \end{tikzpicture}
+    \end{tikzpicture}%
+    }
     \caption{Tempo de execução em escala log-log para a matriz densa (atribuição
     linear). As duas implementações de núcleo compilado situam-se bem abaixo das
     interpretadas, mas com inclinação semelhante.}

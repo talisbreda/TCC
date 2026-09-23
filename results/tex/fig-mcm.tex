@@ -1,5 +1,6 @@
 \begin{figure}[H]
     \centering
+    \adjustbox{max width=\textwidth}{%
     \begin{tikzpicture}
         \begin{loglogaxis}[
             width=0.88\textwidth, height=7.2cm,
@@ -18,7 +19,8 @@
             \addplot+[mark=o] table[x=n,y=t,col sep=comma] {results/plot/mcm-greedy.csv};
             \addlegendentry{Gulosa (heur.)}
         \end{loglogaxis}
-    \end{tikzpicture}
+    \end{tikzpicture}%
+    }
     \caption{Tempo de execução em escala log-log para o grafo denso (cardinalidade
     máxima bipartida). A inclinação de cada reta corresponde ao expoente empírico
     de crescimento; a de Edmonds-Karp, próxima de 3, destaca-se das demais.}

@@ -3,6 +3,8 @@
     \caption{Tempo de execução em Python — Grafo 3 — Denso   \textbar{} COM perfeito \textbar{} MCM = n (mediana, ms)}
     \label{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-python}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l l rrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=50$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
@@ -14,5 +16,6 @@
         Gulosa & heuristica & $O(E)$ & $O(V)$ & 0.03 & 0.06 & 0.08 & 0.11 & 0.14 \\
         Karp-Sipser & heuristica & $O(V \cdot E)$ & $O(V+E)$ & 0.49 & 1.35 & 3.87 & 4.65 & 6.86 \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}

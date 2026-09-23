@@ -3,6 +3,8 @@
     \caption{Qualidade da solução — Grafo 1 — Esparso \textbar{} SEM perfeito \textbar{} MCM = 80\% de n}
     \label{tab:mcm-grafo-1-esparso-sem-perfeito-mcm-80-de-n-qualidade}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l rrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=50$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
@@ -15,5 +17,6 @@
         Gulosa & heuristica & $O(E)$ & 37 & 76 & 116 & 156 & 195 \\
         Karp-Sipser & heuristica & $O(V \cdot E)$ & 40 & 80 & 120 & 160 & 200 \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}

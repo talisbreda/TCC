@@ -3,6 +3,8 @@
     \caption{Tempo de execução em Python — Perfil 2 — Correlacionado  \textbar{} ranking de popularidade (mediana, ms)}
     \label{tab:stable-marriage-perfil-2-correlacionado-ranking-de-popul-tempo-python}
     \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \adjustbox{max width=\textwidth}{%
     \begin{tabular}{@{} l l l l rrrrrrr @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=25$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=200$} & \textbf{$n=300$} & \textbf{$n=400$} \\
@@ -11,5 +13,6 @@
         Gale-Shapley (numérico/pip) & exato & $O(n^{2})$ & $O(n^{2})$ & 0.75 & 2.76 & 6.22 & 10.87 & 43.05 & 101.47 & 188.56 \\
         Gale-Shapley (Lattas/dict) & exato & $O(n^{3})$* & $O(n^{2})$ & 0.66 & 3.48 & 10.24 & 21.99 & 144.99 & 482.24 & 1160.66 \\
         \bottomrule
-    \end{tabular}
+    \end{tabular}%
+    }
 \end{table}
