@@ -8,8 +8,7 @@
 Este capítulo apresenta e discute os resultados obtidos com o ambiente de testes
 descrito no capítulo anterior. Para cada problema, apresentam-se \textbf{todas as
 famílias de instância} definidas na Seção~\ref{sec:protocolo}, de modo a expor
-como a estrutura da entrada afeta o desempenho e a qualidade --- um efeito que,
-como se verá, chega a inverter a ordem entre algoritmos. As tabelas de tempo
+como a estrutura da entrada afeta o desempenho e a qualidade. As tabelas de tempo
 separam as implementações em linguagem interpretada das de núcleo compilado,
 conforme a Seção~\ref{sec:criterios}, e seguem sempre a mesma ordem: tempo em
 Python, tempo compilado (quando houver) e qualidade. Todos os valores são gerados
@@ -47,7 +46,7 @@ seja a mais rápida de todo o conjunto, tem sua pior qualidade não no grafo den
 e sim no grafo esparso com emparelhamento perfeito, em que a ordem de varredura
 das arestas mais facilmente a prende em um emparelhamento maximal pequeno. A
 heurística de Karp-Sipser, por sua vez, encontra o ótimo em todas as instâncias
-esparsas e fica a menos de meio ponto percentual dele no grafo denso ---
+esparsas e fica a menos de meio ponto percentual dele no grafo denso, 
 resultado da regra dos vértices de grau um, que domina em grafos esparsos.
 
 % ---------------------------------------------------------------------------
