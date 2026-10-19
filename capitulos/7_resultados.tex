@@ -157,7 +157,11 @@ qualidade que alcança é, aliás, um pouco superior nos grafos densos.
 
 Sendo NP-difícil, o emparelhamento induzido máximo tem perfil distinto: o
 algoritmo exato só é viável em instâncias pequenas, e a qualidade das heurísticas
-é o eixo central. Apresentam-se as três densidades avaliadas.
+é o eixo central. Apresentam-se as três densidades avaliadas. A referência de
+qualidade depende do tamanho: até $n = 40$, a razão é calculada contra o
+algoritmo exato; a partir de $n = 50$, em que o exato é inviável, contra o melhor
+resultado obtido entre as heurísticas. Nesse segundo regime, uma razão igual a 1
+indica apenas a melhor heurística, e não necessariamente o ótimo.
 
 \input{results/tex/mim-grafo-esparso-grau-3-tempo-python}
 \input{results/tex/mim-grafo-esparso-grau-3-qualidade}

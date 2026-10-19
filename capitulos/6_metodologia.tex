@@ -12,9 +12,9 @@ Este capítulo descreve o ambiente de testes construído para implementar e comp
 
 O ambiente é separado em três camadas:
 \begin{itemize}
-    \item \textbf{Repositório de código de terceiros:} Repositório que contém todos os códigos de algoritmos de terceiros, obtidos, em sua maioria, a partir do GitHub. Estes códigos estão intactos, exatamente da forma que estão publicados. Nenhuma alteração foi feita a eles, nem mesmo com intuito de corrigir possíveis problemas, os quais serão mencionados posteriormente.
-    \item \textbf{Adaptadores/\textit{wrappers}:} Como os algoritmos divergem com relação aos formatos de entrada e saída dos algoritmos, e até mesmo em linguagens, essa camada foi criada com o intuito de traduzir cada um dos algoritmos do repositório de terceiros para o formato padrão do trabalho, a fim de manter o ambiente homogêneo para fim de testes.
-    \item \textbf{Módulo de medição:} É a parte que monta e mede os testes. É responsável, por geração de instâncias, gravação, cronometragem e verificação. Todos os \textit{wrappers} utilizam este módulo, visando garantir que todos sejam submetidos ao mesmo protocolo, e que possam ser feitas comparações entre algoritmos sob condições idênticas.
+    \item \textbf{Repositório de código de terceiros:} Contém os códigos de algoritmos obtidos de repositórios públicos, em sua maioria do GitHub. Estes códigos estão intactos, exatamente da forma que estão publicados. Nenhuma alteração foi feita a eles, nem mesmo com intuito de corrigir possíveis problemas, os quais serão mencionados posteriormente. As bibliotecas maduras usadas como referência (NetworkX, SciPy, igraph e lap) não ficam nesta camada: são instaladas pelo gerenciador de pacotes do Python, com versões fixadas.
+    \item \textbf{Adaptadores/\textit{wrappers}:} Como os algoritmos divergem quanto aos formatos de entrada e saída, e até mesmo quanto à linguagem, essa camada foi criada com o intuito de traduzir cada um dos algoritmos para o formato padrão do trabalho, a fim de manter o ambiente homogêneo para fim de testes. Quando o código original não pode ser usado diretamente, a reimplementação também fica nesta camada, de modo que o original permanece intacto no repositório.
+    \item \textbf{Módulo de medição:} É a parte que executa e mede os testes, responsável por cronometragem, verificação e gravação dos resultados. Para cada problema, um \textit{script} de \textit{benchmark} gera as instâncias e aciona este módulo, que executa todos os algoritmos por meio dos seus \textit{wrappers}. Isso garante que todos sejam submetidos ao mesmo protocolo, e que possam ser feitas comparações entre algoritmos sob condições idênticas.
 \end{itemize}
 
 % ---------------------------------------------------------------------------
@@ -68,13 +68,13 @@ ponderados quando aplicável.
 \subsection{Protocolo de medição}
 \label{sec:protocolo}
 
-Um protocolo de medição foi criado a fim de reduzir o quanto fontes de ruído externas afetam os resultados dos testes. Algumas das decisões que compõem esse protocolo:
+Um protocolo de medição foi criado a fim de reduzir o quanto fontes de ruído externas afetam os resultados dos testes. A unidade de medição é a \textbf{célula}: a combinação de um algoritmo, uma instância e um tamanho $n$. Cada célula é executada uma vez para aquecimento e, em seguida, cinco vezes com cronometragem. Algumas das decisões que compõem esse protocolo:
 
 \begin{itemize}
-    \item \textbf{Execução de aquecimento:} A primeira execução, que é descartada para que a execução principal não pague custos de importação, alocação inicial e caches frios.
+    \item \textbf{Execução de aquecimento:} A primeira execução de cada célula é descartada da cronometragem, para que as repetições medidas não paguem custos de importação, alocação inicial e caches frios. O resultado dessa execução é o utilizado na verificação de qualidade.
     \item \textbf{Coletor de lixo:} É desligado durante a execução de uma célula inteira, e religado entre células, a fim de não comprometer o resultado da execução.
     \item \textbf{Mediana:} Cada célula reporta a mediana dos tempos, ao invés da média, para dar mais robustez com relação a interrupções momentâneas.
-    \item \textbf{Limite de tempo por célula:} Impede que um algoritmo defeituoso inviabilize toda a suíte de testes. Fez-se necessário por conta de uma situação observada durante os testes, que será discutida na seção de resultados. O limite é aplicado à execução de aquecimento: se ela o excede, é interrompida, a célula é marcada como estourada e os tamanhos maiores daquele algoritmo não são executados, pois também estourariam. A exceção é o problema de atribuição, em que todos os tamanhos são executados mesmo após um estouro, pois um dos algoritmos falha de forma não-monótona no tamanho da entrada.
+    \item \textbf{Limite de tempo por célula:} Impede que um algoritmo defeituoso inviabilize toda a suíte de testes. Fez-se necessário por conta de uma situação observada durante os testes, que será discutida na seção de resultados. O limite, de 120 segundos, é aplicado à execução de aquecimento: se ela o excede, é interrompida, a célula é marcada como estourada e os tamanhos maiores daquele algoritmo não são executados, pois também estourariam. A exceção é o problema de atribuição, em que todos os tamanhos são executados mesmo após um estouro, pois um dos algoritmos falha de forma não-monótona no tamanho da entrada. Por decisão deliberada, o limite é verificado apenas em torno do aquecimento, e não a cada operação do algoritmo, para não adicionar custo à região cronometrada.
 \end{itemize}
 
 % ---------------------------------------------------------------------------
@@ -87,7 +87,7 @@ Para que as comparações sejam válidas, adotaram-se quatro critérios
 complementares.
 
 \begin{enumerate}
-    \item Implementações em linguagem interpretada (ex: Python) e as de núcleo compilado (ex: C++) são apresentadas em tabelas separadas. Bibliotecas escritas inteiramente em linguagem interpretada, como o NetworkX, ficam na tabela das interpretadas, pois nesse caso a comparação de tempo com elas é legítima.
+    \item Implementações em linguagem interpretada (ex: Python) e as de núcleo compilado (ex: C++) são apresentadas em tabelas separadas. Bibliotecas escritas inteiramente em linguagem interpretada, como o NetworkX, ficam na tabela das interpretadas, pois nesse caso a comparação de tempo com elas é legítima. Há ainda casos intermediários: algoritmos escritos como laços em Python sobre vetores da biblioteca NumPy, cujo núcleo é compilado, como os Húngaros \texttt{hunalgorithm} e \texttt{mayorx} e o Gale-Shapley numérico. Estes são classificados como interpretados, pois o algoritmo em si é executado pelo interpretador.
     \item As tabelas mostram complexidade assintótica ao lado do tempo medido, permitindo a comparação do teórico vs real, principalmente entre grafos de diferentes densidades.
     \item Para cada algoritmo, é estimado o \textbf{expoente empírico do crescimento}. Supondo que o tempo cresça como $t(n) \approx C \cdot n^k$, aplicar o logaritmo resulta em
     \begin{equation}
@@ -107,13 +107,13 @@ complementares.
 
 Todos os resultados foram obtidos numa única máquina
 (Tabela~\ref{tab:maquina}); medir tudo no mesmo ambiente é o que torna os tempos
-comparáveis. Três características dela exigiram cuidados, todos documentados para
-permitir reprodução.
+comparáveis. Três fatores exigiram cuidados, dois da máquina e um da linguagem,
+todos documentados para permitir reprodução.
 
 \begin{enumerate}
     \item Por ser um \textbf{processador híbrido} (núcleos de desempenho e de eficiência, não equivalentes), a execução foi fixada a um núcleo de desempenho, evitando que a migração entre núcleos alterasse o tempo sem mudança no código.
     \item Como a \textbf{frequência varia} dinamicamente com a carga, o regulador foi fixado no modo de desempenho, com a máquina conectada à energia e sem aplicações concorrentes.
-    \item Como a ordem de iteração de coleções de objetos em Python é aleatorizada por processo, a semente de aleatorização foi fixada, tornando as execuções reprodutíveis. Isso foi necessário pois foi notado em um dos algoritmos uma grande sensibilidade a essa característica do Python, o que será detalhado no capítulo de resultados.
+    \item Em Python, o \textit{hash} de cadeias de caracteres é aleatorizado a cada processo, o que altera a ordem de iteração de conjuntos e dicionários entre execuções. Por isso, a semente dessa aleatorização foi fixada (variável \texttt{PYTHONHASHSEED}), tornando as execuções reprodutíveis. Isso foi necessário pois foi notada em um dos algoritmos uma grande sensibilidade a essa ordem, o que será detalhado no capítulo de resultados.
 \end{enumerate}
 
 \begin{table}[H]
@@ -140,7 +140,7 @@ permitir reprodução.
 \subsection{Origem, adaptação e verificação dos algoritmos}
 \label{sec:proveniencia}
 
-A maior parte dos algoritmos foi obtida de implementações públicas. Foram empregadas quatro estratégias de adaptação, conforme natureza do código:
+A maior parte dos algoritmos foi obtida de implementações públicas, em vez de reescrita. Isso é coerente com o objetivo de comparar métodos presentes na literatura, reduz o risco de erros próprios e permite avaliar a qualidade das implementações efetivamente disponíveis. Foram empregadas quatro estratégias de adaptação, conforme natureza do código:
 
 \begin{enumerate}
     \item Carregamento direto, quando o original é utilizável na linguagem do projeto;
