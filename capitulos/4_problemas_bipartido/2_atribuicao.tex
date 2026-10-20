@@ -24,8 +24,6 @@ Cria-se um subgrafo de igualdade $H_{u,v}$ contendo apenas as arestas onde a som
 
 Em seguida o pseudo-código do método Húngaro:
 
-% TODO: detalhar melhor e explicar as linhas
-
 \begin{algorithm}[H]
     \DontPrintSemicolon
     \SetAlgoLined
@@ -33,32 +31,32 @@ Em seguida o pseudo-código do método Húngaro:
     \Fn{HUNGARIAN($n, w; mate$)}{
         
         % Lines 1-3
-        \lFor{$v \in V$}{ $mate(v) \leftarrow 0$ }
+        \lFor{$v \in V$}{ $mate(v) \leftarrow 0$ \label{hu:init} }
         \lFor{$i = 1$ \KwTo $n$}{ $u_i \leftarrow \max \{ w_{ij} : j=1,\dots,n \}; v_i \leftarrow 0$ }
-        $nrex \leftarrow n$\;
+        $nrex \leftarrow n$\label{hu:nrex}\;
 
         % Line 4: While Loop
-        \While{$nrex \neq 0$}{
+        \While{$nrex \neq 0$\label{hu:phase}}{
             
             % Line 5
-            \lFor{$i = 1$ \KwTo $n$}{ $m(i) \leftarrow \text{false}; p(i) \leftarrow 0; \delta_i \leftarrow \infty$ }
-            $aug \leftarrow \text{false}; Q \leftarrow \{ i \in S : mate(i) = 0 \}$\;
+            \lFor{$i = 1$ \KwTo $n$}{ $m(i) \leftarrow \text{false}; p(i) \leftarrow 0; \delta_i \leftarrow \infty$ \label{hu:reset} }
+            $aug \leftarrow \text{false}; Q \leftarrow \{ i \in S : mate(i) = 0 \}$\label{hu:roots}\;
             
             % Line 7: Repeat Loop
             \Repeat{$aug = \text{true}$}{
-                remove an arbitrary vertex $i$ from $Q$; $m(i) \leftarrow \text{true}; j \leftarrow 1$\;
+                remove an arbitrary vertex $i$ from $Q$; $m(i) \leftarrow \text{true}; j \leftarrow 1$\label{hu:scan}\;
                 
                 % Line 9: Inner While
                 \While{$aug = \text{false}$ \KwAnd $j \leq n$}{
-                    \If{$mate(i) \neq j'$}{
-                         \If{$u_i + v_j - w_{ij} < \delta_j$}{
+                    \If{$mate(i) \neq j'$\label{hu:skip}}{
+                         \If{$u_i + v_j - w_{ij} < \delta_j$\label{hu:slack}}{
                             $\delta_j \leftarrow u_i + v_j - w_{ij}; p(j) \leftarrow i$\;
-                            \If{$\delta_j = 0$}{
+                            \If{$\delta_j = 0$\label{hu:tight}}{
                                 \eIf{$mate(j') = 0$}{
-                                    AUGMENT($mate, p, j'; mate$)\;
+                                    AUGMENT($mate, p, j'; mate$)\label{hu:aug1}\;
                                     $aug \leftarrow \text{true}; nrex \leftarrow nrex - 1$\;
                                 }{
-                                    $Q \leftarrow Q \cup \{ mate(j') \}$\;
+                                    $Q \leftarrow Q \cup \{ mate(j') \}$\label{hu:grow}\;
                                 }
                             }
                         }
@@ -67,18 +65,18 @@ Em seguida o pseudo-código do método Húngaro:
                 }
                 
                 % Line 24: Check if augmentation failed and Q is empty
-                \If{$aug = \text{false}$ \KwAnd $Q = \emptyset$}{
+                \If{$aug = \text{false}$ \KwAnd $Q = \emptyset$\label{hu:dual}}{
                     $J \leftarrow \{ i \in S : m(i) = \text{true} \}; K \leftarrow \{ j' \in T : \delta_j = 0 \}$\;
-                    $\delta \leftarrow \min \{ \delta_j : j' \in T \setminus K \}$\;
+                    $\delta \leftarrow \min \{ \delta_j : j' \in T \setminus K \}$\label{hu:delta}\;
                     \lFor{$i \in J$}{ $u_i \leftarrow u_i - \delta$ }
                     \lFor{$j' \in K$}{ $v_j \leftarrow v_j + \delta$ }
-                    \lFor{$j' \in T \setminus K$}{ $\delta_j \leftarrow \delta_j - \delta$ }
-                    $X \leftarrow \{ j' \in T \setminus K : \delta_j = 0 \}$\;
+                    \lFor{$j' \in T \setminus K$}{ $\delta_j \leftarrow \delta_j - \delta$ \label{hu:dj} }
+                    $X \leftarrow \{ j' \in T \setminus K : \delta_j = 0 \}$\label{hu:X}\;
                     
                     \eIf{$mate(j') \neq 0$ for all $j' \in X$}{
                         \lFor{$j' \in X$}{ $Q \leftarrow Q \cup \{ mate(j') \}$ }
                     }{
-                        choose $j' \in X$ with $mate(j') = 0$\;
+                        choose $j' \in X$ with $mate(j') = 0$\label{hu:aug2}\;
                         AUGMENT($mate, p, j'; mate$)\;
                         $aug \leftarrow \text{true}; nrex \leftarrow nrex - 1$\;
                     }
@@ -105,6 +103,17 @@ Em seguida o pseudo-código do método Húngaro:
     \caption{Método AUGMENT \cite{jungnickel}}
     \label{alg:augment}
 \end{algorithm}
+
+Na versão de \citeonline{jungnickel}, o algoritmo \textit{maximiza} o peso do emparelhamento; para minimizar custos, basta usar $w_{ij} = -c_{ij}$. As linhas da matriz formam o conjunto $S = \{1, \dots, n\}$ e as colunas, o conjunto $T = \{1', \dots, n'\}$, em que $j'$ denota a coluna $j$ como vértice do grafo. A seguir, cada parte do Algoritmo~\ref{alg:hungarian} é explicada com referência às suas linhas:
+
+\begin{itemize}
+    \item \textbf{Inicialização (linhas~\ref{hu:init}--\ref{hu:nrex}):} Nenhum vértice começa emparelhado. Cada potencial de linha $u_i$ recebe o maior peso da linha $i$, e os potenciais de coluna $v_j$ recebem zero, o que satisfaz $u_i + v_j \geq w_{ij}$ para toda aresta. O contador $nrex$ guarda o número de linhas ainda livres.
+    \item \textbf{Fases (linha~\ref{hu:phase}):} Cada iteração do laço externo aumenta o emparelhamento em uma aresta, até que todas as linhas estejam emparelhadas. No início da fase, as marcas são reiniciadas (linha~\ref{hu:reset}): $m(i)$ indica se a linha $i$ já entrou na árvore de busca, $p(j)$ guarda a linha pela qual a coluna $j$ foi alcançada e $\delta_j$ guarda a menor folga $u_i + v_j - w_{ij}$ da coluna $j$ em relação às linhas da árvore. A fila $Q$ começa com as linhas livres, que são as raízes da busca (linha~\ref{hu:roots}).
+    \item \textbf{Busca no subgrafo de igualdade:} Uma linha $i$ é retirada da fila e entra na árvore (linha~\ref{hu:scan}). Para cada coluna que não é a sua parceira atual (linha~\ref{hu:skip}), calcula-se a folga da aresta $(i, j)$ e, se ela for menor que $\delta_j$, a coluna passa a ter $i$ como predecessora (linha~\ref{hu:slack}). Folga nula significa que a aresta pertence ao subgrafo de igualdade $H_{u,v}$ (linha~\ref{hu:tight}). Nesse caso, se a coluna está livre, foi encontrado um caminho aumentante, e o procedimento AUGMENT o aplica (linha~\ref{hu:aug1}); senão, a parceira da coluna entra na fila (linha~\ref{hu:grow}), e a árvore cresce pela aresta emparelhada.
+    \item \textbf{Ajuste dos potenciais (linhas~\ref{hu:dual}--\ref{hu:aug2}):} Se a fila esvazia sem que um caminho aumentante seja encontrado, as linhas e colunas da árvore formam os conjuntos $J$ e $K$. Calcula-se $\delta$, a menor folga entre as colunas fora da árvore (linha~\ref{hu:delta}). Diminuir $u_i$ em $\delta$ nas linhas da árvore e aumentar $v_j$ em $\delta$ nas colunas da árvore preserva as arestas da árvore no subgrafo de igualdade e mantém a viabilidade dos potenciais. Ao mesmo tempo, a folga das colunas de fora diminui em $\delta$ (linha~\ref{hu:dj}), o que coloca ao menos uma nova aresta no subgrafo de igualdade (o conjunto $X$, linha~\ref{hu:X}). Se todas as colunas de $X$ estão emparelhadas, suas parceiras entram na fila e a busca continua; senão, uma coluna livre de $X$ completa um caminho aumentante (linha~\ref{hu:aug2}).
+    \item \textbf{Aumento (Algoritmo~\ref{alg:augment}):} A partir da coluna livre encontrada, o procedimento AUGMENT segue os predecessores $p$ de volta até a raiz, invertendo o emparelhamento ao longo do caminho.
+    \item \textbf{Complexidade:} Em cada fase, cada linha entra na árvore no máximo uma vez, e sua varredura custa $O(n)$. Cada ajuste de potenciais custa $O(n)$ e acrescenta ao menos uma coluna à árvore, de modo que há no máximo $n$ ajustes por fase. Cada fase custa, portanto, $O(n^2)$, e as $n$ fases resultam em $O(n^3)$.
+\end{itemize}
 
 \paragraph{Jonker-Volgenant} 
 

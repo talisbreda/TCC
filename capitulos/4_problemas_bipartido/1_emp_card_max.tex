@@ -139,19 +139,35 @@ Com isso, temos agora um grafo de fluxo onde o objetivo é encontrar o fluxo má
 \paragraph{Algoritmo de Edmonds-Karp}
 \label{p:edmonds-karp}
 
-% TODO: separar BFS 
-
 O algoritmo de \textbf{Edmonds-Karp} é o principal método para resolver esse tipo de problema. Ele é uma especialização do método de Ford-Fulkerson descrito na seção \ref{p:ford_fulkerson} que utiliza uma busca em largura (BFS) para encontrar sempre o caminho aumentante mais curto em número de arestas. Tem complexidade de tempo $O(VE^2)$:
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
     \SetAlgoLined
 
-    % Variáveis globais explicadas no início (opcional, mas ajuda na clareza)
     \textbf{Global:} $res$ (matriz de capacidade residual), $mf, f, s, t$, $p$ (vetor de pais da BFS)\;
     \bigskip
 
-    % Procedimento Recursivo AUGMENT
+    \Fn{BFS($s, t$)}{
+        $dist \leftarrow \infty; \quad dist[s] \leftarrow 0$\;
+        $Q \leftarrow \{s\}; \quad p \leftarrow \text{nil}$ (init vector with -1)\;
+        \While{$Q \neq \emptyset$}{
+            $u \leftarrow Q.\text{front}()$; $Q.\text{pop}()$\;
+            \If{$u = t$}{
+                \KwBreak (stop BFS)\;
+            }
+            \For{each $v \in V$}{
+                \If{$res_{u, v} > 0$ \KwAnd $dist[v] = \infty$}{
+                    $dist[v] \leftarrow dist[u] + 1$\;
+                    $Q.\text{push}(v)$\;
+                    $p[v] \leftarrow u$\;
+                }
+            }
+        }
+    }
+
+    \bigskip
+
     \Fn{Augment($v, \text{minEdge}$)}{
         \eIf{$v = s$}{
             $f \leftarrow \text{minEdge}$\;
@@ -167,48 +183,31 @@ O algoritmo de \textbf{Edmonds-Karp} é o principal método para resolver esse t
 
     \bigskip
 
-    % Procedimento Principal (Main)
     \Fn{EdmondsKarp($s, t$)}{
         $mf \leftarrow 0$\;
-        
         \While{\KwTrue}{
             $f \leftarrow 0$\;
-            
-            % Setup da BFS
-            $dist \leftarrow \infty; \quad dist[s] \leftarrow 0$\;
-            $Q \leftarrow \{s\}; \quad p \leftarrow \text{nil}$ (init vector with -1)\;
-
-            % BFS Loop
-            \While{$Q \neq \emptyset$}{
-                $u \leftarrow Q.\text{front}()$; $Q.\text{pop}()$\;
-                
-                \If{$u = t$}{
-                    \KwBreak (stop BFS)\;
-                }
-
-                \For{each $v \in V$}{
-                    \If{$res_{u, v} > 0$ \KwAnd $dist[v] = \infty$}{
-                        $dist[v] \leftarrow dist[u] + 1$\;
-                        $Q.\text{push}(v)$\;
-                        $p[v] \leftarrow u$\;
-                    }
-                }
-            }
-
-            Augment($t, \infty$); \textbf{[comment: find min edge weight $f$ in path]}\;
-            
+            BFS($s, t$); \AlgComment{fills the parent vector $p$}\;
+            Augment($t, \infty$); \AlgComment{find min edge weight $f$ in path}\;
             \If{$f = 0$}{
                 \KwBreak (terminate)\;
             }
             $mf \leftarrow mf + f$\;
         }
-        
         \KwRet $mf$\;
     }
-    
+
     \caption{Algoritmo de Edmonds-Karp \cite{halim}}
     \label{alg:edmonds_karp}
 \end{algorithm}
+
+O pseudocódigo divide-se em três procedimentos:
+
+\begin{itemize}
+    \item \textbf{BFS:} Busca em largura a partir de $s$ na rede residual, percorrendo apenas arestas com capacidade residual positiva. Ao alcançar cada vértice pela primeira vez, registra seu pai em $p$; como a busca é em largura, o caminho registrado até $t$ é o de menor número de arestas.
+    \item \textbf{Augment:} Percorre o caminho encontrado de $t$ até $s$, seguindo o vetor de pais. Na volta da recursão, $f$ guarda a menor capacidade residual do caminho (o gargalo), que é subtraída das arestas no sentido do caminho e somada às arestas reversas.
+    \item \textbf{EdmondsKarp:} Repete a busca e o aumento enquanto existir caminho de $s$ a $t$. Quando a BFS não alcança $t$, nenhum fluxo é enviado ($f = 0$) e o fluxo acumulado $mf$ é máximo.
+\end{itemize}
 
 \paragraph{Algoritmo de Dinic}
 
@@ -222,9 +221,6 @@ O algoritmo de Hopcroft-Karp é um algoritmo eficiente para encontrar o emparelh
 
 O algoritmo consiste em duas fases principais: a fase de construção de níveis e a fase de busca de caminhos aumentantes. Na fase de construção de níveis, uma busca em largura (BFS) é realizada a partir dos vértices livres no lado esquerdo do grafo bipartido para construir uma camada de níveis que ajuda a identificar os caminhos aumentantes mais curtos. Na fase de busca de caminhos aumentantes, uma busca em profundidade (DFS) é realizada para encontrar todos os caminhos aumentantes possíveis dentro da camada de níveis construída na fase anterior. Esses caminhos são então usados para aumentar o emparelhamento \cite{halim}.
 
-% TODO: melhorar essa explicação
-% Maicon sugeriu explicar mais a fundo 
-
 A seguir, o pseudo-código do algoritmo de Hopcroft-Karp:
 
 \begin{algorithm}[H]
@@ -236,36 +232,36 @@ A seguir, o pseudo-código do algoritmo de Hopcroft-Karp:
 
     % MAIN ALGORITHM
     \KwLet $G = (U, V; E)$ be a bipartite graph with initial (possibly empty) matching $M$;\;
-    \KwLet $U_0$ contain all unmatched vertices of $U$;\;
-    \KwLet $V_0$ contain all unmatched vertices of $V$;\;
+    \KwLet $U_0$ contain all unmatched vertices of $U$;\label{hk:u0}\;
+    \KwLet $V_0$ contain all unmatched vertices of $V$;\label{hk:v0}\;
     
-    \While{$U_0 \neq \emptyset$}{
-        Construct\_layered\_graph;\;
-        Find\_set\_$\Delta M$;\;
-        $M := M \ominus \Delta M$;\;
-        update sets $U_0, V_0$ of unmatched vertices\;
+    \While{$U_0 \neq \emptyset$\label{hk:phase}}{
+        Construct\_layered\_graph;\label{hk:callbuild}\;
+        Find\_set\_$\Delta M$;\label{hk:callfind}\;
+        $M := M \ominus \Delta M$;\label{hk:symdiff}\;
+        update sets $U_0, V_0$ of unmatched vertices\label{hk:upd}\;
     }
 
     \bigskip
 
     % PROCEDURE 1: CONSTRUCT LAYERED GRAPH
     \Fn{Construct\_layered\_graph}{
-        $L_0 := U_0, k^* := k := 0$;\;
+        $L_0 := U_0, k^* := k := 0$;\label{hk:l0}\;
         \While{$L_k \neq \emptyset$}{
             \For{each $i \in L_k$}{
-                $N(i) := \{ j : [i, j] \in E \setminus M, j \notin L_1 \cup L_3 \cup \dots \cup L_{k-1} \}$;
+                $N(i) := \{ j : [i, j] \in E \setminus M, j \notin L_1 \cup L_3 \cup \dots \cup L_{k-1} \}$;\label{hk:ni}
             }
             $L_{k+1} := \bigcup_{i \in L_k} N(i)$;\;
             
-            \If{$L_{k+1} = \emptyset$}{
+            \If{$L_{k+1} = \emptyset$\label{hk:stop}}{
                 \KwStop \AlgComment{$M$ is a maximum matching}
             }
             
-            \eIf{$L_{k+1} \cap V_0 \neq \emptyset$}{
+            \eIf{$L_{k+1} \cap V_0 \neq \emptyset$\label{hk:found}}{
                 $k^* := k + 1$;\;
                 $L_{k+2} := \emptyset$\;
             }{
-                $L_{k+2} := \{ \overline{i} : [\overline{i}, j] \in M, j \in L_{k+1} \}$;
+                $L_{k+2} := \{ \overline{i} : [\overline{i}, j] \in M, j \in L_{k+1} \}$;\label{hk:lk2}
             }
             $k := k + 2$\;
         }
@@ -276,26 +272,26 @@ A seguir, o pseudo-código do algoritmo de Hopcroft-Karp:
     % PROCEDURE 2: FIND SET DELTA M
     \Fn{Find\_set\_$\Delta M$}{
         \AlgComment{find a maximal set $\Delta M$ of disjoint augmenting paths}\;
-        delete all vertices in $L_{k^*} \setminus V_0$;\;
+        delete all vertices in $L_{k^*} \setminus V_0$;\label{hk:del}\;
         mark all remaining vertices as unscanned;\;
         $k := 1$; \AlgComment{path counter}\;
         
         \While{$L_0 \neq \emptyset$}{
-            choose $x_0 := i \in L_0$ and delete it in $L_0$;\;
+            choose $x_0 := i \in L_0$ and delete it in $L_0$;\label{hk:x0}\;
             $\ell := 0$;\;
             
             \While{$\ell \ge 0$}{
-                \While{$x_\ell$ has an unscanned neighbor in $L_{\ell+1}$}{
+                \While{$x_\ell$ has an unscanned neighbor in $L_{\ell+1}$\label{hk:adv}}{
                     choose unscanned neighbor $x_{\ell+1}$;\;
                     mark $x_{\ell+1}$ as scanned;\;
                     $\ell := \ell + 1$;\;
                     
-                    \If{$\ell = k^*$}{
+                    \If{$\ell = k^*$\label{hk:path}}{
                         $P_k := (x_0, x_1, \dots, x_{k^*})$;\;
                         $k := k + 1$\;
                     }
                 }
-                \eIf{$\ell < k^*$}{
+                \eIf{$\ell < k^*$\label{hk:back}}{
                     $\ell := \ell - 1$\;
                 }{
                     $\ell := -1$\;
@@ -306,6 +302,15 @@ A seguir, o pseudo-código do algoritmo de Hopcroft-Karp:
     }
 
 \end{algorithm}
+
+O pseudocódigo é organizado em um laço principal e dois procedimentos, explicados a seguir com referência às linhas do Algoritmo~\ref{alg:hopcroft_karp}:
+
+\begin{itemize}
+    \item \textbf{Laço principal (linhas~\ref{hk:u0}--\ref{hk:upd}):} $U_0$ e $V_0$ guardam os vértices livres de cada lado (linhas~\ref{hk:u0} e~\ref{hk:v0}). Cada iteração do laço da linha~\ref{hk:phase} é uma \textit{fase}: constrói-se o grafo em camadas (linha~\ref{hk:callbuild}), encontra-se um conjunto maximal $\Delta M$ de caminhos aumentantes mínimos e disjuntos (linha~\ref{hk:callfind}) e o emparelhamento é atualizado pela diferença simétrica $M \ominus \Delta M$ (linha~\ref{hk:symdiff}). Ao longo de cada caminho, as arestas emparelhadas e as não emparelhadas trocam de papel, de modo que $|M|$ aumenta em $|\Delta M|$.
+    \item \textbf{Construção do grafo em camadas:} É uma busca em largura que parte de todos os vértices livres de $U$ ao mesmo tempo, que formam a camada $L_0$ (linha~\ref{hk:l0}). As camadas de índice ímpar contêm vértices de $V$, alcançados por arestas \textit{não} emparelhadas (linha~\ref{hk:ni}); a restrição $j \notin L_1 \cup \dots \cup L_{k-1}$ impede que um vértice seja revisitado. Se nenhum vértice novo é alcançado (linha~\ref{hk:stop}), não há caminho aumentante e, pelo lema de Berge, $M$ é máximo. Se a nova camada contém um vértice livre de $V$ (linha~\ref{hk:found}), foi encontrado o comprimento $k^*$ dos caminhos aumentantes mais curtos, e a construção termina. Caso contrário, a camada seguinte é formada pelos parceiros, em $M$, dos vértices recém-alcançados (linha~\ref{hk:lk2}): o caminho segue obrigatoriamente pela aresta emparelhada, o que garante a alternância.
+    \item \textbf{Busca dos caminhos disjuntos:} Primeiro, descartam-se os vértices da última camada que não são livres (linha~\ref{hk:del}), pois nenhum caminho aumentante termina neles. Em seguida, uma busca em profundidade parte de cada vértice livre $x_0 \in L_0$ (linha~\ref{hk:x0}) e avança sempre para um vizinho ainda não visitado da camada seguinte (linha~\ref{hk:adv}). Ao atingir a camada $k^*$, o caminho $P_k = (x_0, \dots, x_{k^*})$ é registrado (linha~\ref{hk:path}) e a busca a partir dessa raiz termina; se a busca fica sem vizinhos antes disso, recua uma camada (linha~\ref{hk:back}). Como cada vértice é visitado no máximo uma vez por fase, os caminhos encontrados são disjuntos em vértices, e o conjunto $\Delta M$ é maximal.
+    \item \textbf{Complexidade:} Cada fase examina cada aresta um número constante de vezes, com custo $O(E)$. Após $\sqrt{V}$ fases, todo caminho aumentante restante tem mais de $\sqrt{V}$ arestas; como os caminhos aumentantes de $M \ominus M^*$ são disjuntos em vértices, restam menos de $\sqrt{V}$ deles, e cada fase seguinte elimina ao menos um. O número de fases é, portanto, $O(\sqrt{V})$, o que leva à complexidade total $O(E\sqrt{V})$ \cite{burkard}.
+\end{itemize}
 
 \subsubsection{Heurísticas}
 \label{sec:h_emp_card_max_bip}
