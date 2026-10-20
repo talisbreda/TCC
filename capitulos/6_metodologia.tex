@@ -149,7 +149,7 @@ A maior parte dos algoritmos foi obtida de implementações públicas, em vez de
     \item Implementação própria a partir da fonte bibliográfica, para as heurísticas e alguns exatos sem implementação pública adequada, algoritmos de descrição curta cuja reimplementação é mais confiável que um repositório de qualidade incerta.
 \end{enumerate}
 
-A Tabela~\ref{tab:proveniencia} registra o tipo e a origem de cada algoritmo.
+A Tabela~\ref{tab:proveniencia} registra o tipo e a origem de cada algoritmo, e aponta o pseudocódigo correspondente nos capítulos anteriores.
 
 
 \begin{table}[H]
@@ -158,47 +158,47 @@ A Tabela~\ref{tab:proveniencia} registra o tipo e a origem de cada algoritmo.
     \label{tab:proveniencia}
     \renewcommand{\arraystretch}{1.2}
     \footnotesize
-    \begin{tabularx}{\textwidth}{@{} l l X @{}}
+    \begin{tabularx}{\textwidth}{@{} l l l X @{}}
         \toprule
-        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Origem} \\
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Pseudocódigo} & \textbf{Origem} \\
         \midrule
-        \multicolumn{3}{@{}l}{\textit{Cardinalidade máxima --- grafos bipartidos}} \\
-        Caminhos aumentantes & Exato & repositório \texttt{wbchristerson/perfect-matchings} \\
-        Hopcroft-Karp & Exato & repositório \texttt{sofiat-olaosebikan/hopcroftkarp} \\
-        Edmonds-Karp (fluxo) & Exato & repositório \texttt{Maxflow-Algorithms} (reimplementado) \\
-        Hopcroft-Karp (NetworkX) & Referência & biblioteca NetworkX (interpretada) \\
-        Emparelhamento bipartido (igraph) & Referência & biblioteca igraph (núcleo compilado) \\
-        Gulosa & Heurística & implementação própria \cite{cormen} \\
-        Karp-Sipser & Heurística & implementação própria \cite{karp-sipser} \\
+        \multicolumn{4}{@{}l}{\textit{Cardinalidade máxima --- grafos bipartidos}} \\
+        Caminhos aumentantes & Exato & Alg.~\ref{alg:mcbm_augmenting} & repositório \texttt{wbchristerson/perfect-matchings} \\
+        Hopcroft-Karp & Exato & Alg.~\ref{alg:hopcroft_karp} & repositório \texttt{sofiat-olaosebikan/hopcroftkarp} \\
+        Edmonds-Karp (fluxo) & Exato & Alg.~\ref{alg:edmonds_karp} & repositório \texttt{Maxflow-Algorithms} (reimplementado) \\
+        Hopcroft-Karp (NetworkX) & Referência & Alg.~\ref{alg:hopcroft_karp} & biblioteca NetworkX (interpretada) \\
+        Emparelhamento bipartido (igraph) & Referência & --- & biblioteca igraph (núcleo compilado) \\
+        Gulosa & Heurística & Alg.~\ref{alg:greedy_mcm} & implementação própria \cite{cormen} \\
+        Karp-Sipser & Heurística & Alg.~\ref{alg:karp_sipser} & implementação própria \cite{karp-sipser} \\
         \addlinespace
-        \multicolumn{3}{@{}l}{\textit{Atribuição linear}} \\
-        Húngaro (munkres) & Exato & repositório \texttt{bmc/munkres} \\
-        Húngaro (benchaplin) & Exato & repositório \texttt{benchaplin/hungarian-algorithm} \\
-        Húngaro (hunalgorithm) & Exato & repositório \texttt{pbertoni/HungarianAlgorithm} \\
-        Húngaro (mayorx) & Exato & repositório \texttt{mayorx/hungarian-algorithm} \\
-        Caminhos mínimos sucessivos & Exato & reimplementado a partir de repositório \\
-        SciPy & Referência & biblioteca SciPy (núcleo compilado) \\
-        Jonker-Volgenant & Referência & biblioteca lap (núcleo compilado) \\
+        \multicolumn{4}{@{}l}{\textit{Atribuição linear}} \\
+        Húngaro (munkres) & Exato & Alg.~\ref{alg:hungarian} & repositório \texttt{bmc/munkres} \\
+        Húngaro (benchaplin) & Exato & Alg.~\ref{alg:hungarian} & repositório \texttt{benchaplin/hungarian-algorithm} \\
+        Húngaro (hunalgorithm) & Exato & Alg.~\ref{alg:hungarian} & repositório \texttt{pbertoni/HungarianAlgorithm} \\
+        Húngaro (mayorx) & Exato & Alg.~\ref{alg:hungarian} & repositório \texttt{mayorx/hungarian-algorithm} \\
+        Caminhos mínimos sucessivos & Exato & Alg.~\ref{alg:optflow} & reimplementado a partir de repositório \\
+        SciPy & Referência & Alg.~\ref{alg:jv} & biblioteca SciPy (núcleo compilado) \\
+        Jonker-Volgenant & Referência & Alg.~\ref{alg:jv} & biblioteca lap (núcleo compilado) \\
         \addlinespace
-        \multicolumn{3}{@{}l}{\textit{Atribuição gargalo}} \\
-        Threshold & Exato & reimplementado (original em JavaScript) \\
-        Caminhos aumentantes & Exato & implementação própria \cite{burkard} \\
+        \multicolumn{4}{@{}l}{\textit{Atribuição gargalo}} \\
+        Threshold & Exato & Alg.~\ref{alg:threshold} & reimplementado (original em JavaScript) \\
+        Caminhos aumentantes & Exato & Alg.~\ref{alg:augmenting_lbap} & implementação própria \cite{burkard} \\
         \addlinespace
-        \multicolumn{3}{@{}l}{\textit{Casamento estável}} \\
-        Gale-Shapley (orientado a objetos) & Exato & pacote \texttt{gale-shapley-algorithm} \\
-        Gale-Shapley (numérico) & Exato & pacote \texttt{gale-shapley-algorithm} \\
-        Gale-Shapley (Lattas) & Exato & reimplementado (repositório \texttt{StableMarriages}) \\
+        \multicolumn{4}{@{}l}{\textit{Casamento estável}} \\
+        Gale-Shapley (orientado a objetos) & Exato & Alg.~\ref{alg:gale_shapley} & pacote \texttt{gale-shapley-algorithm} \\
+        Gale-Shapley (numérico) & Exato & Alg.~\ref{alg:gale_shapley} & pacote \texttt{gale-shapley-algorithm} \\
+        Gale-Shapley (Lattas) & Exato & Alg.~\ref{alg:gale_shapley} & reimplementado (repositório \texttt{StableMarriages}) \\
         \addlinespace
-        \multicolumn{3}{@{}l}{\textit{Grafos gerais}} \\
-        Blossom/Edmonds (cardinalidade) & Exato & repositório \texttt{adharshkamath/Edmonds-Algorithm} \\
-        van Rantwijk (peso máximo) & Exato & \texttt{mwmatching.py} de J.\ van Rantwijk \\
-        NetworkX (cardinalidade e peso) & Referência & biblioteca NetworkX (interpretada) \\
-        Path Growing & Heurística & implementação própria \cite{drake} \\
+        \multicolumn{4}{@{}l}{\textit{Grafos gerais}} \\
+        Blossom/Edmonds (cardinalidade) & Exato & Alg.~\ref{alg:maxmatch} & repositório \texttt{adharshkamath/Edmonds-Algorithm} \\
+        van Rantwijk (peso máximo) & Exato & Alg.~\ref{alg:edmonds_weighted} & \texttt{mwmatching.py} de J.\ van Rantwijk \\
+        NetworkX (cardinalidade e peso) & Referência & Alg.~\ref{alg:maxmatch} e \ref{alg:edmonds_weighted} & biblioteca NetworkX (interpretada) \\
+        Path Growing & Heurística & Alg.~\ref{alg:path_growing} & implementação própria \cite{drake} \\
         \addlinespace
-        \multicolumn{3}{@{}l}{\textit{Emparelhamento induzido máximo}} \\
-        Exato (conjunto independente) & Exato & implementação própria \cite{cameron} \\
-        Guloso aleatório & Heurística & implementação própria \\
-        Guloso de grau mínimo & Heurística & implementação própria \\
+        \multicolumn{4}{@{}l}{\textit{Emparelhamento induzido máximo}} \\
+        Exato (conjunto independente) & Exato & Alg.~\ref{alg:mim_exact} & implementação própria \cite{cameron} \\
+        Guloso aleatório & Heurística & Alg.~\ref{alg:mim_greedy} & implementação própria \\
+        Guloso de grau mínimo & Heurística & Alg.~\ref{alg:mim_greedy} & implementação própria \\
         \bottomrule
     \end{tabularx}
 \end{table}

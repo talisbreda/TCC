@@ -60,7 +60,7 @@ Para selecionar o valor limite $c\ast$, podemos utilizar uma busca binária entr
         }
     }
     
-    \caption{Threshold algorithm for the LBAP \cite{burkard}}
+    \caption{Algoritmo Threshold para o LBAP \cite{burkard}}
     \label{alg:threshold}
 \end{algorithm}
 
@@ -110,9 +110,11 @@ A partir daqui, o processo se repete. Com o novo valor de $c\ast$ e a nova arest
         }
     }
     
-    \caption{Dual\_LBAP. Dual algorithm for the LBAP \cite{burkard}.}
+    \caption{Dual\_LBAP: algoritmo dual para o LBAP \cite{burkard}}
     \label{alg:dual_lbap}
 \end{algorithm}
+
+O método dual não foi implementado no ambiente de testes deste trabalho. Para o problema de atribuição gargalo, foram comparados o algoritmo Threshold (Algoritmo~\ref{alg:threshold}) e o método de caminhos aumentantes (Algoritmo~\ref{alg:augmenting_lbap}), descrito a seguir.
 
 \paragraph{Método de caminhos aumentantes}
 \label{sec:caminhos_aumentantes_min_max}

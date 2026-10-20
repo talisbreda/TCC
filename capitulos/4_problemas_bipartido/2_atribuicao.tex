@@ -114,10 +114,48 @@ Assim como o método Húngaro, este algoritmo baseia-se na manutenção de poten
 
 O processo inicia com heurísticas avançadas (conhecidas como redução de colunas e transferência de redução) para resolver rapidamente as atribuições triviais. Para os vértices restantes, o algoritmo realiza uma busca similar ao algoritmo de Dijkstra: ele explora o grafo para encontrar o caminho aumentante mais curto, atualizando os potenciais duais simultaneamente durante a busca. Isso garante que, a cada iteração, o emparelhamento seja aumentado pelo menor custo possível até que a solução ótima completa seja atingida.
 
-A implementação deste algoritmo é bastante complexa, e portanto não será detalhada aqui. No entanto, sua eficiência prática o torna uma escolha preferida para muitos problemas de atribuição em aplicações reais, especialmente quando comparado ao método Húngaro tradicional \cite{jungnickel}.
+A implementação completa deste algoritmo é extensa; o Algoritmo~\ref{alg:jv} apresenta suas quatro fases em alto nível. Sua eficiência prática o torna uma escolha preferida para muitos problemas de atribuição em aplicações reais, especialmente quando comparado ao método Húngaro tradicional \cite{jungnickel}.
 
-% TODO: adicionar pseudo-código do algoritmo Jonker-Volgenant
-% "A Shortest Augmenting Path Algorithm for Dense and Sparse Linear Assignment Problems"
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \caption{Algoritmo de Jonker-Volgenant (LAPJV), em alto nível \cite{jonker}}
+    \label{alg:jv}
+
+    \KwIn{cost matrix $C = (c_{ij})_{n \times n}$}
+    \KwOut{optimal assignment $x$ (row $i$ is assigned to column $x_i$) and column duals $v$}
+
+    \AlgComment{phase 1: column reduction}\;
+    \For{$j := n$ \KwTo $1$}{
+        $i^* := \arg\min_i c_{ij}$; $v_j := c_{i^* j}$\;
+        \lIf{row $i^*$ is unassigned}{assign $i^*$ to $j$}
+    }
+
+    \AlgComment{phase 2: reduction transfer}\;
+    \For{each assigned row $i$ that is the minimum of a single column $j_1 = x_i$}{
+        $v_{j_1} := v_{j_1} - \min_{j \neq j_1} (c_{ij} - v_j)$\;
+    }
+
+    \AlgComment{phase 3: augmenting row reduction (applied twice)}\;
+    \For{each free row $i$}{
+        let $j_1, j_2$ be the columns with the smallest and second smallest values $u_1 \le u_2$ of $c_{ij} - v_j$\;
+        \eIf{$u_1 < u_2$}{
+            $v_{j_1} := v_{j_1} - (u_2 - u_1)$\;
+        }{
+            \lIf{$j_1$ is assigned}{$j_1 := j_2$}
+        }
+        assign $i$ to $j_1$; the row previously assigned to $j_1$, if any, becomes free\;
+    }
+
+    \AlgComment{phase 4: augmentation by shortest paths}\;
+    \For{each remaining free row $i$}{
+        find a shortest augmenting path from $i$ to a free column with a Dijkstra-like search on the reduced costs $c_{kj} - v_j$\;
+        $v_j := v_j + d_j - \mu$ for every scanned column $j$, where $d_j$ is its distance and $\mu$ the length of the path\;
+        augment the assignment along the path\;
+    }
+    \KwRet $x$, $v$\;
+\end{algorithm}
 
 \paragraph{Redução para problema de fluxo de custo mínimo}
 \label{p:reduction_to_minimal_flow}

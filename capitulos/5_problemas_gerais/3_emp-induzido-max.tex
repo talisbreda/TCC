@@ -38,6 +38,39 @@ Encontrar um emparelhamento induzido máximo em $G$ equivale exatamente a encont
 
 Dada a natureza NP-Difícil do problema e a ineficácia de métodos exatos para grafos densos ou de grande escala, a literatura concentra-se majoritariamente em algoritmos construtivos gulosos e metaheurísticas.
 
+\paragraph{Algoritmo exato}
+
+Para instâncias pequenas, a redução acima permite resolver o MIM de forma exata. Constrói-se o grafo de conflitos $H = L(G)^2$ e busca-se nele um conjunto independente máximo por \textit{branch-and-bound}: a cada passo, escolhe-se uma aresta candidata e exploram-se dois ramos, incluí-la ou não na solução. Um ramo é podado quando, mesmo incluindo todas as candidatas restantes, não superaria a melhor solução já encontrada. É a abordagem usada neste trabalho como referência exata (Algoritmo~\ref{alg:mim_exact}), viável apenas para algumas dezenas de vértices.
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \caption{Emparelhamento induzido máximo exato, via conjunto independente máximo em $L(G)^2$ \cite{cameron}}
+    \label{alg:mim_exact}
+
+    \KwIn{graph $G = (V, E)$}
+    \KwOut{maximum induced matching $M^*$}
+    build $H = L(G)^2$: one vertex per edge of $G$; $e \sim f$ in $H$ iff $e$ and $f$ share a vertex or are joined by an edge of $G$\;
+    $M^* := \emptyset$\;
+    \textsc{Branch}$(\emptyset, E)$\;
+    \KwRet $M^*$\;
+
+    \bigskip
+
+    \Fn{\textsc{Branch}$(M, C)$}{
+        \AlgComment{$M$: current solution; $C$: candidate edges not in conflict with $M$}\;
+        \lIf{$|M| + |C| \le |M^*|$}{\KwRet \AlgComment{bound}}
+        \If{$C = \emptyset$}{
+            $M^* := M$\;
+            \KwRet\;
+        }
+        choose $e \in C$\;
+        \textsc{Branch}$(M \cup \{e\}, C \setminus (N_H(e) \cup \{e\}))$ \AlgComment{include $e$}\;
+        \textsc{Branch}$(M, C \setminus \{e\})$ \AlgComment{exclude $e$}\;
+    }
+\end{algorithm}
+
 \paragraph{Heurísticas gulosas}
 
 Dada a equivalência entre o problema do Emparelhamento Induzido Máximo em $G$ e o Conjunto Independente Máximo no grafo transformado $L(G)^2$, as heurísticas gulosas clássicas da literatura de conjuntos independentes são naturalmente adaptadas para este contexto.
@@ -49,6 +82,31 @@ O procedimento geral consiste em selecionar iterativamente uma aresta $e \in E$,
     \item \textbf{Guloso de Grau Mínimo (Min-Degree Greedy):} A heurística prioriza a seleção da aresta que possui o \textbf{menor grau induzido} (ou seja, a aresta cuja remoção implica a eliminação do menor número de outras arestas candidatas). Esta abordagem é uma adaptação direta da heurística \textit{Min-Degree} (ou \textit{Greedy}) para o problema do Conjunto Independente Máximo.
     \citeonline{halldorsson} estabeleceram os fundamentos teóricos para essa estratégia, demonstrando que priorizar vértices de baixo grau fornece garantias de aproximação superiores em grafos esparsos e de grau limitado. No contexto do MIM, essa lógica traduz-se em escolher a aresta $e=(u,v)$ que minimiza a soma dos graus de seus extremos ou o tamanho de sua vizinhança em $L(G)^2$.
 \end{itemize}
+
+As duas variantes compartilham a mesma estrutura e diferem apenas no critério de seleção, conforme o Algoritmo~\ref{alg:mim_greedy}.
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \caption{Heurísticas gulosas para emparelhamento induzido: aleatória e de grau mínimo \cite{duckworth, halldorsson}}
+    \label{alg:mim_greedy}
+
+    \KwIn{graph $G = (V, E)$; selection rule \textsc{Random} or \textsc{MinDegree}}
+    \KwOut{maximal induced matching $M$}
+    build $H = L(G)^2$\;
+    $M := \emptyset$; $C := E$\;
+    \While{$C \neq \emptyset$}{
+        \eIf{rule is \textsc{Random}}{
+            choose $e \in C$ uniformly at random\;
+        }{
+            choose $e \in C$ with minimum degree in $H[C]$\;
+        }
+        $M := M \cup \{e\}$\;
+        $C := C \setminus (N_H(e) \cup \{e\})$\;
+    }
+    \KwRet $M$\;
+\end{algorithm}
 
 \paragraph{Metaheurísticas}
 

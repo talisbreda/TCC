@@ -46,6 +46,41 @@ A variante $O(V^3)$ descrita por Lawler (1976) para o emparelhamento ponderado u
 
 Lawler também destaca que a manipulação das variáveis duais das blossoms ($z_B$) é o que permite ao algoritmo "pagar" o custo de usar arestas dentro de estruturas cíclicas ímpares. Quando uma blossom é formada durante a busca, ela recebe um valor dual $z_B > 0$; quando ela precisa ser desfeita (expandida) para encontrar um caminho, seu valor dual retorna a zero.
 
+O Algoritmo~\ref{alg:edmonds_weighted} resume esse esquema primal-dual em alto nível, omitindo as estruturas de dados de contração e expansão de blossoms. Nele, $\pi_{uv} = y_u + y_v + \sum_{B : (u,v) \in B} z_B - w_{uv}$ denota a folga da aresta $(u, v)$; uma aresta é justa quando $\pi_{uv} = 0$.
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \caption{Esquema primal-dual do algoritmo de Edmonds ponderado, em alto nível \cite{lawler}}
+    \label{alg:edmonds_weighted}
+
+    \KwIn{graph $G = (V, E)$ with weights $w: E \to \mathbb{R}$}
+    \KwOut{maximum weight matching $M$}
+    $M := \emptyset$; $y_v := \frac{1}{2} \max_{e \in E} w(e)$ for all $v \in V$; $z_B := 0$ for every blossom $B$\;
+    \While{\KwTrue}{
+        grow alternating trees rooted at the free vertices using only tight edges, labeling vertices as outer ($S$) or inner ($T$)\;
+        \uIf{a tight edge joins outer vertices of two different trees}{
+            augment $M$ along the augmenting path found; remove all labels\;
+        }
+        \uElseIf{a tight edge joins two outer vertices of the same tree}{
+            contract the blossom $B$ formed by the edge, with $z_B := 0$\;
+        }
+        \Else{
+            $\delta_1 := \min \{ y_v : v \text{ outer} \}$\;
+            $\delta_2 := \min \{ \pi_{uv} : u \text{ outer}, v \text{ unlabeled} \}$\;
+            $\delta_3 := \min \{ \pi_{uv} / 2 : u, v \text{ outer, in different blossoms} \}$\;
+            $\delta_4 := \min \{ z_B / 2 : B \text{ inner blossom} \}$\;
+            $\delta := \min(\delta_1, \delta_2, \delta_3, \delta_4)$\;
+            $y_v := y_v - \delta$ for outer $v$; $y_v := y_v + \delta$ for inner $v$\;
+            $z_B := z_B + 2\delta$ for outer blossoms; $z_B := z_B - 2\delta$ for inner blossoms\;
+            \lIf{$\delta = \delta_1$}{\KwStop \AlgComment{$M$ is optimal}}
+            expand every inner blossom $B$ with $z_B = 0$\;
+        }
+    }
+    \KwRet $M$, after expanding all remaining blossoms\;
+\end{algorithm}
+
 \subsubsection{Otimizações}
 
 Desenvolvimentos posteriores por \citeonline{galil_micali_gabow} e \citeonline{gabow1990} melhoraram a estrutura de dados para gerenciar a prioridade das atualizações duais e a contração de blossoms, atingindo complexidades próximas a $O(E V \log V)$ ou $O(E \sqrt{V \alpha(E, V)})$ em implementações de escalonamento \cite{schrijver}.
@@ -81,7 +116,31 @@ Similar à heurística descrita na seção \ref{p:h_path_growing_card}, esta tam
     \item Compare o peso total de $M_1$ e $M_2$. Adicione o conjunto mais pesado à solução final e remova os vértices do grafo.
 \end{enumerate}
 
-A diferença para a versão de emparelhamento de cardinalidade máxima é o passo 5, onde os pesos são somados para escolher o melhor conjunto. Garante emparelhamento de pelo menos $1/2$ da cardinalidade máxima \cite{drake}.
+A diferença para a versão de emparelhamento de cardinalidade máxima é o passo 5, onde os pesos são somados para escolher o melhor conjunto. Garante emparelhamento de pelo menos $1/2$ do peso máximo \cite{drake}.
+
+O Algoritmo~\ref{alg:path_growing} corresponde à versão original de \citeonline{drake}, que é a implementada neste trabalho. Nela, os conjuntos $M_1$ e $M_2$ são mantidos ao longo de todos os caminhos e o mais pesado é retornado ao final, em vez de a escolha ser feita caminho a caminho como na descrição acima; ambas as versões têm a mesma garantia de aproximação.
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \caption{Algoritmo Path Growing \cite{drake}}
+    \label{alg:path_growing}
+
+    \KwIn{graph $G = (V, E)$ with weights $w: E \to \mathbb{R}$}
+    \KwOut{matching $M$ with $w(M) \ge \frac{1}{2} w(M^*)$}
+    $M_1 := \emptyset$; $M_2 := \emptyset$; $i := 1$\;
+    \While{$E \neq \emptyset$}{
+        choose a vertex $x$ with $\deg(x) \ge 1$\;
+        \While{$x$ has a neighbor}{
+            let $(x, y)$ be the heaviest edge incident to $x$\;
+            $M_i := M_i \cup \{(x, y)\}$; $i := 3 - i$\;
+            remove $x$ and all its incident edges from $G$\;
+            $x := y$\;
+        }
+    }
+    \KwRet the heavier of $M_1$ and $M_2$\;
+\end{algorithm}
 
 \begin{table}[ht]
     \centering
