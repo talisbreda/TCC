@@ -235,33 +235,35 @@ Se não escolhermos a aresta $(u,v)$ de peso 10, a próxima melhor opção para 
 % * **Qualidade:** Apenas com caminhos de comprimento 3, a garantia de aproximação sobe para um fator melhor que 1/2.
 % * **Fonte:** **Arkin, E. M., et al. (2006).** *Local search for the maximum cardinality matching problem*.
 
-\begin{table}[ht]
+\begin{table}[htbp]
     \centering
     \caption{Algoritmos para problema de atribuição gargalo}
     \label{tab:atribuicao_gargalo_algos}
     \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
     
     % Structure: l = left align, c = center, X = auto-wrap paragraph
-    \begin{tabularx}{\textwidth}{@{} l l l X @{}}
+    \begin{tabularx}{\textwidth}{@{} l l l l X @{}}
         \toprule
-        \textbf{Algoritmo} & \textbf{Complexidade de tempo} & \textbf{Tipo} & \textbf{Descrição} \\
+        \textbf{Algoritmo} & \textbf{Complexidade} & \textbf{Tipo} & \textbf{Avaliado} & \textbf{Descrição} \\
         \midrule
         
-        Threshold & $O(V^{2.5} / \sqrt{\log V})$ & Exato & 
+        Threshold & $O(V^{2.5} / \sqrt{\log V})$ & Exato & Sim* & 
         Aplica busca binária sobre os pesos das arestas, testando a existência de emparelhamento perfeito no subgrafo restrito ao limiar. \\
         \addlinespace 
         
-        Método Dual & $O(K \cdot E \sqrt{V})$ & Exato & 
+        Método Dual & $O(K \cdot E \sqrt{V})$ & Exato & Não & 
         Expande um limiar inferior iterativamente baseado no Teorema de König, adicionando apenas arestas necessárias para cobrir componentes. \\
         \addlinespace
         
-        Caminhos aumentantes & $O(EV)$ & Exato & 
+        Caminhos aumentantes & $O(EV)$ & Exato & Sim & 
         Abordagem construtiva que busca caminhos aumentantes minimizando a aresta de peso máximo (gargalo) no trajeto (variação de Dijkstra). \\
         \addlinespace
         
-        Construtiva Gulosa & $O(E \log E)$ & Heurística & 
+        Construtiva Gulosa & $O(E \log E)$ & Heurística & Não & 
         Constrói a solução selecionando arestas de baixo peso, usando critérios locais ou de "arrependimento" para evitar gargalos futuros. \\
         
         \bottomrule
     \end{tabularx}
+    \par\smallskip
+    {\raggedright\footnotesize \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. * A implementação avaliada testa cada limiar por caminhos aumentantes, com custo $O(n^3)$ por teste e $O(n^3 \log n)$ no total.\par}
 \end{table}

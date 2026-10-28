@@ -142,33 +142,35 @@ O Algoritmo~\ref{alg:path_growing} corresponde à versão original de \citeonlin
     \KwRet the heavier of $M_1$ and $M_2$\;
 \end{algorithm}
 
-\begin{table}[ht]
+\begin{table}[htbp]
     \centering
     \caption{Algoritmos para problema de emparelhamento ponderado máximo em grafos gerais}
     \label{tab:emp_pond_max_gerais}
     \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
     
     % Structure: l = left align, c = center, X = auto-wrap paragraph
-    \begin{tabularx}{\textwidth}{@{} l l l X @{}}
+    \begin{tabularx}{\textwidth}{@{} l l l l X @{}}
         \toprule
-        \textbf{Algoritmo} & \textbf{Complexidade de tempo} & \textbf{Tipo} & \textbf{Descrição} \\
+        \textbf{Algoritmo} & \textbf{Complexidade} & \textbf{Tipo} & \textbf{Avaliado} & \textbf{Descrição} \\
         \midrule
         
-        Edmonds & $O(V^3)$ & Exato & 
+        Edmonds & $O(V^3)$ & Exato & Sim & 
         Método primal-dual que gerencia variáveis duais para vértices e blossoms, ajustando preços para encontrar caminhos no grafo de igualdade. \\
         \addlinespace 
 
-        Edmonds otimizado & $O(EV \log V)$ & Exato & 
+        Edmonds otimizado & $O(EV \log V)$ & Exato & Não & 
         Melhoria do Edmonds original através de uma série de otimizações \\
         \addlinespace 
 
-        Gulosa ordenada & $O(E \log E)$ & Heurística & 
+        Gulosa ordenada & $O(E \log E)$ & Heurística & Não & 
         Ordena as arestas por peso decrescente e seleciona iterativamente as disponíveis. \\
         \addlinespace
 
-        Crescimento de caminho & $O(E)$ & Heurística & 
+        Crescimento de caminho & $O(E)$ & Heurística & Sim & 
         Heurística que estende caminhos pela aresta mais pesada local e seleciona o subconjunto de arestas (par ou ímpar) de maior soma total. \\
         
         \bottomrule
     \end{tabularx}
+    \par\smallskip
+    {\raggedright\footnotesize \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}.\par}
 \end{table}

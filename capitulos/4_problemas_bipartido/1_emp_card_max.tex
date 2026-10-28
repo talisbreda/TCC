@@ -211,7 +211,7 @@ O pseudocódigo divide-se em três procedimentos:
 
 \paragraph{Algoritmo de Dinic}
 
-Outra opção para resolver o problema de fluxo máximo é o algoritmo de Dinic, que é mais eficiente em muitos casos práticos, especialmente em grafos densos. O algoritmo de Dinic utiliza uma combinação de buscas em largura (BFS) para construir níveis na rede residual e buscas em profundidade (DFS) para encontrar caminhos aumentantes dentro desses níveis. O tempo de execução do algoritmo de Dinic é $O(E \sqrt{V})$ para grafos gerais, tornando-o uma escolha preferida para muitos problemas de fluxo máximo \cite{halim}.
+Outra opção para resolver o problema de fluxo máximo é o algoritmo de Dinic, que é mais eficiente em muitos casos práticos, especialmente em grafos densos. O algoritmo de Dinic utiliza uma combinação de buscas em largura (BFS) para construir níveis na rede residual e buscas em profundidade (DFS) para encontrar caminhos aumentantes dentro desses níveis. O tempo de execução do algoritmo de Dinic é $O(V^2 E)$ em redes gerais e cai para $O(E \sqrt{V})$ em redes de capacidade unitária, como a obtida na redução do emparelhamento bipartido, o que o torna uma escolha preferida para muitos problemas de fluxo máximo \cite{halim}.
 
 Este trabalho não tem uma implementação do algoritmo de Dinic. Ao invés disso, será apresentado o algoritmo de Hopcroft-Karp, que é uma variação especializada do algoritmo de Dinic para o problema de emparelhamento em grafos bipartidos, oferecendo uma solução mais eficiente para este caso específico.
 
@@ -354,7 +354,7 @@ O algoritmo funciona reduzindo dinamicamente o grafo $G=(V,E)$ através da aplic
     Em grafos esparsos, isso tende a quebrar ciclos e formar novas folhas (vértices de grau 1), permitindo que o algoritmo volte a usar a regra 1. Porém, em grafos densos, essa escolha aleatória pode comprometer a precisão da solução.
 \end{enumerate}
 
-Para grafos esparsos, a regra 2 é raramente aplicada, pois a remoção de vértices na regra 1 frequentemente cria novas folhas, provocando um efeito cascata, fazendo com que a maior parte do grafo seja resolvida de maneira ótima. A complexidade do algoritmo é linear ($O(E)$).
+Para grafos esparsos, a regra 2 é raramente aplicada, pois a remoção de vértices na regra 1 frequentemente cria novas folhas, provocando um efeito cascata, fazendo com que a maior parte do grafo seja resolvida de maneira ótima. Com estruturas de dados adequadas, a complexidade do algoritmo é linear ($O(E)$). A implementação avaliada neste trabalho, por simplicidade, localiza os vértices de grau 1 por varredura, o que eleva sua complexidade a $O(V \cdot E)$.
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
@@ -380,43 +380,45 @@ Para grafos esparsos, a regra 2 é raramente aplicada, pois a remoção de vért
     \KwRet $M$\;
 \end{algorithm}
 
-\begin{table}[ht]
+\begin{table}[htbp]
     \centering
     \caption{Algoritmos para emparelhamento de cardinalidade máxima em grafos bipartidos}
     \label{tab:emp_card_max_bip_algos}
     \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
     
     % Structure: l = left align, c = center, X = auto-wrap paragraph
-    \begin{tabularx}{\textwidth}{@{} l l l X @{}}
+    \begin{tabularx}{\textwidth}{@{} l l l l X @{}}
         \toprule
-        \textbf{Algoritmo} & \textbf{Complexidade de tempo} & \textbf{Tipo} & \textbf{Descrição} \\
+        \textbf{Algoritmo} & \textbf{Complexidade} & \textbf{Tipo} & \textbf{Avaliado} & \textbf{Descrição} \\
         \midrule
         
-        Caminhos aumentantes & $O(VE)$ & Exato & 
+        Caminhos aumentantes & $O(VE)$ & Exato & Sim & 
         Busca iterativa (DFS/BFS) por caminhos alternantes entre vértices livres, invertendo arestas para aumentar a cardinalidade. \\
         \addlinespace 
         
-        Edmonds-Karp & $O(VE^2)$ & Exato & 
+        Edmonds-Karp & $O(VE^2)$ & Exato & Sim & 
         Implementação de Ford-Fulkerson que usa BFS para encontrar sempre o caminho aumentante mais curto (em nº de arestas) na rede residual. \\
         \addlinespace
         
-        Dinic & $O(E\sqrt{V})$ & Exato & 
-        Algoritmo de fluxo que constrói grafos de níveis (BFS) e satura múltiplos caminhos simultaneamente via fluxo de bloqueio (DFS). \\
+        Dinic & $O(V^2E)$ & Exato & Não & 
+        Algoritmo de fluxo que constrói grafos de níveis (BFS) e satura múltiplos caminhos simultaneamente via fluxo de bloqueio (DFS). Em redes de capacidade unitária, como a do emparelhamento bipartido, cai para $O(E\sqrt{V})$. \\
         \addlinespace
         
-        Hopcroft-Karp & $O(E\sqrt{V})$ & Exato & 
+        Hopcroft-Karp & $O(E\sqrt{V})$ & Exato & Sim & 
         Busca múltiplos caminhos aumentantes disjuntos por fase usando BFS e DFS. \\
         \addlinespace
         
-        Gulosa simples & $O(E)$ & Heurística & 
+        Gulosa simples & $O(E)$ & Heurística & Sim & 
         Itera sobre arestas arbitrariamente, selecionando aquelas que conectam dois vértices livres. \\
         \addlinespace
 
-        Karp-Sipser & $O(E)$ & Heurística & 
+        Karp-Sipser & $O(E)$ & Heurística & Sim* & 
         Prioriza remoção de vértices de grau 1; usa escolha aleatória quando não há folhas. \\
         
         \bottomrule
     \end{tabularx}
+    \par\smallskip
+    {\raggedright\footnotesize \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. * A implementação avaliada localiza os vértices de grau 1 por varredura simples, com complexidade $O(V \cdot E)$.\par}
 \end{table}
 
 % TODO: possivelmente definir aplicações? exemplo: min-path-cover.md

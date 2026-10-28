@@ -76,7 +76,7 @@ Os pseudocódigos a seguir, de \citeonline{jungnickel}, organizam esses passos e
                         $cont \leftarrow \KwFalse$\;
                         \For{$y \in CA(x)$}{ $u(y) \leftarrow \KwFalse$ }
                         
-                        \Repeat{$u(y) = \KwTrue$ for all $y \in CA(v)$ \KwOr $aug = \KwTrue$ \KwOr $cont = \KwTrue$}{
+                        \Repeat{$u(y) = \KwTrue$ for all $y \in CA(x)$ \KwOr $aug = \KwTrue$ \KwOr $cont = \KwTrue$}{
                             choose $y \in CA(x)$ with $u(y) = \KwFalse; u(y) \leftarrow \KwTrue$\;
                             \If{$a(y) = \KwTrue$}{
                                 \If{$d(y) \equiv 0 \pmod 2$\label{bl:odd}}{
@@ -231,37 +231,39 @@ Uma variação inteligente do método guloso, descrita por \citeonline{drake}, q
 
 Ao contrário do guloso simples (que escolhe arestas desconexas), o Path Growing tende a cobrir cadeias longas de vértices, o que é estruturalmente vantajoso.
 
-\begin{table}[ht]
+\begin{table}[htbp]
     \centering
     \caption{Algoritmos para problema de emparelhamento de cardinalidade máxima em grafos gerais}
     \label{tab:emp_card_max_geral_algos}
     \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
     
     % Structure: l = left align, c = center, X = auto-wrap paragraph
-    \begin{tabularx}{\textwidth}{@{} l l l X @{}}
+    \begin{tabularx}{\textwidth}{@{} l l l l X @{}}
         \toprule
-        \textbf{Algoritmo} & \textbf{Complexidade de tempo} & \textbf{Tipo} & \textbf{Descrição} \\
+        \textbf{Algoritmo} & \textbf{Complexidade} & \textbf{Tipo} & \textbf{Avaliado} & \textbf{Descrição} \\
         \midrule
         
-        Edmonds & $O(V^3)$ & Exato & 
+        Edmonds & $O(V^3)$ & Exato & Sim & 
         Algoritmo exato (Blossom) que contrai ciclos ímpares temporariamente em super-vértices para identificar caminhos aumentantes. \\
         \addlinespace 
 
-        Micali e Vazirani & $O(E\sqrt{V})$ & Exato & 
+        Micali e Vazirani & $O(E\sqrt{V})$ & Exato & Não & 
         Variação otimizada do algoritmo de Edmonds que utiliza estruturas de dados avançadas para reduzir drasticamente a complexidade. \\
         \addlinespace 
 
-        Gulosa simples & $O(E)$ & Heurística & 
+        Gulosa simples & $O(E)$ & Heurística & Não & 
         Itera sobre arestas arbitrariamente, selecionando aquelas que conectam dois vértices livres. \\
         \addlinespace
 
-        Karp-Sipser & $O(E)$ & Heurística & 
+        Karp-Sipser & $O(E)$ & Heurística & Não & 
         Prioriza remoção de vértices de grau 1; usa escolha aleatória quando não há folhas. \\
         \addlinespace
         
-        Crescimento de caminho & $O(E)$ & Heurística & 
+        Crescimento de caminho & $O(E)$ & Heurística & Não & 
         Heurística linear que constrói caminhos simples via DFS e seleciona arestas alternadas para garantir um emparelhamento maximal. \\
         
         \bottomrule
     \end{tabularx}
+    \par\smallskip
+    {\raggedright\footnotesize \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}.\par}
 \end{table}

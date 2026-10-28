@@ -344,38 +344,40 @@ Similar à heurística gulosa simples descrita na seção \ref{p:h_gulosa_simple
 % * **Complexidade:** $O(k \cdot N^2)$ onde $k$ é pequeno. Muito rápido em hardware paralelo.
 
 \newpage
-\begin{table}[ht]
+\begin{table}[htbp]
     \centering
     \caption{Algoritmos para problema de atribuição}
     \label{tab:atribuicao_algos}
     \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
     
     % Structure: l = left align, c = center, X = auto-wrap paragraph
-    \begin{tabularx}{\textwidth}{@{} l l l X @{}}
+    \begin{tabularx}{\textwidth}{@{} l l l l X @{}}
         \toprule
-        \textbf{Algoritmo} & \textbf{Complexidade de tempo} & \textbf{Tipo} & \textbf{Descrição} \\
+        \textbf{Algoritmo} & \textbf{Complexidade} & \textbf{Tipo} & \textbf{Avaliado} & \textbf{Descrição} \\
         \midrule
         
-        Método Húngaro & $O(n^3)$ & Exato & 
+        Método Húngaro & $O(n^3)$ & Exato & Sim & 
         Método primal-dual que mantém folga complementar para custo mínimo em bipartidos. \\
         \addlinespace 
         
-        Jonker-Volgenant & $O(n^3)$ & Exato & 
+        Jonker-Volgenant & $O(n^3)$ & Exato & Sim & 
         Algoritmo primal-dual eficiente que combina redução de custos inicial e busca de caminhos aumentantes com atualização otimizada de duais. \\
         \addlinespace
         
-        Custo mínimo (Bellman-Ford) & $O(V^2E)$ & Exato & 
+        Custo mínimo (Bellman-Ford) & $O(V^2E)$ & Exato & Sim & 
         Método de caminhos sucessivos que usa Bellman-Ford para encontrar caminhos na rede residual, suportando custos negativos iniciais. \\
         \addlinespace
         
-        Custo mínimo (Dijkstra) & $O(V(E+V \log V))$ & Exato & 
+        Custo mínimo (Dijkstra) & $O(V(E+V \log V))$ & Exato & Não & 
         Utiliza potenciais de vértices para manter custos reduzidos não-negativos, permitindo o uso do eficiente Dijkstra para aumentos sucessivos. \\
         \addlinespace
         
-        Gulosa ordenada & $O(E \log E)$ & Heurística & 
+        Gulosa ordenada & $O(E \log E)$ & Heurística & Não & 
         Ordena as arestas por peso decrescente e seleciona iterativamente as disponíveis. \\
 
         \bottomrule
     \end{tabularx}
+    \par\smallskip
+    {\raggedright\footnotesize \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}.\par}
 \end{table}
 
