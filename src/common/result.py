@@ -29,7 +29,7 @@ class ResultRecord:
                       baseline pre-migracao registra, e o que permite a
                       comparacao do AC-17.
         algorithm_key : AlgorithmSpec.key, para uso programatico.
-        kind        : "exato" | "heuristica" | "baseline"
+        kind        : "exato" | "aproximado" | "heuristica" | "baseline"
         language    : "python" | "c" -- dirige a separacao das tabelas (D8)
         instance    : rotulo da instancia, ex. "Grafo 1 — Esparso ..."
         n           : tamanho

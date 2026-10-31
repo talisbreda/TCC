@@ -19,10 +19,13 @@ from dataclasses import dataclass
 from typing import Callable, Optional, Tuple
 
 # Garantia de otimalidade do metodo.
+# APROXIMADO: tem garantia de razao de aproximacao provada (ex.: 1/2 para todo
+# emparelhamento maximal); HEURISTICA: sem garantia (revisao do orientador).
 EXATO = "exato"
+APROXIMADO = "aproximado"
 HEURISTICA = "heuristica"
 BASELINE = "baseline"
-TIPOS = (EXATO, HEURISTICA, BASELINE)
+TIPOS = (EXATO, APROXIMADO, HEURISTICA, BASELINE)
 
 # Linguagem em que o algoritmo executa de fato.
 #

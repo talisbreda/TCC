@@ -1,5 +1,5 @@
 %!TeX root = ../main.tex
-\section{Introdução}
+\chapter{Introdução}
 
 % Um emparelhamento em um grafo não-dirigido é definido como um conjunto de arestas sem pontas em comum. Em outras palavras, um emparelhamento é um conjunto $M$ de arestas que satisfaz a seguinte propriedade: o grau de cada vértice no subconjunto $M$ é no máximo 1 \cite{imeUSP_matching}. Os principais problemas relacionados a emparelhamentos geralmente envolvem grafos bipartidos, aqueles que podem ser particionados em dois conjuntos independentes $U$ e $V$, onde todas as arestas conectam vértices de $U$ com vértices de $V$.
 
@@ -17,15 +17,17 @@ Os problemas de emparelhamento têm aplicações significativas em várias área
 
 É crucial, no entanto, fazer uma distinção precisa quanto à complexidade computacional desses problemas. Ao contrário do que uma análise superficial poderia sugerir, o problema de encontrar um emparelhamento de cardinalidade ou peso máximo pertence à classe de complexidade \textbf{P} (tempo polinomial), sendo solúvel por algoritmos clássicos como o Método Húngaro ou o Algoritmo de \textit{Blossom} de Edmonds \cite{schrijver}. O verdadeiro desafio computacional, frequentemente classificado como \textbf{NP-Difícil}, surge em variações estruturais mais complexas, como o Emparelhamento Tridimensional ou o Problema da Atribuição Quadrática (QAP). Segundo \citeonline{garey-jhonson} e \citeonline{burkard}, o QAP modela situações onde o custo depende da interação entre os pares escolhidos, tornando métodos exatos inviáveis para grandes instâncias e exigindo o uso de relaxações ou heurísticas avançadas.
 
-Diante desse cenário, este trabalho visa sistematizar os principais problemas e métodos computacionais associados ao emparelhamento em grafos. Ele busca oferecer uma comparação detalhada entre suas aplicações e limitações, contribuindo para o entendimento aprofundado das ferramentas disponíveis e identificando oportunidades para o desenvolvimento de novas soluções. Essa abordagem torna-se ainda mais relevante à luz da importância prática desses algoritmos para resolver problemas reais em grande escala, conforme evidenciado por estudos recentes \cite{MIT2021}.
+Diante desse cenário, este trabalho visa sistematizar os principais problemas e métodos computacionais associados ao emparelhamento em grafos. Ele busca oferecer uma comparação detalhada entre suas aplicações e limitações, contribuindo para o entendimento aprofundado dos algoritmos disponíveis e identificando oportunidades para o desenvolvimento de novas soluções. Essa abordagem torna-se ainda mais relevante à luz da importância prática desses algoritmos para resolver problemas reais em grande escala, conforme evidenciado por estudos recentes \cite{MIT2021}.
 
-\subsection{Objetivos}
+\section{Objetivos}
 
-\subsubsection{Objetivo geral}
+Os objetivos deste trabalho dividem-se em um objetivo geral, que expressa o propósito do estudo como um todo, e em objetivos específicos, que o decompõem nas etapas necessárias para alcançá-lo.
+
+\subsection{Objetivo geral}
 
 Este trabalho tem como objetivo principal levantar e organizar os principais problemas de emparelhamento em grafos e os métodos computacionais presentes na literatura para resolvê-los, implementando esses métodos e comparando-os experimentalmente quanto ao desempenho e à qualidade das soluções.
 
-\subsubsection{Objetivos específicos}
+\subsection{Objetivos específicos}
 
 \begin{itemize}
     \item Mapear as variações e características dos principais problemas de emparelhamento em grafos presentes na literatura.
@@ -35,7 +37,20 @@ Este trabalho tem como objetivo principal levantar e organizar os principais pro
     \item Organizar os resultados em um formato que facilite o acesso e a compreensão dos tópicos abordados por pesquisadores e profissionais.
 \end{itemize}
 
-\subsection{Delimitação do estudo}
+\section{Delimitação do estudo}
 
-Os problemas de emparelhamento em grafos podem ser classificados de diversas maneiras, como sendo em grafos bipartidos ou não-bipartidos, ponderados ou não-ponderados, direcionados ou não-direcionados, problemas em multigrafos, problemas em hipergrafos, entre outros. Este trabalho focará em problemas que envolvem grafos menos complexos, excluindo multigrafos e hipergrafos.
+Os problemas de emparelhamento em grafos podem ser classificados de diversas maneiras, como sendo em grafos bipartidos ou não-bipartidos, ponderados ou não-ponderados, direcionados ou não-direcionados, problemas em multigrafos, problemas em hipergrafos, entre outros. Este trabalho focará em problemas que envolvem grafos menos complexos, excluindo multigrafos e hipergrafos. Também ficam fora do escopo outras variações do emparelhamento em grafos gerais, como o b-emparelhamento, o emparelhamento em matroides e o problema dos colegas de quarto estáveis (\textit{Stable Roommates Problem}).
 
+\section{Organização do trabalho}
+
+O restante deste trabalho está organizado da seguinte forma:
+
+\begin{itemize}
+    \item \textbf{Capítulo~\ref{cap:fundamentacao}:} apresenta a fundamentação teórica: definições sobre grafos, algoritmos de busca e de caminhos mais curtos, redes de fluxo, o problema geral do emparelhamento e a classificação dos métodos em exatos, aproximados e heurísticos.
+    \item \textbf{Capítulo~\ref{cap:bipartidos}:} descreve os problemas de emparelhamento em grafos bipartidos (cardinalidade máxima, atribuição, atribuição gargalo e emparelhamento estável), com suas propriedades, seus algoritmos em pseudocódigo e uma tabela-resumo por problema.
+    \item \textbf{Capítulo~\ref{cap:gerais}:} faz o mesmo para os problemas em grafos gerais (cardinalidade máxima, peso máximo e emparelhamento induzido máximo).
+    \item \textbf{Capítulo~\ref{cap:metodologia}:} descreve o ambiente de testes construído para comparar os algoritmos: arquitetura, interface padrão, geradores de instâncias, protocolo de medição, critérios de comparação e origem de cada implementação.
+    \item \textbf{Capítulo~\ref{cap:resultados}:} apresenta e discute os resultados obtidos no ambiente de testes, quanto ao tempo de execução, à qualidade das soluções e ao crescimento empírico frente à complexidade teórica.
+    \item \textbf{Capítulo~\ref{cap:trabalhos_futuros}:} aponta as extensões deste trabalho que ficaram como trabalhos futuros.
+    \item \textbf{Apêndice~\ref{ap:compilados}:} reúne as tabelas de tempo das implementações de núcleo compilado, usadas como referência.
+\end{itemize}

@@ -24,7 +24,7 @@ from pathlib import Path
 # `common`.
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from common.algorithms import AlgorithmSpec, EXATO, HEURISTICA, BASELINE, PYTHON, C  # noqa: E402
+from common.algorithms import AlgorithmSpec, EXATO, APROXIMADO, BASELINE, PYTHON, C  # noqa: E402
 from common.harness import executar_suite  # noqa: E402
 from common import report, growth  # noqa: E402
 from common.loader import carregar_funcao  # noqa: E402
@@ -142,12 +142,13 @@ SPECS = [
     AlgorithmSpec("ig", "Bipartite Match. (igraph)", "O(E·√V)", "O(V+E)",
                   BASELINE, C, lambda inst: _ig(inst[0], inst[0], inst[1]),
                   source_url="https://igraph.org/python/"),
-    # Heuristicas: criam o eixo exato x heuristica (AC-18). Implementadas a mao,
-    # com fonte bibliografica no cabecalho de cada arquivo.
+    # Aproximados (garantia de 1/2, pois ambos produzem emparelhamento maximal):
+    # criam o eixo exato x aproximado (AC-18). Implementados a mao, com fonte
+    # bibliografica no cabecalho de cada arquivo.
     AlgorithmSpec("greedy", "Gulosa", "O(E)", "O(V)",
-                  HEURISTICA, PYTHON, lambda inst: _greedy(inst[0], inst[0], inst[1])),
+                  APROXIMADO, PYTHON, lambda inst: _greedy(inst[0], inst[0], inst[1])),
     AlgorithmSpec("ks", "Karp-Sipser", "O(V·E)", "O(V+E)",
-                  HEURISTICA, PYTHON, lambda inst: _ks(inst[0], inst[0], inst[1])),
+                  APROXIMADO, PYTHON, lambda inst: _ks(inst[0], inst[0], inst[1])),
 ]
 
 GRAPHS = [

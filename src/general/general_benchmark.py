@@ -24,7 +24,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from common.algorithms import AlgorithmSpec, EXATO, HEURISTICA, BASELINE, PYTHON  # noqa: E402
+from common.algorithms import AlgorithmSpec, EXATO, APROXIMADO, BASELINE, PYTHON  # noqa: E402
 from common.harness import executar_suite  # noqa: E402
 from common import report, growth  # noqa: E402
 from common.loader import carregar_funcao  # noqa: E402
@@ -95,7 +95,7 @@ SPECS_WEIGHT = [
                   source_url="https://networkx.org/",
                   notes="mesma linhagem de van Rantwijk (D9)"),
     AlgorithmSpec("path_growing", "Path Growing", "O(E)", "O(V+E)",
-                  HEURISTICA, PYTHON, lambda inst: _path_growing(inst[0], inst[1])),
+                  APROXIMADO, PYTHON, lambda inst: _path_growing(inst[0], inst[1])),
 ]
 
 INST_CARD = [

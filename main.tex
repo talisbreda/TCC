@@ -1,4 +1,15 @@
-\documentclass{article}
+\documentclass[
+    12pt,
+    oneside,
+    a4paper,
+    chapter=TITLE,
+    section=TITLE,
+    sumario=tradicional,
+    english,
+    brazil
+]{abntex2}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
 \usepackage{graphicx}
 \usepackage{helvet}
 \usepackage{lipsum}
@@ -8,20 +19,18 @@
 \usepackage{multicol}
 \usepackage{amssymb}
 \usepackage{pifont}
-\usepackage{setspace}
-\usepackage{tocloft}
 \usepackage{indentfirst}
 \usepackage{booktabs}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
 \usepackage{adjustbox}
-\usepackage[hidelinks]{hyperref}
+\hypersetup{hidelinks} % hyperref é carregado pela classe abntex2
 \usepackage[alf]{abntex2cite}
-\usepackage[portuguese]{babel}
+\usepackage{babel}
 \usepackage[letterspace=100]{microtype}
 
-% ABNT 14724: As folhas devem apresentar margem esquerda e superior de 3 cm; direita e inferior de 2 cm.
-\usepackage[left=3cm,top=3cm,bottom=2cm,right=2cm]{geometry}
+% Margens (ABNT 14724: esquerda e superior 3 cm; direita e inferior 2 cm),
+% espaçamento 1,5 e numeração de páginas são definidos pela classe abntex2.
 
 % Define família de fonte padrão como Helvetica
 \renewcommand{\familydefault}{\sfdefault}
@@ -29,47 +38,42 @@
 % Define um X para ser usado no cronograma
 \newcommand\xmark{\huge{$\times$}}
 
-% Adiciona linha pontilhada para \section no sumário (\tableofcontents)
-\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % Add dots for sections
-
 \newcommand{\topic}[1]{%
   \bigskip
   \textbf{#1}
   \medskip
 }
 
-% Include numbering for paragraphs (up to 4 levels)
-\usepackage{titlesec}
+% Numera e inclui no sumário até o quarto nível (subsubsection)
+\setsecnumdepth{subsubsection}
+\settocdepth{subsubsection}
 
-\setcounter{secnumdepth}{4}
-\setcounter{tocdepth}{4}
+% Títulos no padrão UFSC, todos em 12pt (ABNT 6024: destaque gradativo):
+% capítulo em maiúsculas e negrito, seção em maiúsculas,
+% subseção em negrito, subsubseção normal
+\renewcommand{\ABNTEXchapterfontsize}{\bfseries\normalsize}
+\renewcommand{\ABNTEXsectionfontsize}{\normalsize}
+\renewcommand{\ABNTEXsubsectionfontsize}{\bfseries\normalsize}
+\renewcommand{\ABNTEXsubsubsectionfontsize}{\normalsize}
 
-% Change Section
-\titleformat{\section}
-  {\LARGE\bfseries} % Size: 16pt, Line-height: 18pt, Bold
-  {\thesection} % The number (e.g., "1")
-  {1em}         % Space between number and title
-  {}  
-% Change Subsection
-\titleformat{\subsection}
-  {\Large\bfseries} % Format: Size and Bold
-  {\thesubsection}  % The number (e.g., 2.1)
-  {1em}             % Space between number and title
-  {}                % Code before the title body
+% Sumário tradicional (opção sumario=tradicional): só capítulos em negrito,
+% demais níveis recuados conforme a profundidade
+\renewcommand{\cftsectionfont}{\normalfont}
+\renewcommand{\cftsectionpagefont}{\normalfont}
+\renewcommand{\cftsubsectionfont}{\normalfont}
+\renewcommand{\cftsubsectionpagefont}{\normalfont}
+\renewcommand{\cftsubsubsectionfont}{\normalfont}
+\renewcommand{\cftsubsubsectionpagefont}{\normalfont}
 
-% Change Subsubsection
-\titleformat{\subsubsection}
-  {\large\bfseries}
-  {\thesubsubsection}
-  {1em}
-  {}
+% Recuo e espaço entre parágrafos
+\setlength{\parindent}{1.3cm}
+\setlength{\parskip}{0.2cm}
 
-\titleformat{\paragraph}
-{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
-\titlespacing*{\paragraph}
-{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
-
-% End paragraph numbering configuration
+% Figura ou tabela sozinha numa página fica no topo, não centralizada
+% (ver https://github.com/abntex/abntex2/issues/170)
+\makeatletter
+\setlength{\@fptop}{5pt}
+\makeatother
 
 
 % Listings configuration (for code blocks)
@@ -116,21 +120,57 @@ backgroundcolor=\color{lightgray},   % set background color
 \SetKw{KwBreak}{break}
 \SetKw{KwRet}{return}
 
-\newcommand{\AlgComment}[1]{\textbf{[comment: #1]}}
+\newcommand{\AlgComment}[1]{\textbf{[comentário: #1]}}
+
+% Nome dos algoritmos (algorithm2e) e título da lista de algoritmos
+\SetAlgorithmName{Algoritmo}{algoritmo}{Lista de algoritmos}
+
+% Pseudocódigos em espaçamento simples, como as demais ilustrações (o 1,5 da
+% NBR 14724 vale para o texto; tabelas e figuras já são simples na classe);
+% evita que algoritmos longos passem da página
+\usepackage{etoolbox}
+\AtBeginEnvironment{algorithm}{\SingleSpacing*}
+
+\input{pre_textual/definicoes}
+\input{pre_textual/folhaderosto}
 
 \begin{document}
 
-% Remove contagem de páginas
-\pagestyle{empty}
-
-\input{pre_textual/definicoes}
+% ----------------------------------------------------------
+% Elementos pré-textuais
+% ----------------------------------------------------------
+\pretextual
 
 \input{pre_textual/capa}
-\input{pre_textual/preambulo}
+\imprimirfolhaderosto*{}
+\input{pre_textual/fichacatalografica}
+\input{pre_textual/folhadeaprovacao}
 \input{pre_textual/resumo}
 
-\tableofcontents
-\newpage
+% Listas
+\pdfbookmark[0]{\listfigurename}{lof}
+\listoffigures*
+\cleardoublepage
+
+\pdfbookmark[0]{\listtablename}{lot}
+\listoftables*
+\cleardoublepage
+
+\pdfbookmark[0]{Lista de algoritmos}{loa}
+\listofalgorithms
+\cleardoublepage
+
+\input{pre_textual/siglas}
+\input{pre_textual/simbolos}
+
+\pdfbookmark[0]{\contentsname}{toc}
+\tableofcontents*
+\cleardoublepage
+
+% ----------------------------------------------------------
+% Elementos textuais
+% ----------------------------------------------------------
+\textual
 
 \input{capitulos/1_introducao}
 \input{capitulos/2_fundamentacao.tex}
@@ -141,8 +181,18 @@ backgroundcolor=\color{lightgray},   % set background color
 \input{capitulos/7_resultados.tex}
 \input{capitulos/6_trabalhos_futuros.tex}
 
-\newpage
-\centering \bibliographystyle{abntex2-alf}
+% ----------------------------------------------------------
+% Elementos pós-textuais
+% ----------------------------------------------------------
+\postextual
+
+\bibliographystyle{abntex2-alf}
 \bibliography{pos_textual/referencias}
+
+% Apêndices
+\begin{apendicesenv}
+\partapendices
+\input{capitulos/apendice_compilados}
+\end{apendicesenv}
 
 \end{document}

@@ -4,7 +4,19 @@
 % ================================================================================================
 % 4. Problemas de emparelhamento em grafos bipartidos
 % ================================================================================================
-\section{Problemas de emparelhamento em grafos bipartidos}
+\chapter{Problemas de emparelhamento em grafos bipartidos}
+\label{cap:bipartidos}
+
+Este capítulo apresenta os quatro problemas de emparelhamento em grafos bipartidos estudados neste trabalho. Todos compartilham a mesma estrutura de entrada, um grafo cujos vértices se dividem em dois conjuntos disjuntos, com arestas apenas entre eles, e diferem quanto ao objetivo da otimização:
+
+\begin{itemize}
+    \item \textbf{Emparelhamento de cardinalidade máxima:} maximizar o número de arestas do emparelhamento, sem pesos;
+    \item \textbf{Problema de atribuição:} encontrar o emparelhamento perfeito de menor custo total;
+    \item \textbf{Problema de atribuição gargalo:} encontrar o emparelhamento perfeito cuja aresta mais cara seja a mais barata possível;
+    \item \textbf{Emparelhamento estável:} encontrar um emparelhamento em que nenhum par prefira estar junto a permanecer com os parceiros atuais, a partir de listas de preferências.
+\end{itemize}
+
+Cada problema é apresentado na mesma sequência: a definição e as propriedades necessárias aos algoritmos, os algoritmos exatos, os algoritmos aproximados e as heurísticas, classificados conforme a Seção~\ref{sec:tipos_metodo}, e uma tabela-resumo com a complexidade, o tipo e uma breve descrição de cada método.
 
 \input{capitulos/4_problemas_bipartido/1_emp_card_max.tex}
 \input{capitulos/4_problemas_bipartido/2_atribuicao.tex}

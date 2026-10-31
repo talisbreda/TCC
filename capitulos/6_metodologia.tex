@@ -3,12 +3,14 @@
 % ==================================================================================================================================
 % 6. Metodologia
 % ==================================================================================================================================
-\section{Metodologia}
+\chapter{Metodologia}
+\label{cap:metodologia}
 
-Este capítulo descreve o ambiente de testes construído para implementar e comparar os algoritmos dos capítulos anteriores. São apresentados a arquitetura do ambiente, a interface padrão de cada problema, os geradores de instância, o protocolo de medição, os critérios de comparação, a máquina utilizada e a origem e a adaptação de cada algoritmo, de modo que os resultados do capítulo seguinte sejam reprodutíveis e as comparações, defensáveis.
+Este capítulo descreve o ambiente de testes construído para implementar e comparar os algoritmos dos capítulos anteriores. Todo o código do ambiente, os geradores de instâncias e os resultados brutos estão disponíveis no repositório do trabalho\footnote{\url{https://github.com/talisbreda/TCC}}. São apresentados a arquitetura do ambiente, a interface padrão de cada problema, os geradores de instância, o protocolo de medição, os critérios de comparação, a máquina utilizada e a origem e a adaptação de cada algoritmo, de modo que os resultados do capítulo seguinte sejam reprodutíveis e as comparações, defensáveis.
 
 % ---------------------------------------------------------------------------
-\subsection{Arquitetura do ambiente de testes}
+\section{Arquitetura do ambiente de testes}
+\label{sec:arquitetura}
 
 O ambiente é separado em três camadas:
 \begin{itemize}
@@ -18,7 +20,7 @@ O ambiente é separado em três camadas:
 \end{itemize}
 
 % ---------------------------------------------------------------------------
-\subsection{Interface padrão dos problemas}
+\section{Interface padrão dos problemas}
 
 Cada problema possui uma interface padrão à qual todos os seus algoritmos são
 adaptados (Tabela~\ref{tab:interfaces}). É ela que torna a comparação justa: todo
@@ -48,24 +50,245 @@ método.
 \end{table}
 
 % ---------------------------------------------------------------------------
-\subsection{Geradores de instância}
+\section{Geradores de instância}
 \label{sec:geradores}
 
-As instâncias são geradas por construtores parametrizados pelo tamanho $n$ e por
-uma semente fixa, o que as torna determinísticas e reprodutíveis. Para cada
-problema definiram-se famílias com características distintas, de modo a expor o
-comportamento dos algoritmos sob diferentes estruturas de entrada: para
-cardinalidade máxima em grafos bipartidos, grafos esparsos (com e sem
-emparelhamento perfeito) e densos; para atribuição linear e gargalo, matrizes
-densas aleatórias, matrizes estruturadas (custo em função da distância entre
-índices) e matrizes com poucos valores distintos (muitos empates); para
-casamento estável, preferências aleatórias, correlacionadas (\textit{ranking} de
-popularidade compartilhado, que gera contenção) e cíclicas; e, para grafos gerais
-e emparelhamento induzido máximo, grafos aleatórios de densidade controlada,
-ponderados quando aplicável.
+As instâncias são produzidas por construtores determinísticos, um por família, parametrizados pelo tamanho $n$. Cada construtor que usa aleatoriedade cria, a cada chamada, um gerador pseudoaleatório próprio, iniciado com a semente fixa 42 (\texttt{random.Random(42)}, do Python). Como esse gerador não é compartilhado com o restante do programa, uma mesma chamada produz sempre a mesma instância, independentemente da ordem em que os algoritmos são executados. Além disso, a instância de cada tamanho é construída uma única vez e entregue a todos os algoritmos da célula, de modo que todos resolvem exatamente a mesma entrada. Instâncias de tamanhos diferentes partem da mesma semente, mas não são aninhadas: a de tamanho 100 não contém a de tamanho 50.
+
+Para cada problema, definiram-se famílias com características distintas, de modo a expor o comportamento dos algoritmos sob diferentes estruturas de entrada. Sempre que possível, a família foi construída de forma que o valor ótimo seja conhecido de antemão, o que permite conferir as soluções sem depender de outro algoritmo. A Tabela~\ref{tab:familias} resume as famílias, e os geradores são descritos a seguir.
+
+\begin{table}[H]
+    \centering
+    \caption{Famílias de instâncias por problema}
+    \label{tab:familias}
+    \renewcommand{\arraystretch}{1.2}
+    \footnotesize
+    \begin{tabularx}{\textwidth}{@{} l X l @{}}
+        \toprule
+        \textbf{Família} & \textbf{Construção e propriedade} & \textbf{Tamanhos $n$} \\
+        \midrule
+        \multicolumn{3}{@{}l}{\textit{Cardinalidade máxima --- grafos bipartidos (Algoritmo~\ref{alg:gen_bipartido})}} \\
+        Grafo 1 --- esparso, sem perfeito & dois blocos fixos, grau médio 2,2; $|M^*| = 0{,}8n$ & 50--250 \\
+        Grafo 2 --- esparso, com perfeito & diagonal mais um vizinho $(7i+3) \bmod n$; $|M^*| = n$ & 50--250 \\
+        Grafo 3 --- denso, com perfeito & diagonal mais arestas aleatórias até grau médio 15; $|M^*| = n$ & 50--250 \\
+        \addlinespace
+        \multicolumn{3}{@{}l}{\textit{Atribuição linear (Algoritmo~\ref{alg:gen_custo})}} \\
+        Matriz 1 --- densa uniforme & custos inteiros uniformes em $[1, 100]$ & 10--100; 50--250\textsuperscript{a} \\
+        Matriz 2 --- permutação barata & permutação aleatória de custo 1, demais em $[50, 100]$; ótimo $= n$ & idem \\
+        Matriz 3 --- estruturada & $c_{ij} = |i - j| + 1$; ótimo $= n$ & idem \\
+        \addlinespace
+        \multicolumn{3}{@{}l}{\textit{Atribuição gargalo (Algoritmo~\ref{alg:gen_custo})}} \\
+        Matriz 1 --- densa uniforme & custos inteiros uniformes em $[1, 100]$ & 10--200 \\
+        Matriz 2 --- estruturada & $c_{ij} = |i - j| + 1$; gargalo ótimo $= 1$ & 10--200 \\
+        Matriz 3 --- poucos valores & custos sorteados em $\{1, 5, 10, 50\}$; muitos empates & 10--200 \\
+        \addlinespace
+        \multicolumn{3}{@{}l}{\textit{Casamento estável (Algoritmo~\ref{alg:gen_pref})}} \\
+        Perfil 1 --- aleatório & listas independentes e uniformes & 25--100; 100--400\textsuperscript{b} \\
+        Perfil 2 --- correlacionado & uma única lista para todos os homens e outra para todas as mulheres & idem \\
+        Perfil 3 --- cíclico & $m$ prefere $m, m+1, \dots$; $w$ prefere $w, w-1, \dots$ (módulo $n$) & idem \\
+        \addlinespace
+        \multicolumn{3}{@{}l}{\textit{Grafos gerais: cardinalidade e peso máximo (Algoritmo~\ref{alg:gen_aleatorio})}} \\
+        Esparso (grau $\sim$3) & $G(n,p)$ com $p = 3/n$; na versão ponderada, pesos em $[1, 100]$ & 10--100 \\
+        Denso ($p = 0{,}3$) & $G(n,p)$ com $p = 0{,}3$; idem & 10--100 \\
+        \addlinespace
+        \multicolumn{3}{@{}l}{\textit{Emparelhamento induzido máximo (Algoritmo~\ref{alg:gen_aleatorio})}} \\
+        Esparso, médio e denso & $G(n,p)$ com grau médio esperado 3, 6 e 12 & 10--40; 50--400\textsuperscript{c} \\
+        \bottomrule
+    \end{tabularx}
+
+    \smallskip
+    \parbox{\textwidth}{\scriptsize Nota: (a) 10 a 100 com todos os algoritmos e 50 a 250 com todos exceto os caminhos mínimos sucessivos; (b) 25 a 100 com todos e 100 a 400 apenas com o Gale-Shapley numérico e o de Lattas; (c) 10 a 40 com o algoritmo exato e 50 a 400 apenas com as heurísticas. $n$ é o número de vértices de cada lado (bipartidos e matrizes $n \times n$), o número de homens e de mulheres (casamento estável) ou o número de vértices (grafos gerais).}
+\end{table}
+
+\subsection{Grafos bipartidos}
+
+Para o emparelhamento de cardinalidade máxima, as três famílias diferem na densidade e na existência de emparelhamento perfeito, e o valor ótimo de todas é conhecido por construção (Algoritmo~\ref{alg:gen_bipartido}). Os vértices são $u_0, \dots, u_{n-1}$ do lado $U$ e $v_0, \dots, v_{n-1}$ do lado $V$.
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \caption{Geradores de grafos bipartidos para cardinalidade máxima}
+    \label{alg:gen_bipartido}
+
+    \Fn{Grafo1($n$)}{
+        $a_U := \lfloor 0{,}8n \rfloor$; $a_V := \lfloor 0{,}6n \rfloor$; $b_U := n - a_U$; $b_V := n - a_V$\;\label{gb:sizes}
+        $E := \emptyset$\;
+        \For{$i := 0$ \KwTo $a_U - 1$\label{gb:blocka}}{
+            $E := E \cup \{\{u_i, v_{i \bmod a_V}\}, \{u_i, v_{(i+1) \bmod a_V}\}\}$\;
+        }
+        \For{$k := 0$ \KwTo $b_U - 1$\label{gb:blockb}}{
+            \For{$o := 0$ \KwTo $2$}{
+                $E := E \cup \{\{u_{a_U + k}, v_{a_V + (2k + o) \bmod b_V}\}\}$\;\label{gb:blockb2}
+            }
+        }
+        \KwRet $E$\;
+    }
+
+    \bigskip
+
+    \Fn{Grafo2($n$)}{
+        $E := \emptyset$\;
+        \For{$i := 0$ \KwTo $n - 1$\label{gb:g2loop}}{
+            $j := (7i + 3) \bmod n$\;\label{gb:g2j}
+            \lIf{$j = i$}{$j := (j + 1) \bmod n$}
+            $E := E \cup \{\{u_i, v_i\}, \{u_i, v_j\}\}$\;\label{gb:g2add}
+        }
+        \KwRet $E$\;
+    }
+
+    \bigskip
+
+    \Fn{Grafo3($n$, $d = 15$)}{
+        $rng :=$ new pseudo-random generator with seed $42$\;\label{gb:seed}
+        $E := \{\{u_i, v_i\} : 0 \le i < n\}$\;\label{gb:diag}
+        \While{$|E| < d \cdot n$\label{gb:loop}}{
+            draw $i$ and $j$ uniformly from $\{0, \dots, n-1\}$ using $rng$\;
+            $E := E \cup \{\{u_i, v_j\}\}$ \AlgComment{arestas repetidas são descartadas}\;\label{gb:add}
+        }
+        \KwRet $E$\;
+    }
+\end{algorithm}
+
+\begin{itemize}
+    \item \textbf{Grafo 1 --- esparso, sem emparelhamento perfeito (linhas~\ref{gb:sizes}--\ref{gb:blockb2}):} O grafo é a união de dois blocos sem arestas entre si. No bloco A, os primeiros $0{,}8n$ vértices de $U$ ligam-se, cada um, a dois vértices consecutivos dos primeiros $0{,}6n$ vértices de $V$ (linha~\ref{gb:blocka}). Como o bloco tem só $0{,}6n$ vértices em $V$, no máximo $0{,}6n$ de suas arestas podem estar num emparelhamento, e esse valor é atingido pelas arestas $\{u_i, v_i\}$, $i < a_V$. No bloco B, os $0{,}2n$ vértices restantes de $U$ ligam-se a três dos $0{,}4n$ vértices restantes de $V$ (linhas~\ref{gb:blockb}--\ref{gb:blockb2}); como $2k < b_V$ para todo $k < b_U$, as arestas $\{u_{a_U+k}, v_{a_V+2k}\}$ cobrem todo o lado $U$ do bloco. O emparelhamento máximo tem, portanto, exatamente $0{,}6n + 0{,}2n = 0{,}8n$ arestas, e nenhum é perfeito. O grau médio dos vértices de $U$ é $(2 \cdot 0{,}8n + 3 \cdot 0{,}2n)/n = 2{,}2$. A construção não usa aleatoriedade.
+    \item \textbf{Grafo 2 --- esparso, com emparelhamento perfeito (linhas~\ref{gb:g2loop}--\ref{gb:g2add}):} Cada $u_i$ liga-se a $v_i$ e a um segundo vizinho $v_j$, com $j = (7i + 3) \bmod n$ (linha~\ref{gb:g2j}), deslocado em uma posição quando coincidiria com $i$. As arestas $\{u_i, v_i\}$ formam um emparelhamento perfeito, logo $|M^*| = n$ (linha~\ref{gb:g2add}). Como 7 não divide nenhum dos tamanhos usados, $i \mapsto (7i+3) \bmod n$ é uma permutação, e os segundos vizinhos ficam espalhados por todo o lado $V$, sem a estrutura em blocos do Grafo 1. A construção também é determinística.
+    \item \textbf{Grafo 3 --- denso, com emparelhamento perfeito (linhas~\ref{gb:seed}--\ref{gb:add}):} Parte da diagonal $\{u_i, v_i\}$, que garante um emparelhamento perfeito (linha~\ref{gb:diag}), e acrescenta arestas sorteadas pelo gerador com semente fixa (linha~\ref{gb:seed}) até o grafo ter $d \cdot n = 15n$ arestas (linha~\ref{gb:loop}), isto é, grau médio 15. Sorteios repetidos não alteram o conjunto (linha~\ref{gb:add}). A densidade relativa é $15/n$, de 30\% em $n = 50$ a 6\% em $n = 250$; a família é ``densa'' em comparação com as duas anteriores, cujo grau médio fica entre 2 e 2,2.
+    \item \textbf{Complexidade:} Os Grafos 1 e 2 são gerados em tempo $O(n)$, com um número constante de arestas por vértice. No Grafo 3, a fração de sorteios repetidos é no máximo $d/n$, de modo que o número esperado de sorteios é $O(d \cdot n)$.
+\end{itemize}
+
+\subsection{Matrizes de custo}
+
+Os problemas de atribuição linear e de gargalo recebem uma matriz de custos $C$ de dimensão $n \times n$, gerada por um dos quatro procedimentos do Algoritmo~\ref{alg:gen_custo}. A atribuição linear usa as famílias uniforme, permutação barata e estruturada; o gargalo usa as famílias uniforme, estruturada e de poucos valores.
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \caption{Geradores de matrizes de custo para atribuição linear e gargalo}
+    \label{alg:gen_custo}
+
+    \Fn{Uniforme($n$)}{
+        $rng :=$ new pseudo-random generator with seed $42$\;\label{gc:useed}
+        \lFor{$i, j := 0$ \KwTo $n - 1$}{$c_{ij} :=$ integer drawn uniformly from $[1, 100]$\label{gc:udraw}}
+        \KwRet $C$\;
+    }
+
+    \bigskip
+
+    \Fn{PermutacaoBarata($n$)}{
+        $rng :=$ new pseudo-random generator with seed $42$\;
+        $\pi :=$ random permutation of $\{0, \dots, n-1\}$ using $rng$\;\label{gc:perm}
+        \lFor{$i, j := 0$ \KwTo $n - 1$}{$c_{ij} :=$ integer drawn uniformly from $[50, 100]$\label{gc:pdraw}}
+        \lFor{$i := 0$ \KwTo $n - 1$}{$c_{i\pi(i)} := 1$\label{gc:pcheap}}
+        \KwRet $C$\;
+    }
+
+    \bigskip
+
+    \Fn{Estruturada($n$)}{
+        \lFor{$i, j := 0$ \KwTo $n - 1$}{$c_{ij} := |i - j| + 1$\label{gc:struct}}
+        \KwRet $C$\;
+    }
+
+    \bigskip
+
+    \Fn{PoucosValores($n$)}{
+        $rng :=$ new pseudo-random generator with seed $42$\;
+        \lFor{$i, j := 0$ \KwTo $n - 1$}{$c_{ij} :=$ value drawn uniformly from $\{1, 5, 10, 50\}$\label{gc:few}}
+        \KwRet $C$\;
+    }
+\end{algorithm}
+
+\begin{itemize}
+    \item \textbf{Matriz uniforme (linhas~\ref{gc:useed}--\ref{gc:udraw}):} Cada custo é um inteiro sorteado de modo uniforme e independente em $[1, 100]$. É a família sem estrutura, em que o ótimo não é conhecido de antemão e é obtido pelo algoritmo de referência.
+    \item \textbf{Permutação barata (linhas~\ref{gc:perm}--\ref{gc:pcheap}):} Sorteia-se uma permutação $\pi$ (linha~\ref{gc:perm}), todos os custos são preenchidos com valores entre 50 e 100 (linha~\ref{gc:pdraw}) e, por fim, as posições $(i, \pi(i))$ recebem custo 1 (linha~\ref{gc:pcheap}). A atribuição $\pi$ custa $n$, e qualquer outra usa ao menos uma posição de custo maior ou igual a 50, custando no mínimo $(n-1) + 50 > n$. Logo, $\pi$ é a única atribuição ótima e o valor ótimo $n$ é conhecido por construção.
+    \item \textbf{Matriz estruturada (linha~\ref{gc:struct}):} O custo cresce com a distância à diagonal, $c_{ij} = |i - j| + 1$, sem aleatoriedade. A diagonal tem custo 1 em todas as linhas, de modo que a identidade é ótima tanto para a atribuição linear (custo $n$) quanto para o gargalo (custo máximo 1).
+    \item \textbf{Poucos valores (linha~\ref{gc:few}):} Cada custo é sorteado entre apenas quatro valores. Com isso, há muitos empates: muitas atribuições têm o mesmo gargalo, e a busca pelo limiar do algoritmo Threshold (Algoritmo~\ref{alg:threshold}) tem só quatro candidatos distintos.
+    \item \textbf{Complexidade:} Todos os procedimentos preenchem $n^2$ posições em tempo constante cada, totalizando $O(n^2)$; o sorteio da permutação custa $O(n)$.
+\end{itemize}
+
+\subsection{Perfis de preferência}
+
+No casamento estável, uma instância é formada pelas listas de preferência $P_m$ de cada homem $m$ (uma ordenação das mulheres) e $Q_w$ de cada mulher $w$ (uma ordenação dos homens). As três famílias do Algoritmo~\ref{alg:gen_pref} variam o grau de concordância entre as listas.
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \caption{Geradores de perfis de preferência para o casamento estável}
+    \label{alg:gen_pref}
+
+    \Fn{Aleatorio($n$)}{
+        $rng :=$ new pseudo-random generator with seed $42$\;
+        \lFor{$m := 0$ \KwTo $n - 1$}{$P_m :=$ random permutation of $\{0, \dots, n-1\}$ using $rng$\label{gp:rmen}}
+        \lFor{$w := 0$ \KwTo $n - 1$}{$Q_w :=$ random permutation of $\{0, \dots, n-1\}$ using $rng$\label{gp:rwomen}}
+        \KwRet $(P, Q)$\;
+    }
+
+    \bigskip
+
+    \Fn{Correlacionado($n$)}{
+        $rng :=$ new pseudo-random generator with seed $42$\;
+        $\pi :=$ random permutation of $\{0, \dots, n-1\}$ using $rng$ \AlgComment{ranking das mulheres}\;\label{gp:pi}
+        $\sigma :=$ random permutation of $\{0, \dots, n-1\}$ using $rng$ \AlgComment{ranking dos homens}\;\label{gp:sigma}
+        \lFor{$m := 0$ \KwTo $n - 1$}{$P_m := \pi$\label{gp:cmen}}
+        \lFor{$w := 0$ \KwTo $n - 1$}{$Q_w := \sigma$\label{gp:cwomen}}
+        \KwRet $(P, Q)$\;
+    }
+
+    \bigskip
+
+    \Fn{Ciclico($n$)}{
+        \lFor{$m := 0$ \KwTo $n - 1$}{$P_m := (m, m+1, \dots, m+n-1) \bmod n$\label{gp:ymen}}
+        \lFor{$w := 0$ \KwTo $n - 1$}{$Q_w := (w, w-1, \dots, w-n+1) \bmod n$\label{gp:ywomen}}
+        \KwRet $(P, Q)$\;
+    }
+\end{algorithm}
+
+\begin{itemize}
+    \item \textbf{Perfil aleatório (linhas~\ref{gp:rmen}--\ref{gp:rwomen}):} Cada lista é uma permutação uniforme e independente das demais. É o caso médio, em que as preferências não têm relação entre si.
+    \item \textbf{Perfil correlacionado (linhas~\ref{gp:pi}--\ref{gp:cwomen}):} Sorteiam-se apenas duas permutações: $\pi$, adotada por todos os homens (linha~\ref{gp:cmen}), e $\sigma$, adotada por todas as mulheres (linha~\ref{gp:cwomen}). É o extremo da contenção: todos os homens disputam as mesmas mulheres na mesma ordem. No Gale-Shapley, a cada rodada só um homem é aceito pela mulher mais disputada que resta, e o total de propostas é $n + (n-1) + \dots + 1 = n(n+1)/2$, o pior caso quadrático do algoritmo.
+    \item \textbf{Perfil cíclico (linhas~\ref{gp:ymen}--\ref{gp:ywomen}):} As listas são deslocamentos circulares, sem aleatoriedade: o homem $m$ prefere $m, m+1, m+2, \dots$ e a mulher $w$ prefere $w, w-1, w-2, \dots$, sempre módulo $n$. A primeira escolha de cada homem $m$ é a mulher $m$, cuja primeira escolha é ele próprio; o Gale-Shapley termina, assim, com $n$ propostas e devolve o emparelhamento $\{(m, m)\}$, o melhor caso do algoritmo.
+    \item \textbf{Complexidade:} Cada procedimento escreve $2n$ listas de tamanho $n$, em tempo $O(n^2)$.
+\end{itemize}
+
+\subsection{Grafos gerais aleatórios}
+
+Para os problemas em grafos gerais, inclusive o emparelhamento induzido máximo, as instâncias são grafos aleatórios no modelo $G(n, p)$ de Erdős–Rényi, em que cada um dos $\binom{n}{2}$ pares de vértices é ligado de forma independente com probabilidade $p$ (Algoritmo~\ref{alg:gen_aleatorio}).
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \caption{Gerador de grafos gerais aleatórios no modelo $G(n, p)$}
+    \label{alg:gen_aleatorio}
+
+    \Fn{GrafoAleatorio($n$, $p$, $ponderado$)}{
+        $rng :=$ new pseudo-random generator with seed $42$\;\label{ga:seed}
+        $E := \emptyset$\;
+        \For{$u := 0$ \KwTo $n - 1$\label{ga:pairs}}{
+            \For{$v := u + 1$ \KwTo $n - 1$}{
+                \lIf{a number drawn uniformly from $[0, 1)$ using $rng$ is $< p$}{$E := E \cup \{\{u, v\}\}$\label{ga:test}}
+            }
+        }
+        \If{$ponderado$\label{ga:weighted}}{
+            $rng' :=$ new pseudo-random generator with seed $43$\;\label{ga:seed2}
+            \lFor{each $e \in E$, in the order of insertion}{$w(e) :=$ integer drawn uniformly from $[1, 100]$ using $rng'$\label{ga:weight}}
+        }
+        \KwRet $E$ (and $w$, if $ponderado$)\;
+    }
+\end{algorithm}
+
+\begin{itemize}
+    \item \textbf{Sorteio das arestas (linhas~\ref{ga:seed}--\ref{ga:test}):} Os pares $\{u, v\}$ com $u < v$ são percorridos em ordem fixa (linha~\ref{ga:pairs}), e cada um vira aresta com probabilidade $p$ (linha~\ref{ga:test}). O grau esperado de cada vértice é $p(n-1)$. As famílias usam: $p = 3/n$ (``esparso, grau $\sim$3'') e $p = 0{,}3$ (``denso'') para cardinalidade e peso máximo; e $p = d/(n-1)$, com grau médio esperado $d$ igual a 3, 6 e 12 (grafos esparso, médio e denso), para o emparelhamento induzido máximo.
+    \item \textbf{Pesos (linhas~\ref{ga:weighted}--\ref{ga:weight}):} Na versão ponderada, os pesos são inteiros uniformes em $[1, 100]$, sorteados por um segundo gerador, com semente 43 (linha~\ref{ga:seed2}). Como as arestas continuam sendo sorteadas pelo primeiro gerador, a instância ponderada tem exatamente as mesmas arestas da instância de cardinalidade de mesmo tamanho e densidade; muda apenas a existência dos pesos.
+    \item \textbf{Propriedades:} Nenhuma propriedade de emparelhamento é imposta: o grafo pode ter vértices isolados e não ter emparelhamento perfeito. O valor ótimo é obtido pelo algoritmo exato de referência (Blossom, van Rantwijk ou o exato do emparelhamento induzido) ou, nos tamanhos em que o exato não é executado, comparado ao melhor resultado conhecido.
+    \item \textbf{Complexidade:} Todos os $\binom{n}{2}$ pares são testados, independentemente de $p$, o que leva a tempo $\Theta(n^2)$; o sorteio dos pesos acrescenta $O(|E|)$.
+\end{itemize}
 
 % ---------------------------------------------------------------------------
-\subsection{Protocolo de medição}
+\section{Protocolo de medição}
 \label{sec:protocolo}
 
 Um protocolo de medição foi criado a fim de reduzir o quanto fontes de ruído externas afetam os resultados dos testes. A unidade de medição é a \textbf{célula}: a combinação de um algoritmo, uma instância e um tamanho $n$. Cada célula é executada uma vez para aquecimento e, em seguida, cinco vezes com cronometragem. Algumas das decisões que compõem esse protocolo:
@@ -78,7 +301,7 @@ Um protocolo de medição foi criado a fim de reduzir o quanto fontes de ruído 
 \end{itemize}
 
 % ---------------------------------------------------------------------------
-\subsection{Critérios de comparação}
+\section{Critérios de comparação}
 \label{sec:criterios}
 
 Comparar tempo de execução entre implementações em linguagens diferentes é
@@ -87,7 +310,7 @@ Para que as comparações sejam válidas, adotaram-se quatro critérios
 complementares.
 
 \begin{enumerate}
-    \item Implementações em linguagem interpretada (ex: Python) e as de núcleo compilado (ex: C++) são apresentadas em tabelas separadas. Bibliotecas escritas inteiramente em linguagem interpretada, como o NetworkX, ficam na tabela das interpretadas, pois nesse caso a comparação de tempo com elas é legítima. Há ainda casos intermediários: algoritmos escritos como laços em Python sobre vetores da biblioteca NumPy, cujo núcleo é compilado, como os Húngaros \texttt{hunalgorithm} e \texttt{mayorx} e o Gale-Shapley numérico. Estes são classificados como interpretados, pois o algoritmo em si é executado pelo interpretador.
+    \item Implementações em linguagem interpretada (ex: Python) e as de núcleo compilado (ex: C++) são apresentadas em tabelas separadas, e o tempo absoluto só é comparado dentro de uma mesma linguagem. Manter as duas linguagens, em vez de uma só, foi necessário por dois motivos. Primeiro, não há implementações públicas confiáveis de todos os algoritmos em uma mesma linguagem, e portá-las significaria reimplementá-las, o que contraria o objetivo de avaliar o código como foi publicado (camada intacta, Seção~\ref{sec:arquitetura}). Segundo, as bibliotecas maduras usadas como referência de correção e de patamar de desempenho (igraph, SciPy e lap) têm núcleo compilado. O conjunto principal de comparação é o das implementações interpretadas, cujas tabelas compõem o Capítulo~\ref{cap:resultados}; as tabelas das compiladas ficam no Apêndice~\ref{ap:compilados}, e a comparação entre as duas linguagens é feita apenas pelo expoente empírico (critério 3). Bibliotecas escritas inteiramente em linguagem interpretada, como o NetworkX, ficam na tabela das interpretadas, pois nesse caso a comparação de tempo com elas é legítima. Há ainda casos intermediários: algoritmos escritos como laços em Python sobre vetores da biblioteca NumPy, cujo núcleo é compilado, como os Húngaros \texttt{hunalgorithm} e \texttt{mayorx} e o Gale-Shapley numérico. Estes são classificados como interpretados, pois o algoritmo em si é executado pelo interpretador.
     \item As tabelas mostram complexidade assintótica ao lado do tempo medido, permitindo a comparação do teórico vs real, principalmente entre grafos de diferentes densidades.
     \item Para cada algoritmo, é estimado o \textbf{expoente empírico do crescimento}. Supondo que o tempo cresça como $t(n) \approx C \cdot n^k$, aplicar o logaritmo resulta em
     \begin{equation}
@@ -98,11 +321,11 @@ complementares.
         k = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sum_i (x_i - \bar{x})^2}.
     \end{equation}
     Esse dado, ao contrário do tempo absoluto, é comparável entre linguagens: a linguagem altera apenas a constante $C$, o que desloca a reta verticalmente sem mudar sua inclinação. Junto ao expoente é reportado o coeficiente de determinação $R^2$, que indica o quanto os pontos de fato seguem uma reta; um $R^2$ baixo sinaliza que o crescimento não é bem descrito por uma única potência de $n$ na faixa medida.
-    \item Em problemas com apenas soluções exatas, a qualidade da solução é idêntica entre todos, sendo o método de comparação o tempo de execução. Já nos que têm soluções heurísticas, é apresentado o resultado obtido e a razão entre este e o resultado do algoritmo exato de referência (ou melhor resultado conhecido), permitindo calcular a qualidade da solução.
+    \item Em problemas com apenas soluções exatas, a qualidade da solução é idêntica entre todos, sendo o método de comparação o tempo de execução. Já nos que têm soluções aproximadas ou heurísticas, é apresentado o resultado obtido e a razão entre este e o resultado do algoritmo exato de referência (ou melhor resultado conhecido), permitindo calcular a qualidade da solução.
 \end{enumerate}
 
 % ---------------------------------------------------------------------------
-\subsection{Ambiente de execução e reprodutibilidade}
+\section{Ambiente de execução e reprodutibilidade}
 \label{sec:ambiente}
 
 Todos os resultados foram obtidos numa única máquina
@@ -137,7 +360,7 @@ todos documentados para permitir reprodução.
 \end{table}
 
 % ---------------------------------------------------------------------------
-\subsection{Origem, adaptação e verificação dos algoritmos}
+\section{Origem, adaptação e verificação dos algoritmos}
 \label{sec:proveniencia}
 
 A maior parte dos algoritmos foi obtida de implementações públicas, em vez de reescrita. Isso é coerente com o objetivo de comparar métodos presentes na literatura, reduz o risco de erros próprios e permite avaliar a qualidade das implementações efetivamente disponíveis. Foram empregadas quatro estratégias de adaptação, conforme natureza do código:
@@ -146,7 +369,7 @@ A maior parte dos algoritmos foi obtida de implementações públicas, em vez de
     \item Carregamento direto, quando o original é utilizável na linguagem do projeto;
     \item Encapsulamento, para métodos disponíveis em bibliotecas maduras;
     \item Reimplementação fiel, quando o original não é utilizável diretamente, seja por estar em outra linguagem ou versão, ou por conter efeitos colaterais, seguindo a lógica original com a fonte documentada;
-    \item Implementação própria a partir da fonte bibliográfica, para as heurísticas e alguns exatos sem implementação pública adequada, algoritmos de descrição curta cuja reimplementação é mais confiável que um repositório de qualidade incerta.
+    \item Implementação própria a partir da fonte bibliográfica, para os métodos aproximados, as heurísticas e alguns exatos sem implementação pública adequada, algoritmos de descrição curta cuja reimplementação é mais confiável que um repositório de qualidade incerta.
 \end{enumerate}
 
 A Tabela~\ref{tab:proveniencia} registra o tipo e a origem de cada algoritmo, e aponta o pseudocódigo correspondente nos capítulos anteriores.
@@ -160,47 +383,50 @@ A Tabela~\ref{tab:proveniencia} registra o tipo e a origem de cada algoritmo, e 
     \footnotesize
     \begin{tabularx}{\textwidth}{@{} l l l X @{}}
         \toprule
-        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Pseudocódigo} & \textbf{Origem} \\
+        \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Alg.} & \textbf{Origem} \\
         \midrule
         \multicolumn{4}{@{}l}{\textit{Cardinalidade máxima --- grafos bipartidos}} \\
-        Caminhos aumentantes & Exato & Alg.~\ref{alg:mcbm_augmenting} & repositório \texttt{wbchristerson/perfect-matchings} \\
-        Hopcroft-Karp & Exato & Alg.~\ref{alg:hopcroft_karp} & repositório \texttt{sofiat-olaosebikan/hopcroftkarp} \\
-        Edmonds-Karp (fluxo) & Exato & Alg.~\ref{alg:edmonds_karp} & repositório \texttt{Maxflow-Algorithms} (reimplementado) \\
-        Hopcroft-Karp (NetworkX) & Referência & Alg.~\ref{alg:hopcroft_karp} & biblioteca NetworkX (interpretada) \\
-        Emparelhamento bipartido (igraph) & Referência & --- & biblioteca igraph (núcleo compilado) \\
-        Gulosa & Heurística & Alg.~\ref{alg:greedy_mcm} & implementação própria \cite{cormen} \\
-        Karp-Sipser & Heurística & Alg.~\ref{alg:karp_sipser} & implementação própria \cite{karp-sipser} \\
+        Caminhos aumentantes & Exato & \ref{alg:mcbm_augmenting} & \nolinkurl{wbchristerson/perfect-matchings} \\
+        Hopcroft-Karp & Exato & \ref{alg:hopcroft_karp} e \ref{alg:hopcroft_karp_busca} & \nolinkurl{sofiat-olaosebikan/hopcroftkarp} \\
+        Edmonds-Karp (fluxo) & Exato & \ref{alg:edmonds_karp} & reimpl. de \texttt{Maxflow-Algorithms} \\
+        Hopcroft-Karp (NetworkX) & Referência & \ref{alg:hopcroft_karp} e \ref{alg:hopcroft_karp_busca} & NetworkX (interpretada) \\
+        Emparelhamento bipartido (igraph) & Referência & --- & igraph (compilada) \\
+        Guloso simples & Aproximado & \ref{alg:greedy_mcm} & própria \cite{cormen} \\
+        Karp-Sipser & Aproximado & \ref{alg:karp_sipser} & própria \cite{karp-sipser} \\
         \addlinespace
         \multicolumn{4}{@{}l}{\textit{Atribuição linear}} \\
-        Húngaro (munkres) & Exato & Alg.~\ref{alg:hungarian} & repositório \texttt{bmc/munkres} \\
-        Húngaro (benchaplin) & Exato & Alg.~\ref{alg:hungarian} & repositório \texttt{benchaplin/hungarian-algorithm} \\
-        Húngaro (hunalgorithm) & Exato & Alg.~\ref{alg:hungarian} & repositório \texttt{pbertoni/HungarianAlgorithm} \\
-        Húngaro (mayorx) & Exato & Alg.~\ref{alg:hungarian} & repositório \texttt{mayorx/hungarian-algorithm} \\
-        Caminhos mínimos sucessivos & Exato & Alg.~\ref{alg:optflow} & reimplementado a partir de repositório \\
-        SciPy & Referência & Alg.~\ref{alg:jv} & biblioteca SciPy (núcleo compilado) \\
-        Jonker-Volgenant & Referência & Alg.~\ref{alg:jv} & biblioteca lap (núcleo compilado) \\
+        Húngaro (munkres) & Exato & \ref{alg:hungarian} & \nolinkurl{bmc/munkres} \\
+        Húngaro (benchaplin) & Exato & \ref{alg:hungarian} & \nolinkurl{benchaplin/hungarian-algorithm} \\
+        Húngaro (hunalgorithm) & Exato & \ref{alg:hungarian} & \nolinkurl{pbertoni/HungarianAlgorithm} \\
+        Húngaro (mayorx) & Exato & \ref{alg:hungarian} & \nolinkurl{mayorx/hungarian-algorithm} \\
+        Caminhos mínimos sucessivos & Exato & \ref{alg:optflow} & reimpl. a partir de repositório \\
+        SciPy & Referência & \ref{alg:jv} & SciPy (compilada) \\
+        Jonker-Volgenant & Referência & \ref{alg:jv} & lap (compilada) \\
         \addlinespace
         \multicolumn{4}{@{}l}{\textit{Atribuição gargalo}} \\
-        Threshold & Exato & Alg.~\ref{alg:threshold} & reimplementado (original em JavaScript) \\
-        Caminhos aumentantes & Exato & Alg.~\ref{alg:augmenting_lbap} & implementação própria \cite{burkard} \\
+        Threshold & Exato & \ref{alg:threshold} & reimpl. (original em JavaScript) \\
+        Caminhos aumentantes & Exato & \ref{alg:augmenting_lbap} & própria \cite{burkard} \\
         \addlinespace
         \multicolumn{4}{@{}l}{\textit{Casamento estável}} \\
-        Gale-Shapley (orientado a objetos) & Exato & Alg.~\ref{alg:gale_shapley} & pacote \texttt{gale-shapley-algorithm} \\
-        Gale-Shapley (numérico) & Exato & Alg.~\ref{alg:gale_shapley} & pacote \texttt{gale-shapley-algorithm} \\
-        Gale-Shapley (Lattas) & Exato & Alg.~\ref{alg:gale_shapley} & reimplementado (repositório \texttt{StableMarriages}) \\
+        Gale-Shapley (orientado a objetos) & Exato & \ref{alg:gale_shapley} & pacote \texttt{gale-shapley-algorithm} \\
+        Gale-Shapley (numérico) & Exato & \ref{alg:gale_shapley} & pacote \texttt{gale-shapley-algorithm} \\
+        Gale-Shapley (Lattas) & Exato & \ref{alg:gale_shapley} & reimpl. de \texttt{StableMarriages} \\
         \addlinespace
         \multicolumn{4}{@{}l}{\textit{Grafos gerais}} \\
-        Blossom/Edmonds (cardinalidade) & Exato & Alg.~\ref{alg:maxmatch} & repositório \texttt{adharshkamath/Edmonds-Algorithm} \\
-        van Rantwijk (peso máximo) & Exato & Alg.~\ref{alg:edmonds_weighted} & \texttt{mwmatching.py} de J.\ van Rantwijk \\
-        NetworkX (cardinalidade e peso) & Referência & Alg.~\ref{alg:maxmatch} e \ref{alg:edmonds_weighted} & biblioteca NetworkX (interpretada) \\
-        Path Growing & Heurística & Alg.~\ref{alg:path_growing} & implementação própria \cite{drake} \\
+        Blossom/Edmonds (cardinalidade) & Exato & \ref{alg:maxmatch} & \nolinkurl{adharshkamath/Edmonds-Algorithm} \\
+        van Rantwijk (peso máximo) & Exato & \ref{alg:edmonds_weighted} & \texttt{mwmatching.py} de J.\ van Rantwijk \\
+        NetworkX (cardinalidade e peso) & Referência & \ref{alg:maxmatch} e \ref{alg:edmonds_weighted} & NetworkX (interpretada) \\
+        Path Growing & Aproximado & \ref{alg:path_growing} & própria \cite{drake} \\
         \addlinespace
         \multicolumn{4}{@{}l}{\textit{Emparelhamento induzido máximo}} \\
-        Exato (conjunto independente) & Exato & Alg.~\ref{alg:mim_exact} & implementação própria \cite{cameron} \\
-        Guloso aleatório & Heurística & Alg.~\ref{alg:mim_greedy} & implementação própria \\
-        Guloso de grau mínimo & Heurística & Alg.~\ref{alg:mim_greedy} & implementação própria \\
+        Exato (conjunto independente) & Exato & \ref{alg:mim_exact} & própria \cite{cameron} \\
+        Guloso aleatório & Heurística & \ref{alg:mim_greedy} & própria \\
+        Guloso de grau mínimo & Heurística & \ref{alg:mim_greedy} & própria \\
         \bottomrule
     \end{tabularx}
+
+    \smallskip
+    \parbox{\textwidth}{\scriptsize Nota: \textbf{Alg.}: número do pseudocódigo correspondente. \textbf{Origem}: \texttt{usuário/nome} indica um repositório do GitHub; NetworkX, igraph, SciPy e lap são bibliotecas, com núcleo interpretado (Python) ou compilado; ``própria'' indica implementação deste trabalho a partir da referência citada; ``reimpl.'' indica código reimplementado a partir do original indicado.}
 \end{table}
 
 Os endereços completos constam no cabeçalho de cada adaptador, no código-fonte.
@@ -212,8 +438,9 @@ biblioteca sobre um mesmo algoritmo, e não duas abordagens distintas.
 Por fim, nenhuma implementação própria ou reimplementada foi incorporada sem
 \textbf{verificação independente}: os métodos exatos foram confrontados com
 soluções por força bruta (em instâncias pequenas) e com bibliotecas
-consolidadas; as heurísticas, quanto à validade da solução, a não superarem o
-ótimo e a respeitarem suas garantias de aproximação. Além disso, os benchmarks
+consolidadas; os métodos aproximados e as heurísticas, quanto à validade da
+solução e a não superarem o ótimo, e os aproximados também quanto a respeitarem
+suas garantias de aproximação. Além disso, os benchmarks
 já existentes ao início do trabalho foram migrados para o ambiente unificado sob
 uma salvaguarda de não-regressão: a qualidade de saída de cada um foi registrada
 antes da migração e exigiu-se que a nova execução a reproduzisse exatamente, de

@@ -1,0 +1,36 @@
+%!TeX root = ../main.tex
+
+% ==================================================================================================================================
+% Apêndice A. Tempos das implementações de núcleo compilado
+% ==================================================================================================================================
+\chapter{Tempos das implementações de núcleo compilado}
+\label{ap:compilados}
+
+Este apêndice reúne as tabelas de tempo das implementações de núcleo compilado
+(C/C++), que no Capítulo~\ref{cap:resultados} servem apenas de referência.
+Conforme os critérios da Seção~\ref{sec:criterios}, esses tempos não são
+comparados diretamente com os das implementações interpretadas; a comparação
+entre linguagens é feita somente pelo expoente empírico de crescimento
+(Seção~\ref{sec:crescimento}). As instâncias são as mesmas das tabelas
+correspondentes do Capítulo~\ref{cap:resultados}.
+
+\section{Cardinalidade máxima em grafos bipartidos}
+
+As Tabelas~\ref{tab:mcm-grafo-1-esparso-sem-perfeito-mcm-80-de-n-tempo-c}
+a~\ref{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-c} trazem os tempos da
+biblioteca igraph nos três grafos da Seção~\ref{sec:res_mcm}.
+
+\input{results/tex/mcm-grafo-1-esparso-sem-perfeito-mcm-80-de-n-tempo-c}
+\input{results/tex/mcm-grafo-2-esparso-com-perfeito-mcm-n-tempo-c}
+\input{results/tex/mcm-grafo-3-denso-com-perfeito-mcm-n-tempo-c}
+
+\section{Atribuição linear}
+
+As Tabelas~\ref{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-c}
+a~\ref{tab:assignment-matriz-3-estruturada-custo-i-j-1-tempo-c} trazem os tempos
+das bibliotecas SciPy e lap (Jonker-Volgenant) nas três matrizes da
+Seção~\ref{sec:res_assignment}.
+
+\input{results/tex/assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-c}
+\input{results/tex/assignment-matriz-2-permutacao-barata-otimo-n-tempo-c}
+\input{results/tex/assignment-matriz-3-estruturada-custo-i-j-1-tempo-c}

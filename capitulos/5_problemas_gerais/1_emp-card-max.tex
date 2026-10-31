@@ -1,13 +1,13 @@
-\subsection{Emparelhamento de cardinalidade máxima}
+\section{Emparelhamento de cardinalidade máxima}
 \label{sec:emp_card_max_geral}
-
-\subsubsection{Descrição}
 
 A definição do problema de emparelhamento de cardinalidade máxima é, fundamentalmente, a mesma da sua contraparte bipartida, descrita na seção \ref{sec:emp_card_max_bip}. No entanto, a solução deste problema é significativamente mais complexa que a versão bipartida, mesmo ainda sendo em tempo polinomial.
 
-\subsubsection{Propriedades}
+\subsection{Propriedades}
 
-\paragraph{Ciclos ímpares}
+A seguir serão apresentadas algumas propriedades importantes para a compreensão dos algoritmos relacionados ao problema de emparelhamento de cardinalidade máxima em grafos gerais.
+
+\subsubsection{Ciclos ímpares}
 
 Previamente, na seção \ref{p:caminhos_aumentantes}, vimos a definição de caminhos aumentantes, que vieram a ser fundamentais para a solução de grande parte dos problemas de emparelhamento em grafos bipartidos. Em grafos gerais, a base da solução ainda é a mesma, se baseando no lema de Berge, descrito por \citeonline{jungnickel} como:
 
@@ -19,7 +19,7 @@ Em grafos bipartidos, ciclos sempre têm tamanho par. Isso garante que, ao reali
 
 No entanto, em grafos gerais, a presença de ciclos de comprimento ímpar quebra essa lógica. \citeonline{schrijver} explica que, ao explorar o grafo, o algoritmo pode encontrar uma aresta conectando dois vértices que possuem paridade "par" em relação à raiz da busca. Essa estrutura forma um \textbf{ciclo ímpar} que "confunde" a identificação de um caminho aumentante simples, pois um vértice poderia ser alcançado por dois caminhos alternantes de paridades diferentes.
 
-\paragraph{Flor (Blossom)}
+\subsubsection{Flor (Blossom)}
 
 A solução para lidar com ciclos ímpares foi proposta por \citeonline{edmonds}, e consiste em uma estrutura denominada \textbf{Blossom}.
 
@@ -32,14 +32,14 @@ Edmonds provou que uma \textit{blossom} pode ser contraída em um único vértic
     Existe um caminho aumentante no grafo original $G$ se, e somente se, existe um caminho aumentante no grafo contraído $G' = G / B$, onde a flor $B$ foi reduzida a um único vértice. \cite{schrijver}
 \end{quotation}
 
-\subsubsection{O algoritmo de Edmonds}
+\subsection{O algoritmo de Edmonds}
 
 Baseando-se na propriedade de Blossom e no teorema da contração, \citeonline{lawler} descreve o algoritmo para encontrar o 
 emparelhamento máximo em grafos gerais da seguinte forma:
 
 \begin{enumerate}
-    \item \textbf{Busca:} Inicie uma busca (geralmente BFS) a partir dos vértices livres para encontrar um caminho aumentante, construindo uma Floresta de Árvores Alternantes. Na versão de \citeonline{jungnickel} (Algoritmo~\ref{alg:maxmatch}), a busca parte de um vértice livre $r$ de cada vez (linha~\ref{bl:root}) e cresce a árvore alternando uma aresta não emparelhada $(x, y)$ com a aresta emparelhada $(y, mate(y))$ (linhas~\ref{bl:extend}--\ref{bl:grow}).
-    \item \textbf{Detecção:} Se a busca encontrar uma aresta que fecha um ciclo ímpar, uma \textbf{blossom} foi identificada. Isso ocorre quando a aresta $(x, y)$ liga dois vértices de profundidade par da mesma árvore (linha~\ref{bl:odd}). O procedimento BLOSSOM (Algoritmo~\ref{alg:blossom_proc}) identifica o ciclo, subindo de $x$ e de $y$ até a raiz e tomando como base $w$ o ancestral comum mais profundo.
+    \item \textbf{Busca:} Inicie uma busca (geralmente BFS) a partir dos vértices livres para encontrar um caminho aumentante, construindo uma Floresta de Árvores Alternantes. Na versão de \citeonline{jungnickel} (Algoritmo~\ref{alg:maxmatch}), a busca parte de um vértice livre $r$ de cada vez (linha~\ref{bl:root}) e cresce a árvore alternando uma aresta não emparelhada $\{x, y\}$ com a aresta emparelhada $\{y, mate(y)\}$ (linhas~\ref{bl:extend}--\ref{bl:grow}).
+    \item \textbf{Detecção:} Se a busca encontrar uma aresta que fecha um ciclo ímpar, uma \textbf{blossom} foi identificada. Isso ocorre quando a aresta $\{x, y\}$ liga dois vértices de profundidade par da mesma árvore (linha~\ref{bl:odd}). O procedimento BLOSSOM (Algoritmo~\ref{alg:blossom_proc}) identifica o ciclo, subindo de $x$ e de $y$ até a raiz e tomando como base $w$ o ancestral comum mais profundo.
     \item \textbf{Contração:} Contraia todos os vértices da \textbf{blossom} em um único super-vértice e modifique o grafo temporariamente. O procedimento CONTRACT (Algoritmo~\ref{alg:contract}) cria o super-vértice $b = n + m$, que herda o pai, a profundidade e o parceiro da base, recebe a união das adjacências da flor e desativa os vértices originais.
     \item \textbf{Recursão:} Continue a busca no grafo contraído. Na versão de \citeonline{jungnickel}, isso é feito sem recursão explícita: o super-vértice entra na fila de busca (linha~\ref{bl:insb} do Algoritmo~\ref{alg:contract}) e passa a ser tratado como um vértice comum, podendo ele próprio fazer parte de novas flores.
     \item \textbf{Expansão:} Se um caminho aumentante for encontrado no grafo contraído passando pelo super-vértice, "abra" (expanda) a flor novamente para traduzir esse caminho para o grafo original. O caminho dentro da flor será roteado de forma a manter a alternância correta. É o primeiro laço do procedimento AUGMENT (Algoritmo~\ref{alg:augment_blossom}, linha~\ref{bl:expand}), que substitui cada super-vértice do caminho, do mais recente para o mais antigo, por um caminho alternante de comprimento par dentro da flor.
@@ -114,20 +114,31 @@ Os pseudocódigos a seguir, de \citeonline{jungnickel}, organizam esses passos e
     \SetAlgoLined
 
     \Fn{BLOSSOM($x, y; B, w$)}{
-        $P \leftarrow \{x\}; P' \leftarrow \{y\}; u \leftarrow x; v \leftarrow y$\;
+        $P \leftarrow \{x\}; P' \leftarrow \{y\}; u \leftarrow x; v \leftarrow y$\label{blp:init}\;
         \Repeat{$p(u) = r$}{
-            $P \leftarrow P \cup \{p(u)\}; u \leftarrow p(u)$\;
+            $P \leftarrow P \cup \{p(u)\}; u \leftarrow p(u)$\label{blp:upx}\;
         }
         \Repeat{$v = r$}{
-            $P' \leftarrow P' \cup \{p(v)\}; v \leftarrow p(v)$\;
+            $P' \leftarrow P' \cup \{p(v)\}; v \leftarrow p(v)$\label{blp:upy}\;
         }
-        $S \leftarrow P \cap P'$\;
-        let $w$ be the element of $S$ for which $d(w) \ge d(z)$ for all $z \in S$\;
-        $B \leftarrow ((P \cup P') \setminus S) \cup \{w\}$\;
+        $S \leftarrow P \cap P'$\label{blp:common}\;
+        let $w$ be the element of $S$ for which $d(w) \ge d(z)$ for all $z \in S$\label{blp:base}\;
+        $B \leftarrow ((P \cup P') \setminus S) \cup \{w\}$\label{blp:set}\;
     }
     \caption{Algoritmo de BLOSSOM \cite{jungnickel}}
     \label{alg:blossom_proc}
 \end{algorithm}
+
+O procedimento BLOSSOM é chamado pelo MAXMATCH quando a aresta $\{x, y\}$ liga dois vértices de profundidade par da mesma árvore alternante, de raiz $r$ (linha~\ref{bl:odd} do Algoritmo~\ref{alg:maxmatch}). Seu papel é identificar o conjunto de vértices $B$ da flor e a sua base $w$:
+
+\begin{itemize}
+    \item \textbf{Linha~\ref{blp:init}:} Os conjuntos $P$ e $P'$ guardarão os caminhos de $x$ e de $y$ até a raiz, e começam contendo apenas o próprio vértice de partida.
+    \item \textbf{Linhas~\ref{blp:upx} e~\ref{blp:upy}:} Dois laços sobem na árvore pelos ponteiros de pai $p(\cdot)$, o primeiro a partir de $x$ e o segundo a partir de $y$, até alcançar a raiz $r$. Ao final, $P$ e $P'$ contêm todos os vértices dos caminhos de $x$ e de $y$ até $r$.
+    \item \textbf{Linha~\ref{blp:common}:} A interseção $S$ dos dois caminhos é o trecho que eles têm em comum, de algum vértice até a raiz.
+    \item \textbf{Linha~\ref{blp:base}:} A base $w$ é o vértice de $S$ de maior profundidade $d(\cdot)$, ou seja, o ancestral comum mais profundo de $x$ e $y$: é nele que os dois caminhos se encontram e se fecha o ciclo ímpar.
+    \item \textbf{Linha~\ref{blp:set}:} A flor $B$ é formada pelos vértices dos dois caminhos que estão abaixo de $w$, mais a própria base. Os vértices de $S$ acima de $w$ ficam de fora, pois pertencem ao caule, e não ao ciclo. Em seguida, o MAXMATCH chama o CONTRACT (Algoritmo~\ref{alg:contract}) com $B$ e $w$.
+    \item \textbf{Complexidade:} Cada caminho até a raiz tem no máximo $O(V)$ vértices, e a interseção e a união dos conjuntos podem ser feitas em tempo linear no tamanho deles; cada chamada custa, portanto, $O(V)$. Como cada contração reduz o número de vértices ativos, há no máximo $O(V)$ flores por busca, o que é compatível com o custo total $O(V^3)$ do algoritmo citado acima.
+\end{itemize}
 
 
 % ---------------------------------------------------------
@@ -190,7 +201,7 @@ Os pseudocódigos a seguir, de \citeonline{jungnickel}, organizam esses passos e
     \label{alg:augment_blossom}
 \end{algorithm}
 
-\paragraph{Teorema de Tutte-Berge}
+\subsubsection{Teorema de Tutte-Berge}
 
 O teorema de Tutte-Berge, apesar de não aparecer explicitamente na descrição do algoritmo, é fundamental para sua corretude, pois ele fornece um certificado de otimalidade. Por exemplo, digamos que a etapa de busca do algoritmo de Blossom não encontrou nenhum caminho aumentante. Como sabemos que o emparelhamento atual é máximo? Para descobrir isso, utilizamos a fórmula de Tutte-Berge, descrita por \citeonline{jungnickel} da seguinte forma:
 
@@ -200,11 +211,11 @@ O teorema de Tutte-Berge, apesar de não aparecer explicitamente na descrição 
 
 Onde $v(G)$ é o tamanho do emparelhamento máximo, e $\mathrm{odd}(G - U)$ é o número de componentes conexos com número ímpar de vértices no grafo resultante após a remoção de $U$. Se o grafo possui um emparelhamento perfeito, o mínimo desta equação é $|V|/2$, o que ocorre se e somente se $odd(G-U) \le |U|$ para todo $U$.
 
-\subsubsection{Heurísticas}
+\subsection{Algoritmos aproximados}
 
-Algumas das heurísticas que resolvem este problema são as mesmas que vimos na seção \ref{sec:emp_card_max_bip}, como a Heurística Gulosa Simples e a Heurística de Karp-Sipser, que também funcionam para grafos gerais. Mas, além dessas, existem outras heurísticas que podem ser utilizadas neste problema.
+Alguns dos algoritmos aproximados que resolvem este problema são os mesmos vistos na seção \ref{sec:emp_card_max_bip}, como o método guloso simples e o algoritmo de Karp-Sipser, que também funcionam para grafos gerais e mantêm a garantia de metade da cardinalidade máxima, já que ambos produzem um emparelhamento maximal. Além desses, existem outros métodos que podem ser utilizados neste problema.
 
-% \paragraph{Busca local com caminhos curtos}
+% \subsubsection{Busca local com caminhos curtos}
 
 % É uma maneira de melhorar um emparelhamento maximal (produzido pelo método guloso) é procurar por caminhos aumentantes curtos. Em grafos gerais, algoritmos exatos buscam caminhos aumentantes de qualquer tamanho (lidando com blossoms). A heurística limita essa busca a um tamanho fixo $k$:
 
@@ -217,10 +228,10 @@ Algumas das heurísticas que resolvem este problema são as mesmas que vimos na 
 % Procurar caminhos de comprimento 3 pode ser feito em complexidade de tempo $O(E)$, e há garantia de aproximação com fator acima de $1/2$ (metade) da cardinalidade máxima
 % Fonte: Arkin, E. M., et al. (2006). Local search for the maximum cardinality matching problem.
 
-\paragraph{Algoritmo de crescimento de caminho (Path Growing)}
+\subsubsection{Algoritmo de crescimento de caminho (Path Growing)}
 \label{p:h_path_growing_card}
 
-Uma variação inteligente do método guloso, descrita por \citeonline{drake}, que usa DFS e tenta evitar a "miopia" de escolher uma aresta isolada.
+Uma variação inteligente do método guloso, descrita por \citeonline{drake}, que usa DFS e tenta evitar a "miopia" de escolher uma aresta isolada. Assim como os anteriores, garante um emparelhamento com pelo menos metade da cardinalidade máxima, caso particular da garantia de metade do peso máximo da versão ponderada (Seção~\ref{sec:emp_pond_max_aprox}).
 
 \begin{enumerate}
     \item Escolha um vértice livre inicial $v$.
@@ -251,16 +262,16 @@ Ao contrário do guloso simples (que escolhe arestas desconexas), o Path Growing
         Variação otimizada do algoritmo de Edmonds que utiliza estruturas de dados avançadas para reduzir drasticamente a complexidade. \\
         \addlinespace 
 
-        Gulosa simples & $O(E)$ & Heurística & Não & 
+        Guloso simples & $O(E)$ & Aproximado & Não & 
         Itera sobre arestas arbitrariamente, selecionando aquelas que conectam dois vértices livres. \\
         \addlinespace
 
-        Karp-Sipser & $O(E)$ & Heurística & Não & 
+        Karp-Sipser & $O(E)$ & Aproximado & Não & 
         Prioriza remoção de vértices de grau 1; usa escolha aleatória quando não há folhas. \\
         \addlinespace
         
-        Crescimento de caminho & $O(E)$ & Heurística & Não & 
-        Heurística linear que constrói caminhos simples via DFS e seleciona arestas alternadas para garantir um emparelhamento maximal. \\
+        Crescimento de caminho & $O(E)$ & Aproximado & Não & 
+        Método linear que constrói caminhos simples via DFS e seleciona arestas alternadas para garantir um emparelhamento maximal. \\
         
         \bottomrule
     \end{tabularx}
