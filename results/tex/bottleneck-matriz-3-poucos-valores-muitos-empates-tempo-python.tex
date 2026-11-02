@@ -9,8 +9,10 @@
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} \\
         \midrule
-        Threshold (busca binária) & exato & $O(n^{3} log n)$ & $O(n^{2})$ & 0.05 & 0.27 & 0.80 & 2.97 & 9.97 & 23.25 & 79.08 & 188.72 \\
-        Caminhos aumentantes & exato & $O(n^{3})$ & $O(n^{2})$ & 0.06 & 0.42 & 1.33 & 5.26 & 15.55 & 35.09 & 111.08 & 253.58 \\
+        Threshold (busca binária) & exato & $O(n^{3} log n)$ & $O(n^{2})$ & 0.05 & 0.27 & 0.79 & 2.87 & 9.74 & 22.76 & 77.67 & 185.59 \\
+        Caminhos aumentantes & exato & $O(n^{3})$ & $O(n^{2})$ & 0.06 & 0.42 & 1.32 & 5.22 & 15.52 & 34.85 & 110.13 & 250.72 \\
+        Gulosa simples & heuristica & $O(n^{2} log n)$ & $O(n^{2})$ & 0.03 & 0.12 & 0.27 & 0.73 & 1.71 & 3.12 & 7.71 & 13.47 \\
+        Gulosa por arrependimento & heuristica & $O(n^{2} log n)$ & $O(n^{2})$ & 0.05 & 0.17 & 0.38 & 1.03 & 2.31 & 4.19 & 9.21 & 16.63 \\
         \bottomrule
     \end{tabular}%
     }

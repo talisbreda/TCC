@@ -2,7 +2,7 @@
 \chapter{Fundamentação teórica}
 \label{cap:fundamentacao}
 
-Este capítulo reúne os conceitos de teoria dos grafos e de otimização combinatória sobre os quais os capítulos seguintes se apoiam. Inicia-se pelas definições básicas sobre grafos e suas variações (direcionados, ponderados e bipartidos). Em seguida, apresentam-se os algoritmos de busca em largura e em profundidade, usados pelos algoritmos de emparelhamento para encontrar caminhos aumentantes; os algoritmos de caminhos mais curtos, usados nas reduções do problema de atribuição a fluxo de custo mínimo; e as redes de fluxo, por meio das quais o emparelhamento bipartido pode ser resolvido. Por fim, define-se o problema geral do emparelhamento e a classificação dos métodos de solução em exatos, aproximados e heurísticos, usada ao longo do trabalho.
+Este capítulo reúne os conceitos de teoria dos grafos e de otimização combinatória sobre os quais os capítulos seguintes se apoiam. Inicia-se pelas definições básicas sobre grafos e suas variações (direcionados, ponderados e bipartidos). Em seguida, apresentam-se os algoritmos de busca em largura e em profundidade, usados pelos algoritmos de emparelhamento para encontrar caminhos aumentantes; os algoritmos de caminhos mais curtos, usados nas reduções do problema de atribuição a fluxo de custo mínimo; e as redes de fluxo, por meio das quais o emparelhamento bipartido pode ser resolvido. Em seguida, define-se o problema geral do emparelhamento e resumem-se as noções de programação linear e dualidade em que se apoiam os algoritmos primal-duais. Por fim, apresenta-se a classificação dos métodos de solução em exatos, aproximados e heurísticos, usada ao longo do trabalho.
 
 % ==================================================================================================================================
 % 2.1. Definições sobre grafos
@@ -106,7 +106,7 @@ Os algoritmos de caminho mínimo baseiam-se na propriedade de \textbf{subestrutu
     \label{eq:relax}
 \end{equation}
 
-Nos pseudocódigos a seguir, essa operação aparece como Relax($u, v, w$) e custa $O(1)$. Seguindo os predecessores a partir de um vértice qualquer até a fonte, obtém-se o caminho mais curto encontrado até o momento. Os algoritmos de Dijkstra e de Bellman-Ford diferem apenas na ordem e na frequência com que relaxam os arcos \cite{cormen}.
+Nos pseudocódigos a seguir, essa operação aparece como Relaxa($u, v, w$) e custa $O(1)$. Seguindo os predecessores a partir de um vértice qualquer até a fonte, obtém-se o caminho mais curto encontrado até o momento. Os algoritmos de Dijkstra e de Bellman-Ford diferem apenas na ordem e na frequência com que relaxam os arcos \cite{cormen}.
 
 
 Para grafos onde os pesos das arestas são não-negativos ($w(u,v)\geq 0$), o Algoritmo de Dijkstra é a abordagem mais eficiente. Ele utiliza uma estratégia gulosa, mantendo um conjunto de vértices cujos pesos finais dos caminhos mais curtos já foram determinados \cite{aho}.
@@ -118,14 +118,14 @@ O algoritmo seleciona repetidamente o vértice $u$ com a menor estimativa de cam
     \SetAlgoLined
 
     \Fn{Dijkstra($G, w, s$)}{
-        Initialize-Single-Source($G, s$)\label{dij:init}\;
+        Inicializa-Fonte($G, s$)\label{dij:init}\;
         $S \leftarrow \emptyset$\label{dij:s}\;
         $Q \leftarrow G.V$\label{dij:q}\;
         \While{$Q \neq \emptyset$\label{dij:loop}}{
-            $u \leftarrow \text{Extract-Min}(Q)$\label{dij:min}\;
+            $u \leftarrow \text{Extrai-Mínimo}(Q)$\label{dij:min}\;
             $S \leftarrow S \cup \{u\}$\label{dij:add}\;
-            \ForEach{vertex $v \in G.Adj[u]$\label{dij:adj}}{
-                Relax($u, v, w$)\label{dij:relax}\;
+            \ForEach{vértice $v \in G.Adj[u]$\label{dij:adj}}{
+                Relaxa($u, v, w$)\label{dij:relax}\;
             }
         }
     }
@@ -136,10 +136,10 @@ O algoritmo seleciona repetidamente o vértice $u$ com a menor estimativa de cam
 O Algoritmo~\ref{alg:dijkstra_fund} funciona da seguinte forma \cite{cormen}:
 
 \begin{itemize}
-    \item \textbf{Inicialização (linhas~\ref{dij:init}--\ref{dij:q}):} Initialize-Single-Source atribui $v.d = \infty$ e $v.\pi = \text{NIL}$ a todo vértice, e $s.d = 0$ à fonte. O conjunto $S$ dos vértices com distância final já determinada começa vazio, e a fila de prioridade $Q$, ordenada pelo atributo $d$, começa com todos os vértices.
+    \item \textbf{Inicialização (linhas~\ref{dij:init}--\ref{dij:q}):} Inicializa-Fonte atribui $v.d = \infty$ e $v.\pi = \text{NIL}$ a todo vértice, e $s.d = 0$ à fonte. O conjunto $S$ dos vértices com distância final já determinada começa vazio, e a fila de prioridade $Q$, ordenada pelo atributo $d$, começa com todos os vértices.
     \item \textbf{Escolha gulosa (linhas~\ref{dij:loop}--\ref{dij:add}):} a cada iteração, retira-se de $Q$ o vértice $u$ de menor estimativa $u.d$ e ele é incluído em $S$. Como os pesos são não-negativos, nenhum caminho que passe por outro vértice de $Q$ pode chegar a $u$ com peso menor, e por isso $u.d = \delta(s,u)$ nesse momento.
     \item \textbf{Relaxamento (linhas~\ref{dij:adj}--\ref{dij:relax}):} todos os arcos que saem de $u$ são relaxados (Equação~\ref{eq:relax}), o que pode diminuir a estimativa dos vizinhos de $u$ ainda em $Q$ e, com isso, alterar suas posições na fila.
-    \item \textbf{Complexidade:} cada vértice é retirado de $Q$ exatamente uma vez, totalizando $V$ operações Extract-Min, e cada arco é relaxado exatamente uma vez, quando sua origem é retirada, totalizando até $E$ diminuições de chave na fila. Com um heap binário, as duas operações custam $O(\log V)$, o que resulta em $O((V+E)\log V)$. Com um heap de Fibonacci, a diminuição de chave custa $O(1)$ amortizado, o que resulta em $O(E + V\log V)$.
+    \item \textbf{Complexidade:} cada vértice é retirado de $Q$ exatamente uma vez, totalizando $V$ operações Extrai-Mínimo, e cada arco é relaxado exatamente uma vez, quando sua origem é retirada, totalizando até $E$ diminuições de chave na fila. Com um heap binário, as duas operações custam $O(\log V)$, o que resulta em $O((V+E)\log V)$. Com um heap de Fibonacci, a diminuição de chave custa $O(1)$ amortizado, o que resulta em $O(E + V\log V)$.
 \end{itemize}
 
 \subsection{Algoritmo de Bellman-Ford}
@@ -153,13 +153,13 @@ A propriedade fundamental do Bellman-Ford é sua capacidade de detectar ciclos n
     \SetAlgoLined
 
     \Fn{Bellman-Ford($G, w, s$)}{
-        Initialize-Single-Source($G, s$)\label{bf:init}\;
+        Inicializa-Fonte($G, s$)\label{bf:init}\;
         \For{$i = 1$ \KwTo $|G.V| - 1$\label{bf:outer}}{
-            \ForEach{edge $(u, v) \in G.E$\label{bf:edges}}{
-                Relax($u, v, w$)\label{bf:relax}\;
+            \ForEach{arco $(u, v) \in G.E$\label{bf:edges}}{
+                Relaxa($u, v, w$)\label{bf:relax}\;
             }
         }
-        \ForEach{edge $(u, v) \in G.E$\label{bf:check}}{
+        \ForEach{arco $(u, v) \in G.E$\label{bf:check}}{
             \If{$v.d > u.d + w(u, v)$\label{bf:test}}{
                 \KwRet \KwFalse\label{bf:neg}\;
             }
@@ -175,8 +175,8 @@ O Algoritmo~\ref{alg:bellman_ford} funciona da seguinte forma \cite{cormen}:
 \begin{itemize}
     \item \textbf{Inicialização (linha~\ref{bf:init}):} igual à do algoritmo de Dijkstra: $s.d = 0$ e $v.d = \infty$ para os demais vértices.
     \item \textbf{Relaxamentos (linhas~\ref{bf:outer}--\ref{bf:relax}):} todos os arcos são relaxados, em qualquer ordem, $|V|-1$ vezes. Após a $i$-ésima passagem, todo vértice cujo caminho mais curto a partir de $s$ tem no máximo $i$ arcos já tem sua distância correta. Como um caminho mais curto sem ciclos tem no máximo $|V|-1$ arcos, $|V|-1$ passagens bastam quando não há ciclo negativo.
-    \item \textbf{Detecção de ciclo negativo (linhas~\ref{bf:check}--\ref{bf:neg}):} uma passagem extra verifica se algum arco ainda pode ser relaxado. Se puder, existe um ciclo de peso negativo alcançável a partir de $s$, e o algoritmo retorna \textbf{false}.
-    \item \textbf{Retorno (linha~\ref{bf:ok}):} caso contrário, retorna \textbf{true}, e os atributos $v.d$ e $v.\pi$ descrevem os caminhos mais curtos.
+    \item \textbf{Detecção de ciclo negativo (linhas~\ref{bf:check}--\ref{bf:neg}):} uma passagem extra verifica se algum arco ainda pode ser relaxado. Se puder, existe um ciclo de peso negativo alcançável a partir de $s$, e o algoritmo retorna \textbf{falso}.
+    \item \textbf{Retorno (linha~\ref{bf:ok}):} caso contrário, retorna \textbf{verdadeiro}, e os atributos $v.d$ e $v.\pi$ descrevem os caminhos mais curtos.
     \item \textbf{Complexidade:} a inicialização custa $O(V)$; o laço principal faz $|V|-1$ passagens por todos os $E$ arcos, com relaxamento de custo $O(1)$, totalizando $O(VE)$; a verificação final custa $O(E)$. O total é $O(VE)$.
 \end{itemize}
 
@@ -241,7 +241,7 @@ Quando a aresta $(u,v)$ possui fluxo igual à sua capacidade, então $c_f(u,v) =
 \subsubsection{Caminhos aumentantes}
 \label{p:ford_fulkerson}
 
-Dado um grafo $G=(V,E)$ e um fluxo $f$, um \textbf{caminho aumentante} é um caminho de $s$ para $t$ na rede residual $G_f$. Por definição, podemos aumentar o fluxo em uma aresta $(u,v)$ de um caminho aumentante em até $c_f(u,v)$ sem violar a capacidade da aresta original em $G$ \cite{cormen}.
+Dado um grafo $G=(V,E)$ e um fluxo $f$, um \textbf{caminho aumentante} é um caminho de $s$ para $t$ na rede residual $G_f$. Por definição, podemos aumentar o fluxo em uma aresta $(u,v)$ de um caminho aumentante em até $c_f(u,v)$ sem violar a capacidade da aresta original em $G$ \cite{cormen}. Esse conceito é diferente do caminho aumentante de um emparelhamento (Seção~\ref{sec:caminhos_alternantes}): aqui, trata-se de um caminho de $s$ a $t$ na rede residual, ao longo do qual o fluxo pode ser aumentado. Os dois se encontram na redução do emparelhamento bipartido a fluxo máximo (Seção~\ref{p:reducao_fluxo_mcm}), em que cada caminho aumentante de fluxo corresponde a um caminho aumentante do emparelhamento, acrescido dos arcos que saem de $s$ e chegam a $t$.
 
 O método de Ford-Fulkerson, que é base dos principais algoritmos de resolução do problema do fluxo máximo, iterativamente encontra um caminho aumentante, calcula sua capacidade residual e adiciona esse fluxo à solução atual até que não existam mais caminhos aumentantes \cite{ahuja}.
 
@@ -250,14 +250,14 @@ O método de Ford-Fulkerson, que é base dos principais algoritmos de resoluçã
     \SetAlgoLined
 
     \Fn{FORD-FULKERSON($G, s, t$)}{
-        \ForEach{edge $(u, v) \in G.E$\label{ff:init}}{
+        \ForEach{arco $(u, v) \in G.E$\label{ff:init}}{
             $(u, v).f \leftarrow 0$\label{ff:zero}\;
         }
         
-        \While{there exists a path $p$ from $s$ to $t$ in the residual network $G_f$\label{ff:loop}}{
-            $c_f(p) \leftarrow \min \{ c_f(u, v) : (u, v) \text{ is in } p \}$\label{ff:cf}\;
+        \While{existe um caminho $p$ de $s$ a $t$ na rede residual $G_f$\label{ff:loop}}{
+            $c_f(p) \leftarrow \min \{ c_f(u, v) : (u, v) \text{ está em } p \}$\label{ff:cf}\;
             
-            \ForEach{edge $(u, v) \in p$\label{ff:path}}{
+            \ForEach{arco $(u, v) \in p$\label{ff:path}}{
                 \eIf{$(u, v) \in E$\label{ff:fwd}}{
                     $(u, v).f \leftarrow (u, v).f + c_f(p)$\label{ff:inc}\;
                 }{
@@ -336,6 +336,83 @@ Um vértice é chamado \textbf{coberto} (\textit{matched}) se for incidente a um
 
 O \textbf{problema de matching ponderado} (Weighted Matching Problem) envolve encontrar um matching para o qual a soma dos pesos das arestas é máxima. Em um grafo ponderado $G=(V,E,w)$, busca-se um $M\subseteq E$ que maximize $w(M)$ \cite{matching_gpus_sc24}.
 
+\subsection{Caminhos alternantes e aumentantes}
+\label{sec:caminhos_alternantes}
+
+Os algoritmos exatos de emparelhamento de cardinalidade máxima apresentados neste trabalho se apoiam em dois tipos de caminho, definidos em relação a um emparelhamento $M$ \cite{schrijver}:
+
+\begin{itemize}
+    \item \textbf{Caminho $M$-alternante:} caminho cujas arestas pertencem alternadamente a $E \setminus M$ e a $M$.
+    \item \textbf{Caminho $M$-aumentante:} caminho $M$-alternante que começa e termina em vértices descobertos distintos. Como os dois extremos são descobertos, a primeira e a última aresta não pertencem a $M$; logo, o caminho tem um número ímpar $2k+1$ de arestas, das quais $k$ estão em $M$ e $k+1$ estão fora dele.
+\end{itemize}
+
+A utilidade dos caminhos aumentantes vem da \textbf{diferença simétrica}. Dado um caminho $M$-aumentante $P$, visto como um conjunto de arestas, o conjunto
+\begin{equation}
+    M \ominus P = (M \setminus P) \cup (P \setminus M)
+    \label{eq:diferenca_simetrica}
+\end{equation}
+é obtido invertendo o papel das arestas de $P$: as que estavam em $M$ saem, e as que estavam fora entram. O resultado continua sendo um emparelhamento, pois cada vértice interno de $P$ troca uma aresta emparelhada por outra, e os dois extremos, antes descobertos, passam a ser cobertos. Como $P$ tem uma aresta a mais fora de $M$ do que dentro, $|M \ominus P| = |M| + 1$. A Figura~\ref{fig:caminho_aumentante} ilustra a operação em um grafo bipartido.
+
+\begin{figure}[H]
+    \centering
+    \caption{Um emparelhamento $M$, um caminho $M$-aumentante $P$ e o emparelhamento $M \ominus P$}
+    \label{fig:caminho_aumentante}
+    \begin{tikzpicture}[
+        vert/.style={circle, draw, fill=black, inner sep=0pt, minimum size=5pt},
+        livre/.style={circle, draw, thick, fill=white, inner sep=0pt, minimum size=6pt},
+        emp/.style={line width=2.2pt},
+        nemp/.style={thin, gray},
+        destaque/.style={line width=8pt, blue!20, line cap=round},
+    ]
+        \foreach \px/\titulo in {0/{(a) emparelhamento $M$\\$|M| = 3$}, 4.6/{(b) caminho\\$M$-aumentante $P$}, 9.2/{(c) $M \ominus P$\\$|M \ominus P| = 4$}} {
+            \begin{scope}[xshift=\px cm]
+                \foreach \i in {1,...,4} {
+                    \coordinate (u\i) at (0, -\i);
+                    \coordinate (v\i) at (2, -\i);
+                    \node[left=4pt] at (u\i) {$u_\i$};
+                    \node[right=4pt] at (v\i) {$v_\i$};
+                }
+                \node[font=\small, align=center] at (1, -5.2) {\titulo};
+            \end{scope}
+        }
+        % (a) M = {u2v1, u3v2, u4v4}
+        \begin{scope}
+            \foreach \i in {1,...,4} {\coordinate (u\i) at (0, -\i); \coordinate (v\i) at (2, -\i);}
+            \foreach \a/\b in {u1/v1, u2/v2, u3/v3, u4/v3, u2/v4} \draw[nemp] (\a) -- (\b);
+            \foreach \a/\b in {u2/v1, u3/v2, u4/v4} \draw[emp] (\a) -- (\b);
+            \foreach \v in {u2,u3,u4,v1,v2,v4} \node[vert] at (\v) {};
+            \foreach \v in {u1,v3} \node[livre] at (\v) {};
+        \end{scope}
+        % (b) P = u1 v1 u2 v2 u3 v3
+        \begin{scope}[xshift=4.6cm]
+            \foreach \i in {1,...,4} {\coordinate (u\i) at (0, -\i); \coordinate (v\i) at (2, -\i);}
+            \foreach \a/\b in {u1/v1, u2/v1, u2/v2, u3/v2, u3/v3} \draw[destaque] (\a) -- (\b);
+            \foreach \a/\b in {u1/v1, u2/v2, u3/v3, u4/v3, u2/v4} \draw[nemp] (\a) -- (\b);
+            \foreach \a/\b in {u2/v1, u3/v2, u4/v4} \draw[emp] (\a) -- (\b);
+            \foreach \v in {u2,u3,u4,v1,v2,v4} \node[vert] at (\v) {};
+            \foreach \v in {u1,v3} \node[livre] at (\v) {};
+        \end{scope}
+        % (c) M (-) P = {u1v1, u2v2, u3v3, u4v4}
+        \begin{scope}[xshift=9.2cm]
+            \foreach \i in {1,...,4} {\coordinate (u\i) at (0, -\i); \coordinate (v\i) at (2, -\i);}
+            \foreach \a/\b in {u2/v1, u3/v2, u4/v3, u2/v4} \draw[nemp] (\a) -- (\b);
+            \foreach \a/\b in {u1/v1, u2/v2, u3/v3, u4/v4} \draw[emp] (\a) -- (\b);
+            \foreach \v in {u1,u2,u3,u4,v1,v2,v3,v4} \node[vert] at (\v) {};
+        \end{scope}
+    \end{tikzpicture}
+    \fonte{Elaborado pelo autor. Arestas grossas pertencem ao emparelhamento; vértices vazados estão descobertos; em (b), o caminho $P$ aparece destacado.}
+\end{figure}
+
+Essa operação fundamenta o \textbf{lema de Berge}, base dos algoritmos exatos de emparelhamento de cardinalidade máxima deste trabalho \cite{jungnickel}:
+
+\begin{quotation}
+    Um emparelhamento $M$ em um grafo $G$ é máximo se, e somente se, não existe caminho $M$-aumentante em $G$.
+\end{quotation}
+
+Uma das direções segue da diferença simétrica: se existe um caminho $M$-aumentante $P$, então $M \ominus P$ é um emparelhamento maior que $M$. Para a outra, suponha que $M$ não seja máximo e seja $M^*$ um emparelhamento máximo. No subgrafo formado pelas arestas de $M \ominus M^*$, cada vértice tem grau no máximo 2, de modo que ele se decompõe em caminhos e ciclos cujas arestas alternam entre $M$ e $M^*$. Os ciclos têm tantas arestas de $M$ quanto de $M^*$; como $|M^*| > |M|$, ao menos um dos caminhos tem mais arestas de $M^*$ do que de $M$ e é, portanto, um caminho $M$-aumentante \cite{schrijver}.
+
+Os algoritmos exatos dos Capítulos~\ref{cap:bipartidos} e~\ref{cap:gerais} diferem, essencialmente, na forma de encontrar caminhos aumentantes: em grafos bipartidos, uma busca em largura ou em profundidade a partir dos vértices descobertos basta; em grafos gerais, os ciclos de comprimento ímpar exigem o tratamento de flores do algoritmo de Edmonds (Seção~\ref{sec:emp_card_max_geral}).
+
 % ---------------------------------------------------------------------------------------------------------------------------------
 % 2.2.1. Matching em grafos bipartidos
 % ---------------------------------------------------------------------------------------------------------------------------------
@@ -358,6 +435,48 @@ busca maximizar a compatibilidade entre dois grafos $G$ e $G'$ \cite{learning_gr
 % ---------------------------------------------------------------------------------------------------------------------------------
 % Métodos exatos, aproximados e heurísticos
 % ---------------------------------------------------------------------------------------------------------------------------------
+\section{Programação linear e dualidade}
+\label{sec:pl}
+
+Vários algoritmos deste trabalho, como o método Húngaro (Seção~\ref{sec:assignment_problem}) e o algoritmo de Edmonds para emparelhamento de peso máximo (Seção~\ref{sec:emp_pond_max}), são justificados por um modelo de programação linear e pelo seu dual. Esta seção resume os conceitos necessários, seguindo \citeonline{cormen} e \citeonline{schrijver}.
+
+\subsection{Modelo de programação linear}
+
+Um problema de \textbf{programação linear} (PL) consiste em escolher valores para variáveis reais $x_1, \dots, x_m$ de modo a otimizar uma função linear delas, sujeita a restrições também lineares. Em forma matricial, com $x \in \mathbb{R}^m$, $c \in \mathbb{R}^m$, $A \in \mathbb{R}^{k \times m}$ e $b \in \mathbb{R}^k$:
+\begin{equation}
+    \max \; c^{\top} x \quad \text{sujeito a} \quad A x \le b, \quad x \ge 0.
+    \label{eq:pl_primal}
+\end{equation}
+Os elementos do modelo são:
+\begin{itemize}
+    \item \textbf{Variáveis de decisão:} as componentes de $x$, que representam as escolhas do problema.
+    \item \textbf{Função objetivo:} $c^{\top} x = \sum_j c_j x_j$, o valor a maximizar (ou minimizar).
+    \item \textbf{Restrições:} cada linha $i$ de $A x \le b$ é uma desigualdade $\sum_j a_{ij} x_j \le b_i$; junto com $x \ge 0$, elas delimitam o conjunto das \textbf{soluções viáveis}, que é um poliedro. Uma restrição satisfeita com igualdade por uma solução é dita \textbf{justa} nessa solução.
+\end{itemize}
+Quando existe solução ótima, ela é atingida em algum vértice do poliedro, e um PL pode ser resolvido em tempo polinomial \cite{cormen}.
+
+\subsection{Programação inteira e relaxação linear}
+
+Em problemas combinatórios, as variáveis costumam representar escolhas do tipo sim ou não, e o modelo exige $x_j \in \{0, 1\}$. Com essa exigência, o problema passa a ser de \textbf{programação linear inteira}, que é NP-difícil em geral. A \textbf{relaxação linear} do modelo troca $x_j \in \{0, 1\}$ por $0 \le x_j \le 1$. Como toda solução inteira continua viável, o ótimo da relaxação é um limitante superior para o ótimo inteiro (em maximização), mas pode ser atingido apenas por uma solução \textbf{fracionária}, que não corresponde a nenhuma escolha real.
+
+Há, porém, casos em que todo vértice do poliedro da relaxação é inteiro; neles, resolver o PL resolve também o problema inteiro. Um caso clássico é o de matrizes \textbf{totalmente unimodulares}, em que toda submatriz quadrada tem determinante $0$, $1$ ou $-1$. A matriz de incidência entre vértices e arestas de um grafo bipartido tem essa propriedade, e por isso os problemas de emparelhamento bipartido e de atribuição podem ser resolvidos pela sua relaxação linear \cite{schrijver}. Em grafos gerais isso deixa de valer, como mostra a Seção~\ref{sec:emp_pond_max}.
+
+\subsection{Dualidade e folga complementar}
+
+A todo PL corresponde outro PL, o seu \textbf{dual}. Para o problema~\eqref{eq:pl_primal}, chamado de \textbf{primal}, o dual tem uma variável $y_i \ge 0$ para cada restrição primal $i$ e uma restrição para cada variável primal $j$:
+\begin{equation}
+    \min \; b^{\top} y \quad \text{sujeito a} \quad A^{\top} y \ge c, \quad y \ge 0.
+    \label{eq:pl_dual}
+\end{equation}
+Os dois problemas se relacionam por três resultados \cite{cormen}:
+\begin{itemize}
+    \item \textbf{Dualidade fraca:} para quaisquer soluções viáveis $x$ do primal e $y$ do dual, $c^{\top} x \le b^{\top} y$. Toda solução dual viável é, portanto, um limitante superior para o primal.
+    \item \textbf{Dualidade forte:} se o primal tem ótimo, o dual também tem, e os dois valores ótimos são iguais.
+    \item \textbf{Folga complementar:} soluções viáveis $x$ e $y$ são ambas ótimas se, e somente se, (i) toda variável primal positiva, $x_j > 0$, torna justa a restrição dual correspondente, e (ii) toda variável dual positiva, $y_i > 0$, torna justa a restrição primal correspondente.
+\end{itemize}
+
+As variáveis duais podem ser vistas como \textbf{preços} associados às restrições; em problemas sobre grafos, em que as restrições primais são associadas a vértices, elas são chamadas de \textbf{potenciais} dos vértices. A folga complementar é a base dos \textbf{algoritmos primal-duais}: eles mantêm uma solução dual viável e constroem uma solução primal usando apenas elementos justos; quando as duas soluções satisfazem a folga complementar, ambas são ótimas. É o caso do método Húngaro e do algoritmo de Edmonds para emparelhamento de peso máximo.
+
 \section{Métodos exatos, aproximados e heurísticos}
 \label{sec:tipos_metodo}
 

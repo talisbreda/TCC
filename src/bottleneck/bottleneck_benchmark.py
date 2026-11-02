@@ -1,12 +1,13 @@
 """
 Benchmark — Problema de Atribuicao Gargalo (LBAP). Harness compartilhado.
 
-Compara os dois algoritmos exatos descritos no capitulo de atribuicao gargalo:
+Compara os algoritmos descritos no capitulo de atribuicao gargalo:
   - Threshold (busca binaria sobre o limiar + verificacao por emparelhamento);
-  - Caminhos aumentantes (Dijkstra de gargalo, construtivo).
+  - Caminhos aumentantes (Dijkstra de gargalo, construtivo);
+  - Heuristicas gulosas: simples e por arrependimento (Martello e Toth).
 
-Ambos sao exatos: o custo gargalo e sempre o mesmo (verificado em 500 matrizes
-aleatorias). A comparacao de interesse e tempo e crescimento empirico.
+Os dois exatos produzem sempre o mesmo custo gargalo (verificado em 500 matrizes
+aleatorias); o Threshold e a referencia para a qualidade das heuristicas.
 """
 
 import io
@@ -16,7 +17,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from common.algorithms import AlgorithmSpec, EXATO, PYTHON  # noqa: E402
+from common.algorithms import AlgorithmSpec, EXATO, HEURISTICA, PYTHON  # noqa: E402
 from common.harness import executar_suite  # noqa: E402
 from common import report, growth  # noqa: E402
 from common.loader import carregar_funcao  # noqa: E402
@@ -32,6 +33,12 @@ _threshold = carregar_funcao(
 _augmenting = carregar_funcao(
     "src/bottleneck/augmenting/assignment_bottleneck_augmenting.py",
     "assignment_bottleneck_augmenting")
+_greedy = carregar_funcao(
+    "src/bottleneck/heuristics/assignment_bottleneck_greedy.py",
+    "assignment_bottleneck_greedy")
+_regret = carregar_funcao(
+    "src/bottleneck/heuristics/assignment_bottleneck_greedy.py",
+    "assignment_bottleneck_regret")
 
 
 def build_cost_1(n, seed=42):
@@ -60,6 +67,10 @@ SPECS = [
                   source_url="https://github.com/djohnson2718/Linear-Bottleneck-Assignment-Problem"),
     AlgorithmSpec("augmenting", "Caminhos aumentantes", "O(n³)", "O(n²)",
                   EXATO, PYTHON, lambda m: _augmenting(m)),
+    AlgorithmSpec("greedy", "Gulosa simples", "O(n² log n)", "O(n²)",
+                  HEURISTICA, PYTHON, lambda m: _greedy(m)),
+    AlgorithmSpec("regret", "Gulosa por arrependimento", "O(n² log n)", "O(n²)",
+                  HEURISTICA, PYTHON, lambda m: _regret(m)),
 ]
 
 COSTS = [

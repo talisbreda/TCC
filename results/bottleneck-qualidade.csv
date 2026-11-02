@@ -1,49 +1,97 @@
 problema,secao,instancia,algoritmo,n,qualidade
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),10,26
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,10,26
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa simples,10,82
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa por arrependimento,10,49
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),20,18
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,20,18
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa simples,20,71
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa por arrependimento,20,18
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),30,18
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,30,18
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa simples,30,47
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa por arrependimento,30,30
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),50,13
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,50,13
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa simples,50,91
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa por arrependimento,50,16
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),75,8
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,75,8
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa simples,75,90
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa por arrependimento,75,40
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),100,7
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,100,7
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa simples,100,94
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa por arrependimento,100,59
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),150,5
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,150,5
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa simples,150,99
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa por arrependimento,150,49
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Threshold (busca binária),200,4
 bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Caminhos aumentantes,200,4
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa simples,200,75
+bottleneck,,"Matriz 1 — Densa uniforme  | custo in [1,100]",Gulosa por arrependimento,200,49
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),10,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,10,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa simples,10,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa por arrependimento,10,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),20,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,20,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa simples,20,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa por arrependimento,20,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),30,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,30,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa simples,30,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa por arrependimento,30,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),50,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,50,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa simples,50,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa por arrependimento,50,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),75,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,75,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa simples,75,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa por arrependimento,75,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),100,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,100,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa simples,100,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa por arrependimento,100,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),150,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,150,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa simples,150,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa por arrependimento,150,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Threshold (busca binária),200,1
 bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Caminhos aumentantes,200,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa simples,200,1
+bottleneck,,Matriz 2 — Estruturada     | custo = |i-j|+1,Gulosa por arrependimento,200,1
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),10,5
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,10,5
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa simples,10,50
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa por arrependimento,10,5
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),20,1
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,20,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa simples,20,50
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa por arrependimento,20,5
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),30,1
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,30,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa simples,30,50
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa por arrependimento,30,5
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),50,1
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,50,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa simples,50,5
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa por arrependimento,50,50
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),75,1
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,75,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa simples,75,5
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa por arrependimento,75,5
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),100,1
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,100,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa simples,100,5
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa por arrependimento,100,5
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),150,1
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,150,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa simples,150,50
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa por arrependimento,150,5
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Threshold (busca binária),200,1
 bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Caminhos aumentantes,200,1
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa simples,200,10
+bottleneck,,Matriz 3 — Poucos valores  | muitos empates,Gulosa por arrependimento,200,1

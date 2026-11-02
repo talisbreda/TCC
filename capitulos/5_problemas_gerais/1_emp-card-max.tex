@@ -9,23 +9,74 @@ A seguir serão apresentadas algumas propriedades importantes para a compreensã
 
 \subsubsection{Ciclos ímpares}
 
-Previamente, na seção \ref{p:caminhos_aumentantes}, vimos a definição de caminhos aumentantes, que vieram a ser fundamentais para a solução de grande parte dos problemas de emparelhamento em grafos bipartidos. Em grafos gerais, a base da solução ainda é a mesma, se baseando no lema de Berge, descrito por \citeonline{jungnickel} como:
+Os caminhos aumentantes e o lema de Berge (Seção~\ref{sec:caminhos_alternantes}) fundamentam também a solução em grafos gerais: um emparelhamento $M$ é máximo se, e somente se, não existe caminho $M$-aumentante \cite{jungnickel}. A dificuldade está em encontrar esses caminhos.
 
-\begin{quotation}
-    Um emparelhamento $M$ em um grafo $G$ é máximo se, e somente se, não existe nenhum caminho aumentante em $G$ relativo a $M$.
-\end{quotation}
+Em grafos bipartidos, ciclos sempre têm tamanho par. Isso garante que, ao realizar uma busca (BFS ou DFS) a partir de um vértice livre, nunca encontraremos uma aresta que conecte dois vértices que estejam à mesma distância (``paridade'') da raiz na árvore de busca alternante \cite{ahuja}.
 
-Em grafos bipartidos, ciclos sempre têm tamanho par. Isso garante que, ao realizar uma busca (BFS ou DFS) a partir de um vértice livre, nunca encontraremos uma aresta que conecte dois vértices que estejam à mesma distância ("paridade") da raiz na árvore de busca alternante \cite{ahuja}.
+No entanto, em grafos gerais, a presença de ciclos de comprimento ímpar quebra essa lógica. \citeonline{schrijver} explica que, ao explorar o grafo, o algoritmo pode encontrar uma aresta conectando dois vértices que possuem paridade ``par'' em relação à raiz da busca. Essa estrutura forma um \textbf{ciclo ímpar} que ``confunde'' a identificação de um caminho aumentante simples, pois um vértice poderia ser alcançado por dois caminhos alternantes de paridades diferentes.
 
-No entanto, em grafos gerais, a presença de ciclos de comprimento ímpar quebra essa lógica. \citeonline{schrijver} explica que, ao explorar o grafo, o algoritmo pode encontrar uma aresta conectando dois vértices que possuem paridade "par" em relação à raiz da busca. Essa estrutura forma um \textbf{ciclo ímpar} que "confunde" a identificação de um caminho aumentante simples, pois um vértice poderia ser alcançado por dois caminhos alternantes de paridades diferentes.
+\subsubsection{Flor (\textit{blossom})}
 
-\subsubsection{Flor (Blossom)}
+A solução para lidar com ciclos ímpares foi proposta por \citeonline{edmonds}, e consiste em uma estrutura denominada \textbf{flor} (\textit{blossom}).
 
-A solução para lidar com ciclos ímpares foi proposta por \citeonline{edmonds}, e consiste em uma estrutura denominada \textbf{Blossom}.
+Uma flor $B$ é definida como um ciclo de comprimento ímpar $2k+1$, onde $k$ arestas pertencem ao emparelhamento $M$, de tal forma que existe apenas um vértice $v_B$ no ciclo (a base da flor) que não é coberto por uma aresta de $M$ dentro do próprio ciclo. A base $v_B$ é conectada ao resto do grafo por um caminho alternante de comprimento par (o \textbf{caule} ou \textit{stem}). A Figura~\ref{fig:blossom} mostra uma flor com seu caule e o resultado da sua contração, descrita a seguir.
 
-Uma Blossom $B$ é definida como um ciclo de comprimento ímpar $2k+1$, onde $k$ arestas pertencem ao emparelhamento $M$, de tal forma que existe apenas um vértice $v_B$ no ciclo (a base da flor) que não é coberto por uma aresta de $M$ dentro do próprio ciclo. A base $v_B$ é conectada ao resto do grafo por um caminho alternante de comprimento par (o \textbf{caule} ou \textit{stem}).
+\begin{figure}[H]
+    \centering
+    \caption{Uma flor $B$ com caule e base $v_B$, antes e depois da contração}
+    \label{fig:blossom}
+    \begin{tikzpicture}[
+        vert/.style={circle, fill=black, inner sep=0pt, minimum size=6pt},
+        livre/.style={circle, draw=red!70!black, thick, fill=white, inner sep=0pt, minimum size=7pt},
+        emp/.style={line width=2.2pt},
+        nemp/.style={thin},
+        rot/.style={font=\small, green!40!black},
+    ]
+        % antes da contração
+        \coordinate (w) at (0, 0);
+        \coordinate (a1) at (1.5, 0);
+        \coordinate (a2) at (3, 0);
+        \coordinate (a3) at (4.5, 0);
+        \coordinate (b) at (6, 0);
+        \coordinate (c1) at (6.9, 1.25);
+        \coordinate (c2) at (8.4, 0.8);
+        \coordinate (c3) at (8.4, -0.8);
+        \coordinate (c4) at (6.9, -1.25);
+        \fill[green!15] (7.35, 0) circle (1.75);
+        \draw[green!40!black, thick] (7.35, 0) circle (1.75);
+        \node[rot] at (7.35, 2.05) {flor $B$};
+        \draw[green!40!black, thick] (0, 0.75) -- (5.6, 0.75);
+        \node[rot, above] at (2.8, 0.75) {caule};
+        \foreach \x/\y in {w/a1, a2/a3, b/c1, c2/c3, c4/b} \draw[nemp] (\x) -- (\y);
+        \foreach \x/\y in {a1/a2, a3/b, c1/c2, c3/c4} \draw[emp] (\x) -- (\y);
+        \foreach \v in {a1, a2, a3, b, c1, c2, c3, c4} \node[vert] at (\v) {};
+        \node[livre] at (w) {};
+        \node[below=3pt, font=\small] at (w) {$w$ (descoberto)};
+        \node[anchor=north east, font=\small] at (5.55, -0.12) {$v_B$ (base)};
+        % seta
+        \draw[-{Stealth[length=8pt]}, very thick, blue!70!black] (3, -0.9) -- (3, -2.3);
+        \node[right, font=\small, blue!70!black] at (3.1, -1.6) {contração};
+        % depois da contração
+        \begin{scope}[yshift=-3.2cm]
+            \coordinate (w) at (0, 0);
+            \coordinate (a1) at (1.5, 0);
+            \coordinate (a2) at (3, 0);
+            \coordinate (a3) at (4.5, 0);
+            \coordinate (b) at (6, 0);
+            \foreach \x/\y in {w/a1, a2/a3} \draw[nemp] (\x) -- (\y);
+            \foreach \x/\y in {a1/a2, a3/b} \draw[emp] (\x) -- (\y);
+            \foreach \v in {a1, a2, a3} \node[vert] at (\v) {};
+            \node[livre] at (w) {};
+            \node[circle, draw=green!40!black, thick, fill=green!15, minimum size=14pt, inner sep=0pt] at (b) {};
+            \node[vert] at (b) {};
+            \node[below=3pt, font=\small] at (w) {$w$ (descoberto)};
+            \node[below=6pt, font=\small] at (b) {$B$ (flor contraída)};
+        \end{scope}
+    \end{tikzpicture}
+    \fonte{Adaptado de \textit{Edmonds\_blossom.svg}, de A3nm, Wikimedia Commons (domínio público, CC0). Arestas grossas pertencem ao emparelhamento.}
+\end{figure}
 
-Edmonds provou que uma \textit{blossom} pode ser contraída em um único vértice, com base no seguinte teorema:
+Edmonds provou que uma flor pode ser contraída em um único vértice, com base no seguinte teorema:
 
 \begin{quotation}
     \label{t:contraction}
@@ -34,15 +85,15 @@ Edmonds provou que uma \textit{blossom} pode ser contraída em um único vértic
 
 \subsection{O algoritmo de Edmonds}
 
-Baseando-se na propriedade de Blossom e no teorema da contração, \citeonline{lawler} descreve o algoritmo para encontrar o 
+Baseando-se nas flores e no teorema da contração, \citeonline{lawler} descreve o algoritmo para encontrar o 
 emparelhamento máximo em grafos gerais da seguinte forma:
 
 \begin{enumerate}
     \item \textbf{Busca:} Inicie uma busca (geralmente BFS) a partir dos vértices livres para encontrar um caminho aumentante, construindo uma Floresta de Árvores Alternantes. Na versão de \citeonline{jungnickel} (Algoritmo~\ref{alg:maxmatch}), a busca parte de um vértice livre $r$ de cada vez (linha~\ref{bl:root}) e cresce a árvore alternando uma aresta não emparelhada $\{x, y\}$ com a aresta emparelhada $\{y, mate(y)\}$ (linhas~\ref{bl:extend}--\ref{bl:grow}).
-    \item \textbf{Detecção:} Se a busca encontrar uma aresta que fecha um ciclo ímpar, uma \textbf{blossom} foi identificada. Isso ocorre quando a aresta $\{x, y\}$ liga dois vértices de profundidade par da mesma árvore (linha~\ref{bl:odd}). O procedimento BLOSSOM (Algoritmo~\ref{alg:blossom_proc}) identifica o ciclo, subindo de $x$ e de $y$ até a raiz e tomando como base $w$ o ancestral comum mais profundo.
-    \item \textbf{Contração:} Contraia todos os vértices da \textbf{blossom} em um único super-vértice e modifique o grafo temporariamente. O procedimento CONTRACT (Algoritmo~\ref{alg:contract}) cria o super-vértice $b = n + m$, que herda o pai, a profundidade e o parceiro da base, recebe a união das adjacências da flor e desativa os vértices originais.
+    \item \textbf{Detecção:} Se a busca encontrar uma aresta que fecha um ciclo ímpar, uma \textbf{flor} foi identificada. Isso ocorre quando a aresta $\{x, y\}$ liga dois vértices de profundidade par da mesma árvore (linha~\ref{bl:odd}). O procedimento BLOSSOM (Algoritmo~\ref{alg:blossom_proc}) identifica o ciclo, subindo de $x$ e de $y$ até a raiz e tomando como base $w$ o ancestral comum mais profundo.
+    \item \textbf{Contração:} Contraia todos os vértices da \textbf{flor} em um único super-vértice e modifique o grafo temporariamente. O procedimento CONTRACT (Algoritmo~\ref{alg:contract}) cria o super-vértice $b = n + m$, que herda o pai, a profundidade e o parceiro da base, recebe a união das adjacências da flor e desativa os vértices originais.
     \item \textbf{Recursão:} Continue a busca no grafo contraído. Na versão de \citeonline{jungnickel}, isso é feito sem recursão explícita: o super-vértice entra na fila de busca (linha~\ref{bl:insb} do Algoritmo~\ref{alg:contract}) e passa a ser tratado como um vértice comum, podendo ele próprio fazer parte de novas flores.
-    \item \textbf{Expansão:} Se um caminho aumentante for encontrado no grafo contraído passando pelo super-vértice, "abra" (expanda) a flor novamente para traduzir esse caminho para o grafo original. O caminho dentro da flor será roteado de forma a manter a alternância correta. É o primeiro laço do procedimento AUGMENT (Algoritmo~\ref{alg:augment_blossom}, linha~\ref{bl:expand}), que substitui cada super-vértice do caminho, do mais recente para o mais antigo, por um caminho alternante de comprimento par dentro da flor.
+    \item \textbf{Expansão:} Se um caminho aumentante for encontrado no grafo contraído passando pelo super-vértice, ``abra'' (expanda) a flor novamente para traduzir esse caminho para o grafo original. O caminho dentro da flor será roteado de forma a manter a alternância correta. É o primeiro laço do procedimento AUGMENT (Algoritmo~\ref{alg:augment_blossom}, linha~\ref{bl:expand}), que substitui cada super-vértice do caminho, do mais recente para o mais antigo, por um caminho alternante de comprimento par dentro da flor.
     \item \textbf{Aumento:} Use o caminho encontrado para aumentar o emparelhamento através da diferença simétrica (inversão das arestas). O AUGMENT é chamado quando a busca alcança um vértice livre $y$ (linha~\ref{bl:calla} do Algoritmo~\ref{alg:maxmatch}), e seu último laço (linha~\ref{bl:flip}) inverte as arestas ao longo do caminho.
 \end{enumerate}
 
@@ -68,16 +119,16 @@ Os pseudocódigos a seguir, de \citeonline{jungnickel}, organizam esses passos e
                     $p(v) \leftarrow 0, d(v) \leftarrow -1, a(v) \leftarrow \KwTrue$\;
                     $CA(v) \leftarrow A_v$\;
                 }
-                $d(r) \leftarrow 0$; append $r$ to $Q$\label{bl:root}\;
+                $d(r) \leftarrow 0$; acrescente $r$ ao fim de $Q$\label{bl:root}\;
                 
                 \While{$aug = \KwFalse$ \KwAnd $Q \neq \emptyset$}{
-                    remove the first vertex $x$ of $Q$\;
+                    remova o primeiro vértice $x$ de $Q$\;
                     \If{$a(x) = \KwTrue$}{
                         $cont \leftarrow \KwFalse$\;
                         \For{$y \in CA(x)$}{ $u(y) \leftarrow \KwFalse$ }
                         
-                        \Repeat{$u(y) = \KwTrue$ for all $y \in CA(x)$ \KwOr $aug = \KwTrue$ \KwOr $cont = \KwTrue$}{
-                            choose $y \in CA(x)$ with $u(y) = \KwFalse; u(y) \leftarrow \KwTrue$\;
+                        \Repeat{$u(y) = \KwTrue$ para todo $y \in CA(x)$ \KwOr $aug = \KwTrue$ \KwOr $cont = \KwTrue$}{
+                            escolha $y \in CA(x)$ com $u(y) = \KwFalse; u(y) \leftarrow \KwTrue$\;
                             \If{$a(y) = \KwTrue$}{
                                 \If{$d(y) \equiv 0 \pmod 2$\label{bl:odd}}{
                                     $m \leftarrow m + 1$\;
@@ -91,7 +142,7 @@ Os pseudocódigos a seguir, de \citeonline{jungnickel}, organizam esses passos e
                                         $z \leftarrow mate(y)$\;
                                         $p(y) \leftarrow x; d(y) \leftarrow d(x) + 1$\label{bl:extend}\;
                                         $p(z) \leftarrow y; d(z) \leftarrow d(y) + 1$\;
-                                        insert $z$ with priority $d(z)$ into $Q$\label{bl:grow}\;
+                                        insira $z$ em $Q$ com prioridade $d(z)$\label{bl:grow}\;
                                     }
                                 }
                             }
@@ -122,7 +173,7 @@ Os pseudocódigos a seguir, de \citeonline{jungnickel}, organizam esses passos e
             $P' \leftarrow P' \cup \{p(v)\}; v \leftarrow p(v)$\label{blp:upy}\;
         }
         $S \leftarrow P \cap P'$\label{blp:common}\;
-        let $w$ be the element of $S$ for which $d(w) \ge d(z)$ for all $z \in S$\label{blp:base}\;
+        \KwLet $w$ o elemento de $S$ com $d(w) \ge d(z)$ para todo $z \in S$\label{blp:base}\;
         $B \leftarrow ((P \cup P') \setminus S) \cup \{w\}$\label{blp:set}\;
     }
     \caption{Algoritmo de BLOSSOM \cite{jungnickel}}
@@ -151,7 +202,7 @@ O procedimento BLOSSOM é chamado pelo MAXMATCH quando a aresta $\{x, y\}$ liga 
     \Fn{CONTRACT($B, m, w$)}{
         $b \leftarrow n + m; a(b) \leftarrow \KwTrue$\;
         $p(b) \leftarrow p(w); d(b) \leftarrow d(w); mate(b) \leftarrow mate(w)$\;
-        insert $b$ into $Q$ with priority $d(b)$\label{bl:insb}\;
+        insira $b$ em $Q$ com prioridade $d(b)$\label{bl:insb}\;
         $CA(b) \leftarrow \bigcup_{z \in B} CA(z)$\;
         \For{$z \in CA(b)$}{ $CA(z) \leftarrow CA(z) \cup \{b\}$ }
         \For{$z \in B$}{ $a(z) \leftarrow \KwFalse$ }
@@ -180,19 +231,19 @@ O procedimento BLOSSOM é chamado pelo MAXMATCH quando a aresta $\{x, y\}$ liga 
         \While{$p(v) \neq 0$}{
             $P \leftarrow P \cup \{p(v)\}; v \leftarrow p(v)$\;
         }
-        \While{there exists $b \in P$ with $b > n$\label{bl:expand}}{
-            choose the largest $b \in P$ with $b > n$\;
+        \While{existe $b \in P$ com $b > n$\label{bl:expand}}{
+            escolha o maior $b \in P$ com $b > n$\;
             $B \leftarrow B(b - n); w \leftarrow w(b - n); z \leftarrow mate(w)$\;
-            let $q$ be the neighbor of $b$ on $P$ which is different from $z$\;
-            choose some $q' \in B \cap CA(q)$\;
-            determine the alternating path $B'$ of even length in $B$ from $w$ to $q'$\;
-            replace $b$ by $w$ in $P$\;
-            insert $B'$ into $P$ between $w$ and $q$\;
+            \KwLet $q$ o vizinho de $b$ em $P$ diferente de $z$\;
+            escolha algum $q' \in B \cap CA(q)$\;
+            determine o caminho alternante $B'$ de comprimento par em $B$ de $w$ a $q'$\;
+            substitua $b$ por $w$ em $P$\;
+            insira $B'$ em $P$ entre $w$ e $q$\;
         }
         $u \leftarrow y; v \leftarrow x$\;
         \While{$v \neq r$\label{bl:flip}}{
             $z \leftarrow mate(v); mate(v) \leftarrow u; mate(u) \leftarrow v$\;
-            $u \leftarrow z$; let $v$ be the successor of $z$ on $P$\;
+            $u \leftarrow z$; \KwLet $v$ o sucessor de $z$ em $P$\;
         }
         $mate(v) \leftarrow u; mate(u) \leftarrow v$\;
         $nrex \leftarrow nrex - 2; aug \leftarrow \KwTrue$\;
@@ -231,7 +282,7 @@ Alguns dos algoritmos aproximados que resolvem este problema são os mesmos vist
 \subsubsection{Algoritmo de crescimento de caminho (Path Growing)}
 \label{p:h_path_growing_card}
 
-Uma variação inteligente do método guloso, descrita por \citeonline{drake}, que usa DFS e tenta evitar a "miopia" de escolher uma aresta isolada. Assim como os anteriores, garante um emparelhamento com pelo menos metade da cardinalidade máxima, caso particular da garantia de metade do peso máximo da versão ponderada (Seção~\ref{sec:emp_pond_max_aprox}).
+Uma variação inteligente do método guloso, descrita por \citeonline{drake}, que usa DFS e tenta evitar a ``miopia'' de escolher uma aresta isolada. Assim como os anteriores, garante um emparelhamento com pelo menos metade da cardinalidade máxima, caso particular da garantia de metade do peso máximo da versão ponderada (Seção~\ref{sec:emp_pond_max_aprox}).
 
 \begin{enumerate}
     \item Escolha um vértice livre inicial $v$.
@@ -242,14 +293,15 @@ Uma variação inteligente do método guloso, descrita por \citeonline{drake}, q
 
 Ao contrário do guloso simples (que escolhe arestas desconexas), o Path Growing tende a cobrir cadeias longas de vértices, o que é estruturalmente vantajoso.
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Algoritmos para problema de emparelhamento de cardinalidade máxima em grafos gerais}
     \label{tab:emp_card_max_geral_algos}
     \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
+    \footnotesize
     
     % Structure: l = left align, c = center, X = auto-wrap paragraph
-    \begin{tabularx}{\textwidth}{@{} l l l l X @{}}
+    \begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{2.8cm} l l l >{\raggedright\arraybackslash}X @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Complexidade} & \textbf{Tipo} & \textbf{Avaliado} & \textbf{Descrição} \\
         \midrule
@@ -262,19 +314,19 @@ Ao contrário do guloso simples (que escolhe arestas desconexas), o Path Growing
         Variação otimizada do algoritmo de Edmonds que utiliza estruturas de dados avançadas para reduzir drasticamente a complexidade. \\
         \addlinespace 
 
-        Guloso simples & $O(E)$ & Aproximado & Não & 
+        Guloso simples & $O(E)$ & Aprox. & Não & 
         Itera sobre arestas arbitrariamente, selecionando aquelas que conectam dois vértices livres. \\
         \addlinespace
 
-        Karp-Sipser & $O(E)$ & Aproximado & Não & 
+        Karp-Sipser & $O(E)$ & Aprox. & Não & 
         Prioriza remoção de vértices de grau 1; usa escolha aleatória quando não há folhas. \\
         \addlinespace
         
-        Crescimento de caminho & $O(E)$ & Aproximado & Não & 
+        Crescimento de caminho & $O(E)$ & Aprox. & Não & 
         Método linear que constrói caminhos simples via DFS e seleciona arestas alternadas para garantir um emparelhamento maximal. \\
         
         \bottomrule
     \end{tabularx}
     \par\smallskip
-    {\raggedright\footnotesize \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}.\par}
+    {\raggedright\footnotesize \textit{Aprox.}: aproximado. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}.\par}
 \end{table}

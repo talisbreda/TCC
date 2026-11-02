@@ -11,7 +11,7 @@ Seja $G = (V, E)$ um grafo geral. Um subconjunto de arestas $M \subseteq E$ é u
     \item \textbf{Condição Induzida:} O subgrafo induzido pelos vértices saturados por $M$, denotado por $G[V(M)]$, contém \textbf{apenas} as arestas de $M$.
 \end{enumerate}
 
-Em termos mais simples, se tomarmos duas arestas quaisquer $\{u, v\}$ e $\{x, y\}$ pertencentes ao emparelhamento induzido, não pode existir no grafo original nenhuma aresta conectando um vértice do par $\{u, v\}$ a um vértice do par $\{x, y\}$. Isso implica que as arestas do emparelhamento devem estar "topologicamente isoladas" umas das outras.
+Em termos mais simples, se tomarmos duas arestas quaisquer $\{u, v\}$ e $\{x, y\}$ pertencentes ao emparelhamento induzido, não pode existir no grafo original nenhuma aresta conectando um vértice do par $\{u, v\}$ a um vértice do par $\{x, y\}$. Isso implica que as arestas do emparelhamento devem estar ``topologicamente isoladas'' umas das outras.
 
 \citeonline{cameron} oferece uma caracterização alternativa baseada em distância: um emparelhamento induzido é um conjunto de arestas onde a distância entre quaisquer duas arestas distintas é de pelo menos 2 (ou seja, não há aresta de ligação entre elas).
 
@@ -49,25 +49,25 @@ Para instâncias pequenas, a redução acima permite resolver o MIM de forma exa
     \caption{Emparelhamento induzido máximo exato, via conjunto independente máximo em $L(G)^2$ \cite{cameron}}
     \label{alg:mim_exact}
 
-    \KwIn{graph $G = (V, E)$}
-    \KwOut{maximum induced matching $M^*$}
-    build $H = L(G)^2$: one vertex per edge of $G$; $e \sim f$ in $H$ iff $e$ and $f$ share a vertex or are joined by an edge of $G$\label{mx:build}\;
+    \KwIn{grafo $G = (V, E)$}
+    \KwOut{emparelhamento induzido máximo $M^*$}
+    construa $H = L(G)^2$: um vértice por aresta de $G$; $e \sim f$ em $H$ \KwIff $e$ e $f$ têm um vértice em comum ou são ligadas por uma aresta de $G$\label{mx:build}\;
     $M^* := \emptyset$\label{mx:init}\;
-    \textsc{Branch}$(\emptyset, E)$\label{mx:call}\;
+    \textsc{Ramifica}$(\emptyset, E)$\label{mx:call}\;
     \KwRet $M^*$\label{mx:ret}\;
 
     \bigskip
 
-    \Fn{\textsc{Branch}$(M, C)$}{
+    \Fn{\textsc{Ramifica}$(M, C)$}{
         \AlgComment{$M$: solução atual; $C$: arestas candidatas sem conflito com $M$}\;
         \lIf{$|M| + |C| \le |M^*|$\label{mx:bound}}{\KwRet \AlgComment{poda}}
         \If{$C = \emptyset$\label{mx:leaf}}{
             $M^* := M$\label{mx:best}\;
             \KwRet\;
         }
-        choose $e \in C$\label{mx:choose}\;
-        \textsc{Branch}$(M \cup \{e\}, C \setminus (N_H(e) \cup \{e\}))$ \AlgComment{inclui $e$}\label{mx:incl}\;
-        \textsc{Branch}$(M, C \setminus \{e\})$ \AlgComment{exclui $e$}\label{mx:excl}\;
+        escolha $e \in C$\label{mx:choose}\;
+        \textsc{Ramifica}$(M \cup \{e\}, C \setminus (N_H(e) \cup \{e\}))$ \AlgComment{inclui $e$}\label{mx:incl}\;
+        \textsc{Ramifica}$(M, C \setminus \{e\})$ \AlgComment{exclui $e$}\label{mx:excl}\;
     }
 \end{algorithm}
 
@@ -76,7 +76,7 @@ O Algoritmo~\ref{alg:mim_exact} pode ser lido linha a linha da seguinte forma:
 \begin{itemize}
     \item \textbf{Linha~\ref{mx:build}:} Constrói-se o grafo de conflitos $H = L(G)^2$, com um vértice para cada aresta de $G$ e uma aresta entre duas arestas de $G$ que não podem estar juntas em um emparelhamento induzido: as que compartilham um vértice ou as que são ligadas por uma terceira aresta. Um emparelhamento induzido de $G$ é exatamente um conjunto independente de $H$.
     \item \textbf{Linhas~\ref{mx:init}--\ref{mx:ret}:} A melhor solução conhecida $M^*$ começa vazia, e a busca parte de uma solução vazia com todas as arestas como candidatas. Ao final, $M^*$ contém o emparelhamento induzido máximo.
-    \item \textbf{Linha~\ref{mx:bound}:} Poda (\textit{bound}): o procedimento \textsc{Branch} recebe a solução parcial $M$ e o conjunto $C$ das arestas que ainda podem ser adicionadas a ela sem conflito. Mesmo que todas as candidatas fossem incluídas, a solução teria no máximo $|M| + |C|$ arestas; se isso não supera a melhor solução já encontrada, o ramo é abandonado.
+    \item \textbf{Linha~\ref{mx:bound}:} Poda (\textit{bound}): o procedimento \textsc{Ramifica} recebe a solução parcial $M$ e o conjunto $C$ das arestas que ainda podem ser adicionadas a ela sem conflito. Mesmo que todas as candidatas fossem incluídas, a solução teria no máximo $|M| + |C|$ arestas; se isso não supera a melhor solução já encontrada, o ramo é abandonado.
     \item \textbf{Linhas~\ref{mx:leaf}--\ref{mx:best}:} Sem candidatas restantes, a solução parcial está completa e, como passou pela poda, é maior que $M^*$, que é então substituída.
     \item \textbf{Linhas~\ref{mx:choose}--\ref{mx:excl}:} Ramificação (\textit{branch}): escolhe-se uma candidata $e$ e exploram-se os dois casos possíveis. No primeiro, $e$ entra na solução, e saem das candidatas $e$ e todos os seus vizinhos em $H$, que passariam a conflitar com ela. No segundo, $e$ é descartada e as demais candidatas são mantidas. Todo emparelhamento induzido cai em exatamente um dos dois ramos, o que garante que o ótimo é encontrado.
     \item \textbf{Complexidade:} A construção de $H$ compara pares de arestas, com custo $O(E^2)$. A árvore de busca tem profundidade no máximo $E$, pois cada chamada remove ao menos uma candidata, e até $2^E$ folhas no pior caso; cada chamada faz operações de conjunto de custo $O(E)$. O total é exponencial, $O(E \cdot 2^E)$ no pior caso, o que é esperado para um problema NP-difícil; a poda reduz bastante a busca na prática, mas não altera esse limite, e o algoritmo só é viável em instâncias pequenas.
@@ -103,15 +103,15 @@ As duas variantes compartilham a mesma estrutura e diferem apenas no critério d
     \caption{Heurísticas gulosas para emparelhamento induzido: aleatória e de grau mínimo \cite{duckworth, halldorsson}}
     \label{alg:mim_greedy}
 
-    \KwIn{graph $G = (V, E)$; selection rule \textsc{Random} or \textsc{MinDegree}}
-    \KwOut{maximal induced matching $M$}
-    build $H = L(G)^2$\label{mg:build}\;
+    \KwIn{grafo $G = (V, E)$; regra de escolha \textsc{Aleatória} ou \textsc{GrauMínimo}}
+    \KwOut{emparelhamento induzido maximal $M$}
+    construa $H = L(G)^2$\label{mg:build}\;
     $M := \emptyset$; $C := E$\label{mg:init}\;
     \While{$C \neq \emptyset$\label{mg:loop}}{
-        \eIf{rule is \textsc{Random}\label{mg:rule}}{
-            choose $e \in C$ uniformly at random\label{mg:rand}\;
+        \eIf{a regra é \textsc{Aleatória}\label{mg:rule}}{
+            escolha $e \in C$ uniformemente ao acaso\label{mg:rand}\;
         }{
-            choose $e \in C$ with minimum degree in $H[C]$\label{mg:mindeg}\;
+            escolha $e \in C$ de grau mínimo em $H[C]$\label{mg:mindeg}\;
         }
         $M := M \cup \{e\}$\label{mg:add}\;
         $C := C \setminus (N_H(e) \cup \{e\})$\label{mg:remove}\;
@@ -137,23 +137,24 @@ Para superar os ótimos locais frequentemente encontrados pelos métodos gulosos
 \citeonline{furst} investigaram formalmente o poder da busca local para o Emparelhamento Induzido Máximo. A estratégia analisada consiste em iniciar com um emparelhamento induzido qualquer (ou vazio) e tentar aumentá-lo iterativamente através de melhorias locais simples.
 Eles focaram na análise de grafos $k$-regulares e demonstraram que, embora a busca local possa ficar presa em ótimos locais longe da solução global em grafos gerais, ela oferece garantias de desempenho interessantes para classes específicas (como grafos livres de garras ou $C_4$-free). O algoritmo de busca local proposto tenta adicionar arestas que não violem a restrição induzida e, se necessário, remover um número pequeno de arestas existentes para acomodar a nova inclusão, um processo análogo às trocas (*k-swaps*) em outros problemas combinatórios.
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Algoritmos para problema de emparelhamento induzido máximo em grafos gerais}
     \label{tab:emp_induz_max_gerais}
     \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
+    \footnotesize
     
     % Structure: l = left align, c = center, X = auto-wrap paragraph
-    \begin{tabularx}{\textwidth}{@{} l l l l X @{}}
+    \begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{2.8cm} l l l >{\raggedright\arraybackslash}X @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Complexidade} & \textbf{Tipo} & \textbf{Avaliado} & \textbf{Descrição} \\
         \midrule
         
-        Guloso Aleatório & $O(E^2)$* & Heurística & Sim & 
+        Guloso Aleatório & $O(E^2)$* & Heur. & Sim & 
         Seleciona arestas uniformemente ao acaso e remove suas vizinhanças induzidas. \\
         \addlinespace 
 
-        Guloso de grau mínimo & $O(E^2)$* & Heurística & Sim & 
+        Guloso de grau mínimo & $O(E^2)$* & Heur. & Sim & 
         Seleciona a aresta cuja remoção elimina o menor número de arestas vizinhas. \\
         
         \addlinespace
@@ -164,6 +165,6 @@ Eles focaram na análise de grafos $k$-regulares e demonstraram que, embora a bu
         \bottomrule
     \end{tabularx}
     \par\smallskip
-    {\raggedright\footnotesize \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. * Complexidade das implementações avaliadas, que constroem explicitamente o grafo de conflitos $L(G)^2$.\par}
+    {\raggedright\footnotesize \textit{Heur.}: heurística. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. * Complexidade das implementações avaliadas, que constroem explicitamente o grafo de conflitos $L(G)^2$.\par}
 \end{table}
 

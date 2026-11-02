@@ -21,7 +21,7 @@ O método se baseia em manter um conjunto de potenciais para os vértices dos do
 
 Cria-se um subgrafo de igualdade $H_{u,v}$ contendo apenas as arestas onde a soma dos potenciais é igual ao custo da aresta, ou seja, $u_i + v_j = w_{ij}$. O algoritmo então tenta encontrar um emparelhamento máximo neste subgrafo de igualdade. Se o emparelhamento encontrado cobre todos os vértices do conjunto esquerdo, então ele é ótimo para o problema de atribuição original. Caso contrário, o algoritmo ajusta os potenciais para criar novas arestas de igualdade e repete o processo até encontrar um emparelhamento máximo que cubra todos os vértices do conjunto esquerdo \cite{jungnickel}.
 
-Em seguida o pseudo-código do método Húngaro:
+Em seguida o pseudocódigo do método Húngaro:
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
@@ -38,22 +38,22 @@ Em seguida o pseudo-código do método Húngaro:
         \While{$nrex \neq 0$\label{hu:phase}}{
             
             % Line 5
-            \lFor{$i = 1$ \KwTo $n$}{ $m(i) \leftarrow \text{false}; p(i) \leftarrow 0; \delta_i \leftarrow \infty$ \label{hu:reset} }
-            $aug \leftarrow \text{false}; Q \leftarrow \{ i \in S : mate(i) = 0 \}$\label{hu:roots}\;
+            \lFor{$i = 1$ \KwTo $n$}{ $m(i) \leftarrow \text{falso}; p(i) \leftarrow 0; \delta_i \leftarrow \infty$ \label{hu:reset} }
+            $aug \leftarrow \text{falso}; Q \leftarrow \{ i \in S : mate(i) = 0 \}$\label{hu:roots}\;
             
             % Line 7: Repeat Loop
-            \Repeat{$aug = \text{true}$}{
-                remove an arbitrary vertex $i$ from $Q$; $m(i) \leftarrow \text{true}; j \leftarrow 1$\label{hu:scan}\;
+            \Repeat{$aug = \text{verdadeiro}$}{
+                remova um vértice arbitrário $i$ de $Q$; $m(i) \leftarrow \text{verdadeiro}; j \leftarrow 1$\label{hu:scan}\;
                 
                 % Line 9: Inner While
-                \While{$aug = \text{false}$ \KwAnd $j \leq n$}{
+                \While{$aug = \text{falso}$ \KwAnd $j \leq n$}{
                     \If{$mate(i) \neq j'$\label{hu:skip}}{
                          \If{$u_i + v_j - w_{ij} < \delta_j$\label{hu:slack}}{
                             $\delta_j \leftarrow u_i + v_j - w_{ij}; p(j) \leftarrow i$\;
                             \If{$\delta_j = 0$\label{hu:tight}}{
                                 \eIf{$mate(j') = 0$}{
                                     AUGMENT($mate, p, j'; mate$)\label{hu:aug1}\;
-                                    $aug \leftarrow \text{true}; nrex \leftarrow nrex - 1$\;
+                                    $aug \leftarrow \text{verdadeiro}; nrex \leftarrow nrex - 1$\;
                                 }{
                                     $Q \leftarrow Q \cup \{ mate(j') \}$\label{hu:grow}\;
                                 }
@@ -64,20 +64,20 @@ Em seguida o pseudo-código do método Húngaro:
                 }
                 
                 % Line 24: Check if augmentation failed and Q is empty
-                \If{$aug = \text{false}$ \KwAnd $Q = \emptyset$\label{hu:dual}}{
-                    $J \leftarrow \{ i \in S : m(i) = \text{true} \}; K \leftarrow \{ j' \in T : \delta_j = 0 \}$\;
+                \If{$aug = \text{falso}$ \KwAnd $Q = \emptyset$\label{hu:dual}}{
+                    $J \leftarrow \{ i \in S : m(i) = \text{verdadeiro} \}; K \leftarrow \{ j' \in T : \delta_j = 0 \}$\;
                     $\delta \leftarrow \min \{ \delta_j : j' \in T \setminus K \}$\label{hu:delta}\;
                     \lFor{$i \in J$}{ $u_i \leftarrow u_i - \delta$ }
                     \lFor{$j' \in K$}{ $v_j \leftarrow v_j + \delta$ }
                     \lFor{$j' \in T \setminus K$}{ $\delta_j \leftarrow \delta_j - \delta$ \label{hu:dj} }
                     $X \leftarrow \{ j' \in T \setminus K : \delta_j = 0 \}$\label{hu:X}\;
                     
-                    \eIf{$mate(j') \neq 0$ for all $j' \in X$}{
+                    \eIf{$mate(j') \neq 0$ para todo $j' \in X$}{
                         \lFor{$j' \in X$}{ $Q \leftarrow Q \cup \{ mate(j') \}$ }
                     }{
-                        choose $j' \in X$ with $mate(j') = 0$\label{hu:aug2}\;
+                        escolha $j' \in X$ com $mate(j') = 0$\label{hu:aug2}\;
                         AUGMENT($mate, p, j'; mate$)\;
-                        $aug \leftarrow \text{true}; nrex \leftarrow nrex - 1$\;
+                        $aug \leftarrow \text{verdadeiro}; nrex \leftarrow nrex - 1$\;
                     }
                 }
             }
@@ -92,10 +92,10 @@ Em seguida o pseudo-código do método Húngaro:
     \SetAlgoLined
 
     \Fn{AUGMENT($mate, p, j'; mate$)}{
-        \Repeat{$next = 0$\label{aug:until}}{
-            $i \leftarrow p(j); mate(j') \leftarrow i; next \leftarrow mate(i); mate(i) \leftarrow j'$\label{aug:flip}\;
-            \If{$next \neq 0$\label{aug:next}}{
-                $j' \leftarrow next$\label{aug:step}\;
+        \Repeat{$prox = 0$\label{aug:until}}{
+            $i \leftarrow p(j); mate(j') \leftarrow i; prox \leftarrow mate(i); mate(i) \leftarrow j'$\label{aug:flip}\;
+            \If{$prox \neq 0$\label{aug:next}}{
+                $j' \leftarrow prox$\label{aug:step}\;
             }
         }
     }
@@ -112,8 +112,8 @@ Na versão de \citeonline{jungnickel}, o algoritmo \textit{maximiza} o peso do e
     \item \textbf{Ajuste dos potenciais (linhas~\ref{hu:dual}--\ref{hu:aug2}):} Se a fila esvazia sem que um caminho aumentante seja encontrado, as linhas e colunas da árvore formam os conjuntos $J$ e $K$. Calcula-se $\delta$, a menor folga entre as colunas fora da árvore (linha~\ref{hu:delta}). Diminuir $u_i$ em $\delta$ nas linhas da árvore e aumentar $v_j$ em $\delta$ nas colunas da árvore preserva as arestas da árvore no subgrafo de igualdade e mantém a viabilidade dos potenciais. Ao mesmo tempo, a folga das colunas de fora diminui em $\delta$ (linha~\ref{hu:dj}), o que coloca ao menos uma nova aresta no subgrafo de igualdade (o conjunto $X$, linha~\ref{hu:X}). Se todas as colunas de $X$ estão emparelhadas, suas parceiras entram na fila e a busca continua; senão, uma coluna livre de $X$ completa um caminho aumentante (linha~\ref{hu:aug2}).
     \item \textbf{Aumento (Algoritmo~\ref{alg:augment}):} A partir da coluna livre encontrada, o procedimento AUGMENT segue os predecessores $p$ de volta até a raiz, invertendo o emparelhamento ao longo do caminho:
     \begin{itemize}
-        \item Linha~\ref{aug:flip}: $i = p(j)$ é a linha pela qual a coluna $j'$ foi alcançada na busca. A coluna $j'$ passa a ser parceira de $i$, e a antiga parceira de $i$ é guardada em $next$ antes de ser substituída. Essa troca é a inversão de uma aresta emparelhada e uma não emparelhada do caminho aumentante.
-        \item Linhas~\ref{aug:next}--\ref{aug:step}: se $i$ tinha parceira ($next \neq 0$), essa coluna acabou de ficar livre e o processo continua a partir dela, um passo mais perto da raiz.
+        \item Linha~\ref{aug:flip}: $i = p(j)$ é a linha pela qual a coluna $j'$ foi alcançada na busca. A coluna $j'$ passa a ser parceira de $i$, e a antiga parceira de $i$ é guardada em $prox$ antes de ser substituída. Essa troca é a inversão de uma aresta emparelhada e uma não emparelhada do caminho aumentante.
+        \item Linhas~\ref{aug:next}--\ref{aug:step}: se $i$ tinha parceira ($prox \neq 0$), essa coluna acabou de ficar livre e o processo continua a partir dela, um passo mais perto da raiz.
         \item Linha~\ref{aug:until}: o laço termina quando $i$ não tinha parceira, ou seja, quando se chega à raiz da árvore, que era uma linha livre. Ao final, o emparelhamento tem uma aresta a mais.
         \item Como o caminho tem no máximo $n$ arestas emparelhadas, o procedimento custa $O(n)$.
     \end{itemize}
@@ -137,36 +137,36 @@ A implementação completa deste algoritmo é extensa; o Algoritmo~\ref{alg:jv} 
     \caption{Algoritmo de Jonker-Volgenant (LAPJV), em alto nível \cite{jonker}}
     \label{alg:jv}
 
-    \KwIn{cost matrix $C = (c_{ij})_{n \times n}$}
-    \KwOut{optimal assignment $x$ (row $i$ is assigned to column $x_i$) and column duals $v$}
+    \KwIn{matriz de custos $C = (c_{ij})_{n \times n}$}
+    \KwOut{atribuição ótima $x$ (a linha $i$ é atribuída à coluna $x_i$) e duais de coluna $v$}
 
     \AlgComment{fase 1: redução de colunas}\label{jv:p1}\;
     \For{$j := n$ \KwTo $1$\label{jv:colloop}}{
         $i^* := \arg\min_i c_{ij}$; $v_j := c_{i^* j}$\label{jv:colmin}\;
-        \lIf{row $i^*$ is unassigned}{assign $i^*$ to $j$\label{jv:colassign}}
+        \lIf{a linha $i^*$ está livre}{atribua $i^*$ a $j$\label{jv:colassign}}
     }
 
     \AlgComment{fase 2: transferência de redução}\label{jv:p2}\;
-    \For{each assigned row $i$ that is the minimum of a single column $j_1 = x_i$\label{jv:trloop}}{
+    \ForEach{linha atribuída $i$ que é o mínimo de uma única coluna $j_1 = x_i$\label{jv:trloop}}{
         $v_{j_1} := v_{j_1} - \min_{j \neq j_1} (c_{ij} - v_j)$\label{jv:transfer}\;
     }
 
     \AlgComment{fase 3: redução de linhas aumentante (aplicada duas vezes)}\label{jv:p3}\;
-    \For{each free row $i$\label{jv:arrloop}}{
-        let $j_1, j_2$ be the columns with the smallest and second smallest values $u_1 \le u_2$ of $c_{ij} - v_j$\label{jv:two}\;
+    \ForEach{linha livre $i$\label{jv:arrloop}}{
+        \KwLet $j_1, j_2$ as colunas com o menor e o segundo menor valor $u_1 \le u_2$ de $c_{ij} - v_j$\label{jv:two}\;
         \eIf{$u_1 < u_2$\label{jv:strict}}{
             $v_{j_1} := v_{j_1} - (u_2 - u_1)$\label{jv:dec}\;
         }{
-            \lIf{$j_1$ is assigned}{$j_1 := j_2$\label{jv:tie}}
+            \lIf{$j_1$ está atribuída}{$j_1 := j_2$\label{jv:tie}}
         }
-        assign $i$ to $j_1$; the row previously assigned to $j_1$, if any, becomes free\label{jv:displace}\;
+        atribua $i$ a $j_1$; a linha antes atribuída a $j_1$, se houver, fica livre\label{jv:displace}\;
     }
 
     \AlgComment{fase 4: aumento por caminhos mínimos}\label{jv:p4}\;
-    \For{each remaining free row $i$\label{jv:augloop}}{
-        find a shortest augmenting path from $i$ to a free column with a Dijkstra-like search on the reduced costs $c_{kj} - v_j$\label{jv:sp}\;
-        $v_j := v_j + d_j - \mu$ for every scanned column $j$, where $d_j$ is its distance and $\mu$ the length of the path\label{jv:dual}\;
-        augment the assignment along the path\label{jv:aug}\;
+    \ForEach{linha $i$ ainda livre\label{jv:augloop}}{
+        encontre um caminho aumentante mínimo de $i$ a uma coluna livre, com uma busca do tipo Dijkstra sobre os custos reduzidos $c_{kj} - v_j$\label{jv:sp}\;
+        $v_j := v_j + d_j - \mu$ para toda coluna $j$ examinada, sendo $d_j$ sua distância e $\mu$ o comprimento do caminho\label{jv:dual}\;
+        aumente a atribuição ao longo do caminho\label{jv:aug}\;
     }
     \KwRet $x$, $v$\label{jv:ret}\;
 \end{algorithm}
@@ -208,27 +208,27 @@ O primeiro algoritmo, o de caminhos de custo mínimo sucessivos, foi inicialment
         \lFor{$e \in E$}{ $f(e) \leftarrow 0$ \label{ssp:init}}
 
         % Line 2
-        $\text{sol} \leftarrow \text{true}, \text{val} \leftarrow 0$\label{ssp:sol}\;
+        $\text{sol} \leftarrow \text{verdadeiro}, \text{val} \leftarrow 0$\label{ssp:sol}\;
 
         % Line 3: While loop
-        \While{$\text{sol} = \text{true}$ \KwAnd $\text{val} < v$\label{ssp:loop}}{
+        \While{$\text{sol} = \text{verdadeiro}$ \KwAnd $\text{val} < v$\label{ssp:loop}}{
 
             % Line 4: Descriptive text
-            construct the auxiliary network $N' = (G', c', s, t)$ with cost function $\gamma'$\label{ssp:aux}\;
+            construa a rede auxiliar $N' = (G', c', s, t)$ com função de custo $\gamma'$\label{ssp:aux}\;
 
             % Line 5: If-Else structure
-            \eIf{$t$ is not accessible from $s$ in $G'$\label{ssp:reach}}{
+            \eIf{$t$ não é alcançável a partir de $s$ em $G'$\label{ssp:reach}}{
                 % Line 6
-                $\text{sol} \leftarrow \text{false}$\label{ssp:fail}\;
+                $\text{sol} \leftarrow \text{falso}$\label{ssp:fail}\;
             }{
                 % Line 7: Descriptive text
-                determine a shortest path $P$ from $s$ to $t$ in $(G', \gamma')$\label{ssp:path}\;
+                determine um caminho mínimo $P$ de $s$ a $t$ em $(G', \gamma')$\label{ssp:path}\;
 
                 % Line 8: Multiple assignments
                 $\delta \leftarrow \min \{c'(e) : e \in P \}; \delta' \leftarrow \min(\delta, v - \text{val}); \text{val} \leftarrow \text{val} + \delta'$\label{ssp:delta}\;
 
                 % Line 9
-                augment $f$ along $P$ by $\delta'$\label{ssp:aug}\;
+                aumente $f$ ao longo de $P$ em $\delta'$\label{ssp:aug}\;
             }
         }
     }
@@ -242,7 +242,7 @@ O procedimento recebe a rede $G$ com capacidades $c$, fonte $s$, sorvedouro $t$ 
     \item Linhas~\ref{ssp:init}--\ref{ssp:sol}: o fluxo começa nulo em todos os arcos, o que já é um fluxo de custo mínimo para o valor $0$; $\text{val}$ guarda o valor do fluxo atual.
     \item Linha~\ref{ssp:loop}: cada iteração aumenta o valor do fluxo, até atingir $v$ ou até se descobrir que isso é impossível.
     \item Linha~\ref{ssp:aux}: constrói a rede auxiliar (residual) $N'$. Para cada arco $(x,y)$ com $f(x,y) < c(x,y)$, há um arco $(x,y)$ com capacidade residual $c(x,y) - f(x,y)$ e custo $\gamma(x,y)$; para cada arco com $f(x,y) > 0$, há um arco reverso $(y,x)$ com capacidade $f(x,y)$ e custo $-\gamma(x,y)$, que representa a possibilidade de desfazer fluxo e recuperar seu custo.
-    \item Linhas~\ref{ssp:reach}--\ref{ssp:fail}: se $t$ não é alcançável a partir de $s$ na rede auxiliar, o fluxo atual é máximo e o valor $v$ não pode ser atingido; o algoritmo para com $\text{sol} = \text{false}$.
+    \item Linhas~\ref{ssp:reach}--\ref{ssp:fail}: se $t$ não é alcançável a partir de $s$ na rede auxiliar, o fluxo atual é máximo e o valor $v$ não pode ser atingido; o algoritmo para com $\text{sol} = \text{falso}$.
     \item Linha~\ref{ssp:path}: encontra o caminho $P$ de menor custo de $s$ a $t$ na rede auxiliar. Como há arcos de custo negativo, o método usado aqui precisa tratá-los (ver as opções a seguir).
     \item Linha~\ref{ssp:delta}: $\delta$ é a menor capacidade residual do caminho, o máximo que se pode enviar por ele; $\delta'$ limita esse valor ao que ainda falta para atingir $v$.
     \item Linha~\ref{ssp:aug}: aumenta o fluxo em $\delta'$ nos arcos de $P$ que são arcos originais e o diminui nos que são reversos. Como $P$ é um caminho mínimo, o novo fluxo continua sendo de custo mínimo para o seu valor, o que garante a otimalidade ao final.
@@ -270,32 +270,32 @@ O procedimento recebe a rede $G$ com capacidades $c$, fonte $s$, sorvedouro $t$ 
         % Inicialização dos Potenciais (assumindo custos iniciais não negativos)
         \lFor{$x \in V$}{ $\pi(x) \leftarrow 0$ \label{sspd:pot}}
 
-        $\text{sol} \leftarrow \text{true}, \text{val} \leftarrow 0$\label{sspd:sol}\;
+        $\text{sol} \leftarrow \text{verdadeiro}, \text{val} \leftarrow 0$\label{sspd:sol}\;
 
-        \While{$\text{sol} = \text{true}$ \KwAnd $\text{val} < v$\label{sspd:loop}}{
+        \While{$\text{sol} = \text{verdadeiro}$ \KwAnd $\text{val} < v$\label{sspd:loop}}{
 
-            construct the auxiliary network $N' = (G', c', s, t)$\label{sspd:aux}\;
+            construa a rede auxiliar $N' = (G', c', s, t)$\label{sspd:aux}\;
 
             % Definição do Custo Reduzido para o Dijkstra
             \For{$e=(u, v) \in E(G')$\label{sspd:redloop}}{
-                define reduced cost: $w(e) \leftarrow \gamma(e) + \pi(u) - \pi(v)$\label{sspd:red}\;
+                custo reduzido: $w(e) \leftarrow \gamma(e) + \pi(u) - \pi(v)$\label{sspd:red}\;
             }
 
             % Execução do Dijkstra (Lógica omitida, foco no input/output)
-            Run Dijkstra on $N'$ using weights $w$ to find shortest path distances $d(\cdot)$ from $s$\label{sspd:dij}\;
+            execute Dijkstra em $N'$ com os pesos $w$, obtendo as distâncias mínimas $d(\cdot)$ a partir de $s$\label{sspd:dij}\;
 
-            \eIf{$t$ is not accessible from $s$ (i.e., $d(t) = \infty$)\label{sspd:reach}}{
-                $\text{sol} \leftarrow \text{false}$\label{sspd:fail}\;
+            \eIf{$t$ não é alcançável a partir de $s$ (isto é, $d(t) = \infty$)\label{sspd:reach}}{
+                $\text{sol} \leftarrow \text{falso}$\label{sspd:fail}\;
             }{
                 % Atualização dos Potenciais (Passo Crucial)
-                \lFor{$x \in V$ such that $d(x) < \infty$}{ $\pi(x) \leftarrow \pi(x) + d(x)$ \label{sspd:upd}}
+                \lFor{$x \in V$ tal que $d(x) < \infty$}{ $\pi(x) \leftarrow \pi(x) + d(x)$ \label{sspd:upd}}
 
-                Identify shortest path $P$ from $s$ to $t$ based on $d(\cdot)$\label{sspd:path}\;
+                identifique o caminho mínimo $P$ de $s$ a $t$ a partir de $d(\cdot)$\label{sspd:path}\;
 
                 % O resto segue o algoritmo original, usando as capacidades residuais c'
                 $\delta \leftarrow \min \{c'(e) : e \in P \}; \delta' \leftarrow \min(\delta, v - \text{val}); \text{val} \leftarrow \text{val} + \delta'$\label{sspd:delta}\;
 
-                augment $f$ along $P$ by $\delta'$\label{sspd:aug}\;
+                aumente $f$ ao longo de $P$ em $\delta'$\label{sspd:aug}\;
             }
         }
     }
@@ -391,14 +391,15 @@ Diferentemente do problema de peso máximo (Seção~\ref{sec:emp_pond_max_aprox}
 % * **Resultado:** Gera uma matriz duplamente estocástica que aproxima a permutação ótima. Uma passagem final gulosa converte isso em uma atribuição discreta.
 % * **Complexidade:** $O(k \cdot N^2)$ onde $k$ é pequeno. Muito rápido em hardware paralelo.
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Algoritmos para problema de atribuição}
     \label{tab:atribuicao_algos}
     \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
+    \footnotesize
     
     % Structure: l = left align, c = center, X = auto-wrap paragraph
-    \begin{tabularx}{\textwidth}{@{} l l l l X @{}}
+    \begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{2.8cm} l l l >{\raggedright\arraybackslash}X @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Complexidade} & \textbf{Tipo} & \textbf{Avaliado} & \textbf{Descrição} \\
         \midrule
@@ -419,12 +420,12 @@ Diferentemente do problema de peso máximo (Seção~\ref{sec:emp_pond_max_aprox}
         Utiliza potenciais de vértices para manter custos reduzidos não-negativos, permitindo o uso do eficiente Dijkstra para aumentos sucessivos. \\
         \addlinespace
         
-        Gulosa ordenada & $O(E \log E)$ & Heurística & Não & 
+        Gulosa ordenada & $O(E \log E)$ & Heur. & Não & 
         Ordena as arestas por peso decrescente e seleciona iterativamente as disponíveis. \\
 
         \bottomrule
     \end{tabularx}
     \par\smallskip
-    {\raggedright\footnotesize \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}.\par}
+    {\raggedright\footnotesize \textit{Heur.}: heurística. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}.\par}
 \end{table}
 

@@ -83,7 +83,7 @@ Seção~\ref{sec:defeitos}.
 % ---------------------------------------------------------------------------
 \section{Atribuição gargalo}
 
-Apresentam-se as três matrizes de custo, para os dois algoritmos exatos.
+Apresentam-se as três matrizes de custo, para os dois algoritmos exatos e as duas heurísticas gulosas.
 
 \input{results/tex/bottleneck-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
 \input{results/tex/bottleneck-matriz-1-densa-uniforme-custo-in-1-100-qualidade}
@@ -92,7 +92,7 @@ Apresentam-se as três matrizes de custo, para os dois algoritmos exatos.
 \input{results/tex/bottleneck-matriz-3-poucos-valores-muitos-empates-tempo-python}
 \input{results/tex/bottleneck-matriz-3-poucos-valores-muitos-empates-qualidade}
 
-Ambos os algoritmos produzem sempre o mesmo custo gargalo ótimo, o que também
+Os dois algoritmos exatos produzem sempre o mesmo custo gargalo ótimo, o que também
 serve como verificação cruzada de corretude. O tempo, no entanto, revela o
 achado mais interessante deste problema, e que ilustra bem por que vale examinar
 todas as instâncias: \textbf{a ordem entre os dois algoritmos se inverte conforme
@@ -104,6 +104,24 @@ matriz, poucos valores tornam essa busca curtíssima, enquanto o método constru
 não se beneficia da mesma forma. A conclusão de qual método é preferível, portanto,
 depende da estrutura esperada da entrada --- uma nuance que uma única instância
 representativa teria ocultado.
+
+As heurísticas gulosas, por sua vez, confirmam a fragilidade dos métodos gulosos
+para um objetivo de gargalo. Na matriz estruturada, ambas encontram o ótimo, pois a
+diagonal é a posição mais barata de cada linha e de cada coluna. Na matriz densa
+uniforme, porém, o guloso simples termina com gargalos entre 47 e 99, enquanto o
+ótimo cai de 26 para 4 à medida que $n$ cresce: as últimas linhas ficam com as
+colunas que sobraram, e uma única posição cara determina o valor da solução. O
+critério de arrependimento reduz esse efeito (gargalos entre 16 e 59), mas só
+atinge o ótimo em $n = 20$ e chega a ficar doze vezes acima dele em $n = 200$. Na
+matriz com poucos valores, o arrependimento costuma parar no segundo menor valor
+(5), e não no ótimo (1), e chega a 50 em $n = 50$, o que ilustra a ausência de
+garantia. Quanto ao tempo, as heurísticas são cerca de quatro vezes mais rápidas que
+o método de caminhos aumentantes na matriz densa, equivalem a ele na estruturada e
+só se destacam na matriz com poucos valores, em que os dois métodos exatos ficam
+mais lentos. Como a qualidade é instável justamente nas instâncias aleatórias, o
+método exato de caminhos aumentantes é, neste problema, a escolha mais segura, ao
+contrário do que ocorre na cardinalidade máxima, em que o algoritmo de Karp-Sipser
+é rápido e quase sempre ótimo.
 
 % ---------------------------------------------------------------------------
 \section{Casamento estável}

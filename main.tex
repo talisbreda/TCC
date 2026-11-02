@@ -23,6 +23,7 @@
 \usepackage{booktabs}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta}
 \usepackage{adjustbox}
 \hypersetup{hidelinks} % hyperref é carregado pela classe abntex2
 \usepackage[alf]{abntex2cite}
@@ -104,21 +105,33 @@ backgroundcolor=\color{lightgray},   % set background color
 % 1. Change line numbering style to (1), (2)...
 \SetNlSty{textnormal}{(}{)}
 
-% 2. Define the "Procedure" keyword
-\SetKwProg{Fn}{Procedure}{}{}
+% 2. Palavras reservadas em português (os comandos continuam os do
+% algorithm2e, como \If e \While; só o texto impresso muda)
+\SetKwProg{Fn}{Procedimento}{}{}
+\SetKwInput{KwIn}{Entrada}
+\SetKwInput{KwOut}{Saída}
+\SetKwInput{KwData}{Dados}
+\SetKwInput{KwResult}{Resultado}
+\SetKwIF{If}{ElseIf}{Else}{se}{então}{senão se}{senão}{fim se}
+\SetKwFor{For}{para}{faça}{fim para}
+\SetKwFor{ForEach}{para cada}{faça}{fim para cada}
+\SetKwFor{ForAll}{para todo}{faça}{fim para todo}
+\SetKwFor{While}{enquanto}{faça}{fim enquanto}
+\SetKwRepeat{Repeat}{repita}{até que}
+\SetKwBlock{Begin}{início}{fim}
 
-% 3. Define specific keywords to match the image
-\SetKw{KwOr}{or}
-\SetKw{KwAnd}{and}
-\SetKw{KwTo}{to}
-\SetKw{KwStep}{step}
-\SetKw{KwLet}{let}
-\SetKw{KwStop}{stop}
-\SetKw{KwIff}{iff}
-\SetKw{KwTrue}{true}
-\SetKw{KwFalse}{false}
-\SetKw{KwBreak}{break}
-\SetKw{KwRet}{return}
+% 3. Palavras reservadas adicionais
+\SetKw{KwOr}{ou}
+\SetKw{KwAnd}{e}
+\SetKw{KwTo}{até}
+\SetKw{KwStep}{passo}
+\SetKw{KwLet}{seja}
+\SetKw{KwStop}{pare}
+\SetKw{KwIff}{se e somente se}
+\SetKw{KwTrue}{verdadeiro}
+\SetKw{KwFalse}{falso}
+\SetKw{KwBreak}{interrompa}
+\SetKw{KwRet}{retorne}
 
 \newcommand{\AlgComment}[1]{\textbf{[comentário: #1]}}
 

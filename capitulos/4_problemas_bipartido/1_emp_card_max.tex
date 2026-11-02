@@ -20,7 +20,7 @@ Um emparelhamento máximo é aquele que contém o maior número possível de are
 \subsubsection{Caminhos aumentantes}
 \label{p:caminhos_aumentantes}
 
-Um caminho aumentante $P$ em um grafo $G$ é chamado de caminho aumentante se $P$ tem tamanho ímpar, começa e termina em vértices livres (não cobertos por nenhuma aresta do emparelhamento atual) e alterna entre arestas que pertencem a $M$ e arestas que não pertencem a $M$. A existência de um caminho aumentante indica que o emparelhamento atual não é máximo \cite{schrijver}
+Os caminhos aumentantes, definidos na Seção~\ref{sec:caminhos_alternantes} e ilustrados na Figura~\ref{fig:caminho_aumentante}, são a base dos algoritmos exatos deste problema: pelo lema de Berge, um emparelhamento $M$ é máximo se, e somente se, não existe caminho $M$-aumentante. Em um grafo bipartido com lados $U$ e $V$, todo caminho $M$-aumentante liga um vértice descoberto de $U$ a um vértice descoberto de $V$, pois o caminho alterna entre os dois lados e tem um número ímpar de arestas.
 
 \subsubsection{Teorema de Kőnig}
 \label{p:teorema_konig}
@@ -74,30 +74,30 @@ Por ser em um ambiente mais restrito, o problema de emparelhamento de cardinalid
 
 \subsubsection{Algoritmo do caminho aumentante}
 
-O algoritmo de caminho aumentante se baseia em um lema proposto por Claude Berge, que afirma que um grafo G é máximo se e somente se não existe nenhum caminho aumentante em G. Este algoritmo é uma implementação direta deste lema, onde se busca repetidamente por caminhos aumentantes e se aumenta o emparelhamento até que nenhum caminho aumentante possa ser encontrado \cite{lawler}.
+O algoritmo de caminho aumentante se baseia no lema de Berge (Seção~\ref{sec:caminhos_alternantes}), segundo o qual um emparelhamento $M$ é máximo se, e somente se, não existe caminho $M$-aumentante em $G$. Este algoritmo é uma implementação direta deste lema, onde se busca repetidamente por caminhos aumentantes e se aumenta o emparelhamento até que nenhum caminho aumentante possa ser encontrado \cite{lawler}.
 
 Começamos com um emparelhamento vazio $M=\emptyset$. Escolhemos um vértice livre $u$ no lado esquerdo do grafo bipartido e tentamos encontrar um caminho aumentante $P$ que começa em $u$ e termina em um vértice livre no lado direito do grafo, respeitando a regra da alternância entre arestas em $M$ e arestas fora de $M$. Se um caminho aumentante for encontrado, atualizamos o emparelhamento $M$ invertendo as arestas ao longo do caminho $P$. Repetimos esse processo até que não seja possível encontrar mais caminhos aumentantes. O emparelhamento resultante será o emparelhamento de cardinalidade máxima \cite{halim}.
 
-Em seguida o algoritmo em pseudo-código:
+Em seguida o algoritmo em pseudocódigo:
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
     \SetAlgoLined
 
     % Variáveis globais
-    \textbf{Global:} $match$ (vetor de emparelhamento), $vis$ (vetor de visitados), $AdjList$\;
+    \textbf{Globais:} $match$ (vetor de emparelhamento), $vis$ (vetor de visitados), $ListaAdj$\;
     \bigskip
 
-    % Procedimento Augment (DFS)
-    \Fn{Aug($l$)}{
+    % Procedimento Aum (DFS)
+    \Fn{Aum($l$)}{
         \If{$vis[l] = 1$\label{mcbm:vis}}{
             \KwRet 0\;
         }
         $vis[l] \leftarrow 1$\label{mcbm:mark}\;
 
-        \For{each $r \in AdjList[l]$\label{mcbm:for}}{
+        \ForEach{$r \in ListaAdj[l]$\label{mcbm:for}}{
             % A lógica do caminho aumentante
-            \If{$match[r] = -1$ \KwOr Aug($match[r]$)\label{mcbm:try}}{
+            \If{$match[r] = -1$ \KwOr Aum($match[r]$)\label{mcbm:try}}{
                 $match[r] \leftarrow l$\label{mcbm:set}\;
                 \KwRet 1 \AlgComment{encontrou 1 emparelhamento}\;
             }
@@ -108,13 +108,13 @@ Em seguida o algoritmo em pseudo-código:
     \bigskip
 
     % Procedimento Principal
-    \Fn{MCBM\_Algorithm($n$)}{
+    \Fn{Algoritmo\_MCBM($n$)}{
         $MCBM \leftarrow 0$\;
-        $match \leftarrow -1$ (initialize for all $V$)\label{mcbm:init}\;
+        $match \leftarrow -1$ (para todo vértice de $V$)\label{mcbm:init}\;
 
         \For{$l \leftarrow 0$ \KwTo $n-1$\label{mcbm:loop}}{
-            $vis \leftarrow 0$ (reset before each recursion)\label{mcbm:reset}\;
-            $MCBM \leftarrow MCBM + \text{Aug}(l)$\label{mcbm:call}\;
+            $vis \leftarrow 0$ (reinicia antes de cada busca)\label{mcbm:reset}\;
+            $MCBM \leftarrow MCBM + \text{Aum}(l)$\label{mcbm:call}\;
         }
 
         \KwRet $MCBM$\label{mcbm:ret}\;
@@ -127,7 +127,7 @@ Em seguida o algoritmo em pseudo-código:
 O pseudocódigo é composto de um procedimento recursivo de busca e de um procedimento principal, explicados a seguir com referência às linhas do Algoritmo~\ref{alg:mcbm_augmenting}. Os vértices do lado esquerdo são numerados de $0$ a $n-1$, e $match[r]$ guarda o parceiro, no lado esquerdo, de cada vértice $r$ do lado direito ($-1$ se $r$ está livre):
 
 \begin{itemize}
-    \item \textbf{Linhas~\ref{mcbm:vis}--\ref{mcbm:mark}:} O procedimento Aug($l$) é uma busca em profundidade que tenta encontrar um caminho aumentante a partir do vértice esquerdo $l$. Se $l$ já foi visitado na busca atual, a tentativa falha; caso contrário, $l$ é marcado como visitado, o que impede que a busca entre em ciclo.
+    \item \textbf{Linhas~\ref{mcbm:vis}--\ref{mcbm:mark}:} O procedimento Aum($l$) é uma busca em profundidade que tenta encontrar um caminho aumentante a partir do vértice esquerdo $l$. Se $l$ já foi visitado na busca atual, a tentativa falha; caso contrário, $l$ é marcado como visitado, o que impede que a busca entre em ciclo.
     \item \textbf{Linhas~\ref{mcbm:for}--\ref{mcbm:try}:} Para cada vizinho $r$ de $l$, há duas formas de usar a aresta $\{l, r\}$: se $r$ está livre, o caminho aumentante termina em $r$; se $r$ já está emparelhado com $match[r]$, a busca continua recursivamente a partir de $match[r]$, tentando realocá-lo para outro vértice. Essa recursão percorre o caminho alternante: a aresta $\{l, r\}$ está fora de $M$, e a aresta $\{r, match[r]\}$ está em $M$.
     \item \textbf{Linha~\ref{mcbm:set}:} Se uma das duas condições é satisfeita, $r$ passa a ser parceiro de $l$. Como essa atribuição é feita na volta da recursão, em cada nível do caminho, todas as arestas do caminho aumentante trocam de papel, o que corresponde à diferença simétrica entre $M$ e o caminho, e a cardinalidade de $M$ aumenta em um.
     \item \textbf{Linha~\ref{mcbm:fail}:} Se nenhum vizinho leva a um caminho aumentante, a busca a partir de $l$ falha.
@@ -136,6 +136,7 @@ O pseudocódigo é composto de um procedimento recursivo de busca e de um proced
 \end{itemize}
 
 \subsubsection{Redução ao problema de fluxo máximo}
+\label{p:reducao_fluxo_mcm}
 
 O problema de emparelhamento de cardinalidade máxima em grafos bipartidos pode ser eficientemente resolvido através de uma redução ao problema de fluxo máximo em redes. A ideia central é construir uma rede de fluxo a partir do grafo bipartido original, onde cada aresta do grafo bipartido é convertida em uma aresta com capacidade unitária na rede de fluxo. \cite{lawler}
 
@@ -152,21 +153,21 @@ O algoritmo de \textbf{Edmonds-Karp} é o principal método para resolver esse t
     \DontPrintSemicolon
     \SetAlgoLined
 
-    \textbf{Global:} $res$ (matriz de capacidade residual), $mf, f, s, t$, $p$ (vetor de pais da BFS)\;
+    \textbf{Globais:} $res$ (matriz de capacidade residual), $mf, f, s, t$, $p$ (vetor de pais da BFS)\;
     \bigskip
 
     \Fn{BFS($s, t$)}{
         $dist \leftarrow \infty; \quad dist[s] \leftarrow 0$\label{ek:init}\;
-        $Q \leftarrow \{s\}; \quad p \leftarrow \text{nil}$ (init vector with -1)\label{ek:queue}\;
+        $Q \leftarrow \{s\}; \quad p \leftarrow \text{nulo}$ (vetor iniciado com $-1$)\label{ek:queue}\;
         \While{$Q \neq \emptyset$\label{ek:while}}{
-            $u \leftarrow Q.\text{front}()$; $Q.\text{pop}()$\;
+            $u \leftarrow Q.\text{frente}()$; $Q.\text{remove}()$\;
             \If{$u = t$\label{ek:stop}}{
-                \KwBreak (stop BFS)\;
+                \KwBreak (encerra a BFS)\;
             }
-            \For{each $v \in V$\label{ek:for}}{
+            \ForEach{$v \in V$\label{ek:for}}{
                 \If{$res_{u, v} > 0$ \KwAnd $dist[v] = \infty$\label{ek:cond}}{
                     $dist[v] \leftarrow dist[u] + 1$\label{ek:dist}\;
-                    $Q.\text{push}(v)$\;
+                    $Q.\text{insere}(v)$\;
                     $p[v] \leftarrow u$\label{ek:parent}\;
                 }
             }
@@ -175,13 +176,13 @@ O algoritmo de \textbf{Edmonds-Karp} é o principal método para resolver esse t
 
     \bigskip
 
-    \Fn{Augment($v, \text{minEdge}$)}{
+    \Fn{Aumenta($v, \text{menorAresta}$)}{
         \eIf{$v = s$\label{ek:base}}{
-            $f \leftarrow \text{minEdge}$\;
+            $f \leftarrow \text{menorAresta}$\;
             \KwRet\;
         }{
             \If{$p[v] \neq -1$\label{ek:haspar}}{
-                Augment($p[v], \min(\text{minEdge}, res_{p[v], v})$)\label{ek:rec}\;
+                Aumenta($p[v], \min(\text{menorAresta}, res_{p[v], v})$)\label{ek:rec}\;
                 $res_{p[v], v} \leftarrow res_{p[v], v} - f$\label{ek:fwd}\;
                 $res_{v, p[v]} \leftarrow res_{v, p[v]} + f$\label{ek:rev}\;
             }
@@ -195,9 +196,9 @@ O algoritmo de \textbf{Edmonds-Karp} é o principal método para resolver esse t
         \While{\KwTrue\label{ek:main}}{
             $f \leftarrow 0$\label{ek:f0}\;
             BFS($s, t$); \AlgComment{preenche o vetor de pais $p$}\label{ek:bfs}\;
-            Augment($t, \infty$); \AlgComment{encontra o menor peso de aresta $f$ no caminho}\label{ek:aug}\;
+            Aumenta($t, \infty$); \AlgComment{encontra o menor peso de aresta $f$ no caminho}\label{ek:aug}\;
             \If{$f = 0$\label{ek:end}}{
-                \KwBreak (terminate)\;
+                \KwBreak (termina)\;
             }
             $mf \leftarrow mf + f$\label{ek:acc}\;
         }
@@ -212,8 +213,8 @@ O pseudocódigo divide-se em três procedimentos, explicados a seguir com refer�
 
 \begin{itemize}
     \item \textbf{BFS (linhas~\ref{ek:init}--\ref{ek:parent}):} Busca em largura a partir de $s$ na rede residual. Todas as distâncias começam infinitas, exceto a de $s$ (linha~\ref{ek:init}), e a fila $Q$ começa só com $s$, com o vetor de pais vazio (linha~\ref{ek:queue}). Enquanto houver vértices na fila (linha~\ref{ek:while}), retira-se o primeiro, $u$; se ele é o sorvedouro $t$, o caminho já foi encontrado e a busca para (linha~\ref{ek:stop}). Caso contrário, percorrem-se todos os vértices $v$ (linha~\ref{ek:for}) e consideram-se apenas os arcos com capacidade residual positiva que levam a um vértice ainda não alcançado (linha~\ref{ek:cond}). Cada vértice alcançado pela primeira vez recebe sua distância (linha~\ref{ek:dist}), entra na fila e tem seu pai registrado em $p$ (linha~\ref{ek:parent}). Como a busca é em largura, o caminho registrado até $t$ é o de menor número de arcos.
-    \item \textbf{Augment (linhas~\ref{ek:base}--\ref{ek:rev}):} Percorre o caminho encontrado de $t$ até $s$, seguindo o vetor de pais, e carrega em $\text{minEdge}$ a menor capacidade residual vista até o momento. Ao chegar em $s$ (linha~\ref{ek:base}), esse mínimo é o gargalo do caminho e é guardado em $f$. Se um vértice não tem pai (linha~\ref{ek:haspar}), $t$ não foi alcançado pela BFS e nada é feito, de modo que $f$ continua $0$. A chamada recursiva (linha~\ref{ek:rec}) desce até $s$ antes de qualquer atualização; na volta da recursão, $f$ é subtraído da capacidade residual de cada arco no sentido do caminho (linha~\ref{ek:fwd}) e somado à do arco reverso (linha~\ref{ek:rev}), o que permite a uma iteração futura desfazer parte desse fluxo.
-    \item \textbf{EdmondsKarp (linhas~\ref{ek:mf}--\ref{ek:acc}):} O fluxo total $mf$ começa em zero (linha~\ref{ek:mf}). A cada iteração do laço (linha~\ref{ek:main}), $f$ é zerado (linha~\ref{ek:f0}), a BFS procura o caminho aumentante mais curto (linha~\ref{ek:bfs}) e o Augment envia por ele o fluxo do gargalo (linha~\ref{ek:aug}). Quando a BFS não alcança $t$, nenhum fluxo é enviado ($f = 0$, linha~\ref{ek:end}) e o fluxo acumulado $mf$ é máximo; caso contrário, $f$ é somado a $mf$ (linha~\ref{ek:acc}).
+    \item \textbf{Aumenta (linhas~\ref{ek:base}--\ref{ek:rev}):} Percorre o caminho encontrado de $t$ até $s$, seguindo o vetor de pais, e carrega em $\text{menorAresta}$ a menor capacidade residual vista até o momento. Ao chegar em $s$ (linha~\ref{ek:base}), esse mínimo é o gargalo do caminho e é guardado em $f$. Se um vértice não tem pai (linha~\ref{ek:haspar}), $t$ não foi alcançado pela BFS e nada é feito, de modo que $f$ continua $0$. A chamada recursiva (linha~\ref{ek:rec}) desce até $s$ antes de qualquer atualização; na volta da recursão, $f$ é subtraído da capacidade residual de cada arco no sentido do caminho (linha~\ref{ek:fwd}) e somado à do arco reverso (linha~\ref{ek:rev}), o que permite a uma iteração futura desfazer parte desse fluxo.
+    \item \textbf{EdmondsKarp (linhas~\ref{ek:mf}--\ref{ek:acc}):} O fluxo total $mf$ começa em zero (linha~\ref{ek:mf}). A cada iteração do laço (linha~\ref{ek:main}), $f$ é zerado (linha~\ref{ek:f0}), a BFS procura o caminho aumentante mais curto (linha~\ref{ek:bfs}) e o procedimento Aumenta envia por ele o fluxo do gargalo (linha~\ref{ek:aug}). Quando a BFS não alcança $t$, nenhum fluxo é enviado ($f = 0$, linha~\ref{ek:end}) e o fluxo acumulado $mf$ é máximo; caso contrário, $f$ é somado a $mf$ (linha~\ref{ek:acc}).
     \item \textbf{Complexidade:} Como a BFS escolhe sempre o caminho aumentante mais curto, a distância de $s$ a cada vértice na rede residual nunca diminui. A cada aumento, pelo menos um arco do caminho é saturado (o arco gargalo), e um mesmo arco só pode voltar a ser gargalo depois que a distância até ele aumenta em pelo menos 2. Como a distância é limitada por $V$, cada arco é gargalo $O(V)$ vezes, e o número total de aumentos é $O(VE)$. Com listas de adjacência, cada BFS custa $O(E)$, o que leva ao total de $O(VE^2)$. Na versão com matriz do Algoritmo~\ref{alg:edmonds_karp}, o laço da linha~\ref{ek:for} percorre todos os vértices, e cada BFS custa $O(V^2)$, o que dá $O(V^3E)$ \cite{halim}. Na rede obtida pela redução do emparelhamento bipartido, as capacidades são unitárias e o fluxo máximo é no máximo $V/2$; como cada aumento envia uma unidade de fluxo, há no máximo $V/2$ aumentos, e o tempo cai para $O(VE)$ com listas de adjacência.
 \end{itemize}
 
@@ -239,24 +240,24 @@ A seguir, o pseudocódigo do algoritmo de Hopcroft-Karp, dividido em duas partes
     \label{alg:hopcroft_karp}
 
     % MAIN ALGORITHM
-    \KwLet $G = (U, V; E)$ be a bipartite graph with initial (possibly empty) matching $M$;\;
-    \KwLet $U_0$ contain all unmatched vertices of $U$;\label{hk:u0}\;
-    \KwLet $V_0$ contain all unmatched vertices of $V$;\label{hk:v0}\;
+    \KwLet $G = (U, V; E)$ um grafo bipartido com emparelhamento inicial $M$ (possivelmente vazio);\;
+    \KwLet $U_0$ o conjunto dos vértices livres de $U$;\label{hk:u0}\;
+    \KwLet $V_0$ o conjunto dos vértices livres de $V$;\label{hk:v0}\;
     
     \While{$U_0 \neq \emptyset$\label{hk:phase}}{
-        Construct\_layered\_graph;\label{hk:callbuild}\;
-        Find\_set\_$\Delta M$;\label{hk:callfind}\;
+        Constroi\_grafo\_em\_camadas;\label{hk:callbuild}\;
+        Encontra\_conjunto\_$\Delta M$;\label{hk:callfind}\;
         $M := M \ominus \Delta M$;\label{hk:symdiff}\;
-        update sets $U_0, V_0$ of unmatched vertices\label{hk:upd}\;
+        atualize os conjuntos $U_0, V_0$ de vértices livres\label{hk:upd}\;
     }
 
     \bigskip
 
     % PROCEDURE 1: CONSTRUCT LAYERED GRAPH
-    \Fn{Construct\_layered\_graph}{
+    \Fn{Constroi\_grafo\_em\_camadas}{
         $L_0 := U_0, k^* := k := 0$;\label{hk:l0}\;
         \While{$L_k \neq \emptyset$}{
-            \For{each $i \in L_k$}{
+            \ForEach{$i \in L_k$}{
                 $N(i) := \{ j : [i, j] \in E \setminus M, j \notin L_1 \cup L_3 \cup \dots \cup L_{k-1} \}$;\label{hk:ni}
             }
             $L_{k+1} := \bigcup_{i \in L_k} N(i)$;\;
@@ -284,20 +285,20 @@ A seguir, o pseudocódigo do algoritmo de Hopcroft-Karp, dividido em duas partes
     \label{alg:hopcroft_karp_busca}
 
     % PROCEDURE 2: FIND SET DELTA M
-    \Fn{Find\_set\_$\Delta M$}{
+    \Fn{Encontra\_conjunto\_$\Delta M$}{
         \AlgComment{encontra um conjunto maximal $\Delta M$ de caminhos aumentantes disjuntos}\;
-        delete all vertices in $L_{k^*} \setminus V_0$;\label{hk:del}\;
-        mark all remaining vertices as unscanned;\;
+        remova todos os vértices de $L_{k^*} \setminus V_0$;\label{hk:del}\;
+        marque todos os vértices restantes como não visitados;\;
         $k := 1$; \AlgComment{contador de caminhos}\;
         
         \While{$L_0 \neq \emptyset$}{
-            choose $x_0 := i \in L_0$ and delete it in $L_0$;\label{hk:x0}\;
+            escolha $x_0 := i \in L_0$ e remova-o de $L_0$;\label{hk:x0}\;
             $\ell := 0$;\;
             
             \While{$\ell \ge 0$}{
-                \While{$x_\ell$ has an unscanned neighbor in $L_{\ell+1}$\label{hk:adv}}{
-                    choose unscanned neighbor $x_{\ell+1}$;\;
-                    mark $x_{\ell+1}$ as scanned;\;
+                \While{$x_\ell$ tem vizinho não visitado em $L_{\ell+1}$\label{hk:adv}}{
+                    escolha um vizinho não visitado $x_{\ell+1}$;\;
+                    marque $x_{\ell+1}$ como visitado;\;
                     $\ell := \ell + 1$;\;
                     
                     \If{$\ell = k^*$\label{hk:path}}{
@@ -343,13 +344,13 @@ Um método que itera sobre as arestas do grafo em ordem arbitrária. Se a aresta
     \caption{Método guloso simples \cite{vazirani2001}}
     \label{alg:greedy_mcm}
 
-    \KwIn{bipartite graph $G = (U, V; E)$}
-    \KwOut{maximal matching $M$}
+    \KwIn{grafo bipartido $G = (U, V; E)$}
+    \KwOut{emparelhamento maximal $M$}
     $M := \emptyset$\label{gs:init}\;
-    \For{each edge $\{u, v\} \in E$, in arbitrary order\label{gs:for}}{
-        \If{$u$ and $v$ are both unmatched\label{gs:test}}{
+    \ForEach{aresta $\{u, v\} \in E$, em ordem arbitrária\label{gs:for}}{
+        \If{$u$ e $v$ estão ambos livres\label{gs:test}}{
             $M := M \cup \{\{u, v\}\}$\label{gs:add}\;
-            mark $u$ and $v$ as matched\label{gs:mark}\;
+            marque $u$ e $v$ como emparelhados\label{gs:mark}\;
         }
     }
     \KwRet $M$\label{gs:ret}\;
@@ -388,19 +389,19 @@ Para grafos esparsos, a regra 2 é raramente aplicada, pois a remoção de vért
     \caption{Algoritmo de Karp-Sipser \cite{karp-sipser}}
     \label{alg:karp_sipser}
 
-    \KwIn{bipartite graph $G = (U, V; E)$}
-    \KwOut{maximal matching $M$}
+    \KwIn{grafo bipartido $G = (U, V; E)$}
+    \KwOut{emparelhamento maximal $M$}
     $M := \emptyset$\label{ks:init}\;
     \While{$E \neq \emptyset$\label{ks:while}}{
-        \eIf{there is a vertex $v$ with $\deg(v) = 1$\label{ks:deg1}}{
-            let $u$ be the only neighbor of $v$\label{ks:nb}\;
+        \eIf{existe um vértice $v$ com $\deg(v) = 1$\label{ks:deg1}}{
+            \KwLet $u$ o único vizinho de $v$\label{ks:nb}\;
             \AlgComment{seguro: algum emparelhamento máximo contém $\{u, v\}$}\;
         }{
-            choose an arbitrary edge $\{u, v\} \in E$\label{ks:rand}\;
+            escolha uma aresta arbitrária $\{u, v\} \in E$\label{ks:rand}\;
             \AlgComment{único passo que pode perder a otimalidade}\;
         }
         $M := M \cup \{\{u, v\}\}$\label{ks:add}\;
-        remove $u$, $v$ and all their incident edges from $G$\label{ks:rm}\;
+        remova de $G$ os vértices $u$ e $v$ e todas as arestas incidentes a eles\label{ks:rm}\;
     }
     \KwRet $M$\label{ks:ret}\;
 \end{algorithm}
@@ -416,14 +417,15 @@ O Algoritmo~\ref{alg:karp_sipser} é explicado a seguir, linha a linha:
     \item \textbf{Complexidade:} Cada iteração emparelha dois vértices, então há no máximo $V/2$ iterações, e cada aresta é removida uma única vez. Com uma estrutura que mantém os vértices de grau 1 em uma lista atualizada a cada remoção, encontrar o vértice da linha~\ref{ks:deg1} custa $O(1)$, e o total é $O(V + E)$. Na implementação avaliada, a linha~\ref{ks:deg1} varre todos os vértices a cada iteração, com custo $O(V + E)$ por iteração, o que resulta em $O(V(V + E))$, ou seja, $O(V \cdot E)$ em grafos sem vértices isolados.
 \end{itemize}
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Algoritmos para emparelhamento de cardinalidade máxima em grafos bipartidos}
     \label{tab:emp_card_max_bip_algos}
     \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
+    \footnotesize
     
     % Structure: l = left align, c = center, X = auto-wrap paragraph
-    \begin{tabularx}{\textwidth}{@{} l l l l X @{}}
+    \begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{2.8cm} l l l >{\raggedright\arraybackslash}X @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Complexidade} & \textbf{Tipo} & \textbf{Avaliado} & \textbf{Descrição} \\
         \midrule
@@ -444,17 +446,17 @@ O Algoritmo~\ref{alg:karp_sipser} é explicado a seguir, linha a linha:
         Busca múltiplos caminhos aumentantes disjuntos por fase usando BFS e DFS. \\
         \addlinespace
         
-        Guloso simples & $O(E)$ & Aproximado & Sim & 
+        Guloso simples & $O(E)$ & Aprox. & Sim & 
         Itera sobre arestas arbitrariamente, selecionando aquelas que conectam dois vértices livres. \\
         \addlinespace
 
-        Karp-Sipser & $O(E)$ & Aproximado & Sim* & 
+        Karp-Sipser & $O(E)$ & Aprox. & Sim* & 
         Prioriza remoção de vértices de grau 1; usa escolha aleatória quando não há folhas. \\
         
         \bottomrule
     \end{tabularx}
     \par\smallskip
-    {\raggedright\footnotesize \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. * A implementação avaliada localiza os vértices de grau 1 por varredura simples, com complexidade $O(V \cdot E)$.\par}
+    {\raggedright\footnotesize \textit{Aprox.}: aproximado. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. * A implementação avaliada localiza os vértices de grau 1 por varredura simples, com complexidade $O(V \cdot E)$.\par}
 \end{table}
 
 % TODO: possivelmente definir aplicações? exemplo: min-path-cover.md

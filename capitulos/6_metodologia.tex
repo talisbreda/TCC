@@ -140,10 +140,10 @@ Para o emparelhamento de cardinalidade máxima, as três famílias diferem na de
     \bigskip
 
     \Fn{Grafo3($n$, $d = 15$)}{
-        $rng :=$ new pseudo-random generator with seed $42$\;\label{gb:seed}
+        $rng :=$ novo gerador pseudoaleatório com semente $42$\;\label{gb:seed}
         $E := \{\{u_i, v_i\} : 0 \le i < n\}$\;\label{gb:diag}
         \While{$|E| < d \cdot n$\label{gb:loop}}{
-            draw $i$ and $j$ uniformly from $\{0, \dots, n-1\}$ using $rng$\;
+            sorteie $i$ e $j$ uniformemente em $\{0, \dots, n-1\}$ com $rng$\;
             $E := E \cup \{\{u_i, v_j\}\}$ \AlgComment{arestas repetidas são descartadas}\;\label{gb:add}
         }
         \KwRet $E$\;
@@ -169,17 +169,17 @@ Os problemas de atribuição linear e de gargalo recebem uma matriz de custos $C
     \label{alg:gen_custo}
 
     \Fn{Uniforme($n$)}{
-        $rng :=$ new pseudo-random generator with seed $42$\;\label{gc:useed}
-        \lFor{$i, j := 0$ \KwTo $n - 1$}{$c_{ij} :=$ integer drawn uniformly from $[1, 100]$\label{gc:udraw}}
+        $rng :=$ novo gerador pseudoaleatório com semente $42$\;\label{gc:useed}
+        \lFor{$i, j := 0$ \KwTo $n - 1$}{$c_{ij} :=$ inteiro sorteado uniformemente em $[1, 100]$\label{gc:udraw}}
         \KwRet $C$\;
     }
 
     \bigskip
 
     \Fn{PermutacaoBarata($n$)}{
-        $rng :=$ new pseudo-random generator with seed $42$\;
-        $\pi :=$ random permutation of $\{0, \dots, n-1\}$ using $rng$\;\label{gc:perm}
-        \lFor{$i, j := 0$ \KwTo $n - 1$}{$c_{ij} :=$ integer drawn uniformly from $[50, 100]$\label{gc:pdraw}}
+        $rng :=$ novo gerador pseudoaleatório com semente $42$\;
+        $\pi :=$ permutação aleatória de $\{0, \dots, n-1\}$ com $rng$\;\label{gc:perm}
+        \lFor{$i, j := 0$ \KwTo $n - 1$}{$c_{ij} :=$ inteiro sorteado uniformemente em $[50, 100]$\label{gc:pdraw}}
         \lFor{$i := 0$ \KwTo $n - 1$}{$c_{i\pi(i)} := 1$\label{gc:pcheap}}
         \KwRet $C$\;
     }
@@ -194,8 +194,8 @@ Os problemas de atribuição linear e de gargalo recebem uma matriz de custos $C
     \bigskip
 
     \Fn{PoucosValores($n$)}{
-        $rng :=$ new pseudo-random generator with seed $42$\;
-        \lFor{$i, j := 0$ \KwTo $n - 1$}{$c_{ij} :=$ value drawn uniformly from $\{1, 5, 10, 50\}$\label{gc:few}}
+        $rng :=$ novo gerador pseudoaleatório com semente $42$\;
+        \lFor{$i, j := 0$ \KwTo $n - 1$}{$c_{ij} :=$ valor sorteado uniformemente em $\{1, 5, 10, 50\}$\label{gc:few}}
         \KwRet $C$\;
     }
 \end{algorithm}
@@ -220,18 +220,18 @@ No casamento estável, uma instância é formada pelas listas de preferência $P
     \label{alg:gen_pref}
 
     \Fn{Aleatorio($n$)}{
-        $rng :=$ new pseudo-random generator with seed $42$\;
-        \lFor{$m := 0$ \KwTo $n - 1$}{$P_m :=$ random permutation of $\{0, \dots, n-1\}$ using $rng$\label{gp:rmen}}
-        \lFor{$w := 0$ \KwTo $n - 1$}{$Q_w :=$ random permutation of $\{0, \dots, n-1\}$ using $rng$\label{gp:rwomen}}
+        $rng :=$ novo gerador pseudoaleatório com semente $42$\;
+        \lFor{$m := 0$ \KwTo $n - 1$}{$P_m :=$ permutação aleatória de $\{0, \dots, n-1\}$ com $rng$\label{gp:rmen}}
+        \lFor{$w := 0$ \KwTo $n - 1$}{$Q_w :=$ permutação aleatória de $\{0, \dots, n-1\}$ com $rng$\label{gp:rwomen}}
         \KwRet $(P, Q)$\;
     }
 
     \bigskip
 
     \Fn{Correlacionado($n$)}{
-        $rng :=$ new pseudo-random generator with seed $42$\;
-        $\pi :=$ random permutation of $\{0, \dots, n-1\}$ using $rng$ \AlgComment{ranking das mulheres}\;\label{gp:pi}
-        $\sigma :=$ random permutation of $\{0, \dots, n-1\}$ using $rng$ \AlgComment{ranking dos homens}\;\label{gp:sigma}
+        $rng :=$ novo gerador pseudoaleatório com semente $42$\;
+        $\pi :=$ permutação aleatória de $\{0, \dots, n-1\}$ com $rng$ \AlgComment{ranking das mulheres}\;\label{gp:pi}
+        $\sigma :=$ permutação aleatória de $\{0, \dots, n-1\}$ com $rng$ \AlgComment{ranking dos homens}\;\label{gp:sigma}
         \lFor{$m := 0$ \KwTo $n - 1$}{$P_m := \pi$\label{gp:cmen}}
         \lFor{$w := 0$ \KwTo $n - 1$}{$Q_w := \sigma$\label{gp:cwomen}}
         \KwRet $(P, Q)$\;
@@ -265,18 +265,18 @@ Para os problemas em grafos gerais, inclusive o emparelhamento induzido máximo,
     \label{alg:gen_aleatorio}
 
     \Fn{GrafoAleatorio($n$, $p$, $ponderado$)}{
-        $rng :=$ new pseudo-random generator with seed $42$\;\label{ga:seed}
+        $rng :=$ novo gerador pseudoaleatório com semente $42$\;\label{ga:seed}
         $E := \emptyset$\;
         \For{$u := 0$ \KwTo $n - 1$\label{ga:pairs}}{
             \For{$v := u + 1$ \KwTo $n - 1$}{
-                \lIf{a number drawn uniformly from $[0, 1)$ using $rng$ is $< p$}{$E := E \cup \{\{u, v\}\}$\label{ga:test}}
+                \lIf{um número sorteado uniformemente em $[0, 1)$ com $rng$ for $< p$}{$E := E \cup \{\{u, v\}\}$\label{ga:test}}
             }
         }
         \If{$ponderado$\label{ga:weighted}}{
-            $rng' :=$ new pseudo-random generator with seed $43$\;\label{ga:seed2}
-            \lFor{each $e \in E$, in the order of insertion}{$w(e) :=$ integer drawn uniformly from $[1, 100]$ using $rng'$\label{ga:weight}}
+            $rng' :=$ novo gerador pseudoaleatório com semente $43$\;\label{ga:seed2}
+            \lForEach{$e \in E$, na ordem de inserção}{$w(e) :=$ inteiro sorteado uniformemente em $[1, 100]$ com $rng'$\label{ga:weight}}
         }
-        \KwRet $E$ (and $w$, if $ponderado$)\;
+        \KwRet $E$ (e $w$, se $ponderado$)\;
     }
 \end{algorithm}
 
@@ -406,6 +406,8 @@ A Tabela~\ref{tab:proveniencia} registra o tipo e a origem de cada algoritmo, e 
         \multicolumn{4}{@{}l}{\textit{Atribuição gargalo}} \\
         Threshold & Exato & \ref{alg:threshold} & reimpl. (original em JavaScript) \\
         Caminhos aumentantes & Exato & \ref{alg:augmenting_lbap} & própria \cite{burkard} \\
+        Gulosa simples & Heurística & \ref{alg:lbap_gulosos} & própria \\
+        Gulosa por arrependimento & Heurística & \ref{alg:lbap_gulosos} & própria \cite{martello} \\
         \addlinespace
         \multicolumn{4}{@{}l}{\textit{Casamento estável}} \\
         Gale-Shapley (orientado a objetos) & Exato & \ref{alg:gale_shapley} & pacote \texttt{gale-shapley-algorithm} \\

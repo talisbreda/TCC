@@ -25,7 +25,7 @@ Para selecionar o valor limite $c\ast$, podemos utilizar uma busca binária entr
     \SetAlgoLined
 
     % Main Algorithm Body
-    \KwLet $C = (c_{ij})$ be a given $n \times n$ cost matrix;\label{thr:let}\;
+    \KwLet $C = (c_{ij})$ a matriz de custos $n \times n$ dada;\label{thr:let}\;
     $c_0^* := \min_{ij}\{c_{ij}\}, c_1^* := \max_{ij}\{c_{ij}\}$\label{thr:init}\;
     
     \eIf{$c_0^* = c_1^*$\label{thr:eq}}{
@@ -37,23 +37,23 @@ Para selecionar o valor limite $c\ast$, podemos utilizar uma busca binária entr
             % The complex median formula
             $c^* := \min \{ c \in C^* : |\{ c_{ij} \in C^* : c_{ij} \le c \}| \ge |C^*|/2 \}$;\label{thr:median}\;
             
-            Feasibility\_check($c^*, c_0^*, c_1^*$)\label{thr:check}\;
+            Testa\_viabilidade($c^*, c_0^*, c_1^*$)\label{thr:check}\;
         }
         
-        \If{Feasibility\_check has not yet been executed for $c_0^*$\label{thr:c0}}{
-             Feasibility\_check($c_0^*, c_0^*, c_1^*$)\;
+        \If{Testa\_viabilidade ainda não foi executado para $c_0^*$\label{thr:c0}}{
+             Testa\_viabilidade($c_0^*, c_0^*, c_1^*$)\;
         }
         
-        find a perfect matching in the current bipartite graph $G[c_1^*]$\label{thr:final}\;
+        encontre um emparelhamento perfeito no grafo bipartido atual $G[c_1^*]$\label{thr:final}\;
         $z := c_1^*$ \AlgComment{valor do emparelhamento ótimo}\label{thr:z}
     }
     
     \bigskip % Add some vertical space between the main block and the procedure
     
     % The Procedure Definition
-    \Fn{Feasibility\_check($c^*, c_0^*, c_1^*$)}{
-        define the current graph $G[c^*]$\label{thr:graph}\;
-        \eIf{$G[c^*]$ contains a perfect matching\label{thr:test}}{
+    \Fn{Testa\_viabilidade($c^*, c_0^*, c_1^*$)}{
+        construa o grafo atual $G[c^*]$\label{thr:graph}\;
+        \eIf{$G[c^*]$ contém um emparelhamento perfeito\label{thr:test}}{
             $c_1^* := c^*$\label{thr:up}\;
         }{
             $c_0^* := c^*$\label{thr:low}\;
@@ -69,7 +69,7 @@ O pseudocódigo segue a formulação de \citeonline{burkard}, que minimiza o mai
 \begin{itemize}
     \item \textbf{Inicialização (linhas~\ref{thr:let}--\ref{thr:trivial}):} O ótimo está sempre entre o menor e o maior custo da matriz, que formam o intervalo inicial de busca $[c_0^*, c_1^*]$ (linha~\ref{thr:init}). O algoritmo mantém a invariante de que $G[c_1^*]$ contém um emparelhamento perfeito, o que vale de início porque $G[\max c_{ij}]$ é o grafo bipartido completo. Se os dois extremos coincidem (linha~\ref{thr:eq}), todos os custos são iguais e qualquer permutação é ótima (linha~\ref{thr:trivial}).
     \item \textbf{Busca binária (linhas~\ref{thr:loop}--\ref{thr:check}):} Enquanto existirem custos estritamente entre os dois extremos (conjunto $C^*$ da linha~\ref{thr:loop}), escolhe-se a mediana $c^*$ desses custos como novo limiar (linha~\ref{thr:median}) e testa-se esse limiar (linha~\ref{thr:check}). Usar a mediana, em vez da média dos extremos, garante que cada teste descarte pelo menos metade dos valores candidatos, independentemente de como os custos estão distribuídos.
-    \item \textbf{Teste de viabilidade (linhas~\ref{thr:graph}--\ref{thr:low}):} O procedimento Feasibility\_check constrói $G[c^*]$ (linha~\ref{thr:graph}) e verifica se ele tem um emparelhamento perfeito (linha~\ref{thr:test}), o que pode ser feito com qualquer algoritmo de cardinalidade máxima, como o de Hopcroft-Karp. Se tem, o ótimo é no máximo $c^*$, e o extremo superior desce para $c^*$ (linha~\ref{thr:up}); caso contrário, o ótimo é maior que $c^*$, e o extremo inferior sobe para $c^*$ (linha~\ref{thr:low}).
+    \item \textbf{Teste de viabilidade (linhas~\ref{thr:graph}--\ref{thr:low}):} O procedimento Testa\_viabilidade constrói $G[c^*]$ (linha~\ref{thr:graph}) e verifica se ele tem um emparelhamento perfeito (linha~\ref{thr:test}), o que pode ser feito com qualquer algoritmo de cardinalidade máxima, como o de Hopcroft-Karp. Se tem, o ótimo é no máximo $c^*$, e o extremo superior desce para $c^*$ (linha~\ref{thr:up}); caso contrário, o ótimo é maior que $c^*$, e o extremo inferior sobe para $c^*$ (linha~\ref{thr:low}).
     \item \textbf{Finalização (linhas~\ref{thr:c0}--\ref{thr:z}):} Quando $C^*$ fica vazio, o ótimo é $c_0^*$ ou $c_1^*$. Como $c_0^*$ pode nunca ter sido testado (é o mínimo inicial da matriz), ele é testado nesse momento, se necessário (linha~\ref{thr:c0}); se for viável, o teste rebaixa $c_1^*$ para ele. Por fim, extrai-se um emparelhamento perfeito de $G[c_1^*]$ (linha~\ref{thr:final}), cujo valor ótimo é $z = c_1^*$ (linha~\ref{thr:z}).
     \item \textbf{Complexidade:} Há no máximo $n^2$ custos distintos e cada teste descarta metade dos candidatos, de modo que o laço executa $O(\log n^2) = O(\log n)$ vezes. Cada iteração encontra a mediana em tempo linear no tamanho de $C^*$, $O(n^2)$, e faz um teste de emparelhamento perfeito, que custa $O(E\sqrt{V}) = O(n^{2.5})$ com Hopcroft-Karp, já que $G[c^*]$ tem $2n$ vértices e até $n^2$ arestas. O total é $O(n^{2.5} \log n)$; o limite de $O(n^{2.5}/\sqrt{\log n})$ citado por \citeonline{burkard} exige técnicas mais elaboradas para o teste de emparelhamento.
 \end{itemize}
@@ -84,7 +84,7 @@ Assim como os métodos de threshold, o método dual também define um valor limi
 
 Com o limite definido, verificamos se é possível encontrar um emparelhamento perfeito no grafo bipartido formado pelas arestas cujo peso é menor ou igual a $c\ast$, usando os mesmos algoritmos de antes. Se um emparelhamento perfeito for encontrado, então $c\ast$ é a solução ótima. Caso contrário, é necessário aumentar o valor de $c\ast$, e para isso nos baseamos no teorema de Kőnig, definido na seção \ref{p:teorema_konig}. 
 
-Sabemos que todas as arestas $c_{ij} > c\ast$ estão conectadas a um conjunto de linhas $I$ e um conjunto de colunas $J$. Essas linhas e colunas "cobrem" todas as arestas do grafo atual. Para aumentar o valor de $c\ast$, precisamos adicionar uma nova aresta que não esteja coberta por esses conjuntos. Procuramos o menor peso entre as arestas não cobertas, ou seja, aquelas que não pertencem às linhas em $I$ nem às colunas em $J$. Esse valor se torna o novo $c\ast$:
+Sabemos que todas as arestas $c_{ij} > c\ast$ estão conectadas a um conjunto de linhas $I$ e um conjunto de colunas $J$. Essas linhas e colunas ``cobrem'' todas as arestas do grafo atual. Para aumentar o valor de $c\ast$, precisamos adicionar uma nova aresta que não esteja coberta por esses conjuntos. Procuramos o menor peso entre as arestas não cobertas, ou seja, aquelas que não pertencem às linhas em $I$ nem às colunas em $J$. Esse valor se torna o novo $c\ast$:
 
 \begin{equation}
     Novo\space c\ast = \min_{i \notin I, j \notin J} c_{ij}
@@ -97,7 +97,7 @@ A partir daqui, o processo se repete. Com o novo valor de $c\ast$ e a nova arest
     \SetAlgoLined
 
     % Line 1
-    \KwLet $C = (c_{ij})$ be a given $n \times n$ cost matrix;\label{dlb:let}\;
+    \KwLet $C = (c_{ij})$ a matriz de custos $n \times n$ dada;\label{dlb:let}\;
     
     % Line 2: Complex Max/Min assignment
     $c^* := \max_{k=1,2,\dots,n} (\min_{i=1,2,\dots,n} c_{ik}, \ \min_{j=1,2,\dots,n} c_{kj})$\label{dlb:bound}\;
@@ -107,13 +107,13 @@ A partir daqui, o processo se repete. Com o novo valor de $c\ast$ e a nova arest
 
     % Line 4: While Loop
     \While{$|M| < n$\label{dlb:loop}}{
-        define the bipartite graph $G[c^*]$\label{dlb:graph}\;
-        find a maximum matching $M$ in $G[c^*]$\label{dlb:match}\;
+        construa o grafo bipartido $G[c^*]$\label{dlb:graph}\;
+        encontre um emparelhamento máximo $M$ em $G[c^*]$\label{dlb:match}\;
         
         % Line 7: If statement
         \If{$|M| < n$\label{dlb:notperf}}{
             % Line 8
-            \KwLet $I \subseteq U$ and $J \subseteq V$ be vertex sets in a minimum vertex cover of $G[c^*]$\label{dlb:cover}\;
+            \KwLet $I \subseteq U$ e $J \subseteq V$ os conjuntos de vértices de uma cobertura mínima de $G[c^*]$\label{dlb:cover}\;
             
             % Line 9: Min assignment with 'not in' notation
             $c^* := \min_{i \notin I, \ j \notin J} c_{ij}$\label{dlb:raise}\;
@@ -144,7 +144,7 @@ Ao contrário do método dual, que ajusta um limiar global para todo o grafo, o 
     cap(P) = \max_{\{i,j\} \in P} c_{ij} 
 \end{equation}
 
-Para encontrar tal caminho, utiliza-se uma adaptação do algoritmo de Dijkstra. Em vez de somar os pesos das arestas, mantemos para cada vértice um valor de rótulo que representa o "gargalo" mínimo necessário para alcançá-lo. Durante a busca, ao tentar estender o caminho de um nó $u$ (com rótulo $d_u$) para um vizinho $v$ através da aresta $\{u,v\}$, o custo não é somado, mas sim comparado. O novo custo potencial para atingir $v$ é o máximo entre o gargalo já existente até $u$ e o peso da nova aresta:
+Para encontrar tal caminho, utiliza-se uma adaptação do algoritmo de Dijkstra. Em vez de somar os pesos das arestas, mantemos para cada vértice um valor de rótulo que representa o ``gargalo'' mínimo necessário para alcançá-lo. Durante a busca, ao tentar estender o caminho de um nó $u$ (com rótulo $d_u$) para um vizinho $v$ através da aresta $\{u,v\}$, o custo não é somado, mas sim comparado. O novo custo potencial para atingir $v$ é o máximo entre o gargalo já existente até $u$ e o peso da nova aresta:
 
 \begin{equation}     
     Novo\space Custo_v = \max(d_u, c_{uv}) 
@@ -156,25 +156,25 @@ O algoritmo seleciona, a cada passo, o nó não visitado com o menor rótulo atu
     \DontPrintSemicolon
     \SetAlgoLined
 
-    \KwLet $G = (U, V; E)$ be a bipartite graph with edge lengths $c_{ij}$ for $[i, j] \in E$;\label{alb:let}\;
-    find a lower bound $c^*$ for the optimum objective function value;\label{alb:bound}\;
+    \KwLet $G = (U, V; E)$ um grafo bipartido com custos $c_{ij}$ nas arestas $[i, j] \in E$;\label{alb:let}\;
+    encontre um limite inferior $c^*$ para o valor ótimo da função objetivo;\label{alb:bound}\;
     \AlgComment{por exemplo, $c^* := \max(\max_{i \in U} \min_{j \in V} c_{ij}, \ \max_{j \in V} \min_{i \in U} c_{ij})$}\;
     
-    find a maximum matching $M$ in the graph $G[c^*]$ having an edge $[i, j]$ \KwIff $c_{ij} \le c^*$;\label{alb:match}\;
+    encontre um emparelhamento máximo $M$ no grafo $G[c^*]$, que tem a aresta $[i, j]$ \KwIff $c_{ij} \le c^*$;\label{alb:match}\;
     
     \eIf{$|M| = |U|$\label{alb:perfect}}{
         \KwStop \AlgComment{$M$ é um emparelhamento ótimo de custo $c^*$}
     }{
-        \KwLet $L$ be the set of unmatched vertices of $U$\label{alb:free}\;
+        \KwLet $L$ o conjunto dos vértices livres de $U$\label{alb:free}\;
     }
 
     % Continuation from the second image (The Main Loop)
-    \While{$L$ is nonempty\label{alb:loop}}{
-        choose an arbitrary vertex $i \in L$;\label{alb:choose}\;
+    \While{$L$ não é vazio\label{alb:loop}}{
+        escolha um vértice arbitrário $i \in L$;\label{alb:choose}\;
         $L := L \setminus \{i\}$;\;
         Dijkstra($i$); \AlgComment{o procedimento retorna um caminho $P$ que começa em $i$}\label{alb:dijkstra}\;
         
-        \If{$P \neq \mathrm{nil}$\label{alb:found}}{
+        \If{$P \neq \mathrm{nulo}$\label{alb:found}}{
             $M := M \ominus P$;\label{alb:aug}\;
             $c^* := \max(c^*, \ell(P))$\label{alb:cost}\;
         }
@@ -201,25 +201,25 @@ Com referência às linhas do Algoritmo~\ref{alg:augmenting_lbap}:
     \SetAlgoLined
 
     \Fn{Dijkstra($i$)}{
-        label all vertices $j \in V$ by $(\alpha(j), \beta(j)) := (\infty, \mathrm{nil})$;\label{dmod:init}\;
+        rotule todo vértice $j \in V$ com $(\alpha(j), \beta(j)) := (\infty, \mathrm{nulo})$;\label{dmod:init}\;
         $R := V$; \AlgComment{$R$ contém os vértices de $V$ ainda não examinados}\label{dmod:r}\;
-        $\overline{\alpha}(i) := c^*, P := \mathrm{nil}$;\label{dmod:root}\;
-        Label($i$);\label{dmod:label0}\;
+        $\overline{\alpha}(i) := c^*, P := \mathrm{nulo}$;\label{dmod:root}\;
+        Rotula($i$);\label{dmod:label0}\;
         
         \While{$R \neq \emptyset$\label{dmod:loop}}{
-            find a vertex $j_1 \in R$ with minimum $\alpha(j_1)$;\label{dmod:min}\;
+            encontre um vértice $j_1 \in R$ com $\alpha(j_1)$ mínimo;\label{dmod:min}\;
             \eIf{$\alpha(j_1) = \infty$\label{dmod:inf}}{
                 $R := \emptyset$\;
             }{
-                \eIf{$j_1$ is unmatched\label{dmod:free}}{
-                    find the path $P$ induced by the vertex sequence $(i, \dots, \overline{\beta}(\beta(j_1)), \beta(j_1), j_1)$;\label{dmod:path}\;
+                \eIf{$j_1$ está livre\label{dmod:free}}{
+                    obtenha o caminho $P$ dado pela sequência $(i, \dots, \overline{\beta}(\beta(j_1)), \beta(j_1), j_1)$;\label{dmod:path}\;
                     $\ell(P) := \alpha(j_1)$;\label{dmod:len}\;
                     $R := \emptyset$\;
                 }{
-                    let $[i_1, j_1]$ be the matching edge;\label{dmod:mate}\;
-                    label $i_1$ with $(\overline{\alpha}(i_1), \overline{\beta}(i_1)) = (\alpha(j_1), j_1)$;\label{dmod:labeli}\;
+                    \KwLet $[i_1, j_1]$ a aresta do emparelhamento;\label{dmod:mate}\;
+                    rotule $i_1$ com $(\overline{\alpha}(i_1), \overline{\beta}(i_1)) = (\alpha(j_1), j_1)$;\label{dmod:labeli}\;
                     $R := R \setminus \{j_1\}$;\;
-                    Label($i_1$);\label{dmod:label1}\;
+                    Rotula($i_1$);\label{dmod:label1}\;
                 }
             }
         }
@@ -227,8 +227,8 @@ Com referência às linhas do Algoritmo~\ref{alg:augmenting_lbap}:
     
     \bigskip
     
-    \Fn{Label($i$)}{
-        \For{each neighbor $j \in R$ of $i$\label{dmod:for}}{
+    \Fn{Rotula($i$)}{
+        \For{cada vizinho $j \in R$ de $i$\label{dmod:for}}{
             \If{$\alpha(j) > \max(\overline{\alpha}(i), c_{ij})$\label{dmod:relax}}{
                 $\alpha(j) := \max(\overline{\alpha}(i), c_{ij})$;\;
                 $\beta(j) := i$\label{dmod:pred}\;
@@ -244,24 +244,84 @@ O procedimento mantém dois rótulos para cada vértice: para $j \in V$, $\alpha
 
 \begin{itemize}
     \item \textbf{Inicialização (linhas~\ref{dmod:init}--\ref{dmod:label0}):} Todos os vértices de $V$ começam com gargalo infinito e sem predecessor (linha~\ref{dmod:init}) e ficam no conjunto $R$ dos ainda não examinados (linha~\ref{dmod:r}). A raiz $i$ recebe o gargalo $c^*$ (linha~\ref{dmod:root}), e não $0$, porque arestas de custo até o valor atual da solução não a pioram; assim, entre caminhos de mesmo efeito sobre o resultado, qualquer um serve. Em seguida, os vizinhos de $i$ são rotulados (linha~\ref{dmod:label0}).
-    \item \textbf{Escolha do próximo vértice (linhas~\ref{dmod:loop}--\ref{dmod:inf}):} Como no Dijkstra tradicional, escolhe-se o vértice de $R$ de menor rótulo (linha~\ref{dmod:min}). Se esse rótulo é infinito (linha~\ref{dmod:inf}), nenhum vértice restante é alcançável a partir de $i$, a busca termina e o caminho retornado é $P = \mathrm{nil}$.
+    \item \textbf{Escolha do próximo vértice (linhas~\ref{dmod:loop}--\ref{dmod:inf}):} Como no Dijkstra tradicional, escolhe-se o vértice de $R$ de menor rótulo (linha~\ref{dmod:min}). Se esse rótulo é infinito (linha~\ref{dmod:inf}), nenhum vértice restante é alcançável a partir de $i$, a busca termina e o caminho retornado é $P = \mathrm{nulo}$.
     \item \textbf{Coluna livre encontrada (linhas~\ref{dmod:free}--\ref{dmod:len}):} Se $j_1$ não está emparelhado (linha~\ref{dmod:free}), o caminho aumentante foi encontrado. Ele é reconstruído de trás para frente, seguindo os predecessores $\beta$ e $\overline{\beta}$ até $i$ (linha~\ref{dmod:path}), e seu gargalo é o rótulo de $j_1$ (linha~\ref{dmod:len}).
     \item \textbf{Extensão pela aresta emparelhada (linhas~\ref{dmod:mate}--\ref{dmod:label1}):} Se $j_1$ está emparelhado com $i_1$ (linha~\ref{dmod:mate}), o caminho alternante segue obrigatoriamente pela aresta $\{i_1, j_1\}$, que já pertence ao emparelhamento e não altera o gargalo. Por isso, $i_1$ herda o rótulo de $j_1$ e o tem como predecessor (linha~\ref{dmod:labeli}); $j_1$ sai de $R$ e os vizinhos de $i_1$ são rotulados (linha~\ref{dmod:label1}).
-    \item \textbf{Procedimento Label (linhas~\ref{dmod:for}--\ref{dmod:pred}):} Para cada vizinho $j$ de $i$ ainda em $R$ (linha~\ref{dmod:for}), o gargalo de chegar a $j$ por $i$ é o maior entre o gargalo até $i$ e o custo $c_{ij}$. Se esse valor é menor que o rótulo atual de $j$ (linha~\ref{dmod:relax}), o rótulo é atualizado e $i$ passa a ser o predecessor de $j$ (linha~\ref{dmod:pred}). É o relaxamento do Dijkstra, com o máximo no lugar da soma.
-    \item \textbf{Complexidade:} Cada vértice de $V$ sai de $R$ no máximo uma vez, e cada vértice de $U$ é rotulado no máximo uma vez. Com a matriz densa, a busca do mínimo (linha~\ref{dmod:min}) percorre $R$ em $O(n)$ e cada chamada de Label percorre os $O(n)$ vizinhos, o que dá $O(n^2)$ por chamada do procedimento.
+    \item \textbf{Procedimento Rotula (linhas~\ref{dmod:for}--\ref{dmod:pred}):} Para cada vizinho $j$ de $i$ ainda em $R$ (linha~\ref{dmod:for}), o gargalo de chegar a $j$ por $i$ é o maior entre o gargalo até $i$ e o custo $c_{ij}$. Se esse valor é menor que o rótulo atual de $j$ (linha~\ref{dmod:relax}), o rótulo é atualizado e $i$ passa a ser o predecessor de $j$ (linha~\ref{dmod:pred}). É o relaxamento do Dijkstra, com o máximo no lugar da soma.
+    \item \textbf{Complexidade:} Cada vértice de $V$ sai de $R$ no máximo uma vez, e cada vértice de $U$ é rotulado no máximo uma vez. Com a matriz densa, a busca do mínimo (linha~\ref{dmod:min}) percorre $R$ em $O(n)$ e cada chamada de Rotula percorre os $O(n)$ vizinhos, o que dá $O(n^2)$ por chamada do procedimento.
 \end{itemize}
 
 \subsection{Heurísticas}
+\label{sec:lbap_heuristicas}
 
-Assim como na atribuição linear, os métodos gulosos para o problema de atribuição gargalo não têm garantia de aproximação e são, portanto, heurísticas (Seção~\ref{sec:tipos_metodo}). Esta seção apresenta a heurística construtiva gulosa, que adapta o critério de escolha das arestas ao objetivo de minimizar o maior custo.
+Assim como na atribuição linear, os métodos gulosos para o problema de atribuição gargalo não têm garantia de aproximação e são, portanto, heurísticas (Seção~\ref{sec:tipos_metodo}). Esta seção apresenta duas heurísticas construtivas gulosas, ambas avaliadas no ambiente de testes: a simples, que serve de ponto de comparação, e a por arrependimento, que adapta o critério de escolha ao objetivo de minimizar o maior custo.
 
-\subsubsection{Heurística Construtiva Gulosa}
+\subsubsection{Heurística gulosa simples}
 
-Assim como no problema de atribuição, o guloso simples não oferece garantia de qualidade; no problema de gargalo, ele deve ainda ser adaptado para evitar criar ``bicos de garrafa'' muito altos no final do processo.
+A heurística gulosa simples percorre as $n^2$ posições da matriz de custos em ordem crescente e atribui a linha $i$ à coluna $j$ sempre que ambas ainda estão livres. Como a matriz é completa, o resultado é sempre uma atribuição perfeita. O defeito do método está no final do processo: as últimas linhas recebem as colunas que sobraram, cujos custos podem ser altos, e, como o objetivo é o \textit{maior} custo da atribuição, uma única escolha ruim no fim determina o valor da solução, criando um ``gargalo'' que as escolhas baratas do início não compensam.
 
-O algoritmo seleciona arestas iterativamente. Para cada vértice livre, ele verifica não apenas a aresta de menor peso incidente, mas também o "custo de oportunidade" de não escolhê-la.
+\subsubsection{Heurística gulosa por arrependimento}
 
-Se não escolhermos a aresta $\{u,v\}$ de peso 10, a próxima melhor opção para $u$ tem peso 100? Se sim, a prioridade de $\{u,v\}$ aumenta drasticamente \cite{martello}.
+A heurística por arrependimento evita esse defeito decidindo primeiro as linhas que têm mais a perder. A cada passo, para cada linha livre $i$, sejam $c_i^{(1)}$ e $c_i^{(2)}$ o menor e o segundo menor custo de $i$ entre as colunas ainda livres. O \textbf{arrependimento} (\textit{regret}) da linha é
+\begin{equation}
+    r_i = c_i^{(2)} - c_i^{(1)},
+    \label{eq:arrependimento}
+\end{equation}
+isto é, o quanto o custo de $i$ aumenta se a sua melhor coluna for ocupada por outra linha --- o \textit{custo de oportunidade} de não lhe dar essa coluna agora. Escolhe-se a linha de maior arrependimento e ela é atribuída à sua melhor coluna livre; se só resta uma coluna livre, o arrependimento é considerado infinito, pois a linha não tem alternativa. O critério é a adaptação, para o problema de gargalo, da heurística HGAP proposta por \citeonline{martello} para o problema de atribuição generalizada, que a cada passo atribui a tarefa com a maior diferença entre a sua melhor e a sua segunda melhor opção.
+
+O Algoritmo~\ref{alg:lbap_gulosos} apresenta as duas heurísticas.
+
+\begin{algorithm}[H]
+    \DontPrintSemicolon
+    \SetAlgoLined
+
+    \caption{Heurísticas gulosas para o LBAP: simples e por arrependimento \cite{martello}}
+    \label{alg:lbap_gulosos}
+
+    \Fn{Guloso($C$)}{
+        ordene as $n^2$ posições $(i, j)$ por $c_{ij}$ crescente\label{lg:sort}\;
+        \For{cada posição $(i, j)$, nessa ordem\label{lg:for}}{
+            \lIf{a linha $i$ e a coluna $j$ estão livres\label{lg:test}}{atribua $i$ a $j$}
+        }
+        \KwRet a atribuição $\varphi$ e seu gargalo $\max_i c_{i\varphi(i)}$\label{lg:ret}\;
+    }
+
+    \bigskip
+
+    \Fn{Arrependimento($C$)}{
+        \lFor{cada linha $i$\label{rg:sort}}{ordene as colunas por $c_{ij}$ crescente}
+        $R := U$\label{rg:init}\;
+        \While{$R \neq \emptyset$\label{rg:loop}}{
+            \For{cada $i \in R$\label{rg:for}}{
+                $j_1(i), j_2(i) :=$ primeira e segunda colunas livres na ordem da linha $i$\label{rg:best}\;
+                $r_i := c_{i j_2(i)} - c_{i j_1(i)}$ \AlgComment{$r_i := \infty$ se $j_2(i)$ não existe}\label{rg:regret}\;
+            }
+            $i^* :=$ linha de $R$ com $r_i$ máximo \AlgComment{empate: menor $c_{i j_1(i)}$}\label{rg:choose}\;
+            atribua $i^*$ a $j_1(i^*)$; $R := R \setminus \{i^*\}$\label{rg:assign}\;
+        }
+        \KwRet a atribuição $\varphi$ e seu gargalo $\max_i c_{i\varphi(i)}$\label{rg:ret}\;
+    }
+\end{algorithm}
+
+O Algoritmo~\ref{alg:lbap_gulosos} é explicado a seguir, linha a linha:
+
+\begin{itemize}
+    \item \textbf{Guloso simples (linhas~\ref{lg:sort}--\ref{lg:ret}):} As posições são ordenadas por custo (linha~\ref{lg:sort}) e examinadas uma única vez, da mais barata para a mais cara (linha~\ref{lg:for}). Uma posição é aceita se sua linha e sua coluna estão livres (linha~\ref{lg:test}); uma posição rejeitada nunca é reconsiderada. O gargalo é o maior custo entre as posições aceitas (linha~\ref{lg:ret}).
+    \item \textbf{Preparação do arrependimento (linhas~\ref{rg:sort}--\ref{rg:init}):} Cada linha guarda suas colunas em ordem crescente de custo, e o conjunto $R$ começa com todas as linhas.
+    \item \textbf{Cálculo do arrependimento (linhas~\ref{rg:for}--\ref{rg:regret}):} Para cada linha livre, a melhor e a segunda melhor coluna livre são as duas primeiras colunas livres na sua ordem (linha~\ref{rg:best}), e o arrependimento é a diferença entre os seus custos, conforme a Equação~\eqref{eq:arrependimento} (linha~\ref{rg:regret}).
+    \item \textbf{Escolha (linhas~\ref{rg:choose}--\ref{rg:assign}):} A linha de maior arrependimento é atribuída à sua melhor coluna livre e sai de $R$ (linha~\ref{rg:assign}). Os empates são desfeitos pelo menor custo e, depois, pelo menor índice de linha.
+    \item \textbf{Complexidade:} No guloso simples, a ordenação das $n^2$ posições custa $O(n^2 \log n)$ e domina a passada, que é $O(n^2)$. No guloso por arrependimento, a ordenação das linhas também custa $O(n^2 \log n)$. Como uma coluna ocupada nunca volta a ficar livre, cada linha mantém um ponteiro para a sua primeira coluna livre, que só avança; o total de avanços é $O(n^2)$, e cada uma das $n$ iterações do laço examina $O(n)$ linhas. O custo total é, portanto, $O(n^2 \log n)$ para as duas heurísticas.
+\end{itemize}
+
+\textbf{Exemplo.} Considere a matriz de custos
+\begin{equation}
+    C = \begin{bmatrix} 3 & 8 & 6 \\ 7 & 2 & 9 \\ 5 & 1 & 4 \end{bmatrix},
+\end{equation}
+com linhas $1, 2, 3$ e colunas $1, 2, 3$. O guloso simples escolhe primeiro a posição mais barata, $(3, 2)$, de custo 1. A posição seguinte, $(2, 2)$, de custo 2, é rejeitada, pois a coluna 2 já está ocupada; aceita-se então $(1, 1)$, de custo 3. Restam apenas a linha 2 e a coluna 3, e a atribuição termina com $(2, 3)$, de custo 9, que é o gargalo da solução.
+
+O guloso por arrependimento calcula, no primeiro passo, $r_1 = 6 - 3 = 3$, $r_2 = 7 - 2 = 5$ e $r_3 = 4 - 1 = 3$. A linha 2 é a que mais perde se não ficar com a coluna 2 e é atribuída a ela, com custo 2. No segundo passo, com as colunas 1 e 3 livres, $r_1 = 6 - 3 = 3$ e $r_3 = 5 - 4 = 1$, e a linha 1 recebe a coluna 1, com custo 3. Por fim, a linha 3 recebe a coluna 3, com custo 4. O gargalo é 4, que é ótimo: toda atribuição usa uma posição da coluna 3, cujo menor custo é 4, de modo que nenhuma atribuição tem gargalo menor.
+
+O exemplo mostra por que o critério funciona: a linha 3 também preferia a coluna 2, mas tinha uma alternativa barata (a coluna 3, de custo 4), enquanto a linha 2 não tinha. Ainda assim, o critério olha apenas um passo à frente e não oferece garantia: há matrizes em que também ele termina com um gargalo alto, como mostram os resultados do Capítulo~\ref{cap:resultados}.
 
 % ### 3. Busca Local com Caminhos Curtos (Local Search)
 
@@ -275,14 +335,15 @@ Se não escolhermos a aresta $\{u,v\}$ de peso 10, a próxima melhor opção par
 % * **Qualidade:** Apenas com caminhos de comprimento 3, a garantia de aproximação sobe para um fator melhor que 1/2.
 % * **Fonte:** **Arkin, E. M., et al. (2006).** *Local search for the maximum cardinality matching problem*.
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Algoritmos para problema de atribuição gargalo}
     \label{tab:atribuicao_gargalo_algos}
     \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
+    \footnotesize
     
     % Structure: l = left align, c = center, X = auto-wrap paragraph
-    \begin{tabularx}{\textwidth}{@{} l l l l X @{}}
+    \begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{2.8cm} l l l >{\raggedright\arraybackslash}X @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Complexidade} & \textbf{Tipo} & \textbf{Avaliado} & \textbf{Descrição} \\
         \midrule
@@ -299,11 +360,15 @@ Se não escolhermos a aresta $\{u,v\}$ de peso 10, a próxima melhor opção par
         Abordagem construtiva que busca caminhos aumentantes minimizando a aresta de peso máximo (gargalo) no trajeto (variação de Dijkstra). \\
         \addlinespace
         
-        Construtiva Gulosa & $O(E \log E)$ & Heurística & Não & 
-        Constrói a solução selecionando arestas de baixo peso, usando critérios locais ou de "arrependimento" para evitar gargalos futuros. \\
+        Gulosa simples & $O(n^2 \log n)$ & Heur. & Sim & 
+        Percorre as posições em ordem crescente de custo, atribuindo linha e coluna quando ambas estão livres. \\
+        \addlinespace
+        
+        Gulosa por arrependimento & $O(n^2 \log n)$ & Heur. & Sim & 
+        A cada passo, atribui a linha com a maior diferença entre a melhor e a segunda melhor coluna livre à sua melhor coluna. \\
         
         \bottomrule
     \end{tabularx}
     \par\smallskip
-    {\raggedright\footnotesize \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. * A implementação avaliada testa cada limiar por caminhos aumentantes, com custo $O(n^3)$ por teste e $O(n^3 \log n)$ no total.\par}
+    {\raggedright\footnotesize \textit{Heur.}: heurística. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. * A implementação avaliada testa cada limiar por caminhos aumentantes, com custo $O(n^3)$ por teste e $O(n^3 \log n)$ no total.\par}
 \end{table}

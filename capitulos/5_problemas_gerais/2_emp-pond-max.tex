@@ -1,38 +1,105 @@
 \section{Emparelhamento ponderado máximo}
+\label{sec:emp_pond_max}
 
-Enquanto o problema de cardinalidade máxima busca o maior número de arestas, o problema do \textbf{Emparelhamento de Peso Máximo} (Maximum Weight Matching) introduz uma função de peso $w: E \to \mathbb{R}$ nas arestas, e o objetivo torna-se encontrar um emparelhamento $M$ que maximize $\sum_{e \in M} w(e)$. Este problema é a generalização natural do Problema da Atribuição para grafos não-bipartidos, descrito em \ref{sec:assignment_problem}.
+Enquanto o problema de cardinalidade máxima busca o maior número de arestas, o problema do \textbf{emparelhamento de peso máximo} (\textit{maximum weight matching}) introduz uma função de peso $w: E \to \mathbb{R}$ nas arestas, e o objetivo torna-se encontrar um emparelhamento $M$ que maximize $w(M) = \sum_{e \in M} w(e)$. Este problema é a generalização natural do problema de atribuição (Seção~\ref{sec:assignment_problem}) para grafos não bipartidos.
 
-A complexidade deste problema em grafos gerais decorre, assim como no problema de emparelhamento de cardinalidade máxima descrito em \ref{sec:emp_card_max_geral}, da presença de ciclos ímpares. Se tentarmos modelar o problema usando Programação Linear (PL) apenas com restrições de grau ($\sum x_e \le 1$), a solução ótima do sistema relaxado pode ser fracionária (ex: $x_e = 0.5$ para as três arestas de um triângulo), o que não corresponde a um emparelhamento válido.
+Assim como no problema de cardinalidade máxima (Seção~\ref{sec:emp_card_max_geral}), a dificuldade em grafos gerais decorre dos ciclos ímpares. No caso ponderado, ela aparece de forma clara quando o problema é escrito como um modelo de programação linear (Seção~\ref{sec:pl}), que é também o ponto de partida do algoritmo de Edmonds.
 
-\subsection{Formulação poliédrica e Restrições de Blossom}
+\subsection{Formulação poliédrica e desigualdades de flor}
+\label{sec:formulacao_poliedrica}
 
-Conforme detalhado por \citeonline{schrijver}, para descrever o \textbf{Poliedro do Emparelhamento} (Matching Polytope) em grafos gerais, Edmonds (1965) provou que é necessário adicionar uma família exponencial de restrições conhecidas como \textbf{Desigualdades de Blossom} (ou restrições de subconjuntos ímpares):
-
+O problema pode ser escrito como um modelo de programação linear inteira \cite{schrijver}:
+\begin{itemize}
+    \item \textbf{Variáveis:} uma variável $x_e \in \{0, 1\}$ para cada aresta $e \in E$, com $x_e = 1$ se, e somente se, $e$ pertence ao emparelhamento.
+    \item \textbf{Função objetivo:} maximizar o peso total das arestas escolhidas, $\sum_{e \in E} w(e)\, x_e$.
+    \item \textbf{Restrições de grau:} cada vértice é coberto por no máximo uma aresta escolhida. Sendo $\delta(v)$ o conjunto das arestas incidentes a $v$, exige-se $\sum_{e \in \delta(v)} x_e \le 1$ para todo $v \in V$.
+\end{itemize}
+Em resumo:
 \begin{equation}
-    \sum_{e \in E(U)} x_e \le \frac{|U| - 1}{2}, \quad \forall U \subseteq V, |U| \text{ ímpar}, |U| \ge 3
+    \begin{aligned}
+        \max \quad & \sum_{e \in E} w(e)\, x_e \\
+        \text{sujeito a} \quad & \sum_{e \in \delta(v)} x_e \le 1 && \forall\, v \in V, \\
+        & x_e \in \{0, 1\} && \forall\, e \in E.
+    \end{aligned}
+    \label{eq:emp_pli}
 \end{equation}
 
-Onde $E(U)$ é o conjunto de arestas com ambas as extremidades em $U$. Essas inequações garantem que, em qualquer subconjunto ímpar de vértices, o número de arestas selecionadas não exceda a capacidade máxima inteira possível.
+Em grafos bipartidos, a relaxação linear desse modelo, com $0 \le x_e \le 1$, já tem ótimo inteiro, pois a matriz de restrições é totalmente unimodular (Seção~\ref{sec:pl}); é o que torna o problema de atribuição solúvel pela programação linear. Em grafos gerais, isso falha. No triângulo da Figura~\ref{fig:triangulo}, com peso 1 nas três arestas, a solução $x_e = 1/2$ para cada aresta satisfaz todas as restrições de grau, pois cada vértice recebe $1/2 + 1/2 = 1$, e tem valor $3/2$. Porém, qualquer emparelhamento do triângulo tem no máximo uma aresta e, portanto, peso 1: a relaxação admite uma solução fracionária melhor que todas as inteiras.
 
-\subsection{A abordagem Primal-Dual}
+\begin{figure}[H]
+    \centering
+    \caption{Solução fracionária da relaxação linear em um triângulo}
+    \label{fig:triangulo}
+    \begin{tikzpicture}[vert/.style={circle, fill=black, inner sep=0pt, minimum size=6pt}]
+        \coordinate (a) at (0, 0);
+        \coordinate (b) at (2.4, 0);
+        \coordinate (c) at (1.2, 2);
+        \draw[thick] (a) -- node[below] {$x = 1/2$} (b);
+        \draw[thick] (b) -- node[right] {$x = 1/2$} (c);
+        \draw[thick] (c) -- node[left] {$x = 1/2$} (a);
+        \foreach \v in {a, b, c} \node[vert] at (\v) {};
+    \end{tikzpicture}
+    \fonte{Elaborado pelo autor. Os três pesos valem 1; a solução tem valor $3/2$, enquanto o maior emparelhamento tem peso 1.}
+\end{figure}
 
-Diferente do caso de cardinalidade, onde buscamos apenas caminhos aumentantes, o algoritmo para o caso ponderado é um método \textbf{Primal-Dual}. Ele é uma generalização do Método Húngaro, mas adaptado para lidar com as blossoms.
-
-Segundo \citeonline{lawler}, o algoritmo mantém variáveis duais não apenas para os vértices ($y_v$), mas também para cada subconjunto ímpar de vértices ($z_B$) que forma uma blossom contraída. A condição de otimalidade baseia-se na folga complementar. Uma aresta $\{u, v\}$ é considerada "admissível" ou "justa" (\textit{tight}) se a soma dos duais correspondentes iguala o peso da aresta. Simplificadamente:
-
+Para eliminar essas soluções, \citeonline{edmonds} acrescentou as \textbf{desigualdades de flor} (\textit{blossom inequalities}), uma para cada subconjunto $U \subseteq V$ com número ímpar de vértices. Sendo $E(U)$ o conjunto das arestas com os dois extremos em $U$:
 \begin{equation}
-    y_u + y_v + \sum_{B : \{u,v\} \subseteq B} z_B = w_{uv}
+    \sum_{e \in E(U)} x_e \le \frac{|U| - 1}{2}, \quad \forall\, U \subseteq V, \; |U| \text{ ímpar}, \; |U| \ge 3.
+    \label{eq:desig_flor}
 \end{equation}
+Essas desigualdades são válidas para todo emparelhamento: cada aresta escolhida dentro de $U$ cobre dois vértices de $U$, de modo que cabem no máximo $\lfloor |U|/2 \rfloor = (|U| - 1)/2$ delas. E elas cortam a solução fracionária do triângulo: com $U$ igual aos três vértices, a desigualdade exige soma no máximo $1$, e a solução $x_e = 1/2$ soma $3/2$.
 
-O algoritmo opera iterativamente em dois estágios, descritos por \citeonline{jungnickel} e \citeonline{schrijver}:
+O resultado central, conhecido como \textbf{teorema do poliedro do emparelhamento} (\textit{matching polytope theorem}), é que essas desigualdades bastam. O \textbf{poliedro do emparelhamento} de $G$ é o conjunto de todas as combinações convexas dos vetores de emparelhamentos, isto é, dos vetores $x \in \{0, 1\}^E$ com $x_e = 1$ exatamente nas arestas de algum emparelhamento. \citeonline{edmonds} provou que esse poliedro é descrito exatamente pelas restrições $x \ge 0$, de grau e de flor \cite[Corolário 25.1a]{schrijver}. Como consequência, todo vértice do poliedro definido por essas restrições é inteiro, e o PL
+\begin{equation}
+    \begin{aligned}
+        \max \quad & \sum_{e \in E} w(e)\, x_e \\
+        \text{sujeito a} \quad & \sum_{e \in \delta(v)} x_e \le 1 && \forall\, v \in V, \\
+        & \sum_{e \in E(U)} x_e \le \frac{|U| - 1}{2} && \forall\, U \subseteq V, \; |U| \text{ ímpar}, \\
+        & x_e \ge 0 && \forall\, e \in E
+    \end{aligned}
+    \label{eq:emp_pl_flor}
+\end{equation}
+tem sempre um emparelhamento de peso máximo como solução ótima. O número de desigualdades de flor, no entanto, é exponencial em $|V|$, de modo que esse PL não é resolvido diretamente: o algoritmo de Edmonds trabalha com o seu dual, descrito a seguir.
+
+\subsection{A abordagem primal-dual}
+
+Diferente do caso de cardinalidade, onde buscamos apenas caminhos aumentantes, o algoritmo para o caso ponderado é um método \textbf{primal-dual} (Seção~\ref{sec:pl}). Ele é uma generalização do método Húngaro, mas adaptado para lidar com as flores.
+
+O dual do PL~\eqref{eq:emp_pl_flor}, construído como na Seção~\ref{sec:pl}, tem uma variável para cada restrição primal \cite{schrijver}:
+\begin{itemize}
+    \item $y_v \ge 0$ para a restrição de grau do vértice $v$;
+    \item $z_B \ge 0$ para a desigualdade de flor do conjunto ímpar $B$.
+\end{itemize}
+E tem uma restrição para cada variável primal, isto é, para cada aresta:
+\begin{equation}
+    \begin{aligned}
+        \min \quad & \sum_{v \in V} y_v + \sum_{B} \frac{|B| - 1}{2}\, z_B \\
+        \text{sujeito a} \quad & y_u + y_v + \sum_{B \,:\, \{u,v\} \subseteq B} z_B \ge w(\{u, v\}) && \forall\, \{u, v\} \in E, \\
+        & y_v \ge 0, \; z_B \ge 0.
+    \end{aligned}
+    \label{eq:emp_dual}
+\end{equation}
+Na restrição de cada aresta $\{u, v\}$, aparecem o potencial dos seus dois extremos e o dual de todo conjunto ímpar $B$ que contém os dois extremos, pois são exatamente as desigualdades de flor em que a variável $x_{uv}$ aparece. A diferença entre os dois lados é a \textbf{folga} da aresta:
+\begin{equation}
+    \pi_{uv} = y_u + y_v + \sum_{B \,:\, \{u,v\} \subseteq B} z_B - w(\{u, v\}) \ge 0,
+    \label{eq:folga_aresta}
+\end{equation}
+e a aresta é \textbf{justa} ou \textbf{admissível} (\textit{tight}) quando $\pi_{uv} = 0$. Pela folga complementar (Seção~\ref{sec:pl}), um emparelhamento $M$ e duais viáveis $(y, z)$ são ótimos se, e somente se:
+\begin{enumerate}
+    \item toda aresta de $M$ é justa;
+    \item todo vértice com $y_v > 0$ é coberto por $M$;
+    \item todo conjunto com $z_B > 0$ contém exatamente $(|B| - 1)/2$ arestas de $M$, isto é, $M$ emparelha todos os vértices de $B$ menos um.
+\end{enumerate}
+
+O algoritmo de Edmonds é primal-dual \cite{lawler}: ele mantém os duais viáveis e as condições 1 e 3 durante toda a execução e busca satisfazer a condição 2. Na prática, só recebem $z_B > 0$ os conjuntos que formam flores, que satisfazem a condição 3 por definição (Seção~\ref{sec:emp_card_max_geral}). O algoritmo alterna dois estágios, descritos por \citeonline{jungnickel} e \citeonline{schrijver}:
 
 \begin{enumerate}
-    \item \textbf{Estágio Primal (Busca):} Restringindo-se apenas às arestas admissíveis (onde a equação acima é satisfeita), o algoritmo busca um caminho aumentante usando a técnica de contração de blossoms de Edmonds. Se encontrado, o emparelhamento é aumentado.
-    \item \textbf{Estágio Dual (Ajuste de Preços):} Se a busca falha em encontrar um caminho aumentante no grafo de arestas admissíveis, o algoritmo não termina (ao contrário do caso de cardinalidade). Em vez disso, ele realiza uma atualização das variáveis duais $y$ e $z$.
+    \item \textbf{Estágio primal (busca):} usando apenas arestas justas, o algoritmo busca um caminho aumentante a partir dos vértices livres, com a técnica de contração de flores do caso de cardinalidade. Se encontrado, o emparelhamento é aumentado ao longo dele, e as condições 1 e 3 continuam valendo.
+    \item \textbf{Estágio dual (ajuste de preços):} se a busca falha, o algoritmo não termina, ao contrário do caso de cardinalidade. Em vez disso, ajusta os duais:
     \begin{itemize}
-        \item O algoritmo calcula um valor $\delta$ (delta), que é a menor "folga" entre as arestas que conectam a árvore de busca atual a vértices externos.
-        \item Os duais dos vértices na árvore são ajustados por $\pm \delta$ e os duais das blossoms ($z_B$) também são ajustados.
-        \item Esse ajuste tem o efeito de "destravar" novas arestas (tornando-as admissíveis) ou permitir a expansão/contração de blossoms, possibilitando que a busca prossiga.
+        \item calcula o maior passo $\delta$ que mantém todas as folgas~\eqref{eq:folga_aresta} e todos os duais não negativos;
+        \item diminui em $\delta$ os potenciais dos vértices externos da árvore de busca e aumenta em $\delta$ os dos internos, com o ajuste correspondente nos $z_B$ das flores;
+        \item com isso, uma nova aresta se torna justa, uma flor pode ser expandida ou o potencial de um vértice livre chega a zero, o que satisfaz a condição 2 para ele.
     \end{itemize}
 \end{enumerate}
 
@@ -42,11 +109,11 @@ O procedimento resultante é frequentemente chamado de \textbf{Algoritmo de Blos
 
 A implementação original de Edmonds era polinomial, $O(V^4)$. \citeonline{lawler} apresentou uma implementação $O(V^3)$, que por muito tempo foi o padrão em livros didáticos.
 
-A variante $O(V^3)$ descrita por Lawler (1976) para o emparelhamento ponderado utiliza uma abordagem primal-dual rigorosa. O algoritmo mantém um conjunto de arestas admissíveis (custo reduzido nulo) baseadas em variáveis duais de vértices ($y_i$) e de subconjuntos ímpares ($z_B$). A cada iteração onde a busca por caminhos aumentantes falha, o algoritmo calcula um escalar crítico $\delta$ baseado nas folgas das arestas incidentes à árvore alternante atual (conjunto $S$). A atualização dual subsequente ($y_i \leftarrow y_i \pm \delta$, $z_B \leftarrow z_B \pm 2\delta$) garante o surgimento de novas arestas admissíveis ou a expansão de \textbf{blossoms} com dual nulo, mantendo a complexidade cúbica através do gerenciamento eficiente dos valores de folga mínima (\textbf{slack}) para vértices fora da árvore.
+A variante $O(V^3)$ descrita por Lawler (1976) para o emparelhamento ponderado utiliza uma abordagem primal-dual rigorosa. O algoritmo mantém um conjunto de arestas admissíveis (custo reduzido nulo) baseadas em variáveis duais de vértices ($y_i$) e de subconjuntos ímpares ($z_B$). A cada iteração onde a busca por caminhos aumentantes falha, o algoritmo calcula um escalar crítico $\delta$ baseado nas folgas das arestas incidentes à árvore alternante atual (conjunto $S$). A atualização dual subsequente ($y_i \leftarrow y_i \pm \delta$, $z_B \leftarrow z_B \pm 2\delta$) garante o surgimento de novas arestas admissíveis ou a expansão de \textbf{flores} com dual nulo, mantendo a complexidade cúbica através do gerenciamento eficiente dos valores de folga mínima (\textbf{slack}) para vértices fora da árvore.
 
-Lawler também destaca que a manipulação das variáveis duais das blossoms ($z_B$) é o que permite ao algoritmo "pagar" o custo de usar arestas dentro de estruturas cíclicas ímpares. Quando uma blossom é formada durante a busca, ela recebe um valor dual $z_B > 0$; quando ela precisa ser desfeita (expandida) para encontrar um caminho, seu valor dual retorna a zero.
+Lawler também destaca que a manipulação das variáveis duais das flores ($z_B$) é o que permite ao algoritmo ``pagar'' o custo de usar arestas dentro de estruturas cíclicas ímpares. Quando uma flor é formada durante a busca, ela começa com dual $z_B = 0$, que cresce nos ajustes em que a flor é externa; quando ela é interna e seu dual volta a zero, a flor pode ser desfeita (expandida) sem violar a viabilidade dual.
 
-O Algoritmo~\ref{alg:edmonds_weighted} resume esse esquema primal-dual em alto nível, omitindo as estruturas de dados de contração e expansão de blossoms. Nele, $\pi_{uv} = y_u + y_v + \sum_{B : \{u,v\} \subseteq B} z_B - w_{uv}$ denota a folga da aresta $\{u, v\}$; uma aresta é justa quando $\pi_{uv} = 0$.
+O Algoritmo~\ref{alg:edmonds_weighted} resume esse esquema primal-dual em alto nível, omitindo as estruturas de dados de contração e expansão de flores. Nele, $\pi_{uv}$ é a folga da aresta $\{u, v\}$, definida na Equação~\eqref{eq:folga_aresta}; uma aresta é justa quando $\pi_{uv} = 0$.
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
@@ -55,50 +122,50 @@ O Algoritmo~\ref{alg:edmonds_weighted} resume esse esquema primal-dual em alto n
     \caption{Esquema primal-dual do algoritmo de Edmonds ponderado, em alto nível \cite{lawler}}
     \label{alg:edmonds_weighted}
 
-    \KwIn{graph $G = (V, E)$ with weights $w: E \to \mathbb{R}$}
-    \KwOut{maximum weight matching $M$}
-    $M := \emptyset$; $y_v := \frac{1}{2} \max_{e \in E} w(e)$ for all $v \in V$; $z_B := 0$ for every blossom $B$\label{ew:init}\;
+    \KwIn{grafo $G = (V, E)$ com pesos $w: E \to \mathbb{R}$}
+    \KwOut{emparelhamento de peso máximo $M$}
+    $M := \emptyset$; $y_v := \frac{1}{2} \max_{e \in E} w(e)$ para todo $v \in V$; $z_B := 0$ para toda flor $B$\label{ew:init}\;
     \While{\KwTrue\label{ew:loop}}{
-        grow alternating trees rooted at the free vertices using only tight edges, labeling vertices as outer ($S$) or inner ($T$)\label{ew:grow}\;
-        \uIf{a tight edge joins outer vertices of two different trees\label{ew:augif}}{
-            augment $M$ along the augmenting path found; remove all labels\label{ew:aug}\;
+        cresça árvores alternantes enraizadas nos vértices livres usando só arestas justas, rotulando os vértices como externos ($S$) ou internos ($T$)\label{ew:grow}\;
+        \uIf{uma aresta justa liga vértices externos de duas árvores diferentes\label{ew:augif}}{
+            aumente $M$ pelo caminho aumentante encontrado; apague todos os rótulos\label{ew:aug}\;
         }
-        \uElseIf{a tight edge joins two outer vertices of the same tree\label{ew:shrinkif}}{
-            contract the blossom $B$ formed by the edge, with $z_B := 0$\label{ew:shrink}\;
+        \uElseIf{uma aresta justa liga dois vértices externos da mesma árvore\label{ew:shrinkif}}{
+            contraia a flor $B$ formada pela aresta, com $z_B := 0$\label{ew:shrink}\;
         }
         \Else{
-            $\delta_1 := \min \{ y_v : v \text{ outer} \}$\label{ew:d1}\;
-            $\delta_2 := \min \{ \pi_{uv} : u \text{ outer}, v \text{ unlabeled} \}$\label{ew:d2}\;
-            $\delta_3 := \min \{ \pi_{uv} / 2 : u, v \text{ outer, in different blossoms} \}$\label{ew:d3}\;
-            $\delta_4 := \min \{ z_B / 2 : B \text{ inner blossom} \}$\label{ew:d4}\;
+            $\delta_1 := \min \{ y_v : v \text{ externo} \}$\label{ew:d1}\;
+            $\delta_2 := \min \{ \pi_{uv} : u \text{ externo}, v \text{ sem rótulo} \}$\label{ew:d2}\;
+            $\delta_3 := \min \{ \pi_{uv} / 2 : u, v \text{ externos, em flores diferentes} \}$\label{ew:d3}\;
+            $\delta_4 := \min \{ z_B / 2 : B \text{ flor interna} \}$\label{ew:d4}\;
             $\delta := \min(\delta_1, \delta_2, \delta_3, \delta_4)$\label{ew:delta}\;
-            $y_v := y_v - \delta$ for outer $v$; $y_v := y_v + \delta$ for inner $v$\label{ew:dualy}\;
-            $z_B := z_B + 2\delta$ for outer blossoms; $z_B := z_B - 2\delta$ for inner blossoms\label{ew:dualz}\;
+            $y_v := y_v - \delta$ para $v$ externo; $y_v := y_v + \delta$ para $v$ interno\label{ew:dualy}\;
+            $z_B := z_B + 2\delta$ nas flores externas; $z_B := z_B - 2\delta$ nas internas\label{ew:dualz}\;
             \lIf{$\delta = \delta_1$\label{ew:stop}}{\KwStop \AlgComment{$M$ é ótimo}}
-            expand every inner blossom $B$ with $z_B = 0$\label{ew:expand}\;
+            expanda toda flor interna $B$ com $z_B = 0$\label{ew:expand}\;
         }
     }
-    \KwRet $M$, after expanding all remaining blossoms\label{ew:ret}\;
+    \KwRet $M$, após expandir todas as flores restantes\label{ew:ret}\;
 \end{algorithm}
 
 O Algoritmo~\ref{alg:edmonds_weighted} alterna entre o estágio primal e o estágio dual descritos acima, e pode ser lido linha a linha da seguinte forma:
 
 \begin{itemize}
-    \item \textbf{Linha~\ref{ew:init}:} O emparelhamento começa vazio, todos os vértices recebem o mesmo dual $y_v$, igual à metade do maior peso, e nenhuma blossom tem dual. Com essa escolha, $y_u + y_v \ge w_{uv}$ para toda aresta, ou seja, todas as folgas $\pi_{uv}$ começam não negativas, e a solução dual é viável desde o início.
+    \item \textbf{Linha~\ref{ew:init}:} O emparelhamento começa vazio, todos os vértices recebem o mesmo dual $y_v$, igual à metade do maior peso, e nenhuma flor tem dual. Com essa escolha, $y_u + y_v \ge w_{uv}$ para toda aresta, ou seja, todas as folgas $\pi_{uv}$ começam não negativas, e a solução dual é viável desde o início.
     \item \textbf{Linhas~\ref{ew:loop}--\ref{ew:grow}:} A cada iteração, cresce-se uma floresta de árvores alternantes, enraizadas nos vértices livres, usando apenas arestas justas ($\pi_{uv} = 0$). Os vértices a distância par da raiz são rotulados como externos ($S$) e os a distância ímpar, como internos ($T$), como na busca do caso de cardinalidade.
     \item \textbf{Linhas~\ref{ew:augif}--\ref{ew:aug}:} Uma aresta justa entre vértices externos de árvores diferentes liga duas raízes livres por um caminho alternante, isto é, um caminho aumentante. O emparelhamento é aumentado ao longo dele, e os rótulos são apagados para uma nova busca.
-    \item \textbf{Linhas~\ref{ew:shrinkif}--\ref{ew:shrink}:} Uma aresta justa entre dois vértices externos da mesma árvore fecha um ciclo ímpar, que é contraído em uma blossom, como no Algoritmo~\ref{alg:maxmatch}. A nova blossom começa com dual $z_B = 0$ e se comporta como um vértice externo.
-    \item \textbf{Linhas~\ref{ew:d1}--\ref{ew:delta}:} Se nenhuma das situações anteriores ocorre, a busca está travada e é preciso ajustar os duais. Calcula-se o maior passo $\delta$ que mantém a solução dual viável, como o menor de quatro limites: $\delta_1$ é o menor dual de vértice externo, que não pode ficar negativo; $\delta_2$ é a menor folga de aresta entre um vértice externo e um não rotulado, que diminui em $\delta$; $\delta_3$ é a metade da menor folga entre vértices externos de blossoms diferentes, pois essa folga diminui em $2\delta$, uma vez que os dois extremos são externos; e $\delta_4$ é a metade do menor dual de blossom interna, que diminui em $2\delta$ e também não pode ficar negativo.
-    \item \textbf{Linhas~\ref{ew:dualy}--\ref{ew:dualz}:} Os duais são atualizados: os vértices externos perdem $\delta$ e os internos ganham $\delta$, de modo que as arestas justas da árvore (entre um externo e um interno) continuam justas; as blossoms externas ganham $2\delta$ e as internas perdem $2\delta$, o que compensa a variação dos duais dos vértices dentro delas.
+    \item \textbf{Linhas~\ref{ew:shrinkif}--\ref{ew:shrink}:} Uma aresta justa entre dois vértices externos da mesma árvore fecha um ciclo ímpar, que é contraído em uma flor, como no Algoritmo~\ref{alg:maxmatch}. A nova flor começa com dual $z_B = 0$ e se comporta como um vértice externo.
+    \item \textbf{Linhas~\ref{ew:d1}--\ref{ew:delta}:} Se nenhuma das situações anteriores ocorre, a busca está travada e é preciso ajustar os duais. Calcula-se o maior passo $\delta$ que mantém a solução dual viável, como o menor de quatro limites: $\delta_1$ é o menor dual de vértice externo, que não pode ficar negativo; $\delta_2$ é a menor folga de aresta entre um vértice externo e um não rotulado, que diminui em $\delta$; $\delta_3$ é a metade da menor folga entre vértices externos de flores diferentes, pois essa folga diminui em $2\delta$, uma vez que os dois extremos são externos; e $\delta_4$ é a metade do menor dual de flor interna, que diminui em $2\delta$ e também não pode ficar negativo.
+    \item \textbf{Linhas~\ref{ew:dualy}--\ref{ew:dualz}:} Os duais são atualizados: os vértices externos perdem $\delta$ e os internos ganham $\delta$, de modo que as arestas justas da árvore (entre um externo e um interno) continuam justas; as flores externas ganham $2\delta$ e as internas perdem $2\delta$, o que compensa a variação dos duais dos vértices dentro delas.
     \item \textbf{Linha~\ref{ew:stop}:} Se o passo foi limitado por $\delta_1$, algum vértice externo chegou a dual zero. Como os vértices livres são raízes, e portanto externos, e todos os externos perdem o mesmo $\delta$ a cada ajuste, os vértices livres têm o menor dual e chegam a zero; nesse ponto, as condições de folga complementar valem e $M$ é ótimo.
-    \item \textbf{Linha~\ref{ew:expand}:} Uma blossom interna cujo dual chegou a zero (limite $\delta_4$) é expandida, devolvendo seus vértices à busca. Nos casos $\delta_2$ e $\delta_3$, o ajuste torna justa uma nova aresta, e a busca da próxima iteração consegue crescer a árvore, contrair uma blossom ou aumentar o emparelhamento.
-    \item \textbf{Linha~\ref{ew:ret}:} Ao final, as blossoms que restaram contraídas são expandidas para que o emparelhamento seja expresso em termos das arestas do grafo original.
-    \item \textbf{Complexidade:} Há no máximo $V/2$ aumentos. Entre dois aumentos consecutivos, cada ajuste dual rotula um novo vértice, cria uma blossom, expande uma blossom ou encerra o algoritmo, de modo que ocorrem $O(V)$ ajustes por aumento. Calculando $\delta$ diretamente pelas definições das linhas~\ref{ew:d1}--\ref{ew:d4}, cada ajuste custa $O(E)$, o que dá $O(V^2 E)$ no total. A implementação de \citeonline{lawler} mantém, para cada vértice fora da árvore, a menor folga até ela (\textit{slack}), o que reduz o cálculo de $\delta$ a $O(V)$ e leva ao total de $O(V^3)$.
+    \item \textbf{Linha~\ref{ew:expand}:} Uma flor interna cujo dual chegou a zero (limite $\delta_4$) é expandida, devolvendo seus vértices à busca. Nos casos $\delta_2$ e $\delta_3$, o ajuste torna justa uma nova aresta, e a busca da próxima iteração consegue crescer a árvore, contrair uma flor ou aumentar o emparelhamento.
+    \item \textbf{Linha~\ref{ew:ret}:} Ao final, as flores que restaram contraídas são expandidas para que o emparelhamento seja expresso em termos das arestas do grafo original.
+    \item \textbf{Complexidade:} Há no máximo $V/2$ aumentos. Entre dois aumentos consecutivos, cada ajuste dual rotula um novo vértice, cria uma flor, expande uma flor ou encerra o algoritmo, de modo que ocorrem $O(V)$ ajustes por aumento. Calculando $\delta$ diretamente pelas definições das linhas~\ref{ew:d1}--\ref{ew:d4}, cada ajuste custa $O(E)$, o que dá $O(V^2 E)$ no total. A implementação de \citeonline{lawler} mantém, para cada vértice fora da árvore, a menor folga até ela (\textit{slack}), o que reduz o cálculo de $\delta$ a $O(V)$ e leva ao total de $O(V^3)$.
 \end{itemize}
 
 \subsection{Melhorias}
 
-Desenvolvimentos posteriores por \citeonline{galil_micali_gabow} e \citeonline{gabow1990} melhoraram a estrutura de dados para gerenciar a prioridade das atualizações duais e a contração de blossoms, atingindo complexidades próximas a $O(E V \log V)$ ou $O(E \sqrt{V \alpha(E, V)})$ em implementações de escalonamento \cite{schrijver}.
+Desenvolvimentos posteriores por \citeonline{galil_micali_gabow} e \citeonline{gabow1990} melhoraram a estrutura de dados para gerenciar a prioridade das atualizações duais e a contração de flores, atingindo complexidades próximas a $O(E V \log V)$ ou $O(E \sqrt{V \alpha(E, V)})$ em implementações de escalonamento \cite{schrijver}.
 
 Apesar de ser polinomial (classe P), a implementação de emparelhamento ponderado em grafos gerais é considerada uma das rotinas mais complexas da otimização combinatória clássica, sendo significativamente mais difícil de implementar corretamente do que algoritmos para grafos bipartidos ou fluxo máximo.
 
@@ -143,19 +210,19 @@ O Algoritmo~\ref{alg:path_growing} corresponde à versão original de \citeonlin
     \caption{Algoritmo Path Growing \cite{drake}}
     \label{alg:path_growing}
 
-    \KwIn{graph $G = (V, E)$ with weights $w: E \to \mathbb{R}$}
-    \KwOut{matching $M$ with $w(M) \ge \frac{1}{2} w(M^*)$}
+    \KwIn{grafo $G = (V, E)$ com pesos $w: E \to \mathbb{R}$}
+    \KwOut{emparelhamento $M$ com $w(M) \ge \frac{1}{2} w(M^*)$}
     $M_1 := \emptyset$; $M_2 := \emptyset$; $i := 1$\label{pg:init}\;
     \While{$E \neq \emptyset$\label{pg:outer}}{
-        choose a vertex $x$ with $\deg(x) \ge 1$\label{pg:start}\;
-        \While{$x$ has a neighbor\label{pg:grow}}{
-            let $\{x, y\}$ be the heaviest edge incident to $x$\label{pg:heavy}\;
+        escolha um vértice $x$ com $\deg(x) \ge 1$\label{pg:start}\;
+        \While{$x$ tem algum vizinho\label{pg:grow}}{
+            \KwLet $\{x, y\}$ a aresta mais pesada incidente a $x$\label{pg:heavy}\;
             $M_i := M_i \cup \{\{x, y\}\}$; $i := 3 - i$\label{pg:alt}\;
-            remove $x$ and all its incident edges from $G$\label{pg:remove}\;
+            remova de $G$ o vértice $x$ e todas as arestas incidentes a ele\label{pg:remove}\;
             $x := y$\label{pg:advance}\;
         }
     }
-    \KwRet the heavier of $M_1$ and $M_2$\label{pg:ret}\;
+    \KwRet o mais pesado entre $M_1$ e $M_2$\label{pg:ret}\;
 \end{algorithm}
 
 O Algoritmo~\ref{alg:path_growing} pode ser lido linha a linha da seguinte forma:
@@ -170,35 +237,36 @@ O Algoritmo~\ref{alg:path_growing} pode ser lido linha a linha da seguinte forma
     \item \textbf{Complexidade:} Cada vértice é removido uma vez, e a escolha da aresta mais pesada percorre a lista de adjacência do vértice atual, de modo que cada aresta é examinada um número constante de vezes. Mantendo uma lista dos vértices com grau positivo para a linha~\ref{pg:start}, o custo total é $O(V + E)$, linear no tamanho do grafo, sem a ordenação $O(E \log E)$ do método guloso ordenado.
 \end{itemize}
 
-\begin{table}[htbp]
+\begin{table}[H]
     \centering
     \caption{Algoritmos para problema de emparelhamento ponderado máximo em grafos gerais}
     \label{tab:emp_pond_max_gerais}
     \renewcommand{\arraystretch}{1.2} % Adds a little vertical padding
+    \footnotesize
     
     % Structure: l = left align, c = center, X = auto-wrap paragraph
-    \begin{tabularx}{\textwidth}{@{} l l l l X @{}}
+    \begin{tabularx}{\textwidth}{@{} >{\raggedright\arraybackslash}p{2.8cm} l l l >{\raggedright\arraybackslash}X @{}}
         \toprule
         \textbf{Algoritmo} & \textbf{Complexidade} & \textbf{Tipo} & \textbf{Avaliado} & \textbf{Descrição} \\
         \midrule
         
         Edmonds & $O(V^3)$ & Exato & Sim & 
-        Método primal-dual que gerencia variáveis duais para vértices e blossoms, ajustando preços para encontrar caminhos no grafo de igualdade. \\
+        Método primal-dual que gerencia variáveis duais para vértices e flores, ajustando preços para encontrar caminhos no grafo de igualdade. \\
         \addlinespace 
 
         Edmonds otimizado & $O(EV \log V)$ & Exato & Não & 
         Melhoria do Edmonds original através de uma série de otimizações \\
         \addlinespace 
 
-        Guloso ordenado & $O(E \log E)$ & Aproximado & Não & 
+        Guloso ordenado & $O(E \log E)$ & Aprox. & Não & 
         Ordena as arestas por peso decrescente e seleciona iterativamente as disponíveis. \\
         \addlinespace
 
-        Crescimento de caminho & $O(E)$ & Aproximado & Sim & 
+        Crescimento de caminho & $O(E)$ & Aprox. & Sim & 
         Método que estende caminhos pela aresta mais pesada local e seleciona o subconjunto de arestas (par ou ímpar) de maior soma total. \\
         
         \bottomrule
     \end{tabularx}
     \par\smallskip
-    {\raggedright\footnotesize \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}.\par}
+    {\raggedright\footnotesize \textit{Aprox.}: aproximado. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}.\par}
 \end{table}

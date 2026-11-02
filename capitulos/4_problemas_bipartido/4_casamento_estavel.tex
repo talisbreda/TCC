@@ -31,31 +31,31 @@ O Algoritmo~\ref{alg:gale_shapley} apresenta o pseudocódigo, em que $M$ é o co
     \SetAlgoLined
 
     % Initial state
-    Initially all $m \in M$ and $w \in W$ are free\label{gsh:init}\;
+    inicialmente, todo $m \in M$ e toda $w \in W$ estão livres\label{gsh:init}\;
 
     % Main Loop
-    \While{there is a man $m$ who is free and hasn't proposed to every woman\label{gsh:loop}}{
-        Choose such a man $m$\label{gsh:choose}\;
-        Let $w$ be the highest-ranked woman in $m$'s preference list to whom $m$ has not yet proposed\label{gsh:propose}\;
+    \While{existe um homem $m$ livre que ainda não propôs a todas as mulheres\label{gsh:loop}}{
+        escolha um tal homem $m$\label{gsh:choose}\;
+        \KwLet $w$ a mulher mais bem colocada na lista de $m$ a quem $m$ ainda não propôs\label{gsh:propose}\;
         
         % Check if woman is free
-        \eIf{$w$ is free\label{gsh:free}}{
-            $(m, w)$ become engaged\label{gsh:eng1}\;
+        \eIf{$w$ está livre\label{gsh:free}}{
+            $(m, w)$ ficam noivos\label{gsh:eng1}\;
         }{
             % Else case: w is engaged to m'
-            $w$ is currently engaged to $m'$\label{gsh:current}\;
+            $w$ está noiva de $m'$\label{gsh:current}\;
             
-            \eIf{$w$ prefers $m'$ to $m$\label{gsh:prefers}}{
-                $m$ remains free\label{gsh:reject}\;
+            \eIf{$w$ prefere $m'$ a $m$\label{gsh:prefers}}{
+                $m$ continua livre\label{gsh:reject}\;
             }{
                 % w prefers m to m'
-                $(m, w)$ become engaged\label{gsh:eng2}\;
-                $m'$ becomes free\label{gsh:freed}\;
+                $(m, w)$ ficam noivos\label{gsh:eng2}\;
+                $m'$ fica livre\label{gsh:freed}\;
             }
         }
     }
     
-    Return the set $S$ of engaged pairs\label{gsh:ret}\;
+    \KwRet o conjunto $S$ dos pares noivos\label{gsh:ret}\;
 
     \caption{Algoritmo de Gale-Shapley para o problema do emparelhamento estável \cite{kleinberg}}
     \label{alg:gale_shapley}
