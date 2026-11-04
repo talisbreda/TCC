@@ -1,6 +1,6 @@
 \begin{table}[H]
     \centering
-    \caption{Tempo de execução em compilado (C/C++) — Matriz 2 — Permutação barata \textbar{} ótimo = n (mediana, ms)}
+    \caption{Atribuição linear, matriz 2 (permutação barata, ótimo igual a $n$): tempo de execução em compilado (C/C++) (mediana, em ms)}
     \label{tab:assignment-matriz-2-permutacao-barata-otimo-n-tempo-c}
     \renewcommand{\arraystretch}{1.2}
     \footnotesize
@@ -9,9 +9,10 @@
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
         \midrule
-        SciPy (linear\_sum\_assg) & baseline & $O(n^{3})$ & $O(n^{2})$ & 0.02 & 0.04 & 0.07 & 0.17 & 0.35 & 0.61 & 1.35 & 2.27 & 3.54 \\
-        Jonker-Volgenant (lap) & baseline & $O(n^{3})$ & $O(n^{2})$ & 0.02 & 0.04 & 0.07 & 0.16 & 0.32 & 0.56 & 1.18 & 2.04 & 3.20 \\
+        SciPy (linear\_sum\_assg) & referência & $O(n^{3})$ & $O(n^{2})$ & 0.02 & 0.04 & 0.07 & 0.17 & 0.35 & 0.61 & 1.35 & 2.27 & 3.54 \\
+        Jonker-Volgenant (lap) & referência & $O(n^{3})$ & $O(n^{2})$ & 0.02 & 0.04 & 0.07 & 0.16 & 0.32 & 0.56 & 1.18 & 2.04 & 3.20 \\
         \bottomrule
     \end{tabular}%
     }
+    \fonte{Elaborado pelo autor.}
 \end{table}

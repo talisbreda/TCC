@@ -1,6 +1,6 @@
 \begin{table}[H]
     \centering
-    \caption{Tempo de execução em compilado (C/C++) — Grafo 1 — Esparso \textbar{} SEM perfeito \textbar{} MCM = 80\% de n (mediana, ms)}
+    \caption{Cardinalidade máxima bipartida, grafo 1 (esparso, sem emparelhamento perfeito, máximo com $0{,}8n$ arestas): tempo de execução em compilado (C/C++) (mediana, em ms)}
     \label{tab:mcm-grafo-1-esparso-sem-perfeito-mcm-80-de-n-tempo-c}
     \renewcommand{\arraystretch}{1.2}
     \footnotesize
@@ -9,8 +9,9 @@
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=50$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} & \textbf{$n=250$} \\
         \midrule
-        Bipartite Match. (igraph) & baseline & $O(E \cdot \sqrt{V})$ & $O(V+E)$ & 0.09 & 0.14 & 0.20 & 0.26 & 0.31 \\
+        Bipartite Match. (igraph) & referência & $O(E \cdot \sqrt{V})$ & $O(V+E)$ & 0.09 & 0.14 & 0.20 & 0.26 & 0.31 \\
         \bottomrule
     \end{tabular}%
     }
+    \fonte{Elaborado pelo autor.}
 \end{table}

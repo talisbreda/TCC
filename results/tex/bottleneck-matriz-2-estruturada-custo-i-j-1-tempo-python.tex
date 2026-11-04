@@ -1,6 +1,6 @@
 \begin{table}[H]
     \centering
-    \caption{Tempo de execução em Python — Matriz 2 — Estruturada     \textbar{} custo = \textbar{}i-j\textbar{}+1 (mediana, ms)}
+    \caption{Atribuição gargalo, matriz 2 (estruturada, custo $|i - j| + 1$): tempo de execução em Python (mediana, em ms)}
     \label{tab:bottleneck-matriz-2-estruturada-custo-i-j-1-tempo-python}
     \renewcommand{\arraystretch}{1.2}
     \footnotesize
@@ -9,11 +9,12 @@
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} \\
         \midrule
-        Threshold (busca binária) & exato & $O(n^{3} log n)$ & $O(n^{2})$ & 0.10 & 0.54 & 1.40 & 6.48 & 23.58 & 52.01 & 198.04 & 449.78 \\
+        Threshold (busca binária) & exato & $O(n^{3} \log n)$* & $O(n^{2})$ & 0.10 & 0.54 & 1.40 & 6.48 & 23.58 & 52.01 & 198.04 & 449.78 \\
         Caminhos aumentantes & exato & $O(n^{3})$ & $O(n^{2})$ & 0.03 & 0.10 & 0.22 & 0.60 & 1.36 & 2.44 & 5.64 & 10.13 \\
-        Gulosa simples & heuristica & $O(n^{2} log n)$ & $O(n^{2})$ & 0.03 & 0.10 & 0.24 & 0.65 & 1.48 & 2.47 & 5.58 & 10.04 \\
-        Gulosa por arrependimento & heuristica & $O(n^{2} log n)$ & $O(n^{2})$ & 0.05 & 0.16 & 0.32 & 0.88 & 1.78 & 3.19 & 6.81 & 11.86 \\
+        Gulosa simples & heurística & $O(n^{2} \log n)$ & $O(n^{2})$ & 0.03 & 0.10 & 0.24 & 0.65 & 1.48 & 2.47 & 5.58 & 10.04 \\
+        Gulosa por arrependimento & heurística & $O(n^{2} \log n)$ & $O(n^{2})$ & 0.05 & 0.16 & 0.32 & 0.88 & 1.78 & 3.19 & 6.81 & 11.86 \\
         \bottomrule
     \end{tabular}%
     }
+    \fonte{Elaborado pelo autor.}
 \end{table}

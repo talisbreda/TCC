@@ -1,6 +1,6 @@
 \begin{table}[H]
     \centering
-    \caption{Expoente empírico de crescimento --- Grafo 3 — Denso   | COM perfeito | MCM = n}
+    \caption{Cardinalidade máxima bipartida, grafo 3 (denso, com emparelhamento perfeito): expoente empírico de crescimento}
     \label{tab:exp-mcm}
     \renewcommand{\arraystretch}{1.25}
     \footnotesize
@@ -14,7 +14,8 @@
         Hopcroft-Karp (NetworkX) & $O(E \cdot \sqrt{V})$ & 1.09 & 0.999 \\
         Bipartite Match. (igraph) & $O(E \cdot \sqrt{V})$ & 1.05 & 0.994 \\
         Gulosa & $O(E)$ & 1.00 & 1.000 \\
-        Karp-Sipser & $O(V \cdot E)$ & 1.68 & 0.983 \\
+        Karp-Sipser & $O(V \cdot E)$* & 1.68 & 0.983 \\
         \bottomrule
     \end{tabularx}
+    \fonte{Elaborado pelo autor.}
 \end{table}

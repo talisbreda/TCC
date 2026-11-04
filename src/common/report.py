@@ -39,6 +39,89 @@ COLUNAS_QUALIDADE = ("problema", "secao", "instancia", "algoritmo", "n", "qualid
 
 _NOME_LINGUAGEM = {PYTHON: "Python", C: "compilado (C/C++)"}
 
+# Rotulo da coluna Tipo no documento. O CSV guarda a forma sem acento; as
+# bibliotecas maduras (NetworkX, igraph, SciPy, lap) aparecem como "referência",
+# como na tabela de proveniência do capítulo de metodologia.
+_ROTULO_TIPO = {"heuristica": "heurística", "baseline": "referência"}
+
+# Legenda de cada instancia no documento: (problema, instancia) -> (titulo,
+# grandeza medida na tabela de qualidade). O rotulo interno da instancia
+# continua sendo usado no \label e no nome do arquivo, para nao quebrar as
+# referencias; so a legenda impressa muda.
+_GRAFO_ESPARSO = r"grafo esparso (grau médio $\approx 3$)"
+_GRAFO_DENSO = r"grafo denso ($p = 0{,}3$)"
+_LEGENDAS = {
+    ("mcm", "Grafo 1 — Esparso | SEM perfeito | MCM = 80% de n"):
+        ("Cardinalidade máxima bipartida, grafo 1 (esparso, sem emparelhamento "
+         r"perfeito, máximo com $0{,}8n$ arestas)", "cardinalidade"),
+    ("mcm", "Grafo 2 — Esparso | COM perfeito | MCM = n"):
+        ("Cardinalidade máxima bipartida, grafo 2 (esparso, com emparelhamento "
+         "perfeito)", "cardinalidade"),
+    ("mcm", "Grafo 3 — Denso | COM perfeito | MCM = n"):
+        ("Cardinalidade máxima bipartida, grafo 3 (denso, com emparelhamento "
+         "perfeito)", "cardinalidade"),
+    ("assignment", "Matriz 1 — Densa uniforme | custo in [1,100]"):
+        (r"Atribuição linear, matriz 1 (densa uniforme, custos em $[1, 100]$)",
+         "custo total"),
+    ("assignment", "Matriz 2 — Permutação barata | ótimo = n"):
+        (r"Atribuição linear, matriz 2 (permutação barata, ótimo igual a $n$)",
+         "custo total"),
+    ("assignment", "Matriz 3 — Estruturada | custo = |i-j|+1"):
+        (r"Atribuição linear, matriz 3 (estruturada, custo $|i - j| + 1$)",
+         "custo total"),
+    ("bottleneck", "Matriz 1 — Densa uniforme | custo in [1,100]"):
+        (r"Atribuição gargalo, matriz 1 (densa uniforme, custos em $[1, 100]$)",
+         "custo gargalo"),
+    ("bottleneck", "Matriz 2 — Estruturada | custo = |i-j|+1"):
+        (r"Atribuição gargalo, matriz 2 (estruturada, custo $|i - j| + 1$)",
+         "custo gargalo"),
+    ("bottleneck", "Matriz 3 — Poucos valores | muitos empates"):
+        ("Atribuição gargalo, matriz 3 (poucos valores distintos, muitos empates)",
+         "custo gargalo"),
+    ("stable-marriage", "Perfil 1 — Aleatório | permutações uniformes"):
+        ("Casamento estável, perfil 1 (aleatório)",
+         "pares bloqueantes e concordância com a referência"),
+    ("stable-marriage", "Perfil 2 — Correlacionado | ranking de popularidade"):
+        ("Casamento estável, perfil 2 (correlacionado)",
+         "pares bloqueantes e concordância com a referência"),
+    ("stable-marriage", "Perfil 3 — Cíclico | deslocamento estruturado"):
+        ("Casamento estável, perfil 3 (cíclico)",
+         "pares bloqueantes e concordância com a referência"),
+    ("general", "Cardinalidade — esparso (grau ~3)"):
+        (f"Cardinalidade máxima em grafos gerais, {_GRAFO_ESPARSO}", "cardinalidade"),
+    ("general", "Cardinalidade — denso (p=0.3)"):
+        (f"Cardinalidade máxima em grafos gerais, {_GRAFO_DENSO}", "cardinalidade"),
+    ("general", "Peso — esparso (grau ~3)"):
+        (f"Peso máximo em grafos gerais, {_GRAFO_ESPARSO}", "peso total"),
+    ("general", "Peso — denso (p=0.3)"):
+        (f"Peso máximo em grafos gerais, {_GRAFO_DENSO}", "peso total"),
+    ("mim", "Grafo esparso (grau ~3)"):
+        (r"Emparelhamento induzido máximo, grafo esparso (grau médio $\approx 3$)",
+         "cardinalidade"),
+    ("mim", "Grafo médio (grau ~6)"):
+        (r"Emparelhamento induzido máximo, grafo médio (grau médio $\approx 6$)",
+         "cardinalidade"),
+    ("mim", "Grafo denso (grau ~12)"):
+        (r"Emparelhamento induzido máximo, grafo denso (grau médio $\approx 12$)",
+         "cardinalidade"),
+}
+
+FONTE_TABELA = r"\fonte{Elaborado pelo autor.}"
+
+
+def legenda_instancia(problema, instancia):
+    """
+    Titulo e grandeza de qualidade de uma instancia, para as legendas.
+
+    Os rotulos internos alinham colunas no terminal com espacos repetidos;
+    eles sao normalizados antes da busca. Instancia sem legenda cadastrada
+    cai no proprio rotulo escapado, para que um benchmark novo nao quebre.
+    """
+    chave = (problema, re.sub(r"\s+", " ", str(instancia)).strip())
+    if chave in _LEGENDAS:
+        return _LEGENDAS[chave]
+    return escapar_latex(instancia), "valor da solução"
+
 # Alem dos caracteres reservados, inclui os que o LaTeX compoe como outro
 # glifo em modo texto. O caso que motivou: os rotulos de instancia do projeto
 # usam "|" como separador ("Grafo 1 — Esparso | SEM perfeito"), e sem escape
@@ -76,7 +159,12 @@ def complexidade_latex(texto):
         marcadores = corpo[-1] + marcadores
         corpo = corpo[:-1]
 
+    # Algoritmo exponencial: registrado como "exp.", escrito por extenso.
+    if corpo == "exp.":
+        return f"exponencial{marcadores}"
+
     corpo = corpo.replace("·", r" \cdot ")
+    corpo = re.sub(r"\blog\b", r"\\log", corpo)
     corpo = re.sub(r"√(\w+)", r"\\sqrt{\1}", corpo)
     for sobrescrito, digito in (("²", "2"), ("³", "3"), ("⁴", "4")):
         corpo = corpo.replace(sobrescrito, f"^{{{digito}}}")
@@ -203,7 +291,7 @@ def _tabela_latex(registros, tamanhos, titulo, rotulo, coluna_fn, com_espaco):
         por_n = {r.n: r for r in grupo}
         celulas = [
             escapar_latex(primeiro.algorithm),
-            escapar_latex(primeiro.kind),
+            escapar_latex(_ROTULO_TIPO.get(primeiro.kind, primeiro.kind)),
             complexidade_latex(primeiro.complexity_time),
         ]
         if com_espaco:
@@ -214,7 +302,8 @@ def _tabela_latex(registros, tamanhos, titulo, rotulo, coluna_fn, com_espaco):
         ]
         linhas.append("        " + " & ".join(celulas) + r" \\")
 
-    linhas += [r"        \bottomrule", r"    \end{tabular}%", r"    }", r"\end{table}", ""]
+    linhas += [r"        \bottomrule", r"    \end{tabular}%", r"    }",
+               f"    {FONTE_TABELA}", r"\end{table}", ""]
     return "\n".join(linhas)
 
 
@@ -244,6 +333,7 @@ def gravar_tabelas_latex(registros, diretorio, problema):
         da_instancia = [r for r in registros if r.instance == instancia]
         tamanhos = sorted({r.n for r in da_instancia})
         id_inst = _identificador(instancia)[:40]
+        titulo_inst, grandeza = legenda_instancia(problema, instancia)
 
         for linguagem in (PYTHON, C):
             do_grupo = [r for r in da_instancia if r.language == linguagem]
@@ -252,8 +342,8 @@ def gravar_tabelas_latex(registros, diretorio, problema):
             caminho = diretorio / f"{problema}-{id_inst}-tempo-{linguagem}.tex"
             caminho.write_text(_tabela_latex(
                 do_grupo, tamanhos,
-                titulo=(f"Tempo de execução em {_NOME_LINGUAGEM[linguagem]} — "
-                        f"{escapar_latex(instancia)} (mediana, ms)"),
+                titulo=(f"{titulo_inst}: tempo de execução em "
+                        f"{_NOME_LINGUAGEM[linguagem]} (mediana, em ms)"),
                 rotulo=f"tab:{problema}-{id_inst}-tempo-{linguagem}",
                 coluna_fn=_celula_tempo, com_espaco=True,
             ), encoding="utf-8")
@@ -262,7 +352,7 @@ def gravar_tabelas_latex(registros, diretorio, problema):
         caminho = diretorio / f"{problema}-{id_inst}-qualidade.tex"
         caminho.write_text(_tabela_latex(
             da_instancia, tamanhos,
-            titulo=f"Qualidade da solução — {escapar_latex(instancia)}",
+            titulo=f"{titulo_inst}: qualidade da solução ({grandeza})",
             rotulo=f"tab:{problema}-{id_inst}-qualidade",
             coluna_fn=_celula_qualidade, com_espaco=False,
         ), encoding="utf-8")

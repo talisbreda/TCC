@@ -1,6 +1,6 @@
 \begin{table}[H]
     \centering
-    \caption{Qualidade da solução — Grafo 2 — Esparso \textbar{} COM perfeito \textbar{} MCM = n}
+    \caption{Cardinalidade máxima bipartida, grafo 2 (esparso, com emparelhamento perfeito): qualidade da solução (cardinalidade)}
     \label{tab:mcm-grafo-2-esparso-com-perfeito-mcm-n-qualidade}
     \renewcommand{\arraystretch}{1.2}
     \footnotesize
@@ -12,11 +12,12 @@
         Aug. Paths (wbchristerson) & exato & $O(V \cdot E)$ & 50 & 100 & 150 & 200 & 250 \\
         Hopcroft-Karp (sofiat) & exato & $O(E \cdot \sqrt{V})$ & 50 & 100 & 150 & 200 & 250 \\
         Edmonds-Karp (Maxflow-Algs) & exato & $O(V \cdot E^{2})$ & 50 & 100 & 150 & 200 & 250 \\
-        Hopcroft-Karp (NetworkX) & baseline & $O(E \cdot \sqrt{V})$ & 50 & 100 & 150 & 200 & 250 \\
-        Bipartite Match. (igraph) & baseline & $O(E \cdot \sqrt{V})$ & 50 & 100 & 150 & 200 & 250 \\
+        Hopcroft-Karp (NetworkX) & referência & $O(E \cdot \sqrt{V})$ & 50 & 100 & 150 & 200 & 250 \\
+        Bipartite Match. (igraph) & referência & $O(E \cdot \sqrt{V})$ & 50 & 100 & 150 & 200 & 250 \\
         Gulosa & aproximado & $O(E)$ & 43 & 86 & 130 & 170 & 216 \\
-        Karp-Sipser & aproximado & $O(V \cdot E)$ & 50 & 100 & 150 & 200 & 250 \\
+        Karp-Sipser & aproximado & $O(V \cdot E)$* & 50 & 100 & 150 & 200 & 250 \\
         \bottomrule
     \end{tabular}%
     }
+    \fonte{Elaborado pelo autor.}
 \end{table}

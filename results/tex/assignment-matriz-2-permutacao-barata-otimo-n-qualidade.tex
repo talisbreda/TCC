@@ -1,6 +1,6 @@
 \begin{table}[H]
     \centering
-    \caption{Qualidade da solução — Matriz 2 — Permutação barata \textbar{} ótimo = n}
+    \caption{Atribuição linear, matriz 2 (permutação barata, ótimo igual a $n$): qualidade da solução (custo total)}
     \label{tab:assignment-matriz-2-permutacao-barata-otimo-n-qualidade}
     \renewcommand{\arraystretch}{1.2}
     \footnotesize
@@ -14,9 +14,10 @@
         Húngaro (hunalgorithm) & exato & $O(n^{3})$ & 10 & 20 & 30 & 50 & 75 & 100 & 150 & 200 & 250 \\
         Húngaro (mayorx/KM) & exato & $O(n^{3})$ & 10 & 20 & 30 & 50 & 75 & 100 & 150 & 200 & 250 \\
         SSP (flows) & exato & $O(n^{4})$* & 10 & 20 & 30 & 50 & 75 & 100 & — & — & — \\
-        SciPy (linear\_sum\_assg) & baseline & $O(n^{3})$ & 10 & 20 & 30 & 50 & 75 & 100 & 150 & 200 & 250 \\
-        Jonker-Volgenant (lap) & baseline & $O(n^{3})$ & 10 & 20 & 30 & 50 & 75 & 100 & 150 & 200 & 250 \\
+        SciPy (linear\_sum\_assg) & referência & $O(n^{3})$ & 10 & 20 & 30 & 50 & 75 & 100 & 150 & 200 & 250 \\
+        Jonker-Volgenant (lap) & referência & $O(n^{3})$ & 10 & 20 & 30 & 50 & 75 & 100 & 150 & 200 & 250 \\
         \bottomrule
     \end{tabular}%
     }
+    \fonte{Elaborado pelo autor.}
 \end{table}

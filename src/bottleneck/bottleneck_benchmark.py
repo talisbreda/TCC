@@ -62,7 +62,7 @@ SIZES = [10, 20, 30, 50, 75, 100, 150, 200]
 RUNS = 5
 
 SPECS = [
-    AlgorithmSpec("threshold", "Threshold (busca binária)", "O(n³ log n)", "O(n²)",
+    AlgorithmSpec("threshold", "Threshold (busca binária)", "O(n³ log n)*", "O(n²)",
                   EXATO, PYTHON, lambda m: _threshold(m),
                   source_url="https://github.com/djohnson2718/Linear-Bottleneck-Assignment-Problem"),
     AlgorithmSpec("augmenting", "Caminhos aumentantes", "O(n³)", "O(n²)",

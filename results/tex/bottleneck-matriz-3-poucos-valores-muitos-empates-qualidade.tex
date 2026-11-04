@@ -1,6 +1,6 @@
 \begin{table}[H]
     \centering
-    \caption{Qualidade da solução — Matriz 3 — Poucos valores  \textbar{} muitos empates}
+    \caption{Atribuição gargalo, matriz 3 (poucos valores distintos, muitos empates): qualidade da solução (custo gargalo)}
     \label{tab:bottleneck-matriz-3-poucos-valores-muitos-empates-qualidade}
     \renewcommand{\arraystretch}{1.2}
     \footnotesize
@@ -9,11 +9,12 @@
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} & \textbf{$n=150$} & \textbf{$n=200$} \\
         \midrule
-        Threshold (busca binária) & exato & $O(n^{3} log n)$ & 5 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
+        Threshold (busca binária) & exato & $O(n^{3} \log n)$* & 5 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
         Caminhos aumentantes & exato & $O(n^{3})$ & 5 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\
-        Gulosa simples & heuristica & $O(n^{2} log n)$ & 50 & 50 & 50 & 5 & 5 & 5 & 50 & 10 \\
-        Gulosa por arrependimento & heuristica & $O(n^{2} log n)$ & 5 & 5 & 5 & 50 & 5 & 5 & 5 & 1 \\
+        Gulosa simples & heurística & $O(n^{2} \log n)$ & 50 & 50 & 50 & 5 & 5 & 5 & 50 & 10 \\
+        Gulosa por arrependimento & heurística & $O(n^{2} \log n)$ & 5 & 5 & 5 & 50 & 5 & 5 & 5 & 1 \\
         \bottomrule
     \end{tabular}%
     }
+    \fonte{Elaborado pelo autor.}
 \end{table}

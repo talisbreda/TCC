@@ -1,6 +1,6 @@
 \begin{table}[H]
     \centering
-    \caption{Expoente empírico de crescimento --- Matriz 1 — Densa uniforme  | custo in [1,100]}
+    \caption{Atribuição gargalo, matriz 1 (densa uniforme, custos em $[1, 100]$): expoente empírico de crescimento}
     \label{tab:exp-bottleneck}
     \renewcommand{\arraystretch}{1.25}
     \footnotesize
@@ -8,10 +8,11 @@
         \toprule
         \textbf{Algoritmo} & \textbf{Compl.\ teórica} & \textbf{Expoente medido} & \textbf{$R^2$} \\
         \midrule
-        Threshold (busca binária) & $O(n^{3} log n)$ & 2.61 & 0.996 \\
+        Threshold (busca binária) & $O(n^{3} \log n)$* & 2.61 & 0.996 \\
         Caminhos aumentantes & $O(n^{3})$ & 2.41 & 0.999 \\
-        Gulosa simples & $O(n^{2} log n)$ & 2.18 & 1.000 \\
-        Gulosa por arrependimento & $O(n^{2} log n)$ & 1.95 & 0.999 \\
+        Gulosa simples & $O(n^{2} \log n)$ & 2.18 & 1.000 \\
+        Gulosa por arrependimento & $O(n^{2} \log n)$ & 1.95 & 0.999 \\
         \bottomrule
     \end{tabularx}
+    \fonte{Elaborado pelo autor.}
 \end{table}

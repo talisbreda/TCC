@@ -1,5 +1,7 @@
 \begin{figure}[H]
     \centering
+    \caption{Atribuição linear, matriz 1 (densa uniforme, custos em $[1, 100]$): tempo de execução em escala log-log}
+    \label{fig:cresc-assignment}
     \adjustbox{max width=\textwidth}{%
     \begin{tikzpicture}
         \begin{loglogaxis}[
@@ -21,8 +23,5 @@
         \end{loglogaxis}
     \end{tikzpicture}%
     }
-    \caption{Tempo de execução em escala log-log para a matriz densa (atribuição
-    linear). As duas implementações de núcleo compilado situam-se bem abaixo das
-    interpretadas, mas com inclinação semelhante.}
-    \label{fig:cresc-assignment}
+    \fonte{Elaborado pelo autor. A inclinação de cada reta corresponde ao expoente empírico de crescimento.}
 \end{figure}

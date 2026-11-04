@@ -1,6 +1,6 @@
 \begin{table}[H]
     \centering
-    \caption{Qualidade da solução — Grafo denso (grau \textasciitilde{}12)}
+    \caption{Emparelhamento induzido máximo, grafo denso (grau médio $\approx 12$): qualidade da solução (cardinalidade)}
     \label{tab:mim-grafo-denso-grau-12-qualidade}
     \renewcommand{\arraystretch}{1.2}
     \footnotesize
@@ -9,10 +9,11 @@
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=10$} & \textbf{$n=15$} & \textbf{$n=20$} & \textbf{$n=25$} & \textbf{$n=30$} & \textbf{$n=40$} & \textbf{$n=50$} & \textbf{$n=100$} & \textbf{$n=200$} & \textbf{$n=400$} \\
         \midrule
-        Exato (MIS conflitos) & exato & $exp.$ & 1 & 2 & 3 & 3 & 4 & 5 & — & — & — & — \\
-        Guloso aleatório & heuristica & $O(E^{2})$ & 1 & 1 & 1 & 2 & 3 & 4 & 4 & 9 & 20 & 35 \\
-        Guloso grau mínimo & heuristica & $O(E^{2})$ & 1 & 2 & 3 & 3 & 4 & 5 & 6 & 14 & 25 & 55 \\
+        Exato (MIS conflitos) & exato & exponencial & 1 & 2 & 3 & 3 & 4 & 5 & — & — & — & — \\
+        Guloso aleatório & heurística & $O(E^{2})$ & 1 & 1 & 1 & 2 & 3 & 4 & 4 & 9 & 20 & 35 \\
+        Guloso grau mínimo & heurística & $O(E^{2})$ & 1 & 2 & 3 & 3 & 4 & 5 & 6 & 14 & 25 & 55 \\
         \bottomrule
     \end{tabular}%
     }
+    \fonte{Elaborado pelo autor.}
 \end{table}

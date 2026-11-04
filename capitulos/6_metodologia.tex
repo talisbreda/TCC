@@ -47,6 +47,7 @@ método.
         Emparelhamento induzido máximo & número de vértices e lista de arestas & tamanho e emparelhamento \\
         \bottomrule
     \end{tabularx}
+    \fonte{Elaborado pelo autor.}
 \end{table}
 
 % ---------------------------------------------------------------------------
@@ -95,6 +96,7 @@ Para cada problema, definiram-se famílias com características distintas, de mo
         Esparso, médio e denso & $G(n,p)$ com grau médio esperado 3, 6 e 12 & 10--40; 50--400\textsuperscript{c} \\
         \bottomrule
     \end{tabularx}
+    \fonte{Elaborado pelo autor.}
 
     \smallskip
     \parbox{\textwidth}{\scriptsize Nota: (a) 10 a 100 com todos os algoritmos e 50 a 250 com todos exceto os caminhos mínimos sucessivos; (b) 25 a 100 com todos e 100 a 400 apenas com o Gale-Shapley numérico e o de Lattas; (c) 10 a 40 com o algoritmo exato e 50 a 400 apenas com as heurísticas. $n$ é o número de vértices de cada lado (bipartidos e matrizes $n \times n$), o número de homens e de mulheres (casamento estável) ou o número de vértices (grafos gerais).}
@@ -311,7 +313,7 @@ complementares.
 
 \begin{enumerate}
     \item Implementações em linguagem interpretada (ex: Python) e as de núcleo compilado (ex: C++) são apresentadas em tabelas separadas, e o tempo absoluto só é comparado dentro de uma mesma linguagem. Manter as duas linguagens, em vez de uma só, foi necessário por dois motivos. Primeiro, não há implementações públicas confiáveis de todos os algoritmos em uma mesma linguagem, e portá-las significaria reimplementá-las, o que contraria o objetivo de avaliar o código como foi publicado (camada intacta, Seção~\ref{sec:arquitetura}). Segundo, as bibliotecas maduras usadas como referência de correção e de patamar de desempenho (igraph, SciPy e lap) têm núcleo compilado. O conjunto principal de comparação é o das implementações interpretadas, cujas tabelas compõem o Capítulo~\ref{cap:resultados}; as tabelas das compiladas ficam no Apêndice~\ref{ap:compilados}, e a comparação entre as duas linguagens é feita apenas pelo expoente empírico (critério 3). Bibliotecas escritas inteiramente em linguagem interpretada, como o NetworkX, ficam na tabela das interpretadas, pois nesse caso a comparação de tempo com elas é legítima. Há ainda casos intermediários: algoritmos escritos como laços em Python sobre vetores da biblioteca NumPy, cujo núcleo é compilado, como os Húngaros \texttt{hunalgorithm} e \texttt{mayorx} e o Gale-Shapley numérico. Estes são classificados como interpretados, pois o algoritmo em si é executado pelo interpretador.
-    \item As tabelas mostram complexidade assintótica ao lado do tempo medido, permitindo a comparação do teórico vs real, principalmente entre grafos de diferentes densidades.
+    \item As tabelas mostram a complexidade assintótica da implementação avaliada ao lado do tempo medido, permitindo a comparação do teórico vs real, principalmente entre grafos de diferentes densidades.
     \item Para cada algoritmo, é estimado o \textbf{expoente empírico do crescimento}. Supondo que o tempo cresça como $t(n) \approx C \cdot n^k$, aplicar o logaritmo resulta em
     \begin{equation}
         \log t(n) = \log C + k \log n,
@@ -321,7 +323,7 @@ complementares.
         k = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sum_i (x_i - \bar{x})^2}.
     \end{equation}
     Esse dado, ao contrário do tempo absoluto, é comparável entre linguagens: a linguagem altera apenas a constante $C$, o que desloca a reta verticalmente sem mudar sua inclinação. Junto ao expoente é reportado o coeficiente de determinação $R^2$, que indica o quanto os pontos de fato seguem uma reta; um $R^2$ baixo sinaliza que o crescimento não é bem descrito por uma única potência de $n$ na faixa medida.
-    \item Em problemas com apenas soluções exatas, a qualidade da solução é idêntica entre todos, sendo o método de comparação o tempo de execução. Já nos que têm soluções aproximadas ou heurísticas, é apresentado o resultado obtido e a razão entre este e o resultado do algoritmo exato de referência (ou melhor resultado conhecido), permitindo calcular a qualidade da solução.
+    \item Em problemas com apenas soluções exatas, a qualidade da solução é idêntica entre todos, sendo o método de comparação o tempo de execução. Já nos que têm soluções aproximadas ou heurísticas, a tabela de qualidade apresenta o valor absoluto da solução de cada algoritmo (cardinalidade, custo ou peso), ao lado do valor do algoritmo exato de referência (ou do melhor resultado conhecido, quando o exato não é executado); a razão entre os dois é calculada na discussão dos resultados.
 \end{enumerate}
 
 % ---------------------------------------------------------------------------
@@ -357,6 +359,7 @@ todos documentados para permitir reprodução.
         Bibliotecas & NumPy 2.5.2, SciPy 1.18.0, NetworkX 3.6.1, igraph 1.0.0, lap 0.5.13 \\
         \bottomrule
     \end{tabularx}
+    \fonte{Elaborado pelo autor.}
 \end{table}
 
 % ---------------------------------------------------------------------------
@@ -426,6 +429,7 @@ A Tabela~\ref{tab:proveniencia} registra o tipo e a origem de cada algoritmo, e 
         Guloso de grau mínimo & Heurística & \ref{alg:mim_greedy} & própria \\
         \bottomrule
     \end{tabularx}
+    \fonte{Elaborado pelo autor.}
 
     \smallskip
     \parbox{\textwidth}{\scriptsize Nota: \textbf{Alg.}: número do pseudocódigo correspondente. \textbf{Origem}: \texttt{usuário/nome} indica um repositório do GitHub; NetworkX, igraph, SciPy e lap são bibliotecas, com núcleo interpretado (Python) ou compilado; ``própria'' indica implementação deste trabalho a partir da referência citada; ``reimpl.'' indica código reimplementado a partir do original indicado.}

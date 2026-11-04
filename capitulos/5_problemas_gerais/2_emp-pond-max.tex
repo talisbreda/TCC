@@ -107,7 +107,7 @@ O algoritmo de Edmonds é primal-dual \cite{lawler}: ele mantém os duais viáve
 
 O procedimento resultante é frequentemente chamado de \textbf{Algoritmo de Blossom Ponderado} ou simplesmente Algoritmo de Edmonds para Emparelhamento Ponderado.
 
-A implementação original de Edmonds era polinomial, $O(V^4)$. \citeonline{lawler} apresentou uma implementação $O(V^3)$, que por muito tempo foi o padrão em livros didáticos.
+A implementação original de Edmonds era polinomial, $O(V^4)$: calculando $\delta$ diretamente a cada ajuste dual, em $O(E)$, ela custa $O(V^2 E)$, que em grafos densos é $O(V^4)$, como detalhado ao final da explicação do Algoritmo~\ref{alg:edmonds_weighted} \cite{galil_micali_gabow}. \citeonline{lawler} apresentou uma implementação $O(V^3)$, que por muito tempo foi o padrão em livros didáticos.
 
 A variante $O(V^3)$ descrita por Lawler (1976) para o emparelhamento ponderado utiliza uma abordagem primal-dual rigorosa. O algoritmo mantém um conjunto de arestas admissíveis (custo reduzido nulo) baseadas em variáveis duais de vértices ($y_i$) e de subconjuntos ímpares ($z_B$). A cada iteração onde a busca por caminhos aumentantes falha, o algoritmo calcula um escalar crítico $\delta$ baseado nas folgas das arestas incidentes à árvore alternante atual (conjunto $S$). A atualização dual subsequente ($y_i \leftarrow y_i \pm \delta$, $z_B \leftarrow z_B \pm 2\delta$) garante o surgimento de novas arestas admissíveis ou a expansão de \textbf{flores} com dual nulo, mantendo a complexidade cúbica através do gerenciamento eficiente dos valores de folga mínima (\textbf{slack}) para vértices fora da árvore.
 
@@ -165,7 +165,7 @@ O Algoritmo~\ref{alg:edmonds_weighted} alterna entre o estágio primal e o está
 
 \subsection{Melhorias}
 
-Desenvolvimentos posteriores por \citeonline{galil_micali_gabow} e \citeonline{gabow1990} melhoraram a estrutura de dados para gerenciar a prioridade das atualizações duais e a contração de flores, atingindo complexidades próximas a $O(E V \log V)$ ou $O(E \sqrt{V \alpha(E, V)})$ em implementações de escalonamento \cite{schrijver}.
+Desenvolvimentos posteriores melhoraram as estruturas de dados que gerenciam as folgas e a contração de flores. \citeonline{galil_micali_gabow} mantêm as folgas em filas de prioridade generalizadas, em que cada operação custa $O(\log V)$; como há $O(V)$ estágios, um por aumento, e cada estágio realiza $O(E)$ operações nessas filas, o total é $O(EV \log V)$, melhor que $O(V^3)$ em grafos esparsos. \citeonline{gabow1990} reduziu o custo de cada estágio para $O(E + V \log V)$, o mesmo de um Dijkstra com heap de Fibonacci, o que leva a $O(V(E + V \log V))$. Para pesos inteiros, algoritmos de escalonamento de custos atingem limites ainda menores, que dependem também do maior peso \cite{gabow1990}.
 
 Apesar de ser polinomial (classe P), a implementação de emparelhamento ponderado em grafos gerais é considerada uma das rotinas mais complexas da otimização combinatória clássica, sendo significativamente mais difícil de implementar corretamente do que algoritmos para grafos bipartidos ou fluxo máximo.
 
@@ -180,11 +180,11 @@ Apesar de ser polinomial (classe P), a implementação de emparelhamento pondera
 \subsection{Algoritmos aproximados}
 \label{sec:emp_pond_max_aprox}
 
-Aqui também podemos utilizar o método guloso ordenado, descrito na seção \ref{p:gulosa_ordenada}. No problema de peso máximo, ao contrário da atribuição de custo mínimo, ele tem garantia de aproximação: o emparelhamento obtido tem pelo menos metade do peso máximo, pois cada aresta da solução ótima que fica de fora é bloqueada por uma aresta escolhida antes e, portanto, de peso maior ou igual, e cada aresta escolhida bloqueia no máximo duas arestas da solução ótima \cite{drake}. Além dele, temos:
+Aqui também podemos utilizar o método guloso ordenado, descrito na seção \ref{p:gulosa_ordenada}, com a mesma complexidade $O(E \log E)$, dominada pela ordenação. No problema de peso máximo, ao contrário da atribuição de custo mínimo, ele tem garantia de aproximação: o emparelhamento obtido tem pelo menos metade do peso máximo, pois cada aresta da solução ótima que fica de fora é bloqueada por uma aresta escolhida antes e, portanto, de peso maior ou igual, e cada aresta escolhida bloqueia no máximo duas arestas da solução ótima \cite{drake}. Além dele, temos:
 
 \subsubsection{Algoritmo de Crescimento de Caminho (Path Growing)}
 
-Similar ao algoritmo descrito na seção \ref{p:h_path_growing_card}, esta também faz uso de Path Growing para encontrar um emparelhamento. A vantagem desta é que não é necessário ordenação, tornando possível a execução em tempo linear ($O(E)$). Foi descrito por \citeonline{drake}:
+Similar ao algoritmo descrito na seção \ref{p:h_path_growing_card}, esta também faz uso de Path Growing para encontrar um emparelhamento. A vantagem desta é que não é necessário ordenação, tornando possível a execução em tempo linear ($O(E)$), justificado ao final da explicação linha a linha. Foi descrito por \citeonline{drake}:
 
 \begin{enumerate}
     \item O algoritmo constrói caminhos simples disjuntos no grafo.
@@ -255,7 +255,7 @@ O Algoritmo~\ref{alg:path_growing} pode ser lido linha a linha da seguinte forma
         \addlinespace 
 
         Edmonds otimizado & $O(EV \log V)$ & Exato & Não & 
-        Melhoria do Edmonds original através de uma série de otimizações \\
+        Implementação de Galil, Micali e Gabow, que mantém as folgas em filas de prioridade generalizadas. \\
         \addlinespace 
 
         Guloso ordenado & $O(E \log E)$ & Aprox. & Não & 
@@ -267,6 +267,7 @@ O Algoritmo~\ref{alg:path_growing} pode ser lido linha a linha da seguinte forma
         
         \bottomrule
     \end{tabularx}
+    \fonte{Elaborado pelo autor.}
     \par\smallskip
-    {\raggedright\footnotesize \textit{Aprox.}: aproximado. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}.\par}
+    {\raggedright\footnotesize \textit{Aprox.}: aproximado. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. As complexidades são justificadas no texto de cada algoritmo.\par}
 \end{table}

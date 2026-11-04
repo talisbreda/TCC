@@ -97,7 +97,7 @@ emparelhamento máximo em grafos gerais da seguinte forma:
     \item \textbf{Aumento:} Use o caminho encontrado para aumentar o emparelhamento através da diferença simétrica (inversão das arestas). O AUGMENT é chamado quando a busca alcança um vértice livre $y$ (linha~\ref{bl:calla} do Algoritmo~\ref{alg:maxmatch}), e seu último laço (linha~\ref{bl:flip}) inverte as arestas ao longo do caminho.
 \end{enumerate}
 
-\citeonline{schrijver} detalha que, a depender da forma como o algoritmo é implementado, principalmente no que trata da contração, a complexidade do algoritmo ingênuo pode chegar a $O(V^3)$. No entanto, melhorias subsequentes nesse algoritmo culminaram em uma implementação em $O(E\sqrt{V})$, descrita por \citeonline{vazirani}. No entanto, por conta da complexidade de implementação da solução mais rápida, a maioria das implementações práticas do algoritmo utilizam variantes com complexidade próxima a $O(V^3)$.
+\citeonline{schrijver} detalha que, a depender da forma como o algoritmo é implementado, principalmente no que trata da contração, a complexidade do algoritmo ingênuo pode chegar a $O(V^3)$. No entanto, melhorias subsequentes nesse algoritmo culminaram em uma implementação em $O(E\sqrt{V})$, descrita por \citeonline{vazirani}. Ela segue o esquema de fases do Hopcroft-Karp (Seção~\ref{sec:algos_exatos_emp_card_max}): cada fase encontra um conjunto maximal de caminhos aumentantes de comprimento mínimo e disjuntos em vértices, agora também na presença de flores, em tempo $O(E)$, e bastam $O(\sqrt{V})$ fases, pelo mesmo argumento do caso bipartido. No entanto, por conta da complexidade de implementação da solução mais rápida, a maioria das implementações práticas do algoritmo utilizam variantes com complexidade próxima a $O(V^3)$.
 
 Os pseudocódigos a seguir, de \citeonline{jungnickel}, organizam esses passos em quatro procedimentos: MAXMATCH, que conduz a busca; BLOSSOM, que identifica a flor; CONTRACT, que a contrai; e AUGMENT, que expande as flores e aumenta o emparelhamento. Cada passo acima indica a parte correspondente.
 
@@ -252,6 +252,8 @@ O procedimento BLOSSOM é chamado pelo MAXMATCH quando a aresta $\{x, y\}$ liga 
     \label{alg:augment_blossom}
 \end{algorithm}
 
+A complexidade $O(V^3)$ do conjunto resulta da contagem de \citeonline{jungnickel}. Cada fase constrói uma árvore alternante até encontrar um caminho aumentante ou esgotar a busca, e há no máximo $O(V)$ fases, pois cada uma termina com um aumento ou encerra o algoritmo. Dentro de uma fase, cada vértice externo é examinado uma vez, percorrendo seus $O(V)$ vizinhos, em $O(V^2)$ no total; cada chamada do BLOSSOM custa $O(V)$, e há $O(V)$ contrações por fase; e o CONTRACT e o AUGMENT, implementados como no texto, somam $O(V^2)$ por fase. Cada fase custa, portanto, $O(V^2)$, e o algoritmo, $O(V^3)$.
+
 \subsubsection{Teorema de Tutte-Berge}
 
 O teorema de Tutte-Berge, apesar de não aparecer explicitamente na descrição do algoritmo, é fundamental para sua corretude, pois ele fornece um certificado de otimalidade. Por exemplo, digamos que a etapa de busca do algoritmo de Blossom não encontrou nenhum caminho aumentante. Como sabemos que o emparelhamento atual é máximo? Para descobrir isso, utilizamos a fórmula de Tutte-Berge, descrita por \citeonline{jungnickel} da seguinte forma:
@@ -264,7 +266,7 @@ Onde $v(G)$ é o tamanho do emparelhamento máximo, e $\mathrm{odd}(G - U)$ é o
 
 \subsection{Algoritmos aproximados}
 
-Alguns dos algoritmos aproximados que resolvem este problema são os mesmos vistos na seção \ref{sec:emp_card_max_bip}, como o método guloso simples e o algoritmo de Karp-Sipser, que também funcionam para grafos gerais e mantêm a garantia de metade da cardinalidade máxima, já que ambos produzem um emparelhamento maximal. Além desses, existem outros métodos que podem ser utilizados neste problema.
+Alguns dos algoritmos aproximados que resolvem este problema são os mesmos vistos na seção \ref{sec:emp_card_max_bip}, como o método guloso simples e o algoritmo de Karp-Sipser, que também funcionam para grafos gerais e mantêm a garantia de metade da cardinalidade máxima, já que ambos produzem um emparelhamento maximal. A análise de complexidade feita naquela seção não usa a bipartição, e os dois continuam lineares. Além desses, existem outros métodos que podem ser utilizados neste problema.
 
 % \subsubsection{Busca local com caminhos curtos}
 
@@ -291,7 +293,7 @@ Uma variação inteligente do método guloso, descrita por \citeonline{drake}, q
     \item Remova os vértices usados e repita.
 \end{enumerate}
 
-Ao contrário do guloso simples (que escolhe arestas desconexas), o Path Growing tende a cobrir cadeias longas de vértices, o que é estruturalmente vantajoso.
+Ao contrário do guloso simples (que escolhe arestas desconexas), o Path Growing tende a cobrir cadeias longas de vértices, o que é estruturalmente vantajoso. Sua complexidade é linear, $O(V + E)$: cada vértice entra em um único caminho e é removido em seguida, e cada aresta é examinada um número constante de vezes ao estender os caminhos, a mesma análise da versão ponderada (Algoritmo~\ref{alg:path_growing}).
 
 \begin{table}[H]
     \centering
@@ -327,6 +329,7 @@ Ao contrário do guloso simples (que escolhe arestas desconexas), o Path Growing
         
         \bottomrule
     \end{tabularx}
+    \fonte{Elaborado pelo autor.}
     \par\smallskip
-    {\raggedright\footnotesize \textit{Aprox.}: aproximado. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}.\par}
+    {\raggedright\footnotesize \textit{Aprox.}: aproximado. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. As complexidades são justificadas no texto de cada algoritmo.\par}
 \end{table}

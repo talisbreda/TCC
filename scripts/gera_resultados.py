@@ -4,11 +4,13 @@ Gera artefatos do capítulo de Resultados a partir dos CSVs dos benchmarks:
   - results/plot/<prob>.csv      : dados tidy (n + tempo por algoritmo) p/ pgfplots
 Tudo derivado dos dados medidos; nenhum número é digitado à mão (AC-22).
 """
-import csv, re, unicodedata
+import csv, re, sys, unicodedata
 from pathlib import Path
 from collections import defaultdict
 
 RAIZ = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(RAIZ / "src"))
+from common.report import complexidade_latex, legenda_instancia, FONTE_TABELA  # noqa: E402
 TEX = RAIZ / "results" / "tex"
 PLOT = RAIZ / "results" / "plot"
 PLOT.mkdir(exist_ok=True)
@@ -30,10 +32,11 @@ def esc(s):
     return s
 
 def compl_math(s):
-    s=s.replace("·",r" \cdot ").replace("²","^{2}").replace("³","^{3}").replace("⁴","^{4}")
-    s=re.sub(r"√(\w+)", r"\\sqrt{\1}", s)
-    s=re.sub(r"\^(\w)(?!\})", r"^{\1}", s)
-    return f"${s}$" if s else ""
+    # mesma conversão das tabelas de tempo (marcadores * e † fora do modo matemático)
+    return complexidade_latex(s)
+
+# nome do problema usado nas legendas do report.py
+PROBLEMA_LEGENDA = {"general-weight": "general", "mim-grande": "mim"}
 
 def key(s):
     s=unicodedata.normalize("NFKD",s).encode("ascii","ignore").decode()
@@ -57,7 +60,8 @@ def tabela_exp(prob, inst):
     linhas=[r for r in cres if r["instance"]==inst and r["expoente_empirico"]]
     if not linhas: return None
     out=[r"\begin{table}[H]", r"    \centering",
-         f"    \\caption{{Expoente empírico de crescimento --- {esc(inst)}}}",
+         f"    \\caption{{{legenda_instancia(PROBLEMA_LEGENDA.get(prob, prob), inst)[0]}: "
+         f"expoente empírico de crescimento}}",
          f"    \\label{{tab:exp-{key(prob)}}}",
          r"    \renewcommand{\arraystretch}{1.25}", r"    \footnotesize",
          r"    \begin{tabularx}{\textwidth}{@{} X l c c @{}}",
@@ -67,7 +71,8 @@ def tabela_exp(prob, inst):
     for r in linhas:
         out.append(f"        {esc(r['algorithm'])} & {compl_math(r['complexity_time'])} & "
                    f"{float(r['expoente_empirico']):.2f} & {float(r['r2']):.3f} \\\\")
-    out += [r"        \bottomrule", r"    \end{tabularx}", r"\end{table}", ""]
+    out += [r"        \bottomrule", r"    \end{tabularx}", f"    {FONTE_TABELA}",
+            r"\end{table}", ""]
     (TEX/f"exp-{key(prob)}.tex").write_text("\n".join(out),encoding="utf-8")
     return f"exp-{key(prob)}.tex"
 

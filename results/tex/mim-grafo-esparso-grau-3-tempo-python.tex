@@ -1,6 +1,6 @@
 \begin{table}[H]
     \centering
-    \caption{Tempo de execução em Python — Grafo esparso (grau \textasciitilde{}3) (mediana, ms)}
+    \caption{Emparelhamento induzido máximo, grafo esparso (grau médio $\approx 3$): tempo de execução em Python (mediana, em ms)}
     \label{tab:mim-grafo-esparso-grau-3-tempo-python}
     \renewcommand{\arraystretch}{1.2}
     \footnotesize
@@ -9,10 +9,11 @@
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{Espaço} & \textbf{$n=10$} & \textbf{$n=15$} & \textbf{$n=20$} & \textbf{$n=25$} & \textbf{$n=30$} & \textbf{$n=40$} & \textbf{$n=50$} & \textbf{$n=100$} & \textbf{$n=200$} & \textbf{$n=400$} \\
         \midrule
-        Exato (MIS conflitos) & exato & $exp.$ & $O(E^{2})$ & 0.16 & 0.29 & 1.49 & 1.99 & 5.10 & 74.61 & — & — & — & — \\
-        Guloso aleatório & heuristica & $O(E^{2})$ & $O(V+E)$ & 0.05 & 0.05 & 0.08 & 0.13 & 0.18 & 0.29 & 0.47 & 1.50 & 8.28 & 27.29 \\
-        Guloso grau mínimo & heuristica & $O(E^{2})$ & $O(E^{2})$ & 0.18 & 0.36 & 0.78 & 1.47 & 1.83 & 2.78 & 4.27 & 18.48 & 85.90 & 378.36 \\
+        Exato (MIS conflitos) & exato & exponencial & $O(E^{2})$ & 0.16 & 0.29 & 1.49 & 1.99 & 5.10 & 74.61 & — & — & — & — \\
+        Guloso aleatório & heurística & $O(E^{2})$ & $O(V+E)$ & 0.05 & 0.05 & 0.08 & 0.13 & 0.18 & 0.29 & 0.47 & 1.50 & 8.28 & 27.29 \\
+        Guloso grau mínimo & heurística & $O(E^{2})$ & $O(E^{2})$ & 0.18 & 0.36 & 0.78 & 1.47 & 1.83 & 2.78 & 4.27 & 18.48 & 85.90 & 378.36 \\
         \bottomrule
     \end{tabular}%
     }
+    \fonte{Elaborado pelo autor.}
 \end{table}

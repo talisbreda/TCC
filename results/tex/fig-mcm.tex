@@ -1,5 +1,7 @@
 \begin{figure}[H]
     \centering
+    \caption{Cardinalidade máxima bipartida, grafo 3 (denso, com emparelhamento perfeito): tempo de execução em escala log-log}
+    \label{fig:cresc-mcm}
     \adjustbox{max width=\textwidth}{%
     \begin{tikzpicture}
         \begin{loglogaxis}[
@@ -13,16 +15,13 @@
             \addplot+[mark=square*] table[x=n,y=t,col sep=comma] {results/plot/mcm-aug.csv};
             \addlegendentry{Caminhos aumentantes $O(VE)$}
             \addplot+[mark=triangle*] table[x=n,y=t,col sep=comma] {results/plot/mcm-ks.csv};
-            \addlegendentry{Karp-Sipser (heur.)}
+            \addlegendentry{Karp-Sipser (aprox.)}
             \addplot+[mark=diamond*] table[x=n,y=t,col sep=comma] {results/plot/mcm-hk.csv};
             \addlegendentry{Hopcroft-Karp $O(E\sqrt{V})$}
             \addplot+[mark=o] table[x=n,y=t,col sep=comma] {results/plot/mcm-greedy.csv};
-            \addlegendentry{Gulosa (heur.)}
+            \addlegendentry{Gulosa (aprox.)}
         \end{loglogaxis}
     \end{tikzpicture}%
     }
-    \caption{Tempo de execução em escala log-log para o grafo denso (cardinalidade
-    máxima bipartida). A inclinação de cada reta corresponde ao expoente empírico
-    de crescimento; a de Edmonds-Karp, próxima de 3, destaca-se das demais.}
-    \label{fig:cresc-mcm}
+    \fonte{Elaborado pelo autor. A inclinação de cada reta corresponde ao expoente empírico de crescimento.}
 \end{figure}

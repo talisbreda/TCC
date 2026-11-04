@@ -1,6 +1,6 @@
 \begin{table}[H]
     \centering
-    \caption{Qualidade da solução — Peso — denso (p=0.3)}
+    \caption{Peso máximo em grafos gerais, grafo denso ($p = 0{,}3$): qualidade da solução (peso total)}
     \label{tab:general-peso-denso-p-0-3-qualidade}
     \renewcommand{\arraystretch}{1.2}
     \footnotesize
@@ -10,9 +10,10 @@
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Tempo} & \textbf{$n=10$} & \textbf{$n=20$} & \textbf{$n=30$} & \textbf{$n=50$} & \textbf{$n=75$} & \textbf{$n=100$} \\
         \midrule
         van Rantwijk (mwmatching) & exato & $O(V^{3})$ & 309 & 765 & 1279 & 2247 & 3429 & 4710 \\
-        NetworkX (peso máximo) & baseline & $O(V^{3})$ & 309 & 765 & 1279 & 2247 & 3429 & 4710 \\
+        NetworkX (peso máximo) & referência & $O(V^{3})$ & 309 & 765 & 1279 & 2247 & 3429 & 4710 \\
         Path Growing & aproximado & $O(E)$ & 278 & 642 & 1215 & 1934 & 3113 & 4329 \\
         \bottomrule
     \end{tabular}%
     }
+    \fonte{Elaborado pelo autor.}
 \end{table}

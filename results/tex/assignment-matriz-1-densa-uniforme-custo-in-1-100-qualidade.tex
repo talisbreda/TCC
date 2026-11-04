@@ -1,6 +1,6 @@
 \begin{table}[H]
     \centering
-    \caption{Qualidade da solução — Matriz 1 — Densa uniforme  \textbar{} custo in [1,100]}
+    \caption{Atribuição linear, matriz 1 (densa uniforme, custos em $[1, 100]$): qualidade da solução (custo total)}
     \label{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-qualidade}
     \renewcommand{\arraystretch}{1.2}
     \footnotesize
@@ -14,9 +14,10 @@
         Húngaro (hunalgorithm) & exato & $O(n^{3})$ & 102 & BugPerc & BugPerc & BugPerc & BugPerc & BugPerc & BugPerc & BugPerc & BugPerc \\
         Húngaro (mayorx/KM) & exato & $O(n^{3})$ & 102 & 146 & 168 & 217 & 238 & 244 & 258 & 275 & 300 \\
         SSP (flows) & exato & $O(n^{4})$* & 102 & 146 & 168 & 217 & 238 & 244 & — & — & — \\
-        SciPy (linear\_sum\_assg) & baseline & $O(n^{3})$ & 102 & 146 & 168 & 217 & 238 & 244 & 258 & 275 & 300 \\
-        Jonker-Volgenant (lap) & baseline & $O(n^{3})$ & 102 & 146 & 168 & 217 & 238 & 244 & 258 & 275 & 300 \\
+        SciPy (linear\_sum\_assg) & referência & $O(n^{3})$ & 102 & 146 & 168 & 217 & 238 & 244 & 258 & 275 & 300 \\
+        Jonker-Volgenant (lap) & referência & $O(n^{3})$ & 102 & 146 & 168 & 217 & 238 & 244 & 258 & 275 & 300 \\
         \bottomrule
     \end{tabular}%
     }
+    \fonte{Elaborado pelo autor.}
 \end{table}

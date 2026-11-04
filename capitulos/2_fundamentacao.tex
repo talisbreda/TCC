@@ -53,21 +53,20 @@ Grafos ponderados podem ser representados por matrizes de adjacência de valor r
 
 Um grafo bipartido é um grafo não direcionado que pode ser facilmente colorido com apenas duas cores \cite{manber}.
 
-Formalmente, um grafo $G=(V,E)$ é chamado \textbf{grafo bipartido} se o conjunto de vértices $V$ puder ser
-particionado em dois subconjuntos disjuntos $V_1$ e $V_2$, chamados classes de cor, tais que:
-
+Formalmente, um grafo é chamado \textbf{grafo bipartido} se o seu conjunto de vértices puder ser
+particionado em dois subconjuntos disjuntos $U$ e $V$, chamados \textbf{partes} (ou classes de cor), de modo que
+todas as arestas conectam um vértice de $U$ a um vértice de $V$. Ou seja, não existem arestas que conectem
+vértices dentro da mesma parte \cite{dasgupta}. Escreve-se, então,
 \begin{equation}
-    V = V_1 \cup V_2 \quad {e} \quad V_1 \cap V_2 = \emptyset
+    G = (U, V; E), \quad \text{com} \quad U \cap V = \emptyset \quad \text{e} \quad E \subseteq \{\{u, v\} : u \in U, \, v \in V\}.
 \end{equation}
-
-e todas as arestas $e \in E$ conectam um vértice em $V_1$ a um vértice em $V_2$. Ou seja, não existem arestas que conectem
-vértices dentro do mesmo subconjunto \cite{dasgupta}.
+Essa é a notação de \citeonline{burkard}, usada em todo o trabalho para grafos bipartidos. Nela, $V$ denota apenas uma das partes; nas expressões de complexidade, porém, $V$ continua denotando o número total de vértices do grafo, como em $O(E\sqrt{V})$. Nos problemas de atribuição, em que o grafo é representado por uma matriz de custos, $U$ corresponde às linhas (por exemplo, trabalhadores) e $V$ às colunas (por exemplo, tarefas).
 
 Observações:
 \begin{itemize}
     \item Um grafo é bipartido se e somente se não contém ciclos de comprimento ímpar \cite{schrijver}
-    \item O grafo bipartido completo $K_{m,n}$ possui $m$ vértices em $V_1$ e $n$ vértices em $V_2$, 
-    e contém todas as arestas possíveis entre $V_1$ e $V_2$ \cite{jungnickel}
+    \item O grafo bipartido completo $K_{m,n}$ possui $m$ vértices em $U$ e $n$ vértices em $V$, 
+    e contém todas as arestas possíveis entre $U$ e $V$ \cite{jungnickel}
 \end{itemize}
 
 
@@ -111,7 +110,7 @@ Nos pseudocódigos a seguir, essa operação aparece como Relaxa($u, v, w$) e cu
 
 Para grafos onde os pesos das arestas são não-negativos ($w(u,v)\geq 0$), o Algoritmo de Dijkstra é a abordagem mais eficiente. Ele utiliza uma estratégia gulosa, mantendo um conjunto de vértices cujos pesos finais dos caminhos mais curtos já foram determinados \cite{aho}.
 
-O algoritmo seleciona repetidamente o vértice $u$ com a menor estimativa de caminho mais curto $d[u]$ de uma fila de prioridade, adiciona-o ao conjunto de visitados e relaxa todas as arestas que saem de $u$. \citeonline{dasgupta} destacam que a eficiência do Dijkstra depende da estrutura de dados utilizada. Com um Heap Binário, a complexidade é $O((V+E)\log V)$. \citeonline{cormen} apontam que, ao utilizar um Heap de Fibonacci, a complexidade amortizada pode ser reduzida para $O(E+VlogV)$, o que é crucial para grafos densos.
+O algoritmo seleciona repetidamente o vértice $u$ com a menor estimativa de caminho mais curto $d[u]$ de uma fila de prioridade, adiciona-o ao conjunto de visitados e relaxa todas as arestas que saem de $u$. \citeonline{dasgupta} destacam que a eficiência do Dijkstra depende da estrutura de dados utilizada. Com um Heap Binário, a complexidade é $O((V+E)\log V)$. \citeonline{cormen} apontam que, ao utilizar um Heap de Fibonacci, a complexidade amortizada pode ser reduzida para $O(E + V\log V)$, o que é crucial para grafos densos. As duas complexidades são justificadas ao final da explicação do Algoritmo~\ref{alg:dijkstra_fund}.
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
@@ -267,7 +266,7 @@ O método de Ford-Fulkerson, que é base dos principais algoritmos de resoluçã
         }
     }
     
-    \caption{Algoritmo de Ford-Fulkerson}
+    \caption{Algoritmo de Ford-Fulkerson \cite{cormen}}
     \label{alg:ford_fulkerson}
 \end{algorithm}
 
@@ -315,6 +314,7 @@ O critério fundamental para verificar se uma solução é ótima é o \textbf{t
 Este teorema é a base dos algoritmos de \textbf{cancelamento de ciclos} (Cycle Canceling), que iterativamente identificam ciclos negativos na rede residual e enviam fluxo através deles para reduzir o custo total da função objetivo até que nenhum ciclo negativo reste.
 
 \subsubsection{Potenciais de vértices e custos reduzidos}
+\label{p:potenciais_fluxo}
 
 Embora o cancelamento de ciclos seja teoricamente sólido, a detecção de ciclos negativos (via Bellman-Ford) pode ser computacionalmente custosa. Para permitir o uso de algoritmos mais eficientes como o de Dijkstra, a literatura introduz o conceito de \textbf{potenciais de vértices}, baseando-se na teoria de dualidade da programação linear.
 
@@ -327,7 +327,7 @@ O conceito de potenciais e de custo reduzido será utilizado em algoritmos como 
 % ==================================================================================================================================
 \section{Problema Geral do Emparelhamento}
 
-O problema de \textbf{matching} (emparelhamento) em grafos é um problema fundamental na otimização combinatória. Esta seção define o emparelhamento e os conceitos associados a ele, usados em todo o restante do trabalho, e apresenta o caso bipartido, sua versão ponderada (o problema de atribuição) e uma formulação mais geral, de correspondência entre grafos.
+O problema de \textbf{matching} (emparelhamento) em grafos é um problema fundamental na otimização combinatória. Esta seção define o emparelhamento e os conceitos associados a ele, usados em todo o restante do trabalho, e apresenta o caso bipartido, sua versão ponderada (o problema de atribuição) e, por fim, um problema relacionado, mas distinto: a correspondência entre grafos.
 
 Um \textbf{matching} $M$ em um grafo não-direcionado $G=(V,E)$ é um subconjunto de arestas $M \subseteq E$ tal que
 nenhum par de arestas em $M$ compartilha um vértice comum \cite{kleinberg}. Em outras palavras, cada nó aparece em no máximo uma aresta de $M$. A \textbf{cardinalidade} de um matching $M$ é a quantidade de arestas contidas dentro dele, e um dos problemas que serão mostrados posteriormente trata de encontrar o \textbf{matching de cardinalidade máxima} (Maximum Matching) de um grafo $G$, que é o matching $M$ com o maior número possível de arestas \cite{cormen}. A cardinalidade máxima de um matching de um grafo $G$ é denominada por $v(G)$ \cite{schrijver}.
@@ -419,18 +419,72 @@ Os algoritmos exatos dos Capítulos~\ref{cap:bipartidos} e~\ref{cap:gerais} dife
 \subsection{Matching em grafos bipartidos}
 
 O problema de \textbf{Matching Bipartido} é o caso clássico de encontrar um matching de cardinalidade máxima em um grafo 
-bipartido $G=(V,E)$, onde $V=X\cup Y$ \cite{kleinberg}. Pode ser utilizado para modelar situações de atribuição, como associar empregos ($X$) a máquinas ($Y$), ou professores ($X$) a cursos ($Y$), onde uma aresta indica uma capacidade de atribuição \cite{kleinberg}. 
+bipartido $G=(U,V;E)$ \cite{kleinberg}. Pode ser utilizado para modelar situações de atribuição, como associar empregos ($U$) a máquinas ($V$), ou professores ($U$) a cursos ($V$), onde uma aresta indica uma capacidade de atribuição \cite{kleinberg}. 
 
 Quando aplicado em grafos ponderados, o matching bipartido é conhecido como \textbf{problema de atribuição} \cite{lawler}, que trata de encontrar uma combinação ótima de atribuições de forma a minimizar o custo total associado. Mais detalhes sobre esse problema serão vistos na Seção~\ref{sec:assignment_problem}.
 
 % ---------------------------------------------------------------------------------------------------------------------------------
-% 2.2.2. Formulação geral (emparelhamento e otimização)
+% Correspondência entre grafos e atribuição quadrática
 % ---------------------------------------------------------------------------------------------------------------------------------
-\subsection{Formulação geral (emparelhamento e otimização)}
+\subsection{Correspondência entre grafos e atribuição quadrática}
+\label{sec:qap}
 
-Em um contexto mais amplo, o emparelhamento de grafos pode ser formalizado como um problema de otimização que 
-busca maximizar a compatibilidade entre dois grafos $G$ e $G'$ \cite{learning_graph_matching}. Esse problema é frequentemente abordado como um \textbf{problema de atribuição quadrática (QAP)}. Essa formulação busca maximizar uma função objetivo que combina termos de compatibilidade unária (nó-nó, $c_{ii'}$) e compatibilidade par a par (aresta-aresta, $d_{ii'jj'}$), sujeito a restrições de atribuição binária ($y_{ii'} \in \{0,1\}$). O termo quadrático codifica a preservação das relações (arestas) entre os nós \cite{learning_graph_matching}
+Em visão computacional, o termo \textit{graph matching} designa outro problema: encontrar uma \textbf{correspondência entre os vértices de dois grafos} $G = (V, E)$ e $G' = (V', E')$ que preserve ao máximo seus atributos e suas relações \cite{learning_graph_matching}. Sejam $y_{ii'} \in \{0, 1\}$ a variável que indica se o vértice $i$ de $G$ corresponde ao vértice $i'$ de $G'$, $c_{ii'}$ a semelhança entre os dois vértices e $d_{ii'jj'}$ o quanto a relação entre $i$ e $j$ em $G$ é preservada entre $i'$ e $j'$ em $G'$. O problema consiste em
+\begin{equation}
+    \max_{y} \; \sum_{i, i'} c_{ii'}\, y_{ii'} + \sum_{i, i', j, j'} d_{ii'jj'}\, y_{ii'}\, y_{jj'},
+    \label{eq:qap}
+\end{equation}
+sujeito a cada vértice corresponder a no máximo um vértice do outro grafo, e é uma forma do \textbf{problema de atribuição quadrática} (QAP, \textit{Quadratic Assignment Problem}) \cite{learning_graph_matching, burkard}.
 
+Sem o termo quadrático, isto é, com todos os $d_{ii'jj'}$ nulos, \eqref{eq:qap} é o problema de atribuição linear da Seção~\ref{sec:assignment_problem}, que tem solução em tempo polinomial. Com ele, o ganho de cada associação passa a depender das demais, e o problema se torna NP-difícil \cite{learning_graph_matching, burkard}. A Figura~\ref{fig:qap} ilustra a diferença com $c_{ii'} = 0$ e $d_{ii'jj'} = 1$ quando $\{i, j\} \in E$ e $\{i', j'\} \in E'$: a correspondência~(a) preserva as duas arestas de $G$, e a~(b), apenas uma. Como o termo linear é o mesmo para todas as correspondências, só o termo quadrático distingue as duas.
+
+\begin{figure}[H]
+    \centering
+    \caption{Duas correspondências entre os caminhos $G$ e $G'$}
+    \label{fig:qap}
+    \begin{tikzpicture}[
+        vert/.style={circle, fill=black, inner sep=0pt, minimum size=5pt},
+        pres/.style={line width=2.2pt},
+        npres/.style={thin},
+        corr/.style={-{Stealth[length=2mm]}, dashed, gray},
+        rot/.style={font=\small},
+    ]
+        \foreach \px/\ia/\ib/\ic/\titulo in {0/1/2/3/{(a) $1 \mapsto a$, $2 \mapsto b$, $3 \mapsto c$\\duas arestas preservadas}, 7/1/3/2/{(b) $1 \mapsto a$, $2 \mapsto c$, $3 \mapsto b$\\uma aresta preservada}} {
+            \begin{scope}[xshift=\px cm]
+                \foreach \i in {1,2,3} \coordinate (g\i) at ({1.6*(\i-1)}, 1.8);
+                \foreach \i/\n in {1/a,2/b,3/c} \coordinate (h\n) at ({1.6*(\i-1)}, 0);
+                \node[rot, left=6pt] at (g1) {$G$};
+                \node[rot, left=6pt] at (ha) {$G'$};
+                \foreach \i in {1,2,3} \node[rot, above=3pt] at (g\i) {$\i$};
+                \foreach \n in {a,b,c} \node[rot, below=3pt] at (h\n) {$\n$};
+                \node[font=\small, align=center] at (1.6, -1.3) {\titulo};
+            \end{scope}
+        }
+        % (a): ambas as arestas preservadas
+        \begin{scope}
+            \foreach \i in {1,2,3} \coordinate (g\i) at ({1.6*(\i-1)}, 1.8);
+            \foreach \i/\n in {1/a,2/b,3/c} \coordinate (h\n) at ({1.6*(\i-1)}, 0);
+            \draw[pres] (g1) -- (g2) -- (g3);
+            \draw[pres] (ha) -- (hb) -- (hc);
+            \foreach \s/\t in {g1/ha, g2/hb, g3/hc} \draw[corr, shorten <=3pt, shorten >=3pt] (\s) -- (\t);
+            \foreach \v in {g1,g2,g3,ha,hb,hc} \node[vert] at (\v) {};
+        \end{scope}
+        % (b): só {2,3} -> {c,b} preservada
+        \begin{scope}[xshift=7cm]
+            \foreach \i in {1,2,3} \coordinate (g\i) at ({1.6*(\i-1)}, 1.8);
+            \foreach \i/\n in {1/a,2/b,3/c} \coordinate (h\n) at ({1.6*(\i-1)}, 0);
+            \draw[npres] (g1) -- (g2);
+            \draw[pres] (g2) -- (g3);
+            \draw[npres] (ha) -- (hb);
+            \draw[pres] (hb) -- (hc);
+            \foreach \s/\t in {g1/ha, g2/hc, g3/hb} \draw[corr, shorten <=3pt, shorten >=3pt] (\s) -- (\t);
+            \foreach \v in {g1,g2,g3,ha,hb,hc} \node[vert] at (\v) {};
+        \end{scope}
+    \end{tikzpicture}
+    \fonte{Elaborado pelo autor. As setas tracejadas indicam a correspondência; arestas grossas são as preservadas, isto é, arestas de $G$ cuja imagem também é aresta de $G'$, e essas imagens.}
+\end{figure}
+
+A correspondência entre grafos e o QAP ficam fora do escopo deste trabalho (Seção~\ref{sec:delimitacao}): em todos os problemas estudados nos capítulos seguintes, o custo de cada associação não depende das demais.
 
 % ---------------------------------------------------------------------------------------------------------------------------------
 % Métodos exatos, aproximados e heurísticos

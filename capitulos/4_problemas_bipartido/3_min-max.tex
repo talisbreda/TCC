@@ -4,9 +4,9 @@
 \section{Problema de atribuição gargalo}
 
 O problema de atribuição gargalo, também conhecido como \textbf{Problema de Emparelhamento Min-Max} ou \textbf{Bottleneck Assignment
-problem}, é uma variação do problema de atribuição tradicional. O objetivo deste problema é encontrar, em um grafo bipartido ponderado, um emparelhamento de cardinalidade máxima (maior número possível de arestas) no qual o mínimo dos pesos das arestas do emparelhamento seja maximizado \cite{lawler}.
+problem}, é uma variação do problema de atribuição (Seção~\ref{sec:assignment_problem}). Em vez da soma dos custos, minimiza-se o maior deles: dada uma matriz de custos $C = (c_{ij})$ de ordem $n$, procura-se uma atribuição, isto é, um emparelhamento perfeito no grafo bipartido correspondente, cujo maior custo, chamado de \textbf{gargalo}, seja o menor possível \cite{burkard}.
 
-Por exemplo. Considere $N$ trabalhadores e $N$ estações de trabalho. $w_{ij}$ representa a eficiência do trabalhador i na estação de trabalho j. A eficiência total da produção é limitada pela eficiência do trabalhador menos eficiente.  O objetivo é atribuir trabalhadores às estações de trabalho de forma a maximizar a eficiência mínima entre todas as atribuições. \cite{lawler}.
+Por exemplo, considere $n$ tarefas e $n$ máquinas que trabalham em paralelo, em que $c_{ij}$ é o tempo que a máquina $j$ leva para concluir a tarefa $i$. Como todas as tarefas só ficam prontas quando a mais demorada termina, o objetivo é atribuir as tarefas às máquinas de forma a minimizar o maior tempo, e não a soma dos tempos \cite{burkard}. Há também a versão de maximização, em que se maximiza o menor peso, como na escolha de trabalhadores para estações de uma linha de produção cuja eficiência é limitada pelo trabalhador menos eficiente \cite{lawler}. As duas versões são equivalentes, pois a solução ótima depende apenas da ordem relativa dos custos, e basta inverter essa ordem, por exemplo trocando o sinal dos pesos, para passar de uma à outra \cite{burkard}. Este trabalho adota a versão de minimização, seguida pelos algoritmos a seguir.
 
 \subsection{Soluções exatas}
 
@@ -16,7 +16,7 @@ A seguir serão apresentadas alguns dos principais métodos para encontrar uma s
 
 Métodos de threshold funcionam alternando entre duas fases. A primeira fase consiste em selecionar um valor limite, chamado de \textbf{threshold}, descrito por $c\ast$. Na segunda fase, constrói-se um grafo bipartido com todas as arestas cujo peso é menor ou igual a $c\ast$. Em seguida, verifica-se se existe um emparelhamento perfeito nesse grafo. O menor valor de $c\ast$ que permite um emparelhamento perfeito é a solução ótima para o problema de atribuição gargalo \cite{burkard}.
 
-Para selecionar o valor limite $c\ast$, podemos utilizar uma busca binária entre o menor e o maior peso das arestas do grafo original. A cada iteração, ajustamos o valor de $c\ast$ com base na existência ou não de um emparelhamento perfeito no grafo construído. Esse processo continua até que o valor ótimo seja encontrado. \citeonline{burkard}, que descreve esse método, utiliza um algoritmo baseado em matrizes para decidir se um emparelhamento é perfeito ou não, porém podemos utilizar qualquer algoritmo clássico de emparelhamento em grafos bipartidos, como os definidos na seção \ref{sec:algos_exatos_emp_card_max}, como por exemplo o algoritmo de Hopcroft-Karp. Também segundo o autor, o algoritmo tem uma complexidade de tempo de $O(V^{2.5} / \sqrt{\log V})$.
+Para selecionar o valor limite $c\ast$, podemos utilizar uma busca binária entre o menor e o maior peso das arestas do grafo original. A cada iteração, ajustamos o valor de $c\ast$ com base na existência ou não de um emparelhamento perfeito no grafo construído. Esse processo continua até que o valor ótimo seja encontrado. \citeonline{burkard}, que descreve esse método, utiliza um algoritmo baseado em matrizes para decidir se um emparelhamento é perfeito ou não, porém podemos utilizar qualquer algoritmo clássico de emparelhamento em grafos bipartidos, como os definidos na seção \ref{sec:algos_exatos_emp_card_max}, como por exemplo o algoritmo de Hopcroft-Karp. Para uma matriz de custos $n \times n$, as técnicas descritas pelo autor levam o algoritmo a uma complexidade de tempo $O(n^{2.5} / \sqrt{\log n})$; a versão com Hopcroft-Karp apresentada a seguir tem complexidade $O(n^{2.5} \log n)$.
 
 \citeonline{lawler} menciona um método de threshold para solução do problema de atribuição gargalo, porém a definição de threshold dele é levemente diferente, referindo-se ao valor dinâmico do rótulo de um vértice durante busca de caminhos. O algoritmo que ele descreve se assemelha mais aos algoritmos de caminhos aumentantes, que serão discutidos na seção \ref{sec:caminhos_aumentantes_min_max}.
 
@@ -71,7 +71,7 @@ O pseudocódigo segue a formulação de \citeonline{burkard}, que minimiza o mai
     \item \textbf{Busca binária (linhas~\ref{thr:loop}--\ref{thr:check}):} Enquanto existirem custos estritamente entre os dois extremos (conjunto $C^*$ da linha~\ref{thr:loop}), escolhe-se a mediana $c^*$ desses custos como novo limiar (linha~\ref{thr:median}) e testa-se esse limiar (linha~\ref{thr:check}). Usar a mediana, em vez da média dos extremos, garante que cada teste descarte pelo menos metade dos valores candidatos, independentemente de como os custos estão distribuídos.
     \item \textbf{Teste de viabilidade (linhas~\ref{thr:graph}--\ref{thr:low}):} O procedimento Testa\_viabilidade constrói $G[c^*]$ (linha~\ref{thr:graph}) e verifica se ele tem um emparelhamento perfeito (linha~\ref{thr:test}), o que pode ser feito com qualquer algoritmo de cardinalidade máxima, como o de Hopcroft-Karp. Se tem, o ótimo é no máximo $c^*$, e o extremo superior desce para $c^*$ (linha~\ref{thr:up}); caso contrário, o ótimo é maior que $c^*$, e o extremo inferior sobe para $c^*$ (linha~\ref{thr:low}).
     \item \textbf{Finalização (linhas~\ref{thr:c0}--\ref{thr:z}):} Quando $C^*$ fica vazio, o ótimo é $c_0^*$ ou $c_1^*$. Como $c_0^*$ pode nunca ter sido testado (é o mínimo inicial da matriz), ele é testado nesse momento, se necessário (linha~\ref{thr:c0}); se for viável, o teste rebaixa $c_1^*$ para ele. Por fim, extrai-se um emparelhamento perfeito de $G[c_1^*]$ (linha~\ref{thr:final}), cujo valor ótimo é $z = c_1^*$ (linha~\ref{thr:z}).
-    \item \textbf{Complexidade:} Há no máximo $n^2$ custos distintos e cada teste descarta metade dos candidatos, de modo que o laço executa $O(\log n^2) = O(\log n)$ vezes. Cada iteração encontra a mediana em tempo linear no tamanho de $C^*$, $O(n^2)$, e faz um teste de emparelhamento perfeito, que custa $O(E\sqrt{V}) = O(n^{2.5})$ com Hopcroft-Karp, já que $G[c^*]$ tem $2n$ vértices e até $n^2$ arestas. O total é $O(n^{2.5} \log n)$; o limite de $O(n^{2.5}/\sqrt{\log n})$ citado por \citeonline{burkard} exige técnicas mais elaboradas para o teste de emparelhamento.
+    \item \textbf{Complexidade:} Há no máximo $n^2$ custos distintos e cada teste descarta metade dos candidatos, de modo que o laço executa $O(\log n^2) = O(\log n)$ vezes. Cada iteração encontra a mediana em tempo linear no tamanho de $C^*$, $O(n^2)$, e faz um teste de emparelhamento perfeito, que custa $O(E\sqrt{V}) = O(n^{2.5})$ com Hopcroft-Karp, já que $G[c^*]$ tem $2n$ vértices e até $n^2$ arestas. O total é $O(n^{2.5} \log n)$. O limite de $O(n^{2.5}/\sqrt{\log n})$ citado por \citeonline{burkard} exige técnicas mais elaboradas: o valor ótimo é localizado com testes baseados em multiplicação de matrizes, e o emparelhamento final é obtido com um algoritmo de cardinalidade máxima mais rápido que o Hopcroft-Karp em grafos densos.
 \end{itemize}
 
 \subsubsection{Método dual}
@@ -348,15 +348,15 @@ O exemplo mostra por que o critério funciona: a linha 3 também preferia a colu
         \textbf{Algoritmo} & \textbf{Complexidade} & \textbf{Tipo} & \textbf{Avaliado} & \textbf{Descrição} \\
         \midrule
         
-        Threshold & $O(V^{2.5} / \sqrt{\log V})$ & Exato & Sim* & 
+        Threshold & $O(n^{2.5} \log n)$ & Exato & Sim* & 
         Aplica busca binária sobre os pesos das arestas, testando a existência de emparelhamento perfeito no subgrafo restrito ao limiar. \\
         \addlinespace 
         
-        Método Dual & $O(K \cdot E \sqrt{V})$ & Exato & Não & 
+        Método Dual & $O(n^4)$ & Exato & Não & 
         Expande um limiar inferior iterativamente baseado no Teorema de König, adicionando apenas arestas necessárias para cobrir componentes. \\
         \addlinespace
         
-        Caminhos aumentantes & $O(EV)$ & Exato & Sim & 
+        Caminhos aumentantes & $O(n^3)$ & Exato & Sim & 
         Abordagem construtiva que busca caminhos aumentantes minimizando a aresta de peso máximo (gargalo) no trajeto (variação de Dijkstra). \\
         \addlinespace
         
@@ -369,6 +369,7 @@ O exemplo mostra por que o critério funciona: a linha 3 também preferia a colu
         
         \bottomrule
     \end{tabularx}
+    \fonte{Elaborado pelo autor.}
     \par\smallskip
-    {\raggedright\footnotesize \textit{Heur.}: heurística. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. * A implementação avaliada testa cada limiar por caminhos aumentantes, com custo $O(n^3)$ por teste e $O(n^3 \log n)$ no total.\par}
+    {\raggedright\footnotesize \textit{Heur.}: heurística. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. As complexidades são justificadas no texto de cada algoritmo. * A implementação avaliada testa cada limiar por caminhos aumentantes, com custo $O(n^3)$ por teste e $O(n^3 \log n)$ no total; com técnicas mais elaboradas, o limite cai para $O(n^{2.5}/\sqrt{\log n})$ \cite{burkard}.\par}
 \end{table}

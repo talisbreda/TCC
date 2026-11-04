@@ -4,9 +4,102 @@
 \section{Problema de atribuição (Assignment Problem)}
 \label{sec:assignment_problem}
 
-O problema de atribuição, também conhecido como problema do emparelhamento ponderado, consiste em encontrar uma combinação ótima de atribuições entre dois conjuntos disjuntos, minimizando o custo total associado a essas atribuições. Exemplo: Considere $N$ trabalhadores e $N$ tarefas, onde cada trabalhador pode ser designado a exatamente uma tarefa, e cada tarefa deve ser atribuída a exatamente um trabalhador. O custo de atribuir o trabalhador i à tarefa j é representado por uma matriz de custos $W = [w_{ij}]$ \cite{lawler}. O objetivo é encontrar um conjunto de atribuições que minimize o custo total.
+O problema de atribuição, também conhecido como problema do emparelhamento ponderado, consiste em atribuir $n$ agentes a $n$ tarefas, cada agente a exatamente uma tarefa e cada tarefa a exatamente um agente, minimizando a soma dos custos $c_{ij}$ de atribuir o agente $i$ à tarefa $j$ \cite{lawler}. Em termos de grafos, procura-se um emparelhamento perfeito de custo mínimo entre os agentes ($U$) e as tarefas ($V$); em termos da matriz de custos $C = (c_{ij})$, escolhem-se $n$ posições, uma em cada linha e uma em cada coluna \cite{burkard}.
 
-% \subsection{Propriedades}
+Por exemplo, sejam três trabalhadores, $A$, $B$ e $C$, e três tarefas, com os tempos de execução, em horas, dados pela matriz
+\begin{equation}
+    C = \begin{bmatrix} 2 & 3 & 7 \\ 4 & 6 & 8 \\ 3 & 9 & 5 \end{bmatrix},
+    \label{eq:exemplo_atribuicao}
+\end{equation}
+com uma linha por trabalhador e uma coluna por tarefa. Escolher sempre a posição mais barata restante leva a $2 + 6 + 5 = 13$ horas, mas o ótimo é $3 + 4 + 5 = 12$ horas, sem usar a posição mais barata da matriz (Figura~\ref{fig:exemplo_atribuicao}). Como há $n!$ atribuições possíveis, enumerá-las é inviável já para valores moderados de $n$; os algoritmos exatos desta seção encontram o ótimo em tempo polinomial.
+
+\begin{figure}[H]
+    \centering
+    \caption{Atribuição gulosa e atribuição ótima para a matriz de custos~\eqref{eq:exemplo_atribuicao}}
+    \label{fig:exemplo_atribuicao}
+    \begin{tikzpicture}[
+        vert/.style={circle, draw, minimum size=6mm, inner sep=0pt, font=\small},
+        todas/.style={gray!45, thin},
+        escolhida/.style={line width=1.8pt},
+        custo/.style={font=\small, fill=white, inner sep=1.5pt},
+    ]
+        \foreach \px/\titulo in {0/{(a) gulosa: $2 + 6 + 5 = 13$}, 7/{(b) ótima: $3 + 4 + 5 = 12$}} {
+            \begin{scope}[xshift=\px cm]
+                \foreach \n/\y in {A/0, B/-1.3, C/-2.6} \node[vert] (t\n) at (0, \y) {$\n$};
+                \foreach \n/\y in {1/0, 2/-1.3, 3/-2.6} \node[vert] (k\n) at (3.4, \y) {$\n$};
+                \foreach \a in {A, B, C} \foreach \b in {1, 2, 3} \draw[todas] (t\a) -- (k\b);
+                \node[font=\small, above=4pt] at (tA.north) {Trabalhadores};
+                \node[font=\small, above=4pt] at (k1.north) {Tarefas};
+                \node[font=\small] at (1.7, -3.6) {\titulo};
+            \end{scope}
+        }
+        % (a) gulosa
+        \begin{scope}
+            \foreach \n/\y in {A/0, B/-1.3, C/-2.6} \coordinate (t\n) at (0, \y);
+            \foreach \n/\y in {1/0, 2/-1.3, 3/-2.6} \coordinate (k\n) at (3.4, \y);
+            \draw[escolhida, shorten <=3mm, shorten >=3mm] (tA) -- node[custo] {2} (k1);
+            \draw[escolhida, shorten <=3mm, shorten >=3mm] (tB) -- node[custo] {6} (k2);
+            \draw[escolhida, shorten <=3mm, shorten >=3mm] (tC) -- node[custo] {5} (k3);
+        \end{scope}
+        % (b) ótima
+        \begin{scope}[xshift=7cm]
+            \foreach \n/\y in {A/0, B/-1.3, C/-2.6} \coordinate (t\n) at (0, \y);
+            \foreach \n/\y in {1/0, 2/-1.3, 3/-2.6} \coordinate (k\n) at (3.4, \y);
+            \draw[escolhida, shorten <=3mm, shorten >=3mm] (tA) -- node[custo, pos=0.25] {3} (k2);
+            \draw[escolhida, shorten <=3mm, shorten >=3mm] (tB) -- node[custo, pos=0.25] {4} (k1);
+            \draw[escolhida, shorten <=3mm, shorten >=3mm] (tC) -- node[custo] {5} (k3);
+        \end{scope}
+    \end{tikzpicture}
+    \fonte{Elaborado pelo autor. As arestas cinza são todas as atribuições possíveis entre um trabalhador e uma tarefa; as grossas formam a atribuição escolhida, com o custo de cada par.}
+\end{figure}
+
+O nome do problema vem da alocação de pessoal (\textit{personnel assignment problem}), e ele modela também, por exemplo, a escalação de uma equipe de revezamento de natação, a designação de locomotivas a trens e o escalonamento de tarefas em máquinas paralelas, além de aparecer como subproblema do caixeiro-viajante assimétrico e da atribuição quadrática (Seção~\ref{sec:qap}) \cite{burkard}.
+
+\subsection{Formulação como programação linear}
+\label{sec:lap_pl}
+
+O problema de atribuição pode ser escrito como um modelo de programação linear (Seção~\ref{sec:pl}), e é dessa formulação que vêm os \textbf{potenciais} usados pelos algoritmos exatos desta seção \cite{burkard}. Considere uma matriz de custos $C = (c_{ij})$ de ordem $n$, em que as linhas formam a parte $U$ e as colunas a parte $V$ do grafo bipartido $G = (U, V; E)$:
+\begin{itemize}
+    \item \textbf{Variáveis:} $x_{ij} \in \{0, 1\}$ para cada linha $i \in U$ e coluna $j \in V$, com $x_{ij} = 1$ se, e somente se, a linha $i$ é atribuída à coluna $j$.
+    \item \textbf{Função objetivo:} minimizar o custo total das atribuições, $\sum_{i \in U} \sum_{j \in V} c_{ij}\, x_{ij}$.
+    \item \textbf{Restrições:} cada linha recebe exatamente uma coluna, e cada coluna recebe exatamente uma linha.
+\end{itemize}
+Em resumo:
+\begin{equation}
+    \begin{aligned}
+        \min \quad & \sum_{i \in U} \sum_{j \in V} c_{ij}\, x_{ij} \\
+        \text{sujeito a} \quad & \sum_{j \in V} x_{ij} = 1 && \forall\, i \in U, \\
+        & \sum_{i \in U} x_{ij} = 1 && \forall\, j \in V, \\
+        & x_{ij} \in \{0, 1\} && \forall\, i \in U, \; j \in V.
+    \end{aligned}
+    \label{eq:lap_primal}
+\end{equation}
+Como a matriz de restrições é a matriz de incidência de um grafo bipartido, que é totalmente unimodular, a relaxação linear com $x_{ij} \ge 0$ já tem uma solução ótima inteira (Seção~\ref{sec:pl}). Por isso, o problema pode ser tratado com as ferramentas da programação linear, em particular com a dualidade.
+
+O dual de~\eqref{eq:lap_primal} tem uma variável para cada restrição primal: um \textbf{potencial} $u_i$ para cada linha $i \in U$ e um potencial $v_j$ para cada coluna $j \in V$. Como as restrições primais são igualdades, os potenciais podem ter qualquer sinal. O dual é
+\begin{equation}
+    \max \quad \sum_{i \in U} u_i + \sum_{j \in V} v_j \quad \text{sujeito a} \quad u_i + v_j \le c_{ij} \quad \forall\, i \in U, \; j \in V,
+    \label{eq:lap_dual}
+\end{equation}
+e a folga de cada posição $(i, j)$ é o seu \textbf{custo reduzido}:
+\begin{equation}
+    \bar{c}_{ij} = c_{ij} - u_i - v_j \ge 0.
+    \label{eq:custo_reduzido}
+\end{equation}
+Os potenciais funcionam como um certificado de otimalidade. Toda atribuição usa exatamente uma posição de cada linha e de cada coluna; somando $c_{ij} = u_i + v_j + \bar{c}_{ij}$ sobre as suas posições, o seu custo é $\sum_i u_i + \sum_j v_j$ mais a soma dos custos reduzidos usados, que é não negativa. Logo, nenhuma atribuição custa menos que $\sum_i u_i + \sum_j v_j$ (dualidade fraca), e uma atribuição que usa apenas posições de custo reduzido nulo atinge esse valor e é ótima. Essa é a \textbf{folga complementar} do problema: $x_{ij} = 1$ só onde $\bar{c}_{ij} = 0$. As posições de custo reduzido nulo formam o \textbf{subgrafo de igualdade}, sobre o qual os algoritmos procuram a atribuição.
+
+\textbf{Exemplo.} Considere a matriz de custos e os potenciais
+\begin{equation}
+    C = \begin{bmatrix} 4 & 1 & 3 \\ 2 & 0 & 5 \\ 3 & 2 & 2 \end{bmatrix}, \qquad u = (1, 0, 1), \qquad v = (2, 0, 1),
+\end{equation}
+com $u$ associado às linhas e $v$ às colunas. Os custos reduzidos $\bar{c}_{ij} = c_{ij} - u_i - v_j$ são
+\begin{equation}
+    \bar{C} = \begin{bmatrix} 1 & 0 & 1 \\ 0 & 0 & 4 \\ 0 & 1 & 0 \end{bmatrix}.
+\end{equation}
+Todos são não negativos, de modo que os potenciais são viáveis, e nenhuma atribuição custa menos que $\sum_i u_i + \sum_j v_j = 2 + 3 = 5$. A atribuição que leva a linha 1 à coluna 2, a linha 2 à coluna 1 e a linha 3 à coluna 3 usa apenas posições de custo reduzido nulo e custa $1 + 2 + 2 = 5$; portanto, é ótima. Os potenciais dizem, sem enumerar as $3! = 6$ atribuições possíveis, que não há solução melhor. O método Húngaro e o algoritmo de Jonker-Volgenant constroem, ao mesmo tempo, uma atribuição e potenciais com essa propriedade.
+
+Os potenciais da técnica de caminhos mínimos sucessivos (Seção~\ref{p:potenciais_fluxo}) são o mesmo conceito, aplicado ao problema de fluxo de custo mínimo: variáveis duais associadas aos vértices, cujos custos reduzidos não negativos permitem usar o algoritmo de Dijkstra.
+
 
 \subsection{Algoritmos exatos}
 
@@ -17,9 +110,9 @@ A seguir serão apresentados os principais algoritmos conhecidos com soluções 
 
 O método Húngaro é um algoritmo eficiente para resolver o problema de atribuição em tempo polinomial. Ele foi desenvolvido por Harold Kuhn em 1955 e é baseado no trabalho de Dénes Kőnig e Jenő Egerváry sobre emparelhamentos em grafos bipartidos \cite{jungnickel}.
 
-O método se baseia em manter um conjunto de potenciais para os vértices dos dois conjuntos do grafo bipartido, sendo $u_i$ o potencial do vértice i no conjunto esquerdo e $v_j$ o potencial do vértice j no conjunto direito. A regra que o algoritmo mantém é que para cada aresta $\{i,j\}$, a soma dos potenciais deve ser maior ou igual ao custo da aresta, ou seja, $u_i + v_j \geq w_{ij}$. 
+O método mantém potenciais viáveis, $u_i$ para cada linha $i \in U$ e $v_j$ para cada coluna $j \in V$ (Seção~\ref{sec:lap_pl}), e constrói uma atribuição usando apenas posições de custo reduzido nulo. Na versão de \citeonline{jungnickel}, apresentada a seguir, o problema é escrito como maximização do peso $w_{ij} = -c_{ij}$. Com isso, as desigualdades se invertem, e a viabilidade dos potenciais passa a ser $u_i + v_j \geq w_{ij}$ para toda aresta $\{i, j\}$, que é a mesma condição $u_i + v_j \le c_{ij}$ da Equação~\eqref{eq:lap_dual} com os sinais dos potenciais trocados.
 
-Cria-se um subgrafo de igualdade $H_{u,v}$ contendo apenas as arestas onde a soma dos potenciais é igual ao custo da aresta, ou seja, $u_i + v_j = w_{ij}$. O algoritmo então tenta encontrar um emparelhamento máximo neste subgrafo de igualdade. Se o emparelhamento encontrado cobre todos os vértices do conjunto esquerdo, então ele é ótimo para o problema de atribuição original. Caso contrário, o algoritmo ajusta os potenciais para criar novas arestas de igualdade e repete o processo até encontrar um emparelhamento máximo que cubra todos os vértices do conjunto esquerdo \cite{jungnickel}.
+Cria-se o subgrafo de igualdade $H_{u,v}$, formado apenas pelas arestas justas, em que $u_i + v_j = w_{ij}$. O algoritmo procura nele um emparelhamento que cubra todas as linhas de $U$. Se o encontra, esse emparelhamento é ótimo pela folga complementar: usa apenas arestas justas, e os potenciais são viáveis. Caso contrário, o algoritmo ajusta os potenciais, mantendo a viabilidade, para criar novas arestas justas, e repete o processo \cite{jungnickel}.
 
 Em seguida o pseudocódigo do método Húngaro:
 
@@ -39,7 +132,7 @@ Em seguida o pseudocódigo do método Húngaro:
             
             % Line 5
             \lFor{$i = 1$ \KwTo $n$}{ $m(i) \leftarrow \text{falso}; p(i) \leftarrow 0; \delta_i \leftarrow \infty$ \label{hu:reset} }
-            $aug \leftarrow \text{falso}; Q \leftarrow \{ i \in S : mate(i) = 0 \}$\label{hu:roots}\;
+            $aug \leftarrow \text{falso}; Q \leftarrow \{ i \in U : mate(i) = 0 \}$\label{hu:roots}\;
             
             % Line 7: Repeat Loop
             \Repeat{$aug = \text{verdadeiro}$}{
@@ -65,12 +158,12 @@ Em seguida o pseudocódigo do método Húngaro:
                 
                 % Line 24: Check if augmentation failed and Q is empty
                 \If{$aug = \text{falso}$ \KwAnd $Q = \emptyset$\label{hu:dual}}{
-                    $J \leftarrow \{ i \in S : m(i) = \text{verdadeiro} \}; K \leftarrow \{ j' \in T : \delta_j = 0 \}$\;
-                    $\delta \leftarrow \min \{ \delta_j : j' \in T \setminus K \}$\label{hu:delta}\;
+                    $J \leftarrow \{ i \in U : m(i) = \text{verdadeiro} \}; K \leftarrow \{ j' \in V : \delta_j = 0 \}$\;
+                    $\delta \leftarrow \min \{ \delta_j : j' \in V \setminus K \}$\label{hu:delta}\;
                     \lFor{$i \in J$}{ $u_i \leftarrow u_i - \delta$ }
                     \lFor{$j' \in K$}{ $v_j \leftarrow v_j + \delta$ }
-                    \lFor{$j' \in T \setminus K$}{ $\delta_j \leftarrow \delta_j - \delta$ \label{hu:dj} }
-                    $X \leftarrow \{ j' \in T \setminus K : \delta_j = 0 \}$\label{hu:X}\;
+                    \lFor{$j' \in V \setminus K$}{ $\delta_j \leftarrow \delta_j - \delta$ \label{hu:dj} }
+                    $X \leftarrow \{ j' \in V \setminus K : \delta_j = 0 \}$\label{hu:X}\;
                     
                     \eIf{$mate(j') \neq 0$ para todo $j' \in X$}{
                         \lFor{$j' \in X$}{ $Q \leftarrow Q \cup \{ mate(j') \}$ }
@@ -103,7 +196,7 @@ Em seguida o pseudocódigo do método Húngaro:
     \label{alg:augment}
 \end{algorithm}
 
-Na versão de \citeonline{jungnickel}, o algoritmo \textit{maximiza} o peso do emparelhamento; para minimizar custos, basta usar $w_{ij} = -c_{ij}$. As linhas da matriz formam o conjunto $S = \{1, \dots, n\}$ e as colunas, o conjunto $T = \{1', \dots, n'\}$, em que $j'$ denota a coluna $j$ como vértice do grafo. A seguir, cada parte do Algoritmo~\ref{alg:hungarian} é explicada com referência às suas linhas:
+Como dito acima, o algoritmo \textit{maximiza} o peso $w_{ij} = -c_{ij}$. As linhas da matriz formam a parte $U = \{1, \dots, n\}$ e as colunas, a parte $V = \{1', \dots, n'\}$, em que $j'$ denota a coluna $j$ como vértice do grafo. A seguir, cada parte do Algoritmo~\ref{alg:hungarian} é explicada com referência às suas linhas:
 
 \begin{itemize}
     \item \textbf{Inicialização (linhas~\ref{hu:init}--\ref{hu:nrex}):} Nenhum vértice começa emparelhado. Cada potencial de linha $u_i$ recebe o maior peso da linha $i$, e os potenciais de coluna $v_j$ recebem zero, o que satisfaz $u_i + v_j \geq w_{ij}$ para toda aresta. O contador $nrex$ guarda o número de linhas ainda livres.
@@ -124,7 +217,7 @@ Na versão de \citeonline{jungnickel}, o algoritmo \textit{maximiza} o peso do e
 
 O algoritmo de Jonker-Volgenant é uma evolução otimizada para a resolução do problema de atribuição linear, proposto por Roy Jonker e Anton Volgenant em 1987. Ele foi desenvolvido para superar o desempenho prático do método Húngaro, especialmente em grafos densos, combinando a teoria de dualidade com estratégias de inicialização e busca mais eficientes \cite{jonker}.
 
-Assim como o método Húngaro, este algoritmo baseia-se na manutenção de potenciais duais ($u_i$ e $v_j$) e respeita as condições de folga complementar. No entanto, sua principal distinção conceitual é o uso da estratégia de Caminho Aumentante Mais Curto (Shortest Augmenting Path). Ao invés de construir emparelhamentos máximos em fases distintas, o algoritmo foca em encontrar o caminho de custo mínimo que conecta uma linha não atribuída a uma coluna livre.
+Assim como o método Húngaro, este algoritmo mantém os potenciais $u_i$ e $v_j$ da formulação dual (Seção~\ref{sec:lap_pl}) e as condições de folga complementar. No entanto, sua principal distinção conceitual é o uso da estratégia de Caminho Aumentante Mais Curto (Shortest Augmenting Path). Ao invés de construir emparelhamentos máximos em fases distintas, o algoritmo foca em encontrar o caminho de custo mínimo que conecta uma linha não atribuída a uma coluna livre.
 
 O processo inicia com heurísticas avançadas (conhecidas como redução de colunas e transferência de redução) para resolver rapidamente as atribuições triviais. Para os vértices restantes, o algoritmo realiza uma busca similar ao algoritmo de Dijkstra: ele explora o grafo para encontrar o caminho aumentante mais curto, atualizando os potenciais duais simultaneamente durante a busca. Isso garante que, a cada iteração, o emparelhamento seja aumentado pelo menor custo possível até que a solução ótima completa seja atingida.
 
@@ -191,7 +284,7 @@ Diferentemente do Algoritmo~\ref{alg:hungarian}, o LAPJV minimiza diretamente o 
 \subsubsection{Redução para problema de fluxo de custo mínimo}
 \label{p:reduction_to_minimal_flow}
 
-Similarmente ao que foi feito para o problema de emparelhamento de cardinalidade máxima, o problema de atribuição pode ser resolvido através de uma redução ao problema de fluxo de custo mínimo. Assim como para o problema anterior, essa redução é feita criando dois novos vértices: um vértice fonte $s$ e um vértice sorvedouro $t$. Em seguida, são adicionadas arestas do vértice fonte $s$ para cada vértice do conjunto esquerdo do grafo bipartido, com capacidade 1 e custo 0. Também são adicionadas arestas de cada vértice do conjunto direito para o vértice sorvedouro $t$, também com capacidade 1 e custo 0. Finalmente, as arestas do grafo bipartido original são adicionadas com capacidade 1 e custo igual ao custo de atribuição correspondente.
+Similarmente ao que foi feito para o problema de emparelhamento de cardinalidade máxima, o problema de atribuição pode ser resolvido através de uma redução ao problema de fluxo de custo mínimo. Assim como para o problema anterior, essa redução é feita criando dois novos vértices: um vértice fonte $s$ e um vértice sorvedouro $t$. Em seguida, são adicionadas arestas do vértice fonte $s$ para cada vértice de $U$ (as linhas), com capacidade 1 e custo 0. Também são adicionadas arestas de cada vértice de $V$ (as colunas) para o vértice sorvedouro $t$, também com capacidade 1 e custo 0. Finalmente, as arestas do grafo bipartido original são adicionadas com capacidade 1 e custo igual ao custo de atribuição correspondente.
 
 Para resolver problemas de fluxo podemos utilizar algoritmos como o de caminhos de custo mínimo sucessivos (Successive Shortest Paths) ou o algoritmo de cancelamento de ciclos (Cycle canceling) \cite{schrijver}.
 
@@ -249,17 +342,18 @@ O procedimento recebe a rede $G$ com capacidades $c$, fonte $s$, sorvedouro $t$ 
     \item \textbf{Complexidade:} Na redução do problema de atribuição, todas as capacidades são $1$ e $v = n$, de modo que cada iteração envia uma unidade de fluxo e há no máximo $n$ iterações. O custo de cada uma é dominado pela busca do caminho mínimo da linha~\ref{ssp:path}; com Bellman-Ford, ela custa $O(VE)$, o que resulta em $O(nVE) \subseteq O(V^2 E)$.
 \end{itemize}
 
- A complexidade do algoritmo é dependente do método utilizado para encontrar o caminho $P$. A implementação padrão utilizaria o algoritmo de Dijkstra, que tem uma complexidade de $O(E + V \log V)$ em uma implementação com filas de prioridade, onde $V$ é o número de vértices e $E$ o número de arestas. Porém, como o grafo residual pode conter arestas com custos negativos, essa implementação não funcionaria corretamente. Para contornar esse problema, temos duas opções principais:
+ A complexidade do algoritmo é dependente do método utilizado para encontrar o caminho $P$. A implementação padrão utilizaria o algoritmo de Dijkstra, que tem uma complexidade de $O(E + V \log V)$ em uma implementação com filas de prioridade (Algoritmo~\ref{alg:dijkstra_fund}), onde $V$ é o número de vértices e $E$ o número de arestas. Porém, como o grafo residual pode conter arestas com custos negativos, essa implementação não funcionaria corretamente. Para contornar esse problema, temos duas opções principais:
 
  \begin{itemize}
-    \item \textbf{Utilizar Bellman-Ford:} A solução mais simples e direta é utilizar, ao invés do algoritmo de Dijkstra, o algoritmo de Bellman-Ford para encontrar o caminho de custo mínimo $P$. O Bellman-Ford é mais lento, com uma complexidade de $O(VE)$, mas lida corretamente com arestas de custo negativo.
+    \item \textbf{Utilizar Bellman-Ford:} A solução mais simples e direta é utilizar, ao invés do algoritmo de Dijkstra, o algoritmo de Bellman-Ford para encontrar o caminho de custo mínimo $P$. O Bellman-Ford é mais lento, com uma complexidade de $O(VE)$ (Algoritmo~\ref{alg:bellman_ford}), mas lida corretamente com arestas de custo negativo.
     \item \textbf{Utilizar a técnica de potenciais:} Permite que utilizemos o algoritmo de Dijkstra mesmo na presença de arestas de custo negativo.
     
     A cada iteração do loop, encontra-se o caminho de custo mínimo $P$ utilizando Dijkstra com os custos reduzidos. Após encontrar o caminho, os potenciais são atualizados para todos os vértices $v$ alcançáveis a partir de $s$ no grafo residual, ajustando-os conforme a distância mínima encontrada pelo Dijkstra, de acordo com a fórmula $h(v) \leftarrow h(v) + d(s,v)$, onde $d(s,v)$ é a distância mínima de $s$ até $v$ no grafo residual com custos reduzidos.
+\end{itemize}
 
-    Abaixo uma adaptação do algoritmo \ref{alg:optflow} utilizando a técnica de potenciais:
+O Algoritmo~\ref{alg:optflow_dijkstra} é uma adaptação do Algoritmo~\ref{alg:optflow} que utiliza a técnica de potenciais:
 
-    \begin{algorithm}[H]
+\begin{algorithm}[H]
     \DontPrintSemicolon
     \SetAlgoLined
 
@@ -299,7 +393,7 @@ O procedimento recebe a rede $G$ com capacidades $c$, fonte $s$, sorvedouro $t$ 
             }
         }
     }
-    \caption{Adaptação do algoritmo \ref{alg:optflow} utilizando Dijkstra com técnica de potenciais}
+    \caption{Adaptação do Algoritmo~\ref{alg:optflow} utilizando Dijkstra com a técnica de potenciais \cite{jungnickel, ahuja}}
     \label{alg:optflow_dijkstra}
 \end{algorithm}
 
@@ -316,16 +410,14 @@ O procedimento recebe a rede $G$ com capacidades $c$, fonte $s$, sorvedouro $t$ 
 
 A complexidade do algoritmo utilizando Dijkstra com a técnica de potenciais é $O(V (E + V \log V))$, onde $V$ é o número de vértices e $E$ o número de arestas do grafo. Isso ocorre porque, em cada iteração do loop principal, executamos o algoritmo de Dijkstra, que tem complexidade $O(E + V \log V)$ com filas de prioridade (heap de Fibonacci), e o cálculo dos custos reduzidos e a atualização dos potenciais custam apenas $O(E)$ e $O(V)$. O número de iterações é limitado pelo valor do fluxo, $v = n$, que no problema de atribuição não passa de $V$, o número de vértices do grafo bipartido.
 
-\end{itemize}
-
 \subsection{Heurísticas}
 
-Assim como no problema de emparelhamento de cardinalidade máxima, as soluções exatas, apesar de apresentarem tempo polinomial, se tornam extremamente lentas para instâncias muito grandes. A seguir algumas heurísticas que objetivam resolver o problema de atribuição em tempo até mesmo linear ($O(E)$).
+Assim como no problema de emparelhamento de cardinalidade máxima, as soluções exatas, apesar de apresentarem tempo polinomial, se tornam extremamente lentas para instâncias muito grandes. A seguir algumas heurísticas que objetivam resolver o problema de atribuição em tempo próximo do linear.
 
 \subsubsection{Heurística gulosa ordenada}
 \label{p:gulosa_ordenada}
 
-Similar ao método guloso simples descrito na seção \ref{p:h_gulosa_simples}, com a diferença de que a ordem das arestas não é mais arbitrária, e sim decrescente por peso (ou crescente por custo, na atribuição de custo mínimo). Tem complexidade $O(E \log E)$ por conta da ordenação.
+Similar ao método guloso simples descrito na seção \ref{p:h_gulosa_simples}, com a diferença de que a ordem das arestas não é mais arbitrária, e sim decrescente por peso (ou crescente por custo, na atribuição de custo mínimo). A ordenação das arestas custa $O(E \log E)$; a passada seguinte é a do guloso simples, que examina cada aresta uma vez e, com um vetor de marcas, custa $O(V + E)$. A ordenação domina, e o total é $O(E \log E)$.
 
 Diferentemente do problema de peso máximo (Seção~\ref{sec:emp_pond_max_aprox}), porém, na atribuição de custo mínimo o método não tem garantia de aproximação. Como a solução precisa ser um emparelhamento perfeito, as arestas baratas escolhidas no início podem obrigar o uso de arestas arbitrariamente caras no final. Por exemplo, na matriz de custos $\begin{bmatrix} 0 & 1 \\ 1 & K \end{bmatrix}$, o método escolhe primeiro a aresta de custo $0$ e é forçado a completar a atribuição com a de custo $K$, enquanto o ótimo custa $2$; a razão $K/2$ cresce sem limite com $K$. Por isso, nesse problema, o método é classificado como heurística (Seção~\ref{sec:tipos_metodo}).
 
@@ -425,7 +517,8 @@ Diferentemente do problema de peso máximo (Seção~\ref{sec:emp_pond_max_aprox}
 
         \bottomrule
     \end{tabularx}
+    \fonte{Elaborado pelo autor.}
     \par\smallskip
-    {\raggedright\footnotesize \textit{Heur.}: heurística. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}.\par}
+    {\raggedright\footnotesize \textit{Heur.}: heurística. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. As complexidades são justificadas no texto de cada algoritmo.\par}
 \end{table}
 

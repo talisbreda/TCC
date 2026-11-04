@@ -147,7 +147,7 @@ SPECS = [
     # bibliografica no cabecalho de cada arquivo.
     AlgorithmSpec("greedy", "Gulosa", "O(E)", "O(V)",
                   APROXIMADO, PYTHON, lambda inst: _greedy(inst[0], inst[0], inst[1])),
-    AlgorithmSpec("ks", "Karp-Sipser", "O(V·E)", "O(V+E)",
+    AlgorithmSpec("ks", "Karp-Sipser", "O(V·E)*", "O(V+E)",
                   APROXIMADO, PYTHON, lambda inst: _ks(inst[0], inst[0], inst[1])),
 ]
 

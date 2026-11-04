@@ -31,7 +31,7 @@ A cobertura de vértices é um conjunto de vértices tal que cada aresta do graf
 
 O método é definido pelos seguintes passos \cite{jungnickel}:
 \begin{enumerate}
-    \item Identifica-se o conjunto de vértices livres (não saturados por $M$) na partição esquerda $U$.
+    \item Identifica-se o conjunto de vértices livres (não saturados por $M$) na parte $U$.
     \item A partir desses vértices, inicia-se uma travessia no grafo (utilizando Busca em Largura ou Profundidade) com regras estritas de alternância: transições do conjunto $U$ para $V$ devem ocorrer exclusivamente através de arestas que \textbf{não} pertencem ao emparelhamento ($E \setminus M$), enquanto as transições de $V$ de volta para $U$ devem utilizar obrigatoriamente as arestas do emparelhamento ($M$).
     \item Registra-se em um conjunto $Z$ todos os vértices que foram alcançados durante essa busca, tanto da partição $U$ quanto da partição $V$.
     \item A Cobertura Mínima de Vértices $C$ é construída selecionando-se os vértices de $U$ que \textbf{não} foram visitados e os vértices de $V$ que \textbf{foram} visitados. Matematicamente, a cobertura é dada por $C = (U \setminus Z) \cup (V \cap Z)$.
@@ -76,7 +76,7 @@ Por ser em um ambiente mais restrito, o problema de emparelhamento de cardinalid
 
 O algoritmo de caminho aumentante se baseia no lema de Berge (Seção~\ref{sec:caminhos_alternantes}), segundo o qual um emparelhamento $M$ é máximo se, e somente se, não existe caminho $M$-aumentante em $G$. Este algoritmo é uma implementação direta deste lema, onde se busca repetidamente por caminhos aumentantes e se aumenta o emparelhamento até que nenhum caminho aumentante possa ser encontrado \cite{lawler}.
 
-Começamos com um emparelhamento vazio $M=\emptyset$. Escolhemos um vértice livre $u$ no lado esquerdo do grafo bipartido e tentamos encontrar um caminho aumentante $P$ que começa em $u$ e termina em um vértice livre no lado direito do grafo, respeitando a regra da alternância entre arestas em $M$ e arestas fora de $M$. Se um caminho aumentante for encontrado, atualizamos o emparelhamento $M$ invertendo as arestas ao longo do caminho $P$. Repetimos esse processo até que não seja possível encontrar mais caminhos aumentantes. O emparelhamento resultante será o emparelhamento de cardinalidade máxima \cite{halim}.
+Começamos com um emparelhamento vazio $M=\emptyset$. Escolhemos um vértice livre $u \in U$ e tentamos encontrar um caminho aumentante $P$ que começa em $u$ e termina em um vértice livre de $V$, respeitando a regra da alternância entre arestas em $M$ e arestas fora de $M$. Se um caminho aumentante for encontrado, atualizamos o emparelhamento $M$ invertendo as arestas ao longo do caminho $P$. Repetimos esse processo até que não seja possível encontrar mais caminhos aumentantes. O emparelhamento resultante será o emparelhamento de cardinalidade máxima \cite{halim}.
 
 Em seguida o algoritmo em pseudocódigo:
 
@@ -124,15 +124,15 @@ Em seguida o algoritmo em pseudocódigo:
     \label{alg:mcbm_augmenting}
 \end{algorithm}
 
-O pseudocódigo é composto de um procedimento recursivo de busca e de um procedimento principal, explicados a seguir com referência às linhas do Algoritmo~\ref{alg:mcbm_augmenting}. Os vértices do lado esquerdo são numerados de $0$ a $n-1$, e $match[r]$ guarda o parceiro, no lado esquerdo, de cada vértice $r$ do lado direito ($-1$ se $r$ está livre):
+O pseudocódigo é composto de um procedimento recursivo de busca e de um procedimento principal, explicados a seguir com referência às linhas do Algoritmo~\ref{alg:mcbm_augmenting}. Os vértices de $U$ são numerados de $0$ a $n-1$, e $match[r]$ guarda o parceiro, em $U$, de cada vértice $r \in V$ ($-1$ se $r$ está livre):
 
 \begin{itemize}
-    \item \textbf{Linhas~\ref{mcbm:vis}--\ref{mcbm:mark}:} O procedimento Aum($l$) é uma busca em profundidade que tenta encontrar um caminho aumentante a partir do vértice esquerdo $l$. Se $l$ já foi visitado na busca atual, a tentativa falha; caso contrário, $l$ é marcado como visitado, o que impede que a busca entre em ciclo.
+    \item \textbf{Linhas~\ref{mcbm:vis}--\ref{mcbm:mark}:} O procedimento Aum($l$) é uma busca em profundidade que tenta encontrar um caminho aumentante a partir do vértice $l \in U$. Se $l$ já foi visitado na busca atual, a tentativa falha; caso contrário, $l$ é marcado como visitado, o que impede que a busca entre em ciclo.
     \item \textbf{Linhas~\ref{mcbm:for}--\ref{mcbm:try}:} Para cada vizinho $r$ de $l$, há duas formas de usar a aresta $\{l, r\}$: se $r$ está livre, o caminho aumentante termina em $r$; se $r$ já está emparelhado com $match[r]$, a busca continua recursivamente a partir de $match[r]$, tentando realocá-lo para outro vértice. Essa recursão percorre o caminho alternante: a aresta $\{l, r\}$ está fora de $M$, e a aresta $\{r, match[r]\}$ está em $M$.
     \item \textbf{Linha~\ref{mcbm:set}:} Se uma das duas condições é satisfeita, $r$ passa a ser parceiro de $l$. Como essa atribuição é feita na volta da recursão, em cada nível do caminho, todas as arestas do caminho aumentante trocam de papel, o que corresponde à diferença simétrica entre $M$ e o caminho, e a cardinalidade de $M$ aumenta em um.
     \item \textbf{Linha~\ref{mcbm:fail}:} Se nenhum vizinho leva a um caminho aumentante, a busca a partir de $l$ falha.
-    \item \textbf{Linhas~\ref{mcbm:init}--\ref{mcbm:ret}:} O procedimento principal começa com todos os vértices livres (linha~\ref{mcbm:init}) e tenta, uma única vez, encontrar um caminho aumentante a partir de cada vértice esquerdo (linha~\ref{mcbm:loop}). Antes de cada tentativa, as marcas de visita são reiniciadas (linha~\ref{mcbm:reset}). Cada busca bem-sucedida soma um ao tamanho do emparelhamento (linha~\ref{mcbm:call}), que é retornado ao final.
-    \item \textbf{Complexidade:} Cada chamada da linha~\ref{mcbm:call} visita cada vértice no máximo uma vez e examina cada aresta no máximo uma vez, com custo $O(V + E)$. Como há uma chamada por vértice do lado esquerdo, o tempo total é $O(V(V + E))$, ou seja, $O(VE)$ em grafos sem vértices isolados, onde $V$ é o número de vértices e $E$ é o número de arestas do grafo bipartido \cite{halim}.
+    \item \textbf{Linhas~\ref{mcbm:init}--\ref{mcbm:ret}:} O procedimento principal começa com todos os vértices livres (linha~\ref{mcbm:init}) e tenta, uma única vez, encontrar um caminho aumentante a partir de cada vértice de $U$ (linha~\ref{mcbm:loop}). Antes de cada tentativa, as marcas de visita são reiniciadas (linha~\ref{mcbm:reset}). Cada busca bem-sucedida soma um ao tamanho do emparelhamento (linha~\ref{mcbm:call}), que é retornado ao final.
+    \item \textbf{Complexidade:} Cada chamada da linha~\ref{mcbm:call} visita cada vértice no máximo uma vez e examina cada aresta no máximo uma vez, com custo $O(V + E)$. Como há uma chamada por vértice de $U$, o tempo total é $O(V(V + E))$, ou seja, $O(VE)$ em grafos sem vértices isolados, onde $V$ é o número de vértices e $E$ é o número de arestas do grafo bipartido \cite{halim}.
 \end{itemize}
 
 \subsubsection{Redução ao problema de fluxo máximo}
@@ -140,14 +140,14 @@ O pseudocódigo é composto de um procedimento recursivo de busca e de um proced
 
 O problema de emparelhamento de cardinalidade máxima em grafos bipartidos pode ser eficientemente resolvido através de uma redução ao problema de fluxo máximo em redes. A ideia central é construir uma rede de fluxo a partir do grafo bipartido original, onde cada aresta do grafo bipartido é convertida em uma aresta com capacidade unitária na rede de fluxo. \cite{lawler}
 
-Primeiro, adicionamos um vértice fonte $s$ e um vértice sumidouro $t$ à rede. Conectamos o vértice fonte $s$ a todos os vértices do conjunto esquerdo do grafo bipartido com arestas de capacidade 1. Em seguida, conectamos todos os vértices do conjunto direito do grafo bipartido ao vértice sumidouro $t$, também com arestas de capacidade 1. As arestas entre os conjuntos esquerdo e direito do grafo bipartido são mantidas na rede de fluxo, cada uma com capacidade 1 \cite{halim}.
+Primeiro, adicionamos um vértice fonte $s$ e um vértice sumidouro $t$ à rede. Conectamos o vértice fonte $s$ a todos os vértices de $U$ com arestas de capacidade 1. Em seguida, conectamos todos os vértices de $V$ ao vértice sumidouro $t$, também com arestas de capacidade 1. As arestas entre $U$ e $V$ são mantidas na rede de fluxo, cada uma com capacidade 1 \cite{halim}.
 
 Com isso, temos agora um grafo de fluxo onde o objetivo é encontrar o fluxo máximo do vértice fonte $s$ para o vértice sumidouro $t$. O valor do fluxo máximo encontrado nesta rede corresponde ao tamanho do emparelhamento máximo no grafo bipartido original. \cite{lawler}. Para encontrar o fluxo máximo, podemos utilizar algoritmos clássicos como o de Edmonds-Karp.
 
 \subsubsection{Algoritmo de Edmonds-Karp}
 \label{p:edmonds-karp}
 
-O algoritmo de \textbf{Edmonds-Karp} é o principal método para resolver esse tipo de problema. Ele é uma especialização do método de Ford-Fulkerson descrito na seção \ref{p:ford_fulkerson} que utiliza uma busca em largura (BFS) para encontrar sempre o caminho aumentante mais curto em número de arestas. Tem complexidade de tempo $O(VE^2)$:
+O algoritmo de \textbf{Edmonds-Karp} é o principal método para resolver esse tipo de problema. Ele é uma especialização do método de Ford-Fulkerson descrito na seção \ref{p:ford_fulkerson} que utiliza uma busca em largura (BFS) para encontrar sempre o caminho aumentante mais curto em número de arestas. Tem complexidade de tempo $O(VE^2)$, justificada ao final da explicação linha a linha:
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
@@ -222,13 +222,15 @@ O pseudocódigo divide-se em três procedimentos, explicados a seguir com refer�
 
 Outra opção para resolver o problema de fluxo máximo é o algoritmo de Dinic, que é mais eficiente em muitos casos práticos, especialmente em grafos densos. O algoritmo de Dinic utiliza uma combinação de buscas em largura (BFS) para construir níveis na rede residual e buscas em profundidade (DFS) para encontrar caminhos aumentantes dentro desses níveis. O tempo de execução do algoritmo de Dinic é $O(V^2 E)$ em redes gerais e cai para $O(E \sqrt{V})$ em redes de capacidade unitária, como a obtida na redução do emparelhamento bipartido, o que o torna uma escolha preferida para muitos problemas de fluxo máximo \cite{halim}.
 
+O algoritmo trabalha em fases. Em cada uma, uma BFS em $O(E)$ calcula a distância de $s$ a cada vértice na rede residual e forma a \textbf{rede em níveis}, com os arcos que avançam exatamente um nível. Nela, buscam-se caminhos de $s$ a $t$ até obter um \textbf{fluxo bloqueante}, em que todo caminho da rede em níveis tem algum arco saturado. Cada caminho é encontrado em $O(V)$ amortizado e satura ao menos um arco, de modo que há no máximo $E$ caminhos por fase e o fluxo bloqueante custa $O(VE)$. Como a distância de $s$ a $t$ aumenta estritamente a cada fase, há no máximo $V$ fases, o que dá $O(V^2 E)$ \cite{ahuja}. Em redes de capacidade unitária em que cada vértice tem um único arco de entrada ou um único arco de saída, como a da redução do emparelhamento bipartido, cada fluxo bloqueante custa apenas $O(E)$, e o argumento usado adiante para o Hopcroft-Karp mostra que bastam $O(\sqrt{V})$ fases, o que dá $O(E\sqrt{V})$ \cite{ahuja}.
+
 Este trabalho não tem uma implementação do algoritmo de Dinic. Ao invés disso, será apresentado o algoritmo de Hopcroft-Karp, que é uma variação especializada do algoritmo de Dinic para o problema de emparelhamento em grafos bipartidos, oferecendo uma solução mais eficiente para este caso específico.
 
 \subsubsection{Algoritmo de Hopcroft-Karp}
 
-O algoritmo de Hopcroft-Karp é um algoritmo eficiente para encontrar o emparelhamento máximo em grafos bipartidos. Ele melhora o desempenho do algoritmo de caminhos aumentantes ao encontrar múltiplos caminhos aumentantes em cada iteração, em vez de apenas um. O tempo de execução do algoritmo de Hopcroft-Karp é $O(E \sqrt{V})$, tornando-o significativamente mais rápido do que o algoritmo de caminhos aumentantes simples, especialmente em grafos grandes \cite{halim}.
+O algoritmo de Hopcroft-Karp é um algoritmo eficiente para encontrar o emparelhamento máximo em grafos bipartidos. Ele melhora o desempenho do algoritmo de caminhos aumentantes ao encontrar múltiplos caminhos aumentantes em cada iteração, em vez de apenas um. O tempo de execução do algoritmo de Hopcroft-Karp é $O(E \sqrt{V})$, justificado ao final da explicação linha a linha, tornando-o significativamente mais rápido do que o algoritmo de caminhos aumentantes simples, especialmente em grafos grandes \cite{halim}.
 
-O algoritmo consiste em duas fases principais: a fase de construção de níveis e a fase de busca de caminhos aumentantes. Na fase de construção de níveis, uma busca em largura (BFS) é realizada a partir dos vértices livres no lado esquerdo do grafo bipartido para construir uma camada de níveis que ajuda a identificar os caminhos aumentantes mais curtos. Na fase de busca de caminhos aumentantes, uma busca em profundidade (DFS) é realizada para encontrar todos os caminhos aumentantes possíveis dentro da camada de níveis construída na fase anterior. Esses caminhos são então usados para aumentar o emparelhamento \cite{halim}.
+O algoritmo consiste em duas fases principais: a fase de construção de níveis e a fase de busca de caminhos aumentantes. Na fase de construção de níveis, uma busca em largura (BFS) é realizada a partir dos vértices livres de $U$ para construir uma camada de níveis que ajuda a identificar os caminhos aumentantes mais curtos. Na fase de busca de caminhos aumentantes, uma busca em profundidade (DFS) é realizada para encontrar todos os caminhos aumentantes possíveis dentro da camada de níveis construída na fase anterior. Esses caminhos são então usados para aumentar o emparelhamento \cite{halim}.
 
 A seguir, o pseudocódigo do algoritmo de Hopcroft-Karp, dividido em duas partes: o Algoritmo~\ref{alg:hopcroft_karp} traz o laço principal e a construção do grafo em camadas, e o Algoritmo~\ref{alg:hopcroft_karp_busca}, a busca dos caminhos aumentantes disjuntos.
 
@@ -335,7 +337,7 @@ Por mais que o algoritmo de Hopcroft-Karp descrito nos Algoritmos~\ref{alg:hopcr
 \subsubsection{Método guloso simples}
 \label{p:h_gulosa_simples}
 
-Um método que itera sobre as arestas do grafo em ordem arbitrária. Se a aresta $\{u,v\}$ conecta dois vértices livres, adicione essa aresta ao emparelhamento e remova os vértices $u$ e $v$. Tem complexidade de tempo linear $O(E)$ e garante um emparelhamento maximal, que conforme visto na seção \ref{p:emp_max_maximal}, é um emparelhamento ao qual não é possível adicionar mais arestas, mas que não é necessariamente o de maior cardinalidade. A solução também garante um emparelhamento de pelo menos $1/2$ (metade) da cardinalidade máxima \cite{vazirani2001}.
+Um método que itera sobre as arestas do grafo em ordem arbitrária. Se a aresta $\{u,v\}$ conecta dois vértices livres, adicione essa aresta ao emparelhamento e remova os vértices $u$ e $v$. Tem complexidade de tempo linear, justificada na explicação linha a linha, e garante um emparelhamento maximal, que conforme visto na seção \ref{p:emp_max_maximal}, é um emparelhamento ao qual não é possível adicionar mais arestas, mas que não é necessariamente o de maior cardinalidade. A solução também garante um emparelhamento de pelo menos $1/2$ (metade) da cardinalidade máxima \cite{vazirani2001}.
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
@@ -380,7 +382,7 @@ O algoritmo funciona reduzindo dinamicamente o grafo $G=(V,E)$ através da aplic
     Em grafos esparsos, isso tende a quebrar ciclos e formar novas folhas (vértices de grau 1), permitindo que o algoritmo volte a usar a regra 1. Porém, em grafos densos, essa escolha aleatória pode comprometer a precisão da solução.
 \end{enumerate}
 
-Para grafos esparsos, a regra 2 é raramente aplicada, pois a remoção de vértices na regra 1 frequentemente cria novas folhas, provocando um efeito cascata, fazendo com que a maior parte do grafo seja resolvida de maneira ótima. Com estruturas de dados adequadas, a complexidade do algoritmo é linear ($O(E)$). A implementação avaliada neste trabalho, por simplicidade, localiza os vértices de grau 1 por varredura, o que eleva sua complexidade a $O(V \cdot E)$.
+Para grafos esparsos, a regra 2 é raramente aplicada, pois a remoção de vértices na regra 1 frequentemente cria novas folhas, provocando um efeito cascata, fazendo com que a maior parte do grafo seja resolvida de maneira ótima. Com estruturas de dados adequadas, a complexidade do algoritmo é linear ($O(E)$), como mostra a explicação linha a linha. A implementação avaliada neste trabalho, por simplicidade, localiza os vértices de grau 1 por varredura, o que eleva sua complexidade a $O(V \cdot E)$.
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
@@ -455,8 +457,9 @@ O Algoritmo~\ref{alg:karp_sipser} é explicado a seguir, linha a linha:
         
         \bottomrule
     \end{tabularx}
+    \fonte{Elaborado pelo autor.}
     \par\smallskip
-    {\raggedright\footnotesize \textit{Aprox.}: aproximado. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. * A implementação avaliada localiza os vértices de grau 1 por varredura simples, com complexidade $O(V \cdot E)$.\par}
+    {\raggedright\footnotesize \textit{Aprox.}: aproximado. \textit{Avaliado}: incluído no ambiente de testes; a origem de cada implementação consta na Tabela~\ref{tab:proveniencia}. As complexidades são justificadas no texto de cada algoritmo. * A implementação avaliada localiza os vértices de grau 1 por varredura simples, com complexidade $O(V \cdot E)$.\par}
 \end{table}
 
 % TODO: possivelmente definir aplicações? exemplo: min-path-cover.md
