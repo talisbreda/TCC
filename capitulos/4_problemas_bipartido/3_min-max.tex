@@ -3,8 +3,7 @@
 % ------------------------------------------------------------------------------------------------
 \section{Problema de atribuição gargalo}
 
-O problema de atribuição gargalo, também conhecido como \textbf{Problema de Emparelhamento Min-Max} ou \textbf{Bottleneck Assignment
-problem}, é uma variação do problema de atribuição (Seção~\ref{sec:assignment_problem}). Em vez da soma dos custos, minimiza-se o maior deles: dada uma matriz de custos $C = (c_{ij})$ de ordem $n$, procura-se uma atribuição, isto é, um emparelhamento perfeito no grafo bipartido correspondente, cujo maior custo, chamado de \textbf{gargalo}, seja o menor possível \cite{burkard}.
+O problema de atribuição gargalo, também conhecido como \textbf{Problema de Emparelhamento Min-Max} ou \textbf{\textit{Bottleneck Assignment Problem}}, é uma variação do problema de atribuição (Seção~\ref{sec:assignment_problem}). Em vez da soma dos custos, minimiza-se o maior deles: dada uma matriz de custos $C = (c_{ij})$ de ordem $n$, procura-se uma atribuição, isto é, um emparelhamento perfeito no grafo bipartido correspondente, cujo maior custo, chamado de \textbf{gargalo}, seja o menor possível \cite{burkard}.
 
 Por exemplo, considere $n$ tarefas e $n$ máquinas que trabalham em paralelo, em que $c_{ij}$ é o tempo que a máquina $j$ leva para concluir a tarefa $i$. Como todas as tarefas só ficam prontas quando a mais demorada termina, o objetivo é atribuir as tarefas às máquinas de forma a minimizar o maior tempo, e não a soma dos tempos \cite{burkard}. Há também a versão de maximização, em que se maximiza o menor peso, como na escolha de trabalhadores para estações de uma linha de produção cuja eficiência é limitada pelo trabalhador menos eficiente \cite{lawler}. As duas versões são equivalentes, pois a solução ótima depende apenas da ordem relativa dos custos, e basta inverter essa ordem, por exemplo trocando o sinal dos pesos, para passar de uma à outra \cite{burkard}. Este trabalho adota a versão de minimização, seguida pelos algoritmos a seguir.
 
@@ -12,13 +11,13 @@ Por exemplo, considere $n$ tarefas e $n$ máquinas que trabalham em paralelo, em
 
 A seguir serão apresentadas alguns dos principais métodos para encontrar uma solução exata para o problema de atribuição gargalo.
 
-\subsubsection{Métodos de threshold}
+\subsubsection{Métodos de \textit{threshold}}
 
-Métodos de threshold funcionam alternando entre duas fases. A primeira fase consiste em selecionar um valor limite, chamado de \textbf{threshold}, descrito por $c\ast$. Na segunda fase, constrói-se um grafo bipartido com todas as arestas cujo peso é menor ou igual a $c\ast$. Em seguida, verifica-se se existe um emparelhamento perfeito nesse grafo. O menor valor de $c\ast$ que permite um emparelhamento perfeito é a solução ótima para o problema de atribuição gargalo \cite{burkard}.
+Métodos de \textit{threshold} funcionam alternando entre duas fases. A primeira fase consiste em selecionar um valor limite, chamado de \textbf{\textit{threshold}}, descrito por $c\ast$. Na segunda fase, constrói-se um grafo bipartido com todas as arestas cujo peso é menor ou igual a $c\ast$. Em seguida, verifica-se se existe um emparelhamento perfeito nesse grafo. O menor valor de $c\ast$ que permite um emparelhamento perfeito é a solução ótima para o problema de atribuição gargalo \cite{burkard}.
 
-Para selecionar o valor limite $c\ast$, podemos utilizar uma busca binária entre o menor e o maior peso das arestas do grafo original. A cada iteração, ajustamos o valor de $c\ast$ com base na existência ou não de um emparelhamento perfeito no grafo construído. Esse processo continua até que o valor ótimo seja encontrado. \citeonline{burkard}, que descreve esse método, utiliza um algoritmo baseado em matrizes para decidir se um emparelhamento é perfeito ou não, porém podemos utilizar qualquer algoritmo clássico de emparelhamento em grafos bipartidos, como os definidos na seção \ref{sec:algos_exatos_emp_card_max}, como por exemplo o algoritmo de Hopcroft-Karp. Para uma matriz de custos $n \times n$, as técnicas descritas pelo autor levam o algoritmo a uma complexidade de tempo $O(n^{2.5} / \sqrt{\log n})$; a versão com Hopcroft-Karp apresentada a seguir tem complexidade $O(n^{2.5} \log n)$.
+Para selecionar o valor limite $c\ast$, pode-se usar uma busca binária entre o menor e o maior peso das arestas do grafo original. A cada iteração, o valor de $c\ast$ é ajustado com base na existência ou não de um emparelhamento perfeito no grafo construído. Esse processo continua até que o valor ótimo seja encontrado. \citeonline{burkard}, que descreve esse método, utiliza um algoritmo baseado em matrizes para decidir se um emparelhamento é perfeito ou não, porém qualquer algoritmo clássico de emparelhamento em grafos bipartidos, como os definidos na seção \ref{sec:algos_exatos_emp_card_max}, como o de Hopcroft-Karp, pode ser usado. Para uma matriz de custos $n \times n$, as técnicas descritas pelo autor levam o algoritmo a uma complexidade de tempo $O(n^{2.5} / \sqrt{\log n})$; a versão com Hopcroft-Karp apresentada a seguir tem complexidade $O(n^{2.5} \log n)$.
 
-\citeonline{lawler} menciona um método de threshold para solução do problema de atribuição gargalo, porém a definição de threshold dele é levemente diferente, referindo-se ao valor dinâmico do rótulo de um vértice durante busca de caminhos. O algoritmo que ele descreve se assemelha mais aos algoritmos de caminhos aumentantes, que serão discutidos na seção \ref{sec:caminhos_aumentantes_min_max}.
+\citeonline{lawler} menciona um método de \textit{threshold} para solução do problema de atribuição gargalo, porém a definição de \textit{threshold} dele é levemente diferente, referindo-se ao valor dinâmico do rótulo de um vértice durante busca de caminhos. O algoritmo que ele descreve se assemelha mais aos algoritmos de caminhos aumentantes, que serão discutidos na seção \ref{sec:caminhos_aumentantes_min_max}.
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
@@ -60,37 +59,37 @@ Para selecionar o valor limite $c\ast$, podemos utilizar uma busca binária entr
         }
     }
     
-    \caption{Algoritmo Threshold para o LBAP \cite{burkard}}
+    \caption{Algoritmo \textit{threshold} para o LBAP \cite{burkard}}
     \label{alg:threshold}
 \end{algorithm}
 
 O pseudocódigo segue a formulação de \citeonline{burkard}, que minimiza o maior custo $c_{ij}$ da atribuição, e é explicado a seguir com referência às linhas do Algoritmo~\ref{alg:threshold}. Nele, $G[c]$ denota o grafo bipartido que contém apenas as arestas $\{i,j\}$ com $c_{ij} \le c$:
 
-\begin{itemize}
-    \item \textbf{Inicialização (linhas~\ref{thr:let}--\ref{thr:trivial}):} O ótimo está sempre entre o menor e o maior custo da matriz, que formam o intervalo inicial de busca $[c_0^*, c_1^*]$ (linha~\ref{thr:init}). O algoritmo mantém a invariante de que $G[c_1^*]$ contém um emparelhamento perfeito, o que vale de início porque $G[\max c_{ij}]$ é o grafo bipartido completo. Se os dois extremos coincidem (linha~\ref{thr:eq}), todos os custos são iguais e qualquer permutação é ótima (linha~\ref{thr:trivial}).
-    \item \textbf{Busca binária (linhas~\ref{thr:loop}--\ref{thr:check}):} Enquanto existirem custos estritamente entre os dois extremos (conjunto $C^*$ da linha~\ref{thr:loop}), escolhe-se a mediana $c^*$ desses custos como novo limiar (linha~\ref{thr:median}) e testa-se esse limiar (linha~\ref{thr:check}). Usar a mediana, em vez da média dos extremos, garante que cada teste descarte pelo menos metade dos valores candidatos, independentemente de como os custos estão distribuídos.
-    \item \textbf{Teste de viabilidade (linhas~\ref{thr:graph}--\ref{thr:low}):} O procedimento Testa\_viabilidade constrói $G[c^*]$ (linha~\ref{thr:graph}) e verifica se ele tem um emparelhamento perfeito (linha~\ref{thr:test}), o que pode ser feito com qualquer algoritmo de cardinalidade máxima, como o de Hopcroft-Karp. Se tem, o ótimo é no máximo $c^*$, e o extremo superior desce para $c^*$ (linha~\ref{thr:up}); caso contrário, o ótimo é maior que $c^*$, e o extremo inferior sobe para $c^*$ (linha~\ref{thr:low}).
-    \item \textbf{Finalização (linhas~\ref{thr:c0}--\ref{thr:z}):} Quando $C^*$ fica vazio, o ótimo é $c_0^*$ ou $c_1^*$. Como $c_0^*$ pode nunca ter sido testado (é o mínimo inicial da matriz), ele é testado nesse momento, se necessário (linha~\ref{thr:c0}); se for viável, o teste rebaixa $c_1^*$ para ele. Por fim, extrai-se um emparelhamento perfeito de $G[c_1^*]$ (linha~\ref{thr:final}), cujo valor ótimo é $z = c_1^*$ (linha~\ref{thr:z}).
-    \item \textbf{Complexidade:} Há no máximo $n^2$ custos distintos e cada teste descarta metade dos candidatos, de modo que o laço executa $O(\log n^2) = O(\log n)$ vezes. Cada iteração encontra a mediana em tempo linear no tamanho de $C^*$, $O(n^2)$, e faz um teste de emparelhamento perfeito, que custa $O(E\sqrt{V}) = O(n^{2.5})$ com Hopcroft-Karp, já que $G[c^*]$ tem $2n$ vértices e até $n^2$ arestas. O total é $O(n^{2.5} \log n)$. O limite de $O(n^{2.5}/\sqrt{\log n})$ citado por \citeonline{burkard} exige técnicas mais elaboradas: o valor ótimo é localizado com testes baseados em multiplicação de matrizes, e o emparelhamento final é obtido com um algoritmo de cardinalidade máxima mais rápido que o Hopcroft-Karp em grafos densos.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{inicialização (linhas~\ref{thr:let}--\ref{thr:trivial}):} o ótimo está sempre entre o menor e o maior custo da matriz, que formam o intervalo inicial de busca $[c_0^*, c_1^*]$ (linha~\ref{thr:init}). O algoritmo mantém a invariante de que $G[c_1^*]$ contém um emparelhamento perfeito, o que vale de início porque $G[\max c_{ij}]$ é o grafo bipartido completo. Se os dois extremos coincidem (linha~\ref{thr:eq}), todos os custos são iguais e qualquer permutação é ótima (linha~\ref{thr:trivial});
+    \item \textbf{busca binária (linhas~\ref{thr:loop}--\ref{thr:check}):} enquanto existirem custos estritamente entre os dois extremos (conjunto $C^*$ da linha~\ref{thr:loop}), escolhe-se a mediana $c^*$ desses custos como novo limiar (linha~\ref{thr:median}) e testa-se esse limiar (linha~\ref{thr:check}). Usar a mediana, em vez da média dos extremos, garante que cada teste descarte pelo menos metade dos valores candidatos, independentemente de como os custos estão distribuídos;
+    \item \textbf{teste de viabilidade (linhas~\ref{thr:graph}--\ref{thr:low}):} o procedimento Testa\_viabilidade constrói $G[c^*]$ (linha~\ref{thr:graph}) e verifica se ele tem um emparelhamento perfeito (linha~\ref{thr:test}), o que pode ser feito com qualquer algoritmo de cardinalidade máxima, como o de Hopcroft-Karp. Se tem, o ótimo é no máximo $c^*$, e o extremo superior desce para $c^*$ (linha~\ref{thr:up}); caso contrário, o ótimo é maior que $c^*$, e o extremo inferior sobe para $c^*$ (linha~\ref{thr:low});
+    \item \textbf{finalização (linhas~\ref{thr:c0}--\ref{thr:z}):} quando $C^*$ fica vazio, o ótimo é $c_0^*$ ou $c_1^*$. Como $c_0^*$ pode nunca ter sido testado (é o mínimo inicial da matriz), ele é testado nesse momento, se necessário (linha~\ref{thr:c0}); se for viável, o teste rebaixa $c_1^*$ para ele. Por fim, extrai-se um emparelhamento perfeito de $G[c_1^*]$ (linha~\ref{thr:final}), cujo valor ótimo é $z = c_1^*$ (linha~\ref{thr:z});
+    \item \textbf{complexidade:} há no máximo $n^2$ custos distintos e cada teste descarta metade dos candidatos, de modo que o laço executa $O(\log n^2) = O(\log n)$ vezes. Cada iteração encontra a mediana em tempo linear no tamanho de $C^*$, $O(n^2)$, e faz um teste de emparelhamento perfeito, que custa $O(E\sqrt{V}) = O(n^{2.5})$ com Hopcroft-Karp, já que $G[c^*]$ tem $2n$ vértices e até $n^2$ arestas. O total é $O(n^{2.5} \log n)$. O limite de $O(n^{2.5}/\sqrt{\log n})$ citado por \citeonline{burkard} exige técnicas mais elaboradas: o valor ótimo é localizado com testes baseados em multiplicação de matrizes, e o emparelhamento final é obtido com um algoritmo de cardinalidade máxima mais rápido que o Hopcroft-Karp em grafos densos.
+\end{alineas}
 
 \subsubsection{Método dual}
 
-Assim como os métodos de threshold, o método dual também define um valor limite $c\ast$. No entanto, ao invés de 'chutar' um valor usando busca binária, este método define o valor inicial de $c\ast$ como sendo o menor valor possível que ele pode assumir. Olhando para a matriz de custos, esse valor é o máximo entre os mínimos de cada linha e cada coluna da matriz:
+Assim como os métodos de \textit{threshold}, o método dual também define um valor limite $c\ast$. No entanto, ao invés de 'chutar' um valor usando busca binária, este método define o valor inicial de $c\ast$ como sendo o menor valor possível que ele pode assumir. Olhando para a matriz de custos, esse valor é o máximo entre os mínimos de cada linha e cada coluna da matriz:
 
 \begin{equation}
     c\ast = \max \left\{ \max_{i} (\min_{j} c_{ik}), \max_{j} (\min_{i} c_{kj}) \right\}
 \end{equation}
 
-Com o limite definido, verificamos se é possível encontrar um emparelhamento perfeito no grafo bipartido formado pelas arestas cujo peso é menor ou igual a $c\ast$, usando os mesmos algoritmos de antes. Se um emparelhamento perfeito for encontrado, então $c\ast$ é a solução ótima. Caso contrário, é necessário aumentar o valor de $c\ast$, e para isso nos baseamos no teorema de Kőnig, definido na seção \ref{p:teorema_konig}. 
+Com o limite definido, verifica-se se é possível encontrar um emparelhamento perfeito no grafo bipartido formado pelas arestas cujo peso é menor ou igual a $c\ast$, usando os mesmos algoritmos de antes. Se um emparelhamento perfeito for encontrado, então $c\ast$ é a solução ótima. Caso contrário, é necessário aumentar o valor de $c\ast$, e para isso usa-se o teorema de Kőnig, definido na seção \ref{p:teorema_konig}. 
 
-Sabemos que todas as arestas $c_{ij} > c\ast$ estão conectadas a um conjunto de linhas $I$ e um conjunto de colunas $J$. Essas linhas e colunas ``cobrem'' todas as arestas do grafo atual. Para aumentar o valor de $c\ast$, precisamos adicionar uma nova aresta que não esteja coberta por esses conjuntos. Procuramos o menor peso entre as arestas não cobertas, ou seja, aquelas que não pertencem às linhas em $I$ nem às colunas em $J$. Esse valor se torna o novo $c\ast$:
+Todas as arestas $c_{ij} > c\ast$ estão conectadas a um conjunto de linhas $I$ e um conjunto de colunas $J$. Essas linhas e colunas ``cobrem'' todas as arestas do grafo atual. Para aumentar o valor de $c\ast$, é preciso adicionar uma nova aresta que não esteja coberta por esses conjuntos. Procura-se o menor peso entre as arestas não cobertas, ou seja, aquelas que não pertencem às linhas em $I$ nem às colunas em $J$. Esse valor se torna o novo $c\ast$:
 
 \begin{equation}
     Novo\space c\ast = \min_{i \notin I, j \notin J} c_{ij}
 \end{equation}
 
-A partir daqui, o processo se repete. Com o novo valor de $c\ast$ e a nova aresta adicionada ao grafo, verificamos novamente a existência de um emparelhamento perfeito. Esse ciclo continua até que um emparelhamento perfeito seja encontrado, momento em que o valor atual de $c\ast$ será a solução ótima para o problema de atribuição gargalo.
+A partir daqui, o processo se repete. Com o novo valor de $c\ast$ e a nova aresta adicionada ao grafo, verifica-se novamente a existência de um emparelhamento perfeito. Esse ciclo continua até que um emparelhamento perfeito seja encontrado, momento em que o valor atual de $c\ast$ será a solução ótima para o problema de atribuição gargalo.
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
@@ -126,14 +125,14 @@ A partir daqui, o processo se repete. Com o novo valor de $c\ast$ e a nova arest
 
 Com referência às linhas do Algoritmo~\ref{alg:dual_lbap}:
 
-\begin{itemize}
-    \item \textbf{Limite inferior (linhas~\ref{dlb:let}--\ref{dlb:empty}):} Toda linha $i$ precisa ser atribuída a alguma coluna, então o ótimo é pelo menos o menor custo dessa linha; o mesmo vale para cada coluna. O maior desses mínimos é, portanto, um limite inferior para o ótimo e é o valor inicial de $c^*$ (linha~\ref{dlb:bound}). O emparelhamento começa vazio (linha~\ref{dlb:empty}).
-    \item \textbf{Teste do limiar (linhas~\ref{dlb:loop}--\ref{dlb:match}):} Enquanto o emparelhamento não for perfeito (linha~\ref{dlb:loop}), constrói-se o grafo $G[c^*]$ com as arestas de custo até $c^*$ (linha~\ref{dlb:graph}) e calcula-se nele um emparelhamento máximo (linha~\ref{dlb:match}). Se esse emparelhamento tiver $n$ arestas, o laço termina e $c^*$ é o valor ótimo, porque nenhum valor menor que o atual foi viável.
-    \item \textbf{Aumento do limiar (linhas~\ref{dlb:notperf}--\ref{dlb:raise}):} Se o emparelhamento não é perfeito (linha~\ref{dlb:notperf}), toma-se uma cobertura mínima de vértices de $G[c^*]$, formada pelas linhas $I$ e colunas $J$ (linha~\ref{dlb:cover}); pelo teorema de Kőnig, ela tem exatamente $|M| < n$ vértices. Só uma aresta fora da cobertura, isto é, com $i \notin I$ e $j \notin J$, pode aumentar o emparelhamento máximo, então o novo limiar é o menor custo entre essas arestas (linha~\ref{dlb:raise}). Como nenhum valor intermediário pode tornar o emparelhamento perfeito, o limiar nunca ultrapassa o ótimo.
-    \item \textbf{Complexidade:} O limiar cresce estritamente a cada iteração e só assume valores da matriz, de modo que há no máximo $n^2$ iterações; cada uma calcula um emparelhamento máximo e uma cobertura mínima de vértices em um grafo com $2n$ vértices e até $n^2$ arestas. Reaproveitando o emparelhamento da iteração anterior, que continua válido em $G[c^*]$ após o aumento do limiar, cada iteração precisa apenas de uma busca alternante a partir dos vértices livres, em $O(n^2)$, que encontra um caminho aumentante ou, se não houver, a cobertura mínima. Isso dá um limite simples de $O(n^4)$ para o método.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{limite inferior (linhas~\ref{dlb:let}--\ref{dlb:empty}):} toda linha $i$ precisa ser atribuída a alguma coluna, então o ótimo é pelo menos o menor custo dessa linha; o mesmo vale para cada coluna. O maior desses mínimos é, portanto, um limite inferior para o ótimo e é o valor inicial de $c^*$ (linha~\ref{dlb:bound}). O emparelhamento começa vazio (linha~\ref{dlb:empty});
+    \item \textbf{teste do limiar (linhas~\ref{dlb:loop}--\ref{dlb:match}):} enquanto o emparelhamento não for perfeito (linha~\ref{dlb:loop}), constrói-se o grafo $G[c^*]$ com as arestas de custo até $c^*$ (linha~\ref{dlb:graph}) e calcula-se nele um emparelhamento máximo (linha~\ref{dlb:match}). Se esse emparelhamento tiver $n$ arestas, o laço termina e $c^*$ é o valor ótimo, porque nenhum valor menor que o atual foi viável;
+    \item \textbf{aumento do limiar (linhas~\ref{dlb:notperf}--\ref{dlb:raise}):} se o emparelhamento não é perfeito (linha~\ref{dlb:notperf}), toma-se uma cobertura mínima de vértices de $G[c^*]$, formada pelas linhas $I$ e colunas $J$ (linha~\ref{dlb:cover}); pelo teorema de Kőnig, ela tem exatamente $|M| < n$ vértices. Só uma aresta fora da cobertura, isto é, com $i \notin I$ e $j \notin J$, pode aumentar o emparelhamento máximo, então o novo limiar é o menor custo entre essas arestas (linha~\ref{dlb:raise}). Como nenhum valor intermediário pode tornar o emparelhamento perfeito, o limiar nunca ultrapassa o ótimo;
+    \item \textbf{complexidade:} o limiar cresce estritamente a cada iteração e só assume valores da matriz, de modo que há no máximo $n^2$ iterações; cada uma calcula um emparelhamento máximo e uma cobertura mínima de vértices em um grafo com $2n$ vértices e até $n^2$ arestas. Reaproveitando o emparelhamento da iteração anterior, que continua válido em $G[c^*]$ após o aumento do limiar, cada iteração precisa apenas de uma busca alternante a partir dos vértices livres, em $O(n^2)$, que encontra um caminho aumentante ou, se não houver, a cobertura mínima. Isso dá um limite simples de $O(n^4)$ para o método.
+\end{alineas}
 
-O método dual não foi implementado no ambiente de testes deste trabalho. Para o problema de atribuição gargalo, foram comparados o algoritmo Threshold (Algoritmo~\ref{alg:threshold}) e o método de caminhos aumentantes (Algoritmo~\ref{alg:augmenting_lbap}), descrito a seguir.
+O método dual não foi implementado no ambiente de testes deste trabalho. Para o problema de atribuição gargalo, foram comparados o algoritmo de \textit{threshold} (Algoritmo~\ref{alg:threshold}) e o método de caminhos aumentantes (Algoritmo~\ref{alg:augmenting_lbap}), descrito a seguir.
 
 \subsubsection{Método de caminhos aumentantes}
 \label{sec:caminhos_aumentantes_min_max}
@@ -144,7 +143,7 @@ Ao contrário do método dual, que ajusta um limiar global para todo o grafo, o 
     cap(P) = \max_{\{i,j\} \in P} c_{ij} 
 \end{equation}
 
-Para encontrar tal caminho, utiliza-se uma adaptação do algoritmo de Dijkstra. Em vez de somar os pesos das arestas, mantemos para cada vértice um valor de rótulo que representa o ``gargalo'' mínimo necessário para alcançá-lo. Durante a busca, ao tentar estender o caminho de um nó $u$ (com rótulo $d_u$) para um vizinho $v$ através da aresta $\{u,v\}$, o custo não é somado, mas sim comparado. O novo custo potencial para atingir $v$ é o máximo entre o gargalo já existente até $u$ e o peso da nova aresta:
+Para encontrar tal caminho, utiliza-se uma adaptação do algoritmo de Dijkstra. Em vez de somar os pesos das arestas, mantém-se para cada vértice um valor de rótulo que representa o ``gargalo'' mínimo necessário para alcançá-lo. Durante a busca, ao tentar estender o caminho de um nó $u$ (com rótulo $d_u$) para um vizinho $v$ através da aresta $\{u,v\}$, o custo não é somado, mas sim comparado. O novo custo potencial para atingir $v$ é o máximo entre o gargalo já existente até $u$ e o peso da nova aresta:
 
 \begin{equation}     
     Novo\space Custo_v = \max(d_u, c_{uv}) 
@@ -187,12 +186,12 @@ O algoritmo seleciona, a cada passo, o nó não visitado com o menor rótulo atu
 
 Com referência às linhas do Algoritmo~\ref{alg:augmenting_lbap}:
 
-\begin{itemize}
-    \item \textbf{Ponto de partida (linhas~\ref{alb:let}--\ref{alb:free}):} Calcula-se um limite inferior $c^*$ para o ótimo (linha~\ref{alb:bound}), o mesmo do método dual: o maior entre os menores custos de cada linha e de cada coluna. Como arestas de custo até $c^*$ não pioram a solução, encontra-se de uma vez um emparelhamento máximo em $G[c^*]$ (linha~\ref{alb:match}), com qualquer algoritmo de cardinalidade máxima. Se ele já é perfeito (linha~\ref{alb:perfect}), o limite inferior foi atingido e a solução é ótima; senão, $L$ recebe os vértices de $U$ que ficaram livres (linha~\ref{alb:free}).
-    \item \textbf{Laço de aumentos (linhas~\ref{alb:loop}--\ref{alb:dijkstra}):} Cada vértice livre $i \in L$ é retirado de $L$ uma única vez (linha~\ref{alb:choose}) e, a partir dele, o procedimento Dijkstra (Algoritmo~\ref{alg:dijkstra}) busca o caminho aumentante de menor gargalo, isto é, aquele cuja aresta mais cara é a mais barata possível (linha~\ref{alb:dijkstra}).
-    \item \textbf{Atualização (linhas~\ref{alb:found}--\ref{alb:cost}):} Se existe caminho (linha~\ref{alb:found}), o emparelhamento é aumentado pela diferença simétrica com ele (linha~\ref{alb:aug}) e o valor da solução passa a ser o maior entre o valor atual e o gargalo $\ell(P)$ do caminho usado (linha~\ref{alb:cost}). Como cada caminho escolhido tem o menor gargalo possível, o valor final $c^*$ é o ótimo.
-    \item \textbf{Complexidade:} O emparelhamento inicial custa no máximo $O(n^{2.5})$ com Hopcroft-Karp. O laço executa no máximo $n$ vezes, uma por vértice livre, e cada chamada do Dijkstra modificado custa $O(n^2)$ em uma matriz densa (ver a seguir), de modo que o total é $O(n^3)$.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{ponto de partida (linhas~\ref{alb:let}--\ref{alb:free}):} calcula-se um limite inferior $c^*$ para o ótimo (linha~\ref{alb:bound}), o mesmo do método dual: o maior entre os menores custos de cada linha e de cada coluna. Como arestas de custo até $c^*$ não pioram a solução, encontra-se de uma vez um emparelhamento máximo em $G[c^*]$ (linha~\ref{alb:match}), com qualquer algoritmo de cardinalidade máxima. Se ele já é perfeito (linha~\ref{alb:perfect}), o limite inferior foi atingido e a solução é ótima; senão, $L$ recebe os vértices de $U$ que ficaram livres (linha~\ref{alb:free});
+    \item \textbf{laço de aumentos (linhas~\ref{alb:loop}--\ref{alb:dijkstra}):} cada vértice livre $i \in L$ é retirado de $L$ uma única vez (linha~\ref{alb:choose}) e, a partir dele, o procedimento Dijkstra (Algoritmo~\ref{alg:dijkstra}) busca o caminho aumentante de menor gargalo, isto é, aquele cuja aresta mais cara é a mais barata possível (linha~\ref{alb:dijkstra});
+    \item \textbf{atualização (linhas~\ref{alb:found}--\ref{alb:cost}):} se existe caminho (linha~\ref{alb:found}), o emparelhamento é aumentado pela diferença simétrica com ele (linha~\ref{alb:aug}) e o valor da solução passa a ser o maior entre o valor atual e o gargalo $\ell(P)$ do caminho usado (linha~\ref{alb:cost}). Como cada caminho escolhido tem o menor gargalo possível, o valor final $c^*$ é o ótimo;
+    \item \textbf{complexidade:} o emparelhamento inicial custa no máximo $O(n^{2.5})$ com Hopcroft-Karp. O laço executa no máximo $n$ vezes, uma por vértice livre, e cada chamada do Dijkstra modificado custa $O(n^2)$ em uma matriz densa (ver a seguir), de modo que o total é $O(n^3)$.
+\end{alineas}
 
 
 % ALGORITHM 6.4: DIJKSTRA AND LABEL
@@ -242,14 +241,14 @@ Com referência às linhas do Algoritmo~\ref{alg:augmenting_lbap}:
 
 O procedimento mantém dois rótulos para cada vértice: para $j \in V$, $\alpha(j)$ é o menor gargalo conhecido de um caminho alternante de $i$ até $j$, e $\beta(j)$ é o vértice de $U$ que o precede nesse caminho; para $i' \in U$, $\overline{\alpha}(i')$ e $\overline{\beta}(i')$ têm o mesmo papel. Com referência às linhas do Algoritmo~\ref{alg:dijkstra}:
 
-\begin{itemize}
-    \item \textbf{Inicialização (linhas~\ref{dmod:init}--\ref{dmod:label0}):} Todos os vértices de $V$ começam com gargalo infinito e sem predecessor (linha~\ref{dmod:init}) e ficam no conjunto $R$ dos ainda não examinados (linha~\ref{dmod:r}). A raiz $i$ recebe o gargalo $c^*$ (linha~\ref{dmod:root}), e não $0$, porque arestas de custo até o valor atual da solução não a pioram; assim, entre caminhos de mesmo efeito sobre o resultado, qualquer um serve. Em seguida, os vizinhos de $i$ são rotulados (linha~\ref{dmod:label0}).
-    \item \textbf{Escolha do próximo vértice (linhas~\ref{dmod:loop}--\ref{dmod:inf}):} Como no Dijkstra tradicional, escolhe-se o vértice de $R$ de menor rótulo (linha~\ref{dmod:min}). Se esse rótulo é infinito (linha~\ref{dmod:inf}), nenhum vértice restante é alcançável a partir de $i$, a busca termina e o caminho retornado é $P = \mathrm{nulo}$.
-    \item \textbf{Coluna livre encontrada (linhas~\ref{dmod:free}--\ref{dmod:len}):} Se $j_1$ não está emparelhado (linha~\ref{dmod:free}), o caminho aumentante foi encontrado. Ele é reconstruído de trás para frente, seguindo os predecessores $\beta$ e $\overline{\beta}$ até $i$ (linha~\ref{dmod:path}), e seu gargalo é o rótulo de $j_1$ (linha~\ref{dmod:len}).
-    \item \textbf{Extensão pela aresta emparelhada (linhas~\ref{dmod:mate}--\ref{dmod:label1}):} Se $j_1$ está emparelhado com $i_1$ (linha~\ref{dmod:mate}), o caminho alternante segue obrigatoriamente pela aresta $\{i_1, j_1\}$, que já pertence ao emparelhamento e não altera o gargalo. Por isso, $i_1$ herda o rótulo de $j_1$ e o tem como predecessor (linha~\ref{dmod:labeli}); $j_1$ sai de $R$ e os vizinhos de $i_1$ são rotulados (linha~\ref{dmod:label1}).
-    \item \textbf{Procedimento Rotula (linhas~\ref{dmod:for}--\ref{dmod:pred}):} Para cada vizinho $j$ de $i$ ainda em $R$ (linha~\ref{dmod:for}), o gargalo de chegar a $j$ por $i$ é o maior entre o gargalo até $i$ e o custo $c_{ij}$. Se esse valor é menor que o rótulo atual de $j$ (linha~\ref{dmod:relax}), o rótulo é atualizado e $i$ passa a ser o predecessor de $j$ (linha~\ref{dmod:pred}). É o relaxamento do Dijkstra, com o máximo no lugar da soma.
-    \item \textbf{Complexidade:} Cada vértice de $V$ sai de $R$ no máximo uma vez, e cada vértice de $U$ é rotulado no máximo uma vez. Com a matriz densa, a busca do mínimo (linha~\ref{dmod:min}) percorre $R$ em $O(n)$ e cada chamada de Rotula percorre os $O(n)$ vizinhos, o que dá $O(n^2)$ por chamada do procedimento.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{inicialização (linhas~\ref{dmod:init}--\ref{dmod:label0}):} todos os vértices de $V$ começam com gargalo infinito e sem predecessor (linha~\ref{dmod:init}) e ficam no conjunto $R$ dos ainda não examinados (linha~\ref{dmod:r}). A raiz $i$ recebe o gargalo $c^*$ (linha~\ref{dmod:root}), e não $0$, porque arestas de custo até o valor atual da solução não a pioram; assim, entre caminhos de mesmo efeito sobre o resultado, qualquer um serve. Em seguida, os vizinhos de $i$ são rotulados (linha~\ref{dmod:label0});
+    \item \textbf{escolha do próximo vértice (linhas~\ref{dmod:loop}--\ref{dmod:inf}):} como no Dijkstra tradicional, escolhe-se o vértice de $R$ de menor rótulo (linha~\ref{dmod:min}). Se esse rótulo é infinito (linha~\ref{dmod:inf}), nenhum vértice restante é alcançável a partir de $i$, a busca termina e o caminho retornado é $P = \mathrm{nulo}$;
+    \item \textbf{coluna livre encontrada (linhas~\ref{dmod:free}--\ref{dmod:len}):} se $j_1$ não está emparelhado (linha~\ref{dmod:free}), o caminho aumentante foi encontrado. Ele é reconstruído de trás para frente, seguindo os predecessores $\beta$ e $\overline{\beta}$ até $i$ (linha~\ref{dmod:path}), e seu gargalo é o rótulo de $j_1$ (linha~\ref{dmod:len});
+    \item \textbf{extensão pela aresta emparelhada (linhas~\ref{dmod:mate}--\ref{dmod:label1}):} se $j_1$ está emparelhado com $i_1$ (linha~\ref{dmod:mate}), o caminho alternante segue obrigatoriamente pela aresta $\{i_1, j_1\}$, que já pertence ao emparelhamento e não altera o gargalo. Por isso, $i_1$ herda o rótulo de $j_1$ e o tem como predecessor (linha~\ref{dmod:labeli}); $j_1$ sai de $R$ e os vizinhos de $i_1$ são rotulados (linha~\ref{dmod:label1});
+    \item \textbf{procedimento Rotula (linhas~\ref{dmod:for}--\ref{dmod:pred}):} para cada vizinho $j$ de $i$ ainda em $R$ (linha~\ref{dmod:for}), o gargalo de chegar a $j$ por $i$ é o maior entre o gargalo até $i$ e o custo $c_{ij}$. Se esse valor é menor que o rótulo atual de $j$ (linha~\ref{dmod:relax}), o rótulo é atualizado e $i$ passa a ser o predecessor de $j$ (linha~\ref{dmod:pred}). É o relaxamento do Dijkstra, com o máximo no lugar da soma;
+    \item \textbf{complexidade:} cada vértice de $V$ sai de $R$ no máximo uma vez, e cada vértice de $U$ é rotulado no máximo uma vez. Com a matriz densa, a busca do mínimo (linha~\ref{dmod:min}) percorre $R$ em $O(n)$ e cada chamada de Rotula percorre os $O(n)$ vizinhos, o que dá $O(n^2)$ por chamada do procedimento.
+\end{alineas}
 
 \subsection{Heurísticas}
 \label{sec:lbap_heuristicas}
@@ -267,7 +266,7 @@ A heurística por arrependimento evita esse defeito decidindo primeiro as linhas
     r_i = c_i^{(2)} - c_i^{(1)},
     \label{eq:arrependimento}
 \end{equation}
-isto é, o quanto o custo de $i$ aumenta se a sua melhor coluna for ocupada por outra linha --- o \textit{custo de oportunidade} de não lhe dar essa coluna agora. Escolhe-se a linha de maior arrependimento e ela é atribuída à sua melhor coluna livre; se só resta uma coluna livre, o arrependimento é considerado infinito, pois a linha não tem alternativa. O critério é a adaptação, para o problema de gargalo, da heurística HGAP proposta por \citeonline{martello} para o problema de atribuição generalizada, que a cada passo atribui a tarefa com a maior diferença entre a sua melhor e a sua segunda melhor opção.
+isto é, o quanto o custo de $i$ aumenta se a sua melhor coluna for ocupada por outra linha. Esse valor é o \textit{custo de oportunidade} de não lhe dar essa coluna agora. Escolhe-se a linha de maior arrependimento e ela é atribuída à sua melhor coluna livre; se só resta uma coluna livre, o arrependimento é considerado infinito, pois a linha não tem alternativa. O critério é a adaptação, para o problema de gargalo, da heurística HGAP proposta por \citeonline{martello} para o problema de atribuição generalizada, que a cada passo atribui a tarefa com a maior diferença entre a sua melhor e a sua segunda melhor opção.
 
 O Algoritmo~\ref{alg:lbap_gulosos} apresenta as duas heurísticas.
 
@@ -303,15 +302,15 @@ O Algoritmo~\ref{alg:lbap_gulosos} apresenta as duas heurísticas.
     }
 \end{algorithm}
 
-O Algoritmo~\ref{alg:lbap_gulosos} é explicado a seguir, linha a linha:
+O Algoritmo~\ref{alg:lbap_gulosos} funciona da seguinte forma:
 
-\begin{itemize}
-    \item \textbf{Guloso simples (linhas~\ref{lg:sort}--\ref{lg:ret}):} As posições são ordenadas por custo (linha~\ref{lg:sort}) e examinadas uma única vez, da mais barata para a mais cara (linha~\ref{lg:for}). Uma posição é aceita se sua linha e sua coluna estão livres (linha~\ref{lg:test}); uma posição rejeitada nunca é reconsiderada. O gargalo é o maior custo entre as posições aceitas (linha~\ref{lg:ret}).
-    \item \textbf{Preparação do arrependimento (linhas~\ref{rg:sort}--\ref{rg:init}):} Cada linha guarda suas colunas em ordem crescente de custo, e o conjunto $R$ começa com todas as linhas.
-    \item \textbf{Cálculo do arrependimento (linhas~\ref{rg:for}--\ref{rg:regret}):} Para cada linha livre, a melhor e a segunda melhor coluna livre são as duas primeiras colunas livres na sua ordem (linha~\ref{rg:best}), e o arrependimento é a diferença entre os seus custos, conforme a Equação~\eqref{eq:arrependimento} (linha~\ref{rg:regret}).
-    \item \textbf{Escolha (linhas~\ref{rg:choose}--\ref{rg:assign}):} A linha de maior arrependimento é atribuída à sua melhor coluna livre e sai de $R$ (linha~\ref{rg:assign}). Os empates são desfeitos pelo menor custo e, depois, pelo menor índice de linha.
-    \item \textbf{Complexidade:} No guloso simples, a ordenação das $n^2$ posições custa $O(n^2 \log n)$ e domina a passada, que é $O(n^2)$. No guloso por arrependimento, a ordenação das linhas também custa $O(n^2 \log n)$. Como uma coluna ocupada nunca volta a ficar livre, cada linha mantém um ponteiro para a sua primeira coluna livre, que só avança; o total de avanços é $O(n^2)$, e cada uma das $n$ iterações do laço examina $O(n)$ linhas. O custo total é, portanto, $O(n^2 \log n)$ para as duas heurísticas.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{guloso simples (linhas~\ref{lg:sort}--\ref{lg:ret}):} as posições são ordenadas por custo (linha~\ref{lg:sort}) e examinadas uma única vez, da mais barata para a mais cara (linha~\ref{lg:for}). Uma posição é aceita se sua linha e sua coluna estão livres (linha~\ref{lg:test}); uma posição rejeitada nunca é reconsiderada. O gargalo é o maior custo entre as posições aceitas (linha~\ref{lg:ret});
+    \item \textbf{preparação do arrependimento (linhas~\ref{rg:sort}--\ref{rg:init}):} cada linha guarda suas colunas em ordem crescente de custo, e o conjunto $R$ começa com todas as linhas;
+    \item \textbf{cálculo do arrependimento (linhas~\ref{rg:for}--\ref{rg:regret}):} para cada linha livre, a melhor e a segunda melhor coluna livre são as duas primeiras colunas livres na sua ordem (linha~\ref{rg:best}), e o arrependimento é a diferença entre os seus custos, conforme a Equação~\eqref{eq:arrependimento} (linha~\ref{rg:regret});
+    \item \textbf{escolha (linhas~\ref{rg:choose}--\ref{rg:assign}):} a linha de maior arrependimento é atribuída à sua melhor coluna livre e sai de $R$ (linha~\ref{rg:assign}). Os empates são desfeitos pelo menor custo e, depois, pelo menor índice de linha;
+    \item \textbf{complexidade:} no guloso simples, a ordenação das $n^2$ posições custa $O(n^2 \log n)$ e domina a passada, que é $O(n^2)$. No guloso por arrependimento, a ordenação das linhas também custa $O(n^2 \log n)$. Como uma coluna ocupada nunca volta a ficar livre, cada linha mantém um ponteiro para a sua primeira coluna livre, que só avança; o total de avanços é $O(n^2)$, e cada uma das $n$ iterações do laço examina $O(n)$ linhas. O custo total é, portanto, $O(n^2 \log n)$ para as duas heurísticas.
+\end{alineas}
 
 \textbf{Exemplo.} Considere a matriz de custos
 \begin{equation}
@@ -353,7 +352,7 @@ O exemplo mostra por que o critério funciona: a linha 3 também preferia a colu
         \addlinespace 
         
         Método Dual & $O(n^4)$ & Exato & Não & 
-        Expande um limiar inferior iterativamente baseado no Teorema de König, adicionando apenas arestas necessárias para cobrir componentes. \\
+        Expande um limiar inferior iterativamente baseado no Teorema de Kőnig, adicionando apenas arestas necessárias para cobrir componentes. \\
         \addlinespace
         
         Caminhos aumentantes & $O(n^3)$ & Exato & Sim & 

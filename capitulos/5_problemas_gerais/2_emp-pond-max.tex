@@ -9,11 +9,11 @@ Assim como no problema de cardinalidade máxima (Seção~\ref{sec:emp_card_max_g
 \label{sec:formulacao_poliedrica}
 
 O problema pode ser escrito como um modelo de programação linear inteira \cite{schrijver}:
-\begin{itemize}
-    \item \textbf{Variáveis:} uma variável $x_e \in \{0, 1\}$ para cada aresta $e \in E$, com $x_e = 1$ se, e somente se, $e$ pertence ao emparelhamento.
-    \item \textbf{Função objetivo:} maximizar o peso total das arestas escolhidas, $\sum_{e \in E} w(e)\, x_e$.
-    \item \textbf{Restrições de grau:} cada vértice é coberto por no máximo uma aresta escolhida. Sendo $\delta(v)$ o conjunto das arestas incidentes a $v$, exige-se $\sum_{e \in \delta(v)} x_e \le 1$ para todo $v \in V$.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{variáveis:} uma variável $x_e \in \{0, 1\}$ para cada aresta $e \in E$, com $x_e = 1$ se, e somente se, $e$ pertence ao emparelhamento;
+    \item \textbf{função objetivo:} maximizar o peso total das arestas escolhidas, $\sum_{e \in E} w(e)\, x_e$;
+    \item \textbf{restrições de grau:} cada vértice é coberto por no máximo uma aresta escolhida. Sendo $\delta(v)$ o conjunto das arestas incidentes a $v$, exige-se $\sum_{e \in \delta(v)} x_e \le 1$ para todo $v \in V$.
+\end{alineas}
 Em resumo:
 \begin{equation}
     \begin{aligned}
@@ -63,13 +63,13 @@ tem sempre um emparelhamento de peso máximo como solução ótima. O número de
 
 \subsection{A abordagem primal-dual}
 
-Diferente do caso de cardinalidade, onde buscamos apenas caminhos aumentantes, o algoritmo para o caso ponderado é um método \textbf{primal-dual} (Seção~\ref{sec:pl}). Ele é uma generalização do método Húngaro, mas adaptado para lidar com as flores.
+Diferente do caso de cardinalidade, em que se buscam apenas caminhos aumentantes, o algoritmo para o caso ponderado é um método \textbf{primal-dual} (Seção~\ref{sec:pl}). Ele é uma generalização do método Húngaro, mas adaptado para lidar com as flores.
 
 O dual do PL~\eqref{eq:emp_pl_flor}, construído como na Seção~\ref{sec:pl}, tem uma variável para cada restrição primal \cite{schrijver}:
-\begin{itemize}
+\begin{alineas}
     \item $y_v \ge 0$ para a restrição de grau do vértice $v$;
     \item $z_B \ge 0$ para a desigualdade de flor do conjunto ímpar $B$.
-\end{itemize}
+\end{alineas}
 E tem uma restrição para cada variável primal, isto é, para cada aresta:
 \begin{equation}
     \begin{aligned}
@@ -94,13 +94,13 @@ e a aresta é \textbf{justa} ou \textbf{admissível} (\textit{tight}) quando $\p
 O algoritmo de Edmonds é primal-dual \cite{lawler}: ele mantém os duais viáveis e as condições 1 e 3 durante toda a execução e busca satisfazer a condição 2. Na prática, só recebem $z_B > 0$ os conjuntos que formam flores, que satisfazem a condição 3 por definição (Seção~\ref{sec:emp_card_max_geral}). O algoritmo alterna dois estágios, descritos por \citeonline{jungnickel} e \citeonline{schrijver}:
 
 \begin{enumerate}
-    \item \textbf{Estágio primal (busca):} usando apenas arestas justas, o algoritmo busca um caminho aumentante a partir dos vértices livres, com a técnica de contração de flores do caso de cardinalidade. Se encontrado, o emparelhamento é aumentado ao longo dele, e as condições 1 e 3 continuam valendo.
-    \item \textbf{Estágio dual (ajuste de preços):} se a busca falha, o algoritmo não termina, ao contrário do caso de cardinalidade. Em vez disso, ajusta os duais:
-    \begin{itemize}
+    \item \textbf{estágio primal (busca):} usando apenas arestas justas, o algoritmo busca um caminho aumentante a partir dos vértices livres, com a técnica de contração de flores do caso de cardinalidade. Se encontrado, o emparelhamento é aumentado ao longo dele, e as condições 1 e 3 continuam valendo;
+    \item \textbf{estágio dual (ajuste de preços):} se a busca falha, o algoritmo não termina, ao contrário do caso de cardinalidade. Em vez disso, ajusta os duais:
+    \begin{alineas}
         \item calcula o maior passo $\delta$ que mantém todas as folgas~\eqref{eq:folga_aresta} e todos os duais não negativos;
         \item diminui em $\delta$ os potenciais dos vértices externos da árvore de busca e aumenta em $\delta$ os dos internos, com o ajuste correspondente nos $z_B$ das flores;
         \item com isso, uma nova aresta se torna justa, uma flor pode ser expandida ou o potencial de um vértice livre chega a zero, o que satisfaz a condição 2 para ele.
-    \end{itemize}
+    \end{alineas}
 \end{enumerate}
 
 \subsection{O algoritmo de Edmonds Ponderado}
@@ -109,7 +109,7 @@ O procedimento resultante é frequentemente chamado de \textbf{Algoritmo de Blos
 
 A implementação original de Edmonds era polinomial, $O(V^4)$: calculando $\delta$ diretamente a cada ajuste dual, em $O(E)$, ela custa $O(V^2 E)$, que em grafos densos é $O(V^4)$, como detalhado ao final da explicação do Algoritmo~\ref{alg:edmonds_weighted} \cite{galil_micali_gabow}. \citeonline{lawler} apresentou uma implementação $O(V^3)$, que por muito tempo foi o padrão em livros didáticos.
 
-A variante $O(V^3)$ descrita por Lawler (1976) para o emparelhamento ponderado utiliza uma abordagem primal-dual rigorosa. O algoritmo mantém um conjunto de arestas admissíveis (custo reduzido nulo) baseadas em variáveis duais de vértices ($y_i$) e de subconjuntos ímpares ($z_B$). A cada iteração onde a busca por caminhos aumentantes falha, o algoritmo calcula um escalar crítico $\delta$ baseado nas folgas das arestas incidentes à árvore alternante atual (conjunto $S$). A atualização dual subsequente ($y_i \leftarrow y_i \pm \delta$, $z_B \leftarrow z_B \pm 2\delta$) garante o surgimento de novas arestas admissíveis ou a expansão de \textbf{flores} com dual nulo, mantendo a complexidade cúbica através do gerenciamento eficiente dos valores de folga mínima (\textbf{slack}) para vértices fora da árvore.
+A variante $O(V^3)$ descrita por Lawler (1976) para o emparelhamento ponderado utiliza uma abordagem primal-dual rigorosa. O algoritmo mantém um conjunto de arestas admissíveis (custo reduzido nulo) baseadas em variáveis duais de vértices ($y_i$) e de subconjuntos ímpares ($z_B$). A cada iteração onde a busca por caminhos aumentantes falha, o algoritmo calcula um escalar crítico $\delta$ baseado nas folgas das arestas incidentes à árvore alternante atual (conjunto $S$). A atualização dual subsequente ($y_i \leftarrow y_i \pm \delta$, $z_B \leftarrow z_B \pm 2\delta$) garante o surgimento de novas arestas admissíveis ou a expansão de \textbf{flores} com dual nulo, mantendo a complexidade cúbica através do gerenciamento eficiente dos valores de folga mínima (\textbf{\textit{slack}}) para vértices fora da árvore.
 
 Lawler também destaca que a manipulação das variáveis duais das flores ($z_B$) é o que permite ao algoritmo ``pagar'' o custo de usar arestas dentro de estruturas cíclicas ímpares. Quando uma flor é formada durante a busca, ela começa com dual $z_B = 0$, que cresce nos ajustes em que a flor é externa; quando ela é interna e seu dual volta a zero, a flor pode ser desfeita (expandida) sem violar a viabilidade dual.
 
@@ -148,26 +148,26 @@ O Algoritmo~\ref{alg:edmonds_weighted} resume esse esquema primal-dual em alto n
     \KwRet $M$, após expandir todas as flores restantes\label{ew:ret}\;
 \end{algorithm}
 
-O Algoritmo~\ref{alg:edmonds_weighted} alterna entre o estágio primal e o estágio dual descritos acima, e pode ser lido linha a linha da seguinte forma:
+O Algoritmo~\ref{alg:edmonds_weighted} alterna entre o estágio primal e o estágio dual descritos acima, e funciona da seguinte forma:
 
-\begin{itemize}
-    \item \textbf{Linha~\ref{ew:init}:} O emparelhamento começa vazio, todos os vértices recebem o mesmo dual $y_v$, igual à metade do maior peso, e nenhuma flor tem dual. Com essa escolha, $y_u + y_v \ge w_{uv}$ para toda aresta, ou seja, todas as folgas $\pi_{uv}$ começam não negativas, e a solução dual é viável desde o início.
-    \item \textbf{Linhas~\ref{ew:loop}--\ref{ew:grow}:} A cada iteração, cresce-se uma floresta de árvores alternantes, enraizadas nos vértices livres, usando apenas arestas justas ($\pi_{uv} = 0$). Os vértices a distância par da raiz são rotulados como externos ($S$) e os a distância ímpar, como internos ($T$), como na busca do caso de cardinalidade.
-    \item \textbf{Linhas~\ref{ew:augif}--\ref{ew:aug}:} Uma aresta justa entre vértices externos de árvores diferentes liga duas raízes livres por um caminho alternante, isto é, um caminho aumentante. O emparelhamento é aumentado ao longo dele, e os rótulos são apagados para uma nova busca.
-    \item \textbf{Linhas~\ref{ew:shrinkif}--\ref{ew:shrink}:} Uma aresta justa entre dois vértices externos da mesma árvore fecha um ciclo ímpar, que é contraído em uma flor, como no Algoritmo~\ref{alg:maxmatch}. A nova flor começa com dual $z_B = 0$ e se comporta como um vértice externo.
-    \item \textbf{Linhas~\ref{ew:d1}--\ref{ew:delta}:} Se nenhuma das situações anteriores ocorre, a busca está travada e é preciso ajustar os duais. Calcula-se o maior passo $\delta$ que mantém a solução dual viável, como o menor de quatro limites: $\delta_1$ é o menor dual de vértice externo, que não pode ficar negativo; $\delta_2$ é a menor folga de aresta entre um vértice externo e um não rotulado, que diminui em $\delta$; $\delta_3$ é a metade da menor folga entre vértices externos de flores diferentes, pois essa folga diminui em $2\delta$, uma vez que os dois extremos são externos; e $\delta_4$ é a metade do menor dual de flor interna, que diminui em $2\delta$ e também não pode ficar negativo.
-    \item \textbf{Linhas~\ref{ew:dualy}--\ref{ew:dualz}:} Os duais são atualizados: os vértices externos perdem $\delta$ e os internos ganham $\delta$, de modo que as arestas justas da árvore (entre um externo e um interno) continuam justas; as flores externas ganham $2\delta$ e as internas perdem $2\delta$, o que compensa a variação dos duais dos vértices dentro delas.
-    \item \textbf{Linha~\ref{ew:stop}:} Se o passo foi limitado por $\delta_1$, algum vértice externo chegou a dual zero. Como os vértices livres são raízes, e portanto externos, e todos os externos perdem o mesmo $\delta$ a cada ajuste, os vértices livres têm o menor dual e chegam a zero; nesse ponto, as condições de folga complementar valem e $M$ é ótimo.
-    \item \textbf{Linha~\ref{ew:expand}:} Uma flor interna cujo dual chegou a zero (limite $\delta_4$) é expandida, devolvendo seus vértices à busca. Nos casos $\delta_2$ e $\delta_3$, o ajuste torna justa uma nova aresta, e a busca da próxima iteração consegue crescer a árvore, contrair uma flor ou aumentar o emparelhamento.
-    \item \textbf{Linha~\ref{ew:ret}:} Ao final, as flores que restaram contraídas são expandidas para que o emparelhamento seja expresso em termos das arestas do grafo original.
-    \item \textbf{Complexidade:} Há no máximo $V/2$ aumentos. Entre dois aumentos consecutivos, cada ajuste dual rotula um novo vértice, cria uma flor, expande uma flor ou encerra o algoritmo, de modo que ocorrem $O(V)$ ajustes por aumento. Calculando $\delta$ diretamente pelas definições das linhas~\ref{ew:d1}--\ref{ew:d4}, cada ajuste custa $O(E)$, o que dá $O(V^2 E)$ no total. A implementação de \citeonline{lawler} mantém, para cada vértice fora da árvore, a menor folga até ela (\textit{slack}), o que reduz o cálculo de $\delta$ a $O(V)$ e leva ao total de $O(V^3)$.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{linha~\ref{ew:init}:} o emparelhamento começa vazio, todos os vértices recebem o mesmo dual $y_v$, igual à metade do maior peso, e nenhuma flor tem dual. Com essa escolha, $y_u + y_v \ge w_{uv}$ para toda aresta, ou seja, todas as folgas $\pi_{uv}$ começam não negativas, e a solução dual é viável desde o início;
+    \item \textbf{linhas~\ref{ew:loop}--\ref{ew:grow}:} a cada iteração, cresce-se uma floresta de árvores alternantes, enraizadas nos vértices livres, usando apenas arestas justas ($\pi_{uv} = 0$). Os vértices a distância par da raiz são rotulados como externos ($S$) e os a distância ímpar, como internos ($T$), como na busca do caso de cardinalidade;
+    \item \textbf{linhas~\ref{ew:augif}--\ref{ew:aug}:} uma aresta justa entre vértices externos de árvores diferentes liga duas raízes livres por um caminho alternante, isto é, um caminho aumentante. O emparelhamento é aumentado ao longo dele, e os rótulos são apagados para uma nova busca;
+    \item \textbf{linhas~\ref{ew:shrinkif}--\ref{ew:shrink}:} uma aresta justa entre dois vértices externos da mesma árvore fecha um ciclo ímpar, que é contraído em uma flor, como no Algoritmo~\ref{alg:maxmatch}. A nova flor começa com dual $z_B = 0$ e se comporta como um vértice externo;
+    \item \textbf{linhas~\ref{ew:d1}--\ref{ew:delta}:} se nenhuma das situações anteriores ocorre, a busca está travada e é preciso ajustar os duais. Calcula-se o maior passo $\delta$ que mantém a solução dual viável, como o menor de quatro limites: $\delta_1$ é o menor dual de vértice externo, que não pode ficar negativo; $\delta_2$ é a menor folga de aresta entre um vértice externo e um não rotulado, que diminui em $\delta$; $\delta_3$ é a metade da menor folga entre vértices externos de flores diferentes, pois essa folga diminui em $2\delta$, uma vez que os dois extremos são externos; e $\delta_4$ é a metade do menor dual de flor interna, que diminui em $2\delta$ e também não pode ficar negativo;
+    \item \textbf{linhas~\ref{ew:dualy}--\ref{ew:dualz}:} os duais são atualizados: os vértices externos perdem $\delta$ e os internos ganham $\delta$, de modo que as arestas justas da árvore (entre um externo e um interno) continuam justas; as flores externas ganham $2\delta$ e as internas perdem $2\delta$, o que compensa a variação dos duais dos vértices dentro delas;
+    \item \textbf{linha~\ref{ew:stop}:} se o passo foi limitado por $\delta_1$, algum vértice externo chegou a dual zero. Como os vértices livres são raízes, e portanto externos, e todos os externos perdem o mesmo $\delta$ a cada ajuste, os vértices livres têm o menor dual e chegam a zero; nesse ponto, as condições de folga complementar valem e $M$ é ótimo;
+    \item \textbf{linha~\ref{ew:expand}:} uma flor interna cujo dual chegou a zero (limite $\delta_4$) é expandida, devolvendo seus vértices à busca. Nos casos $\delta_2$ e $\delta_3$, o ajuste torna justa uma nova aresta, e a busca da próxima iteração consegue crescer a árvore, contrair uma flor ou aumentar o emparelhamento;
+    \item \textbf{linha~\ref{ew:ret}:} ao final, as flores que restaram contraídas são expandidas para que o emparelhamento seja expresso em termos das arestas do grafo original;
+    \item \textbf{complexidade:} há no máximo $V/2$ aumentos. Entre dois aumentos consecutivos, cada ajuste dual rotula um novo vértice, cria uma flor, expande uma flor ou encerra o algoritmo, de modo que ocorrem $O(V)$ ajustes por aumento. Calculando $\delta$ diretamente pelas definições das linhas~\ref{ew:d1}--\ref{ew:d4}, cada ajuste custa $O(E)$, o que dá $O(V^2 E)$ no total. A implementação de \citeonline{lawler} mantém, para cada vértice fora da árvore, a menor folga até ela (\textit{slack}), o que reduz o cálculo de $\delta$ a $O(V)$ e leva ao total de $O(V^3)$.
+\end{alineas}
 
 \subsection{Melhorias}
 
-Desenvolvimentos posteriores melhoraram as estruturas de dados que gerenciam as folgas e a contração de flores. \citeonline{galil_micali_gabow} mantêm as folgas em filas de prioridade generalizadas, em que cada operação custa $O(\log V)$; como há $O(V)$ estágios, um por aumento, e cada estágio realiza $O(E)$ operações nessas filas, o total é $O(EV \log V)$, melhor que $O(V^3)$ em grafos esparsos. \citeonline{gabow1990} reduziu o custo de cada estágio para $O(E + V \log V)$, o mesmo de um Dijkstra com heap de Fibonacci, o que leva a $O(V(E + V \log V))$. Para pesos inteiros, algoritmos de escalonamento de custos atingem limites ainda menores, que dependem também do maior peso \cite{gabow1990}.
+Desenvolvimentos posteriores melhoraram as estruturas de dados que gerenciam as folgas e a contração de flores. \citeonline{galil_micali_gabow} mantêm as folgas em filas de prioridade generalizadas, em que cada operação custa $O(\log V)$; como há $O(V)$ estágios, um por aumento, e cada estágio realiza $O(E)$ operações nessas filas, o total é $O(EV \log V)$, melhor que $O(V^3)$ em grafos esparsos. \citeonline{gabow1990} reduziu o custo de cada estágio para $O(E + V \log V)$, o mesmo de um Dijkstra com \textit{heap} de Fibonacci, o que leva a $O(V(E + V \log V))$. Para pesos inteiros, algoritmos de escalonamento de custos atingem limites ainda menores, que dependem também do maior peso \cite{gabow1990}.
 
-Apesar de ser polinomial (classe P), a implementação de emparelhamento ponderado em grafos gerais é considerada uma das rotinas mais complexas da otimização combinatória clássica, sendo significativamente mais difícil de implementar corretamente do que algoritmos para grafos bipartidos ou fluxo máximo.
+Apesar de polinomial, o algoritmo é difícil de implementar corretamente: ele combina a contração de flores do caso de cardinalidade com o ajuste das variáveis duais. Um reflexo disso é que poucas implementações públicas independentes foram encontradas; a do NetworkX, por exemplo, é uma adaptação da de van Rantwijk (Seção~\ref{sec:proveniencia}).
 
 
 % #### D. Algoritmos de Crescimento de Caminho (Path Growing)
@@ -180,23 +180,22 @@ Apesar de ser polinomial (classe P), a implementação de emparelhamento pondera
 \subsection{Algoritmos aproximados}
 \label{sec:emp_pond_max_aprox}
 
-Aqui também podemos utilizar o método guloso ordenado, descrito na seção \ref{p:gulosa_ordenada}, com a mesma complexidade $O(E \log E)$, dominada pela ordenação. No problema de peso máximo, ao contrário da atribuição de custo mínimo, ele tem garantia de aproximação: o emparelhamento obtido tem pelo menos metade do peso máximo, pois cada aresta da solução ótima que fica de fora é bloqueada por uma aresta escolhida antes e, portanto, de peso maior ou igual, e cada aresta escolhida bloqueia no máximo duas arestas da solução ótima \cite{drake}. Além dele, temos:
+Aqui também pode ser usado o método guloso ordenado, descrito na seção \ref{p:gulosa_ordenada}, com a mesma complexidade $O(E \log E)$, dominada pela ordenação. No problema de peso máximo, ao contrário da atribuição de custo mínimo, ele tem garantia de aproximação: o emparelhamento obtido tem pelo menos metade do peso máximo, pois cada aresta da solução ótima que fica de fora é bloqueada por uma aresta escolhida antes e, portanto, de peso maior ou igual, e cada aresta escolhida bloqueia no máximo duas arestas da solução ótima \cite{drake}. Além dele, há:
 
 \subsubsection{Algoritmo de Crescimento de Caminho (Path Growing)}
 
-Similar ao algoritmo descrito na seção \ref{p:h_path_growing_card}, esta também faz uso de Path Growing para encontrar um emparelhamento. A vantagem desta é que não é necessário ordenação, tornando possível a execução em tempo linear ($O(E)$), justificado ao final da explicação linha a linha. Foi descrito por \citeonline{drake}:
+Similar ao algoritmo descrito na seção \ref{p:h_path_growing_card}, esta também faz uso de Path Growing para encontrar um emparelhamento. A vantagem desta é que não é necessário ordenação, tornando possível a execução em tempo linear ($O(E)$). Foi descrito por \citeonline{drake}:
 
 \begin{enumerate}
-    \item O algoritmo constrói caminhos simples disjuntos no grafo.
-    \item Comece em um vértice livre $v$ qualquer. Estenda o caminho escolhendo a aresta de maior peso conectada a $v$ que leve a um vértice ainda não visitado neste caminho.
-    \item Repita até que o caminho não possa crescer mais.
-    \item Dado um caminho $P = (e_1, e_2, e_3, \dots, e_k)$, temos dois emparelhamentos possíveis formados por arestas alternadas:
-    \item 
-        \begin{itemize}
-            \item $M_1 = \{e_1, e_3, e_5, \dots\}$ (Arestas ímpares)
-            \item $M_2 = \{e_2, e_4, e_6, \dots\}$ (Arestas pares)
-        \end{itemize}
-    \item Compare o peso total de $M_1$ e $M_2$. Adicione o conjunto mais pesado à solução final e remova os vértices do grafo.
+    \item o algoritmo constrói caminhos simples disjuntos no grafo;
+    \item comece em um vértice livre $v$ qualquer. Estenda o caminho escolhendo a aresta de maior peso conectada a $v$ que leve a um vértice ainda não visitado neste caminho;
+    \item repita até que o caminho não possa crescer mais;
+    \item dado um caminho $P = (e_1, e_2, e_3, \dots, e_k)$, há dois emparelhamentos possíveis formados por arestas alternadas:
+        \begin{alineas}
+            \item $M_1 = \{e_1, e_3, e_5, \dots\}$ (arestas ímpares);
+            \item $M_2 = \{e_2, e_4, e_6, \dots\}$ (arestas pares);
+        \end{alineas}
+    \item compare o peso total de $M_1$ e $M_2$. Adicione o conjunto mais pesado à solução final e remova os vértices do grafo.
 \end{enumerate}
 
 A diferença para a versão de emparelhamento de cardinalidade máxima é o passo 5, onde os pesos são somados para escolher o melhor conjunto. Garante emparelhamento de pelo menos $1/2$ do peso máximo \cite{drake}.
@@ -225,17 +224,17 @@ O Algoritmo~\ref{alg:path_growing} corresponde à versão original de \citeonlin
     \KwRet o mais pesado entre $M_1$ e $M_2$\label{pg:ret}\;
 \end{algorithm}
 
-O Algoritmo~\ref{alg:path_growing} pode ser lido linha a linha da seguinte forma:
+As etapas do Algoritmo~\ref{alg:path_growing} são as seguintes:
 
-\begin{itemize}
-    \item \textbf{Linha~\ref{pg:init}:} Os dois emparelhamentos candidatos começam vazios, e o índice $i$ indica em qual deles entra a próxima aresta.
-    \item \textbf{Linhas~\ref{pg:outer}--\ref{pg:start}:} Enquanto restarem arestas no grafo, inicia-se um novo caminho a partir de qualquer vértice que ainda tenha vizinhos.
-    \item \textbf{Linhas~\ref{pg:grow}--\ref{pg:heavy}:} O caminho cresce a partir do vértice atual $x$ pela aresta mais pesada incidente a ele, que leva ao vizinho $y$.
-    \item \textbf{Linha~\ref{pg:alt}:} A aresta escolhida entra em $M_i$, e o índice alterna entre $1$ e $2$ ($i := 3 - i$). Assim, as arestas do caminho são distribuídas alternadamente entre $M_1$ e $M_2$; como duas arestas consecutivas do caminho vão para conjuntos diferentes, cada um deles continua sendo um emparelhamento.
-    \item \textbf{Linhas~\ref{pg:remove}--\ref{pg:advance}:} O vértice $x$ é removido do grafo com todas as suas arestas, o que impede que o caminho volte a ele, e o caminho continua a partir de $y$. Quando $y$ não tem mais vizinhos, o laço interno termina e um novo caminho é iniciado na linha~\ref{pg:start}.
-    \item \textbf{Linha~\ref{pg:ret}:} Retorna-se o mais pesado dos dois emparelhamentos. Para a garantia de aproximação, cada aresta do grafo é removida junto com algum vértice $x$ na linha~\ref{pg:remove}, e a aresta escolhida nesse passo é a mais pesada entre as que são removidas com ele. Como cada vértice é removido uma única vez e cada aresta da solução ótima $M^*$ pode ser atribuída a um extremo distinto removido, $w(M_1) + w(M_2) \ge w(M^*)$, e o mais pesado dos dois tem pelo menos metade do peso ótimo \cite{drake}.
-    \item \textbf{Complexidade:} Cada vértice é removido uma vez, e a escolha da aresta mais pesada percorre a lista de adjacência do vértice atual, de modo que cada aresta é examinada um número constante de vezes. Mantendo uma lista dos vértices com grau positivo para a linha~\ref{pg:start}, o custo total é $O(V + E)$, linear no tamanho do grafo, sem a ordenação $O(E \log E)$ do método guloso ordenado.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{linha~\ref{pg:init}:} os dois emparelhamentos candidatos começam vazios, e o índice $i$ indica em qual deles entra a próxima aresta;
+    \item \textbf{linhas~\ref{pg:outer}--\ref{pg:start}:} enquanto restarem arestas no grafo, inicia-se um novo caminho a partir de qualquer vértice que ainda tenha vizinhos;
+    \item \textbf{linhas~\ref{pg:grow}--\ref{pg:heavy}:} o caminho cresce a partir do vértice atual $x$ pela aresta mais pesada incidente a ele, que leva ao vizinho $y$;
+    \item \textbf{linha~\ref{pg:alt}:} a aresta escolhida entra em $M_i$, e o índice alterna entre $1$ e $2$ ($i := 3 - i$). Assim, as arestas do caminho são distribuídas alternadamente entre $M_1$ e $M_2$; como duas arestas consecutivas do caminho vão para conjuntos diferentes, cada um deles continua sendo um emparelhamento;
+    \item \textbf{linhas~\ref{pg:remove}--\ref{pg:advance}:} o vértice $x$ é removido do grafo com todas as suas arestas, o que impede que o caminho volte a ele, e o caminho continua a partir de $y$. Quando $y$ não tem mais vizinhos, o laço interno termina e um novo caminho é iniciado na linha~\ref{pg:start};
+    \item \textbf{linha~\ref{pg:ret}:} retorna-se o mais pesado dos dois emparelhamentos. Para a garantia de aproximação, cada aresta do grafo é removida junto com algum vértice $x$ na linha~\ref{pg:remove}, e a aresta escolhida nesse passo é a mais pesada entre as que são removidas com ele. Como cada vértice é removido uma única vez e cada aresta da solução ótima $M^*$ pode ser atribuída a um extremo distinto removido, $w(M_1) + w(M_2) \ge w(M^*)$, e o mais pesado dos dois tem pelo menos metade do peso ótimo \cite{drake};
+    \item \textbf{complexidade:} cada vértice é removido uma vez, e a escolha da aresta mais pesada percorre a lista de adjacência do vértice atual, de modo que cada aresta é examinada um número constante de vezes. Mantendo uma lista dos vértices com grau positivo para a linha~\ref{pg:start}, o custo total é $O(V + E)$, linear no tamanho do grafo, sem a ordenação $O(E \log E)$ do método guloso ordenado.
+\end{alineas}
 
 \begin{table}[H]
     \centering

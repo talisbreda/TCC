@@ -6,27 +6,25 @@
 \chapter{Metodologia}
 \label{cap:metodologia}
 
-Este capítulo descreve o ambiente de testes construído para implementar e comparar os algoritmos dos capítulos anteriores. Todo o código do ambiente, os geradores de instâncias e os resultados brutos estão disponíveis no repositório do trabalho\footnote{\url{https://github.com/talisbreda/TCC}}. São apresentados a arquitetura do ambiente, a interface padrão de cada problema, os geradores de instância, o protocolo de medição, os critérios de comparação, a máquina utilizada e a origem e a adaptação de cada algoritmo, de modo que os resultados do capítulo seguinte sejam reprodutíveis e as comparações, defensáveis.
+Este capítulo descreve o ambiente de testes construído para implementar e comparar os algoritmos dos capítulos anteriores. Todo o código do ambiente, os geradores de instâncias e os resultados brutos estão disponíveis no repositório do trabalho\footnote{\url{https://github.com/talisbreda/TCC}}. São apresentados a arquitetura do ambiente, a interface padrão de cada problema, os geradores de instância, o protocolo de medição, os critérios de comparação, a máquina utilizada e a origem e a adaptação de cada algoritmo, para que os resultados do capítulo seguinte possam ser reproduzidos.
 
 % ---------------------------------------------------------------------------
 \section{Arquitetura do ambiente de testes}
 \label{sec:arquitetura}
 
 O ambiente é separado em três camadas:
-\begin{itemize}
-    \item \textbf{Repositório de código de terceiros:} Contém os códigos de algoritmos obtidos de repositórios públicos, em sua maioria do GitHub. Estes códigos estão intactos, exatamente da forma que estão publicados. Nenhuma alteração foi feita a eles, nem mesmo com intuito de corrigir possíveis problemas, os quais serão mencionados posteriormente. As bibliotecas maduras usadas como referência (NetworkX, SciPy, igraph e lap) não ficam nesta camada: são instaladas pelo gerenciador de pacotes do Python, com versões fixadas.
-    \item \textbf{Adaptadores/\textit{wrappers}:} Como os algoritmos divergem quanto aos formatos de entrada e saída, e até mesmo quanto à linguagem, essa camada foi criada com o intuito de traduzir cada um dos algoritmos para o formato padrão do trabalho, a fim de manter o ambiente homogêneo para fim de testes. Quando o código original não pode ser usado diretamente, a reimplementação também fica nesta camada, de modo que o original permanece intacto no repositório.
-    \item \textbf{Módulo de medição:} É a parte que executa e mede os testes, responsável por cronometragem, verificação e gravação dos resultados. Para cada problema, um \textit{script} de \textit{benchmark} gera as instâncias e aciona este módulo, que executa todos os algoritmos por meio dos seus \textit{wrappers}. Isso garante que todos sejam submetidos ao mesmo protocolo, e que possam ser feitas comparações entre algoritmos sob condições idênticas.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{repositório de código de terceiros:} contém os códigos de algoritmos obtidos de repositórios públicos, em sua maioria do GitHub. Esses códigos são usados exatamente como foram publicados, sem nenhuma alteração, nem mesmo para corrigir defeitos (Seção~\ref{sec:defeitos}). As bibliotecas maduras usadas como referência (NetworkX, SciPy, igraph e lap) não ficam nesta camada: são instaladas pelo gerenciador de pacotes do Python, com versões fixadas;
+    \item \textbf{adaptadores/\textit{wrappers}:} como os algoritmos divergem quanto aos formatos de entrada e saída, e até mesmo quanto à linguagem, essa camada foi criada com o intuito de traduzir cada um dos algoritmos para o formato padrão do trabalho, para que todos sejam testados nas mesmas condições. Quando o código original não pode ser usado diretamente, a reimplementação também fica nesta camada, de modo que o original permanece intacto no repositório;
+    \item \textbf{módulo de medição:} é a parte que executa e mede os testes, responsável por cronometragem, verificação e gravação dos resultados. Para cada problema, um \textit{script} de \textit{benchmark} gera as instâncias e aciona este módulo, que executa todos os algoritmos por meio dos seus \textit{wrappers}. Isso garante que todos sejam submetidos ao mesmo protocolo, e que possam ser feitas comparações entre algoritmos sob condições idênticas.
+\end{alineas}
 
 % ---------------------------------------------------------------------------
 \section{Interface padrão dos problemas}
 
 Cada problema possui uma interface padrão à qual todos os seus algoritmos são
-adaptados (Tabela~\ref{tab:interfaces}). É ela que torna a comparação justa: todo
-algoritmo de um mesmo problema recebe exatamente a mesma instância e produz a
-saída no mesmo formato, de modo que a única variável entre eles é o próprio
-método.
+adaptados (Tabela~\ref{tab:interfaces}). Com ela, todo algoritmo de um mesmo
+problema recebe exatamente a mesma instância e produz a saída no mesmo formato.
 
 \begin{table}[H]
     \centering
@@ -68,25 +66,25 @@ Para cada problema, definiram-se famílias com características distintas, de mo
         \toprule
         \textbf{Família} & \textbf{Construção e propriedade} & \textbf{Tamanhos $n$} \\
         \midrule
-        \multicolumn{3}{@{}l}{\textit{Cardinalidade máxima --- grafos bipartidos (Algoritmo~\ref{alg:gen_bipartido})}} \\
-        Grafo 1 --- esparso, sem perfeito & dois blocos fixos, grau médio 2,2; $|M^*| = 0{,}8n$ & 50--250 \\
-        Grafo 2 --- esparso, com perfeito & diagonal mais um vizinho $(7i+3) \bmod n$; $|M^*| = n$ & 50--250 \\
-        Grafo 3 --- denso, com perfeito & diagonal mais arestas aleatórias até grau médio 15; $|M^*| = n$ & 50--250 \\
+        \multicolumn{3}{@{}l}{\textit{Cardinalidade máxima em grafos bipartidos (Algoritmo~\ref{alg:gen_bipartido})}} \\
+        Grafo 1: esparso, sem perfeito & dois blocos fixos, grau médio 2,2; $|M^*| = 0{,}8n$ & 50--250 \\
+        Grafo 2: esparso, com perfeito & diagonal mais um vizinho $(7i+3) \bmod n$; $|M^*| = n$ & 50--250 \\
+        Grafo 3: denso, com perfeito & diagonal mais arestas aleatórias até grau médio 15; $|M^*| = n$ & 50--250 \\
         \addlinespace
         \multicolumn{3}{@{}l}{\textit{Atribuição linear (Algoritmo~\ref{alg:gen_custo})}} \\
-        Matriz 1 --- densa uniforme & custos inteiros uniformes em $[1, 100]$ & 10--100; 50--250\textsuperscript{a} \\
-        Matriz 2 --- permutação barata & permutação aleatória de custo 1, demais em $[50, 100]$; ótimo $= n$ & idem \\
-        Matriz 3 --- estruturada & $c_{ij} = |i - j| + 1$; ótimo $= n$ & idem \\
+        Matriz 1: densa uniforme & custos inteiros uniformes em $[1, 100]$ & 10--100; 50--250\textsuperscript{a} \\
+        Matriz 2: permutação barata & permutação aleatória de custo 1, demais em $[50, 100]$; ótimo $= n$ & idem \\
+        Matriz 3: estruturada & $c_{ij} = |i - j| + 1$; ótimo $= n$ & idem \\
         \addlinespace
         \multicolumn{3}{@{}l}{\textit{Atribuição gargalo (Algoritmo~\ref{alg:gen_custo})}} \\
-        Matriz 1 --- densa uniforme & custos inteiros uniformes em $[1, 100]$ & 10--200 \\
-        Matriz 2 --- estruturada & $c_{ij} = |i - j| + 1$; gargalo ótimo $= 1$ & 10--200 \\
-        Matriz 3 --- poucos valores & custos sorteados em $\{1, 5, 10, 50\}$; muitos empates & 10--200 \\
+        Matriz 1: densa uniforme & custos inteiros uniformes em $[1, 100]$ & 10--200 \\
+        Matriz 2: estruturada & $c_{ij} = |i - j| + 1$; gargalo ótimo $= 1$ & 10--200 \\
+        Matriz 3: poucos valores & custos sorteados em $\{1, 5, 10, 50\}$; muitos empates & 10--200 \\
         \addlinespace
         \multicolumn{3}{@{}l}{\textit{Casamento estável (Algoritmo~\ref{alg:gen_pref})}} \\
-        Perfil 1 --- aleatório & listas independentes e uniformes & 25--100; 100--400\textsuperscript{b} \\
-        Perfil 2 --- correlacionado & uma única lista para todos os homens e outra para todas as mulheres & idem \\
-        Perfil 3 --- cíclico & $m$ prefere $m, m+1, \dots$; $w$ prefere $w, w-1, \dots$ (módulo $n$) & idem \\
+        Perfil 1: aleatório & listas independentes e uniformes & 25--100; 100--400\textsuperscript{b} \\
+        Perfil 2: correlacionado & uma única lista para todos os homens e outra para todas as mulheres & idem \\
+        Perfil 3: cíclico & $m$ prefere $m, m+1, \dots$; $w$ prefere $w, w-1, \dots$ (módulo $n$) & idem \\
         \addlinespace
         \multicolumn{3}{@{}l}{\textit{Grafos gerais: cardinalidade e peso máximo (Algoritmo~\ref{alg:gen_aleatorio})}} \\
         Esparso (grau $\sim$3) & $G(n,p)$ com $p = 3/n$; na versão ponderada, pesos em $[1, 100]$ & 10--100 \\
@@ -152,12 +150,12 @@ Para o emparelhamento de cardinalidade máxima, as três famílias diferem na de
     }
 \end{algorithm}
 
-\begin{itemize}
-    \item \textbf{Grafo 1 --- esparso, sem emparelhamento perfeito (linhas~\ref{gb:sizes}--\ref{gb:blockb2}):} O grafo é a união de dois blocos sem arestas entre si. No bloco A, os primeiros $0{,}8n$ vértices de $U$ ligam-se, cada um, a dois vértices consecutivos dos primeiros $0{,}6n$ vértices de $V$ (linha~\ref{gb:blocka}). Como o bloco tem só $0{,}6n$ vértices em $V$, no máximo $0{,}6n$ de suas arestas podem estar num emparelhamento, e esse valor é atingido pelas arestas $\{u_i, v_i\}$, $i < a_V$. No bloco B, os $0{,}2n$ vértices restantes de $U$ ligam-se a três dos $0{,}4n$ vértices restantes de $V$ (linhas~\ref{gb:blockb}--\ref{gb:blockb2}); como $2k < b_V$ para todo $k < b_U$, as arestas $\{u_{a_U+k}, v_{a_V+2k}\}$ cobrem todo o lado $U$ do bloco. O emparelhamento máximo tem, portanto, exatamente $0{,}6n + 0{,}2n = 0{,}8n$ arestas, e nenhum é perfeito. O grau médio dos vértices de $U$ é $(2 \cdot 0{,}8n + 3 \cdot 0{,}2n)/n = 2{,}2$. A construção não usa aleatoriedade.
-    \item \textbf{Grafo 2 --- esparso, com emparelhamento perfeito (linhas~\ref{gb:g2loop}--\ref{gb:g2add}):} Cada $u_i$ liga-se a $v_i$ e a um segundo vizinho $v_j$, com $j = (7i + 3) \bmod n$ (linha~\ref{gb:g2j}), deslocado em uma posição quando coincidiria com $i$. As arestas $\{u_i, v_i\}$ formam um emparelhamento perfeito, logo $|M^*| = n$ (linha~\ref{gb:g2add}). Como 7 não divide nenhum dos tamanhos usados, $i \mapsto (7i+3) \bmod n$ é uma permutação, e os segundos vizinhos ficam espalhados por todo o lado $V$, sem a estrutura em blocos do Grafo 1. A construção também é determinística.
-    \item \textbf{Grafo 3 --- denso, com emparelhamento perfeito (linhas~\ref{gb:seed}--\ref{gb:add}):} Parte da diagonal $\{u_i, v_i\}$, que garante um emparelhamento perfeito (linha~\ref{gb:diag}), e acrescenta arestas sorteadas pelo gerador com semente fixa (linha~\ref{gb:seed}) até o grafo ter $d \cdot n = 15n$ arestas (linha~\ref{gb:loop}), isto é, grau médio 15. Sorteios repetidos não alteram o conjunto (linha~\ref{gb:add}). A densidade relativa é $15/n$, de 30\% em $n = 50$ a 6\% em $n = 250$; a família é ``densa'' em comparação com as duas anteriores, cujo grau médio fica entre 2 e 2,2.
-    \item \textbf{Complexidade:} Os Grafos 1 e 2 são gerados em tempo $O(n)$, com um número constante de arestas por vértice. No Grafo 3, a fração de sorteios repetidos é no máximo $d/n$, de modo que o número esperado de sorteios é $O(d \cdot n)$.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{grafo 1 (esparso, sem emparelhamento perfeito; linhas~\ref{gb:sizes}--\ref{gb:blockb2}):} o grafo é a união de dois blocos sem arestas entre si. No bloco A, os primeiros $0{,}8n$ vértices de $U$ ligam-se, cada um, a dois vértices consecutivos dos primeiros $0{,}6n$ vértices de $V$ (linha~\ref{gb:blocka}). Como o bloco tem só $0{,}6n$ vértices em $V$, no máximo $0{,}6n$ de suas arestas podem estar num emparelhamento, e esse valor é atingido pelas arestas $\{u_i, v_i\}$, $i < a_V$. No bloco B, os $0{,}2n$ vértices restantes de $U$ ligam-se a três dos $0{,}4n$ vértices restantes de $V$ (linhas~\ref{gb:blockb}--\ref{gb:blockb2}); como $2k < b_V$ para todo $k < b_U$, as arestas $\{u_{a_U+k}, v_{a_V+2k}\}$ cobrem todo o lado $U$ do bloco. O emparelhamento máximo tem, portanto, exatamente $0{,}6n + 0{,}2n = 0{,}8n$ arestas, e nenhum é perfeito. O grau médio dos vértices de $U$ é $(2 \cdot 0{,}8n + 3 \cdot 0{,}2n)/n = 2{,}2$. A construção não usa aleatoriedade;
+    \item \textbf{grafo 2 (esparso, com emparelhamento perfeito; linhas~\ref{gb:g2loop}--\ref{gb:g2add}):} cada $u_i$ liga-se a $v_i$ e a um segundo vizinho $v_j$, com $j = (7i + 3) \bmod n$ (linha~\ref{gb:g2j}), deslocado em uma posição quando coincidiria com $i$. As arestas $\{u_i, v_i\}$ formam um emparelhamento perfeito, logo $|M^*| = n$ (linha~\ref{gb:g2add}). Como 7 não divide nenhum dos tamanhos usados, $i \mapsto (7i+3) \bmod n$ é uma permutação, e os segundos vizinhos ficam espalhados por todo o lado $V$, sem a estrutura em blocos do Grafo 1. A construção também é determinística;
+    \item \textbf{grafo 3 (denso, com emparelhamento perfeito; linhas~\ref{gb:seed}--\ref{gb:add}):} parte da diagonal $\{u_i, v_i\}$, que garante um emparelhamento perfeito (linha~\ref{gb:diag}), e acrescenta arestas sorteadas pelo gerador com semente fixa (linha~\ref{gb:seed}) até o grafo ter $d \cdot n = 15n$ arestas (linha~\ref{gb:loop}), isto é, grau médio 15. Sorteios repetidos não alteram o conjunto (linha~\ref{gb:add}). A densidade relativa é $15/n$, de 30\% em $n = 50$ a 6\% em $n = 250$; a família é ``densa'' em comparação com as duas anteriores, cujo grau médio fica entre 2 e 2,2;
+    \item \textbf{complexidade:} os Grafos 1 e 2 são gerados em tempo $O(n)$, com um número constante de arestas por vértice. No Grafo 3, a fração de sorteios repetidos é no máximo $d/n$, de modo que o número esperado de sorteios é $O(d \cdot n)$.
+\end{alineas}
 
 \subsection{Matrizes de custo}
 
@@ -202,13 +200,13 @@ Os problemas de atribuição linear e de gargalo recebem uma matriz de custos $C
     }
 \end{algorithm}
 
-\begin{itemize}
-    \item \textbf{Matriz uniforme (linhas~\ref{gc:useed}--\ref{gc:udraw}):} Cada custo é um inteiro sorteado de modo uniforme e independente em $[1, 100]$. É a família sem estrutura, em que o ótimo não é conhecido de antemão e é obtido pelo algoritmo de referência.
-    \item \textbf{Permutação barata (linhas~\ref{gc:perm}--\ref{gc:pcheap}):} Sorteia-se uma permutação $\pi$ (linha~\ref{gc:perm}), todos os custos são preenchidos com valores entre 50 e 100 (linha~\ref{gc:pdraw}) e, por fim, as posições $(i, \pi(i))$ recebem custo 1 (linha~\ref{gc:pcheap}). A atribuição $\pi$ custa $n$, e qualquer outra usa ao menos uma posição de custo maior ou igual a 50, custando no mínimo $(n-1) + 50 > n$. Logo, $\pi$ é a única atribuição ótima e o valor ótimo $n$ é conhecido por construção.
-    \item \textbf{Matriz estruturada (linha~\ref{gc:struct}):} O custo cresce com a distância à diagonal, $c_{ij} = |i - j| + 1$, sem aleatoriedade. A diagonal tem custo 1 em todas as linhas, de modo que a identidade é ótima tanto para a atribuição linear (custo $n$) quanto para o gargalo (custo máximo 1).
-    \item \textbf{Poucos valores (linha~\ref{gc:few}):} Cada custo é sorteado entre apenas quatro valores. Com isso, há muitos empates: muitas atribuições têm o mesmo gargalo, e a busca pelo limiar do algoritmo Threshold (Algoritmo~\ref{alg:threshold}) tem só quatro candidatos distintos.
-    \item \textbf{Complexidade:} Todos os procedimentos preenchem $n^2$ posições em tempo constante cada, totalizando $O(n^2)$; o sorteio da permutação custa $O(n)$.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{matriz uniforme (linhas~\ref{gc:useed}--\ref{gc:udraw}):} cada custo é um inteiro sorteado de modo uniforme e independente em $[1, 100]$. É a família sem estrutura, em que o ótimo não é conhecido de antemão e é obtido pelo algoritmo de referência;
+    \item \textbf{permutação barata (linhas~\ref{gc:perm}--\ref{gc:pcheap}):} sorteia-se uma permutação $\pi$ (linha~\ref{gc:perm}), todos os custos são preenchidos com valores entre 50 e 100 (linha~\ref{gc:pdraw}) e, por fim, as posições $(i, \pi(i))$ recebem custo 1 (linha~\ref{gc:pcheap}). A atribuição $\pi$ custa $n$, e qualquer outra usa ao menos uma posição de custo maior ou igual a 50, custando no mínimo $(n-1) + 50 > n$. Logo, $\pi$ é a única atribuição ótima e o valor ótimo $n$ é conhecido por construção;
+    \item \textbf{matriz estruturada (linha~\ref{gc:struct}):} o custo cresce com a distância à diagonal, $c_{ij} = |i - j| + 1$, sem aleatoriedade. A diagonal tem custo 1 em todas as linhas, de modo que a identidade é ótima tanto para a atribuição linear (custo $n$) quanto para o gargalo (custo máximo 1);
+    \item \textbf{poucos valores (linha~\ref{gc:few}):} cada custo é sorteado entre apenas quatro valores. Com isso, há muitos empates: muitas atribuições têm o mesmo gargalo, e a busca pelo limiar do algoritmo de \textit{threshold} (Algoritmo~\ref{alg:threshold}) tem só quatro candidatos distintos;
+    \item \textbf{complexidade:} todos os procedimentos preenchem $n^2$ posições em tempo constante cada, totalizando $O(n^2)$; o sorteio da permutação custa $O(n)$.
+\end{alineas}
 
 \subsection{Perfis de preferência}
 
@@ -232,8 +230,8 @@ No casamento estável, uma instância é formada pelas listas de preferência $P
 
     \Fn{Correlacionado($n$)}{
         $rng :=$ novo gerador pseudoaleatório com semente $42$\;
-        $\pi :=$ permutação aleatória de $\{0, \dots, n-1\}$ com $rng$ \AlgComment{ranking das mulheres}\;\label{gp:pi}
-        $\sigma :=$ permutação aleatória de $\{0, \dots, n-1\}$ com $rng$ \AlgComment{ranking dos homens}\;\label{gp:sigma}
+        $\pi :=$ permutação aleatória de $\{0, \dots, n-1\}$ com $rng$ \AlgComment{\textit{ranking} das mulheres}\;\label{gp:pi}
+        $\sigma :=$ permutação aleatória de $\{0, \dots, n-1\}$ com $rng$ \AlgComment{\textit{ranking} dos homens}\;\label{gp:sigma}
         \lFor{$m := 0$ \KwTo $n - 1$}{$P_m := \pi$\label{gp:cmen}}
         \lFor{$w := 0$ \KwTo $n - 1$}{$Q_w := \sigma$\label{gp:cwomen}}
         \KwRet $(P, Q)$\;
@@ -248,12 +246,12 @@ No casamento estável, uma instância é formada pelas listas de preferência $P
     }
 \end{algorithm}
 
-\begin{itemize}
-    \item \textbf{Perfil aleatório (linhas~\ref{gp:rmen}--\ref{gp:rwomen}):} Cada lista é uma permutação uniforme e independente das demais. É o caso médio, em que as preferências não têm relação entre si.
-    \item \textbf{Perfil correlacionado (linhas~\ref{gp:pi}--\ref{gp:cwomen}):} Sorteiam-se apenas duas permutações: $\pi$, adotada por todos os homens (linha~\ref{gp:cmen}), e $\sigma$, adotada por todas as mulheres (linha~\ref{gp:cwomen}). É o extremo da contenção: todos os homens disputam as mesmas mulheres na mesma ordem. No Gale-Shapley, a cada rodada só um homem é aceito pela mulher mais disputada que resta, e o total de propostas é $n + (n-1) + \dots + 1 = n(n+1)/2$, o pior caso quadrático do algoritmo.
-    \item \textbf{Perfil cíclico (linhas~\ref{gp:ymen}--\ref{gp:ywomen}):} As listas são deslocamentos circulares, sem aleatoriedade: o homem $m$ prefere $m, m+1, m+2, \dots$ e a mulher $w$ prefere $w, w-1, w-2, \dots$, sempre módulo $n$. A primeira escolha de cada homem $m$ é a mulher $m$, cuja primeira escolha é ele próprio; o Gale-Shapley termina, assim, com $n$ propostas e devolve o emparelhamento $\{(m, m)\}$, o melhor caso do algoritmo.
-    \item \textbf{Complexidade:} Cada procedimento escreve $2n$ listas de tamanho $n$, em tempo $O(n^2)$.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{perfil aleatório (linhas~\ref{gp:rmen}--\ref{gp:rwomen}):} cada lista é uma permutação uniforme e independente das demais. É o caso médio, em que as preferências não têm relação entre si;
+    \item \textbf{perfil correlacionado (linhas~\ref{gp:pi}--\ref{gp:cwomen}):} sorteiam-se apenas duas permutações: $\pi$, adotada por todos os homens (linha~\ref{gp:cmen}), e $\sigma$, adotada por todas as mulheres (linha~\ref{gp:cwomen}). É o extremo da contenção: todos os homens disputam as mesmas mulheres na mesma ordem. No Gale-Shapley, a cada rodada só um homem é aceito pela mulher mais disputada que resta, e o total de propostas é $n + (n-1) + \dots + 1 = n(n+1)/2$, o pior caso quadrático do algoritmo;
+    \item \textbf{perfil cíclico (linhas~\ref{gp:ymen}--\ref{gp:ywomen}):} as listas são deslocamentos circulares, sem aleatoriedade: o homem $m$ prefere $m, m+1, m+2, \dots$ e a mulher $w$ prefere $w, w-1, w-2, \dots$, sempre módulo $n$. A primeira escolha de cada homem $m$ é a mulher $m$, cuja primeira escolha é ele próprio; o Gale-Shapley termina, assim, com $n$ propostas e devolve o emparelhamento $\{(m, m)\}$, o melhor caso do algoritmo;
+    \item \textbf{complexidade:} cada procedimento escreve $2n$ listas de tamanho $n$, em tempo $O(n^2)$.
+\end{alineas}
 
 \subsection{Grafos gerais aleatórios}
 
@@ -282,12 +280,12 @@ Para os problemas em grafos gerais, inclusive o emparelhamento induzido máximo,
     }
 \end{algorithm}
 
-\begin{itemize}
-    \item \textbf{Sorteio das arestas (linhas~\ref{ga:seed}--\ref{ga:test}):} Os pares $\{u, v\}$ com $u < v$ são percorridos em ordem fixa (linha~\ref{ga:pairs}), e cada um vira aresta com probabilidade $p$ (linha~\ref{ga:test}). O grau esperado de cada vértice é $p(n-1)$. As famílias usam: $p = 3/n$ (``esparso, grau $\sim$3'') e $p = 0{,}3$ (``denso'') para cardinalidade e peso máximo; e $p = d/(n-1)$, com grau médio esperado $d$ igual a 3, 6 e 12 (grafos esparso, médio e denso), para o emparelhamento induzido máximo.
-    \item \textbf{Pesos (linhas~\ref{ga:weighted}--\ref{ga:weight}):} Na versão ponderada, os pesos são inteiros uniformes em $[1, 100]$, sorteados por um segundo gerador, com semente 43 (linha~\ref{ga:seed2}). Como as arestas continuam sendo sorteadas pelo primeiro gerador, a instância ponderada tem exatamente as mesmas arestas da instância de cardinalidade de mesmo tamanho e densidade; muda apenas a existência dos pesos.
-    \item \textbf{Propriedades:} Nenhuma propriedade de emparelhamento é imposta: o grafo pode ter vértices isolados e não ter emparelhamento perfeito. O valor ótimo é obtido pelo algoritmo exato de referência (Blossom, van Rantwijk ou o exato do emparelhamento induzido) ou, nos tamanhos em que o exato não é executado, comparado ao melhor resultado conhecido.
-    \item \textbf{Complexidade:} Todos os $\binom{n}{2}$ pares são testados, independentemente de $p$, o que leva a tempo $\Theta(n^2)$; o sorteio dos pesos acrescenta $O(|E|)$.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{sorteio das arestas (linhas~\ref{ga:seed}--\ref{ga:test}):} os pares $\{u, v\}$ com $u < v$ são percorridos em ordem fixa (linha~\ref{ga:pairs}), e cada um vira aresta com probabilidade $p$ (linha~\ref{ga:test}). O grau esperado de cada vértice é $p(n-1)$. As famílias usam: $p = 3/n$ (``esparso, grau $\sim$3'') e $p = 0{,}3$ (``denso'') para cardinalidade e peso máximo; e $p = d/(n-1)$, com grau médio esperado $d$ igual a 3, 6 e 12 (grafos esparso, médio e denso), para o emparelhamento induzido máximo;
+    \item \textbf{pesos (linhas~\ref{ga:weighted}--\ref{ga:weight}):} na versão ponderada, os pesos são inteiros uniformes em $[1, 100]$, sorteados por um segundo gerador, com semente 43 (linha~\ref{ga:seed2}). Como as arestas continuam sendo sorteadas pelo primeiro gerador, a instância ponderada tem exatamente as mesmas arestas da instância de cardinalidade de mesmo tamanho e densidade; muda apenas a existência dos pesos;
+    \item \textbf{propriedades:} nenhuma propriedade de emparelhamento é imposta: o grafo pode ter vértices isolados e não ter emparelhamento perfeito. O valor ótimo é obtido pelo algoritmo exato de referência (Blossom, van Rantwijk ou o exato do emparelhamento induzido) ou, nos tamanhos em que o exato não é executado, comparado ao melhor resultado conhecido;
+    \item \textbf{complexidade:} todos os $\binom{n}{2}$ pares são testados, independentemente de $p$, o que leva a tempo $\Theta(n^2)$; o sorteio dos pesos acrescenta $O(|E|)$.
+\end{alineas}
 
 % ---------------------------------------------------------------------------
 \section{Protocolo de medição}
@@ -295,26 +293,25 @@ Para os problemas em grafos gerais, inclusive o emparelhamento induzido máximo,
 
 Um protocolo de medição foi criado a fim de reduzir o quanto fontes de ruído externas afetam os resultados dos testes. A unidade de medição é a \textbf{célula}: a combinação de um algoritmo, uma instância e um tamanho $n$. Cada célula é executada uma vez para aquecimento e, em seguida, cinco vezes com cronometragem. Algumas das decisões que compõem esse protocolo:
 
-\begin{itemize}
-    \item \textbf{Execução de aquecimento:} A primeira execução de cada célula é descartada da cronometragem, para que as repetições medidas não paguem custos de importação, alocação inicial e caches frios. O resultado dessa execução é o utilizado na verificação de qualidade.
-    \item \textbf{Coletor de lixo:} É desligado durante a execução de uma célula inteira, e religado entre células, a fim de não comprometer o resultado da execução.
-    \item \textbf{Mediana:} Cada célula reporta a mediana dos tempos, ao invés da média, para dar mais robustez com relação a interrupções momentâneas.
-    \item \textbf{Limite de tempo por célula:} Impede que um algoritmo defeituoso inviabilize toda a suíte de testes. Fez-se necessário por conta de uma situação observada durante os testes, que será discutida na seção de resultados. O limite, de 120 segundos, é aplicado à execução de aquecimento: se ela o excede, é interrompida, a célula é marcada como estourada e os tamanhos maiores daquele algoritmo não são executados, pois também estourariam. A exceção é o problema de atribuição, em que todos os tamanhos são executados mesmo após um estouro, pois um dos algoritmos falha de forma não-monótona no tamanho da entrada. Por decisão deliberada, o limite é verificado apenas em torno do aquecimento, e não a cada operação do algoritmo, para não adicionar custo à região cronometrada.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{execução de aquecimento:} a primeira execução de cada célula é descartada da cronometragem, para que as repetições medidas não paguem custos de importação, alocação inicial e \textit{caches} frios. O resultado dessa execução é o utilizado na verificação de qualidade;
+    \item \textbf{coletor de lixo:} é desligado durante a execução de uma célula inteira, e religado entre células, a fim de não comprometer o resultado da execução;
+    \item \textbf{mediana:} cada célula reporta a mediana dos tempos, ao invés da média, para dar mais robustez com relação a interrupções momentâneas;
+    \item \textbf{limite de tempo por célula:} impede que um algoritmo defeituoso inviabilize toda a suíte de testes. Ele foi necessário por causa de um defeito discutido na Seção~\ref{sec:defeitos}. O limite, de 120 segundos, é aplicado à execução de aquecimento: se ela o excede, é interrompida, a célula é marcada como estourada e os tamanhos maiores daquele algoritmo não são executados, pois também estourariam. A exceção é o problema de atribuição, em que todos os tamanhos são executados mesmo após um estouro, pois um dos algoritmos falha de forma não-monótona no tamanho da entrada. O limite é verificado apenas em torno do aquecimento, e não a cada operação do algoritmo, para não adicionar custo à região cronometrada.
+\end{alineas}
 
 % ---------------------------------------------------------------------------
 \section{Critérios de comparação}
 \label{sec:criterios}
 
-Comparar tempo de execução entre implementações em linguagens diferentes é
-intrinsecamente injusto: parte da diferença reflete a linguagem, não o algoritmo.
-Para que as comparações sejam válidas, adotaram-se quatro critérios
-complementares.
+O tempo de execução de implementações em linguagens diferentes não é diretamente
+comparável, porque parte da diferença vem da linguagem. Por isso, adotaram-se
+quatro critérios complementares.
 
 \begin{enumerate}
-    \item Implementações em linguagem interpretada (ex: Python) e as de núcleo compilado (ex: C++) são apresentadas em tabelas separadas, e o tempo absoluto só é comparado dentro de uma mesma linguagem. Manter as duas linguagens, em vez de uma só, foi necessário por dois motivos. Primeiro, não há implementações públicas confiáveis de todos os algoritmos em uma mesma linguagem, e portá-las significaria reimplementá-las, o que contraria o objetivo de avaliar o código como foi publicado (camada intacta, Seção~\ref{sec:arquitetura}). Segundo, as bibliotecas maduras usadas como referência de correção e de patamar de desempenho (igraph, SciPy e lap) têm núcleo compilado. O conjunto principal de comparação é o das implementações interpretadas, cujas tabelas compõem o Capítulo~\ref{cap:resultados}; as tabelas das compiladas ficam no Apêndice~\ref{ap:compilados}, e a comparação entre as duas linguagens é feita apenas pelo expoente empírico (critério 3). Bibliotecas escritas inteiramente em linguagem interpretada, como o NetworkX, ficam na tabela das interpretadas, pois nesse caso a comparação de tempo com elas é legítima. Há ainda casos intermediários: algoritmos escritos como laços em Python sobre vetores da biblioteca NumPy, cujo núcleo é compilado, como os Húngaros \texttt{hunalgorithm} e \texttt{mayorx} e o Gale-Shapley numérico. Estes são classificados como interpretados, pois o algoritmo em si é executado pelo interpretador.
-    \item As tabelas mostram a complexidade assintótica da implementação avaliada ao lado do tempo medido, permitindo a comparação do teórico vs real, principalmente entre grafos de diferentes densidades.
-    \item Para cada algoritmo, é estimado o \textbf{expoente empírico do crescimento}. Supondo que o tempo cresça como $t(n) \approx C \cdot n^k$, aplicar o logaritmo resulta em
+    \item implementações em linguagem interpretada (ex: Python) e as de núcleo compilado (ex: C++) não têm o tempo absoluto comparado entre si: as tabelas de tempo trazem apenas as interpretadas. Manter as duas linguagens, em vez de uma só, foi necessário por dois motivos. Primeiro, não há implementações públicas confiáveis de todos os algoritmos em uma mesma linguagem, e portá-las significaria reimplementá-las, o que contraria o objetivo de avaliar o código como foi publicado (camada intacta, Seção~\ref{sec:arquitetura}). Segundo, as bibliotecas maduras usadas como referência de correção e de patamar de desempenho (igraph, SciPy e lap) têm núcleo compilado. O conjunto principal de comparação é o das implementações interpretadas, cujas tabelas de tempo compõem o Capítulo~\ref{cap:resultados}; as compiladas entram nas tabelas de qualidade, e a comparação entre as duas linguagens é feita apenas pelo expoente empírico (critério 3). Bibliotecas escritas inteiramente em linguagem interpretada, como o NetworkX, entram nas tabelas de tempo, pois nesse caso a comparação de tempo com elas é legítima. Há ainda casos intermediários: algoritmos escritos como laços em Python sobre vetores da biblioteca NumPy, cujo núcleo é compilado, como os Húngaros \texttt{hunalgorithm} e \texttt{mayorx} e o Gale-Shapley numérico. Estes são classificados como interpretados, pois o algoritmo em si é executado pelo interpretador;
+    \item as tabelas mostram a complexidade assintótica da implementação avaliada ao lado do tempo medido, permitindo a comparação do teórico vs real, principalmente entre grafos de diferentes densidades;
+    \item para cada algoritmo, é estimado o \textbf{expoente empírico do crescimento}. Supondo que o tempo cresça como $t(n) \approx C \cdot n^k$, aplicar o logaritmo resulta em
     \begin{equation}
         \log t(n) = \log C + k \log n,
     \end{equation}
@@ -322,8 +319,8 @@ complementares.
     \begin{equation}
         k = \frac{\sum_i (x_i - \bar{x})(y_i - \bar{y})}{\sum_i (x_i - \bar{x})^2}.
     \end{equation}
-    Esse dado, ao contrário do tempo absoluto, é comparável entre linguagens: a linguagem altera apenas a constante $C$, o que desloca a reta verticalmente sem mudar sua inclinação. Junto ao expoente é reportado o coeficiente de determinação $R^2$, que indica o quanto os pontos de fato seguem uma reta; um $R^2$ baixo sinaliza que o crescimento não é bem descrito por uma única potência de $n$ na faixa medida.
-    \item Em problemas com apenas soluções exatas, a qualidade da solução é idêntica entre todos, sendo o método de comparação o tempo de execução. Já nos que têm soluções aproximadas ou heurísticas, a tabela de qualidade apresenta o valor absoluto da solução de cada algoritmo (cardinalidade, custo ou peso), ao lado do valor do algoritmo exato de referência (ou do melhor resultado conhecido, quando o exato não é executado); a razão entre os dois é calculada na discussão dos resultados.
+    Esse dado, ao contrário do tempo absoluto, é comparável entre linguagens: a linguagem altera apenas a constante $C$, o que desloca a reta verticalmente sem mudar sua inclinação. Junto ao expoente é reportado o coeficiente de determinação $R^2$, que indica o quanto os pontos de fato seguem uma reta; um $R^2$ baixo sinaliza que o crescimento não é bem descrito por uma única potência de $n$ na faixa medida;
+    \item em problemas com apenas soluções exatas, a qualidade da solução é idêntica entre todos, sendo o método de comparação o tempo de execução. Já nos que têm soluções aproximadas ou heurísticas, a tabela de qualidade apresenta o valor absoluto da solução de cada algoritmo (cardinalidade, custo ou peso), ao lado do valor do algoritmo exato de referência (ou do melhor resultado conhecido, quando o exato não é executado); a razão entre os dois é calculada na discussão dos resultados.
 \end{enumerate}
 
 % ---------------------------------------------------------------------------
@@ -331,14 +328,13 @@ complementares.
 \label{sec:ambiente}
 
 Todos os resultados foram obtidos numa única máquina
-(Tabela~\ref{tab:maquina}); medir tudo no mesmo ambiente é o que torna os tempos
-comparáveis. Três fatores exigiram cuidados, dois da máquina e um da linguagem,
+(Tabela~\ref{tab:maquina}). Três fatores exigiram cuidados, dois da máquina e um da linguagem,
 todos documentados para permitir reprodução.
 
 \begin{enumerate}
-    \item Por ser um \textbf{processador híbrido} (núcleos de desempenho e de eficiência, não equivalentes), a execução foi fixada a um núcleo de desempenho, evitando que a migração entre núcleos alterasse o tempo sem mudança no código.
-    \item Como a \textbf{frequência varia} dinamicamente com a carga, o regulador foi fixado no modo de desempenho, com a máquina conectada à energia e sem aplicações concorrentes.
-    \item Em Python, o \textit{hash} de cadeias de caracteres é aleatorizado a cada processo, o que altera a ordem de iteração de conjuntos e dicionários entre execuções. Por isso, a semente dessa aleatorização foi fixada (variável \texttt{PYTHONHASHSEED}), tornando as execuções reprodutíveis. Isso foi necessário pois foi notada em um dos algoritmos uma grande sensibilidade a essa ordem, o que será detalhado no capítulo de resultados.
+    \item por ser um \textbf{processador híbrido} (núcleos de desempenho e de eficiência, não equivalentes), a execução foi fixada a um núcleo de desempenho, evitando que a migração entre núcleos alterasse o tempo sem mudança no código;
+    \item como a \textbf{frequência varia} dinamicamente com a carga, o regulador foi fixado no modo de desempenho, com a máquina conectada à energia e sem aplicações concorrentes;
+    \item em Python, o \textit{hash} de cadeias de caracteres é aleatorizado a cada processo, o que altera a ordem de iteração de conjuntos e dicionários entre execuções. Por isso, a semente dessa aleatorização foi fixada (variável \texttt{PYTHONHASHSEED}), tornando as execuções reprodutíveis. Isso foi necessário pois foi notada em um dos algoritmos uma grande sensibilidade a essa ordem, o que será detalhado no capítulo de resultados.
 \end{enumerate}
 
 \begin{table}[H]
@@ -354,7 +350,7 @@ todos documentados para permitir reprodução.
         Processador & Intel Core 7 150U (10 núcleos físicos, 12 \textit{threads}) \\
         Topologia & híbrida: 2 núcleos de desempenho e 8 de eficiência \\
         Memória & 33 GB \\
-        Sistema operacional & Ubuntu 24.04.2 LTS (kernel 7.0.0) \\
+        Sistema operacional & Ubuntu 24.04.2 LTS (\textit{kernel} 7.0.0) \\
         Linguagem & Python 3.12.3 \\
         Bibliotecas & NumPy 2.5.2, SciPy 1.18.0, NetworkX 3.6.1, igraph 1.0.0, lap 0.5.13 \\
         \bottomrule
@@ -369,10 +365,10 @@ todos documentados para permitir reprodução.
 A maior parte dos algoritmos foi obtida de implementações públicas, em vez de reescrita. Isso é coerente com o objetivo de comparar métodos presentes na literatura, reduz o risco de erros próprios e permite avaliar a qualidade das implementações efetivamente disponíveis. Foram empregadas quatro estratégias de adaptação, conforme natureza do código:
 
 \begin{enumerate}
-    \item Carregamento direto, quando o original é utilizável na linguagem do projeto;
-    \item Encapsulamento, para métodos disponíveis em bibliotecas maduras;
-    \item Reimplementação fiel, quando o original não é utilizável diretamente, seja por estar em outra linguagem ou versão, ou por conter efeitos colaterais, seguindo a lógica original com a fonte documentada;
-    \item Implementação própria a partir da fonte bibliográfica, para os métodos aproximados, as heurísticas e alguns exatos sem implementação pública adequada, algoritmos de descrição curta cuja reimplementação é mais confiável que um repositório de qualidade incerta.
+    \item carregamento direto, quando o original é utilizável na linguagem do projeto;
+    \item encapsulamento, para métodos disponíveis em bibliotecas maduras;
+    \item reimplementação fiel, quando o original não é utilizável diretamente, seja por estar em outra linguagem ou versão, ou por conter efeitos colaterais, seguindo a lógica original com a fonte documentada;
+    \item implementação própria a partir da fonte bibliográfica, para os métodos aproximados, as heurísticas e alguns exatos sem implementação pública adequada, algoritmos de descrição curta cuja reimplementação é mais confiável que um repositório de qualidade incerta.
 \end{enumerate}
 
 A Tabela~\ref{tab:proveniencia} registra o tipo e a origem de cada algoritmo, e aponta o pseudocódigo correspondente nos capítulos anteriores.
@@ -388,7 +384,7 @@ A Tabela~\ref{tab:proveniencia} registra o tipo e a origem de cada algoritmo, e 
         \toprule
         \textbf{Algoritmo} & \textbf{Tipo} & \textbf{Alg.} & \textbf{Origem} \\
         \midrule
-        \multicolumn{4}{@{}l}{\textit{Cardinalidade máxima --- grafos bipartidos}} \\
+        \multicolumn{4}{@{}l}{\textit{Cardinalidade máxima em grafos bipartidos}} \\
         Caminhos aumentantes & Exato & \ref{alg:mcbm_augmenting} & \nolinkurl{wbchristerson/perfect-matchings} \\
         Hopcroft-Karp & Exato & \ref{alg:hopcroft_karp} e \ref{alg:hopcroft_karp_busca} & \nolinkurl{sofiat-olaosebikan/hopcroftkarp} \\
         Edmonds-Karp (fluxo) & Exato & \ref{alg:edmonds_karp} & reimpl. de \texttt{Maxflow-Algorithms} \\
@@ -436,18 +432,17 @@ A Tabela~\ref{tab:proveniencia} registra o tipo e a origem de cada algoritmo, e 
 \end{table}
 
 Os endereços completos constam no cabeçalho de cada adaptador, no código-fonte.
-Cabe uma ressalva de linhagem: a rotina de emparelhamento de peso máximo em
+Uma observação sobre a origem do código: a rotina de emparelhamento de peso máximo em
 grafos gerais do NetworkX é uma adaptação do mesmo código de van Rantwijk também
-avaliado de forma independente; compará-las mede o efeito da engenharia de
-biblioteca sobre um mesmo algoritmo, e não duas abordagens distintas.
+avaliado de forma independente; compará-las mede o efeito das alterações feitas na
+biblioteca sobre um mesmo código, e não duas abordagens distintas.
 
 Por fim, nenhuma implementação própria ou reimplementada foi incorporada sem
 \textbf{verificação independente}: os métodos exatos foram confrontados com
 soluções por força bruta (em instâncias pequenas) e com bibliotecas
 consolidadas; os métodos aproximados e as heurísticas, quanto à validade da
 solução e a não superarem o ótimo, e os aproximados também quanto a respeitarem
-suas garantias de aproximação. Além disso, os benchmarks
-já existentes ao início do trabalho foram migrados para o ambiente unificado sob
-uma salvaguarda de não-regressão: a qualidade de saída de cada um foi registrada
-antes da migração e exigiu-se que a nova execução a reproduzisse exatamente, de
-modo que a unificação não alterasse nenhuma conclusão.
+suas garantias de aproximação. Além disso, os \textit{benchmarks}
+já existentes ao início do trabalho foram migrados para o ambiente unificado, e
+conferiu-se que a qualidade das soluções de cada um continuou exatamente a mesma
+após a migração.

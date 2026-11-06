@@ -1,7 +1,7 @@
 % ----------------------------------------------------------------------------------------------
-% 3.2.1. Problema de atribuição (Assignment Problem)
+% 3.2.1. Problema de atribuição (\textit{Assignment Problem})
 % ----------------------------------------------------------------------------------------------
-\section{Problema de atribuição (Assignment Problem)}
+\section{Problema de atribuição (\textit{Assignment Problem})}
 \label{sec:assignment_problem}
 
 O problema de atribuição, também conhecido como problema do emparelhamento ponderado, consiste em atribuir $n$ agentes a $n$ tarefas, cada agente a exatamente uma tarefa e cada tarefa a exatamente um agente, minimizando a soma dos custos $c_{ij}$ de atribuir o agente $i$ à tarefa $j$ \cite{lawler}. Em termos de grafos, procura-se um emparelhamento perfeito de custo mínimo entre os agentes ($U$) e as tarefas ($V$); em termos da matriz de custos $C = (c_{ij})$, escolhem-se $n$ posições, uma em cada linha e uma em cada coluna \cite{burkard}.
@@ -53,17 +53,17 @@ com uma linha por trabalhador e uma coluna por tarefa. Escolher sempre a posiç�
     \fonte{Elaborado pelo autor. As arestas cinza são todas as atribuições possíveis entre um trabalhador e uma tarefa; as grossas formam a atribuição escolhida, com o custo de cada par.}
 \end{figure}
 
-O nome do problema vem da alocação de pessoal (\textit{personnel assignment problem}), e ele modela também, por exemplo, a escalação de uma equipe de revezamento de natação, a designação de locomotivas a trens e o escalonamento de tarefas em máquinas paralelas, além de aparecer como subproblema do caixeiro-viajante assimétrico e da atribuição quadrática (Seção~\ref{sec:qap}) \cite{burkard}.
+O nome do problema vem da alocação de pessoal (\textit{personnel assignment problem}), e ele modela também, por exemplo, a escalação de uma equipe de revezamento de natação, a designação de locomotivas a trens e o escalonamento de tarefas em máquinas paralelas, além de aparecer como subproblema do caixeiro-viajante assimétrico e da atribuição quadrática (Seção~\ref{sec:delimitacao}) \cite{burkard}.
 
 \subsection{Formulação como programação linear}
 \label{sec:lap_pl}
 
 O problema de atribuição pode ser escrito como um modelo de programação linear (Seção~\ref{sec:pl}), e é dessa formulação que vêm os \textbf{potenciais} usados pelos algoritmos exatos desta seção \cite{burkard}. Considere uma matriz de custos $C = (c_{ij})$ de ordem $n$, em que as linhas formam a parte $U$ e as colunas a parte $V$ do grafo bipartido $G = (U, V; E)$:
-\begin{itemize}
-    \item \textbf{Variáveis:} $x_{ij} \in \{0, 1\}$ para cada linha $i \in U$ e coluna $j \in V$, com $x_{ij} = 1$ se, e somente se, a linha $i$ é atribuída à coluna $j$.
-    \item \textbf{Função objetivo:} minimizar o custo total das atribuições, $\sum_{i \in U} \sum_{j \in V} c_{ij}\, x_{ij}$.
-    \item \textbf{Restrições:} cada linha recebe exatamente uma coluna, e cada coluna recebe exatamente uma linha.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{variáveis:} $x_{ij} \in \{0, 1\}$ para cada linha $i \in U$ e coluna $j \in V$, com $x_{ij} = 1$ se, e somente se, a linha $i$ é atribuída à coluna $j$;
+    \item \textbf{função objetivo:} minimizar o custo total das atribuições, $\sum_{i \in U} \sum_{j \in V} c_{ij}\, x_{ij}$;
+    \item \textbf{restrições:} cada linha recebe exatamente uma coluna, e cada coluna recebe exatamente uma linha.
+\end{alineas}
 Em resumo:
 \begin{equation}
     \begin{aligned}
@@ -198,26 +198,26 @@ Em seguida o pseudocódigo do método Húngaro:
 
 Como dito acima, o algoritmo \textit{maximiza} o peso $w_{ij} = -c_{ij}$. As linhas da matriz formam a parte $U = \{1, \dots, n\}$ e as colunas, a parte $V = \{1', \dots, n'\}$, em que $j'$ denota a coluna $j$ como vértice do grafo. A seguir, cada parte do Algoritmo~\ref{alg:hungarian} é explicada com referência às suas linhas:
 
-\begin{itemize}
-    \item \textbf{Inicialização (linhas~\ref{hu:init}--\ref{hu:nrex}):} Nenhum vértice começa emparelhado. Cada potencial de linha $u_i$ recebe o maior peso da linha $i$, e os potenciais de coluna $v_j$ recebem zero, o que satisfaz $u_i + v_j \geq w_{ij}$ para toda aresta. O contador $nrex$ guarda o número de linhas ainda livres.
-    \item \textbf{Fases (linha~\ref{hu:phase}):} Cada iteração do laço externo aumenta o emparelhamento em uma aresta, até que todas as linhas estejam emparelhadas. No início da fase, as marcas são reiniciadas (linha~\ref{hu:reset}): $m(i)$ indica se a linha $i$ já entrou na árvore de busca, $p(j)$ guarda a linha pela qual a coluna $j$ foi alcançada e $\delta_j$ guarda a menor folga $u_i + v_j - w_{ij}$ da coluna $j$ em relação às linhas da árvore. A fila $Q$ começa com as linhas livres, que são as raízes da busca (linha~\ref{hu:roots}).
-    \item \textbf{Busca no subgrafo de igualdade:} Uma linha $i$ é retirada da fila e entra na árvore (linha~\ref{hu:scan}). Para cada coluna que não é a sua parceira atual (linha~\ref{hu:skip}), calcula-se a folga da aresta $\{i, j\}$ e, se ela for menor que $\delta_j$, a coluna passa a ter $i$ como predecessora (linha~\ref{hu:slack}). Folga nula significa que a aresta pertence ao subgrafo de igualdade $H_{u,v}$ (linha~\ref{hu:tight}). Nesse caso, se a coluna está livre, foi encontrado um caminho aumentante, e o procedimento AUGMENT o aplica (linha~\ref{hu:aug1}); senão, a parceira da coluna entra na fila (linha~\ref{hu:grow}), e a árvore cresce pela aresta emparelhada.
-    \item \textbf{Ajuste dos potenciais (linhas~\ref{hu:dual}--\ref{hu:aug2}):} Se a fila esvazia sem que um caminho aumentante seja encontrado, as linhas e colunas da árvore formam os conjuntos $J$ e $K$. Calcula-se $\delta$, a menor folga entre as colunas fora da árvore (linha~\ref{hu:delta}). Diminuir $u_i$ em $\delta$ nas linhas da árvore e aumentar $v_j$ em $\delta$ nas colunas da árvore preserva as arestas da árvore no subgrafo de igualdade e mantém a viabilidade dos potenciais. Ao mesmo tempo, a folga das colunas de fora diminui em $\delta$ (linha~\ref{hu:dj}), o que coloca ao menos uma nova aresta no subgrafo de igualdade (o conjunto $X$, linha~\ref{hu:X}). Se todas as colunas de $X$ estão emparelhadas, suas parceiras entram na fila e a busca continua; senão, uma coluna livre de $X$ completa um caminho aumentante (linha~\ref{hu:aug2}).
-    \item \textbf{Aumento (Algoritmo~\ref{alg:augment}):} A partir da coluna livre encontrada, o procedimento AUGMENT segue os predecessores $p$ de volta até a raiz, invertendo o emparelhamento ao longo do caminho:
-    \begin{itemize}
-        \item Linha~\ref{aug:flip}: $i = p(j)$ é a linha pela qual a coluna $j'$ foi alcançada na busca. A coluna $j'$ passa a ser parceira de $i$, e a antiga parceira de $i$ é guardada em $prox$ antes de ser substituída. Essa troca é a inversão de uma aresta emparelhada e uma não emparelhada do caminho aumentante.
-        \item Linhas~\ref{aug:next}--\ref{aug:step}: se $i$ tinha parceira ($prox \neq 0$), essa coluna acabou de ficar livre e o processo continua a partir dela, um passo mais perto da raiz.
-        \item Linha~\ref{aug:until}: o laço termina quando $i$ não tinha parceira, ou seja, quando se chega à raiz da árvore, que era uma linha livre. Ao final, o emparelhamento tem uma aresta a mais.
-        \item Como o caminho tem no máximo $n$ arestas emparelhadas, o procedimento custa $O(n)$.
-    \end{itemize}
-    \item \textbf{Complexidade:} Em cada fase, cada linha entra na árvore no máximo uma vez, e sua varredura custa $O(n)$. Cada ajuste de potenciais custa $O(n)$ e acrescenta ao menos uma coluna à árvore, de modo que há no máximo $n$ ajustes por fase. Cada fase custa, portanto, $O(n^2)$, e as $n$ fases resultam em $O(n^3)$.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{inicialização (linhas~\ref{hu:init}--\ref{hu:nrex}):} nenhum vértice começa emparelhado. Cada potencial de linha $u_i$ recebe o maior peso da linha $i$, e os potenciais de coluna $v_j$ recebem zero, o que satisfaz $u_i + v_j \geq w_{ij}$ para toda aresta. O contador $nrex$ guarda o número de linhas ainda livres;
+    \item \textbf{fases (linha~\ref{hu:phase}):} cada iteração do laço externo aumenta o emparelhamento em uma aresta, até que todas as linhas estejam emparelhadas. No início da fase, as marcas são reiniciadas (linha~\ref{hu:reset}): $m(i)$ indica se a linha $i$ já entrou na árvore de busca, $p(j)$ guarda a linha pela qual a coluna $j$ foi alcançada e $\delta_j$ guarda a menor folga $u_i + v_j - w_{ij}$ da coluna $j$ em relação às linhas da árvore. A fila $Q$ começa com as linhas livres, que são as raízes da busca (linha~\ref{hu:roots});
+    \item \textbf{busca no subgrafo de igualdade:} uma linha $i$ é retirada da fila e entra na árvore (linha~\ref{hu:scan}). Para cada coluna que não é a sua parceira atual (linha~\ref{hu:skip}), calcula-se a folga da aresta $\{i, j\}$ e, se ela for menor que $\delta_j$, a coluna passa a ter $i$ como predecessora (linha~\ref{hu:slack}). Folga nula significa que a aresta pertence ao subgrafo de igualdade $H_{u,v}$ (linha~\ref{hu:tight}). Nesse caso, se a coluna está livre, foi encontrado um caminho aumentante, e o procedimento AUGMENT o aplica (linha~\ref{hu:aug1}); senão, a parceira da coluna entra na fila (linha~\ref{hu:grow}), e a árvore cresce pela aresta emparelhada;
+    \item \textbf{ajuste dos potenciais (linhas~\ref{hu:dual}--\ref{hu:aug2}):} se a fila esvazia sem que um caminho aumentante seja encontrado, as linhas e colunas da árvore formam os conjuntos $J$ e $K$. Calcula-se $\delta$, a menor folga entre as colunas fora da árvore (linha~\ref{hu:delta}). Diminuir $u_i$ em $\delta$ nas linhas da árvore e aumentar $v_j$ em $\delta$ nas colunas da árvore preserva as arestas da árvore no subgrafo de igualdade e mantém a viabilidade dos potenciais. Ao mesmo tempo, a folga das colunas de fora diminui em $\delta$ (linha~\ref{hu:dj}), o que coloca ao menos uma nova aresta no subgrafo de igualdade (o conjunto $X$, linha~\ref{hu:X}). Se todas as colunas de $X$ estão emparelhadas, suas parceiras entram na fila e a busca continua; senão, uma coluna livre de $X$ completa um caminho aumentante (linha~\ref{hu:aug2});
+    \item \textbf{aumento (Algoritmo~\ref{alg:augment}):} a partir da coluna livre encontrada, o procedimento AUGMENT segue os predecessores $p$ de volta até a raiz, invertendo o emparelhamento ao longo do caminho:
+    \begin{alineas}
+        \item linha~\ref{aug:flip}: $i = p(j)$ é a linha pela qual a coluna $j'$ foi alcançada na busca. A coluna $j'$ passa a ser parceira de $i$, e a antiga parceira de $i$ é guardada em $prox$ antes de ser substituída. Essa troca é a inversão de uma aresta emparelhada e uma não emparelhada do caminho aumentante;
+        \item linhas~\ref{aug:next}--\ref{aug:step}: se $i$ tinha parceira ($prox \neq 0$), essa coluna acabou de ficar livre e o processo continua a partir dela, um passo mais perto da raiz;
+        \item linha~\ref{aug:until}: o laço termina quando $i$ não tinha parceira, ou seja, quando se chega à raiz da árvore, que era uma linha livre. Ao final, o emparelhamento tem uma aresta a mais;
+        \item como o caminho tem no máximo $n$ arestas emparelhadas, o procedimento custa $O(n)$;
+    \end{alineas}
+    \item \textbf{complexidade:} em cada fase, cada linha entra na árvore no máximo uma vez, e sua varredura custa $O(n)$. Cada ajuste de potenciais custa $O(n)$ e acrescenta ao menos uma coluna à árvore, de modo que há no máximo $n$ ajustes por fase. Cada fase custa, portanto, $O(n^2)$, e as $n$ fases resultam em $O(n^3)$.
+\end{alineas}
 
 \subsubsection{Jonker-Volgenant} 
 
 O algoritmo de Jonker-Volgenant é uma evolução otimizada para a resolução do problema de atribuição linear, proposto por Roy Jonker e Anton Volgenant em 1987. Ele foi desenvolvido para superar o desempenho prático do método Húngaro, especialmente em grafos densos, combinando a teoria de dualidade com estratégias de inicialização e busca mais eficientes \cite{jonker}.
 
-Assim como o método Húngaro, este algoritmo mantém os potenciais $u_i$ e $v_j$ da formulação dual (Seção~\ref{sec:lap_pl}) e as condições de folga complementar. No entanto, sua principal distinção conceitual é o uso da estratégia de Caminho Aumentante Mais Curto (Shortest Augmenting Path). Ao invés de construir emparelhamentos máximos em fases distintas, o algoritmo foca em encontrar o caminho de custo mínimo que conecta uma linha não atribuída a uma coluna livre.
+Assim como o método Húngaro, este algoritmo mantém os potenciais $u_i$ e $v_j$ da formulação dual (Seção~\ref{sec:lap_pl}) e as condições de folga complementar. No entanto, sua principal distinção conceitual é o uso da estratégia de Caminho Aumentante Mais Curto (\textit{Shortest Augmenting Path}). Ao invés de construir emparelhamentos máximos em fases distintas, o algoritmo foca em encontrar o caminho de custo mínimo que conecta uma linha não atribuída a uma coluna livre.
 
 O processo inicia com heurísticas avançadas (conhecidas como redução de colunas e transferência de redução) para resolver rapidamente as atribuições triviais. Para os vértices restantes, o algoritmo realiza uma busca similar ao algoritmo de Dijkstra: ele explora o grafo para encontrar o caminho aumentante mais curto, atualizando os potenciais duais simultaneamente durante a busca. Isso garante que, a cada iteração, o emparelhamento seja aumentado pelo menor custo possível até que a solução ótima completa seja atingida.
 
@@ -266,27 +266,26 @@ A implementação completa deste algoritmo é extensa; o Algoritmo~\ref{alg:jv} 
 
 Diferentemente do Algoritmo~\ref{alg:hungarian}, o LAPJV minimiza diretamente o custo e mantém explícitos apenas os potenciais de coluna $v_j$; o potencial de cada linha fica implícito como o menor custo reduzido $\min_j (c_{ij} - v_j)$ da linha. Uma aresta $\{i,j\}$ é \textit{justa} quando seu custo reduzido $c_{ij} - v_j$ é o mínimo da linha $i$. As fases 1 a 3 são heurísticas de inicialização, que atribuem rapidamente boa parte das linhas; apenas a fase 4 garante a otimalidade \cite{jonker}:
 
-\begin{itemize}
-    \item \textbf{Fase 1, redução de colunas (linhas~\ref{jv:p1}--\ref{jv:colassign}):} As colunas são percorridas da última para a primeira (linha~\ref{jv:colloop}). Cada potencial $v_j$ recebe o menor custo da coluna, e $i^*$ é a linha onde ele ocorre (linha~\ref{jv:colmin}). Se essa linha ainda está livre, ela é atribuída à coluna (linha~\ref{jv:colassign}); se já foi atribuída a outra coluna, a coluna $j$ fica livre por enquanto.
-    \item \textbf{Fase 2, transferência de redução (linhas~\ref{jv:p2}--\ref{jv:transfer}):} Para cada linha atribuída na fase 1 cuja coluna $j_1$ só tem essa linha como mínimo (linha~\ref{jv:trloop}), o potencial $v_{j_1}$ diminui pela menor diferença entre o custo reduzido da linha nas outras colunas e o de $j_1$ (linha~\ref{jv:transfer}). Isso transfere a folga da coluna para a linha: a atribuição atual continua justa, mas a coluna $j_1$ fica menos atrativa para as linhas livres, o que favorece a fase 3.
-    \item \textbf{Fase 3, redução aumentante de linhas (linhas~\ref{jv:p3}--\ref{jv:displace}):} Cada linha livre $i$ (linha~\ref{jv:arrloop}) busca as duas colunas de menor custo reduzido, $j_1$ e $j_2$ (linha~\ref{jv:two}).
-    \begin{itemize}
-        \item Se o mínimo é estrito (linha~\ref{jv:strict}), $v_{j_1}$ diminui em $u_2 - u_1$ (linha~\ref{jv:dec}), o que iguala o custo reduzido de $j_1$ ao de $j_2$ para a linha $i$ e mantém a aresta $\{i, j_1\}$ justa.
-        \item Em caso de empate e se $j_1$ já está atribuída, a linha escolhe $j_2$ (linha~\ref{jv:tie}), para não desalojar outra linha sem necessidade.
-        \item A linha $i$ é atribuída a $j_1$; a linha que ocupava $j_1$, se houver, volta a ser livre (linha~\ref{jv:displace}) e será processada novamente, agora diante de um $v_{j_1}$ menor.
-    \end{itemize}
-    A fase é aplicada duas vezes, como recomendado pelos autores, pois as linhas desalojadas podem disputar as colunas indefinidamente.
-    \item \textbf{Fase 4, aumento por caminhos mínimos (linhas~\ref{jv:p4}--\ref{jv:aug}):} Para cada linha ainda livre (linha~\ref{jv:augloop}), uma busca semelhante ao algoritmo de Dijkstra sobre os custos reduzidos encontra o caminho aumentante mais barato até uma coluna livre (linha~\ref{jv:sp}). Os custos reduzidos são não negativos, o que permite usar Dijkstra. Os potenciais das colunas examinadas são ajustados pela sua distância $d_j$ em relação ao comprimento $\mu$ do caminho (linha~\ref{jv:dual}), o que torna justas as arestas do caminho e mantém os demais custos reduzidos não negativos. Por fim, a atribuição é invertida ao longo do caminho, como no procedimento AUGMENT (linha~\ref{jv:aug}).
-    \item \textbf{Retorno (linha~\ref{jv:ret}):} Devolve a atribuição $x$ e os potenciais de coluna $v$, que comprovam a otimalidade pela folga complementar.
-    \item \textbf{Complexidade:} As fases 1 e 2 percorrem a matriz uma vez, em $O(n^2)$. A fase 3 tem custo limitado na prática por ser aplicada apenas duas vezes. Na fase 4, há no máximo $n$ linhas livres, e cada busca de caminho mínimo em uma matriz densa custa $O(n^2)$, o que leva ao limite total de $O(n^3)$, o mesmo do método Húngaro. A vantagem do LAPJV é prática: a inicialização deixa poucas linhas para a fase 4, que é a mais cara.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{fase 1, redução de colunas (linhas~\ref{jv:p1}--\ref{jv:colassign}):} as colunas são percorridas da última para a primeira (linha~\ref{jv:colloop}). Cada potencial $v_j$ recebe o menor custo da coluna, e $i^*$ é a linha onde ele ocorre (linha~\ref{jv:colmin}). Se essa linha ainda está livre, ela é atribuída à coluna (linha~\ref{jv:colassign}); se já foi atribuída a outra coluna, a coluna $j$ fica livre por enquanto;
+    \item \textbf{fase 2, transferência de redução (linhas~\ref{jv:p2}--\ref{jv:transfer}):} para cada linha atribuída na fase 1 cuja coluna $j_1$ só tem essa linha como mínimo (linha~\ref{jv:trloop}), o potencial $v_{j_1}$ diminui pela menor diferença entre o custo reduzido da linha nas outras colunas e o de $j_1$ (linha~\ref{jv:transfer}). Isso transfere a folga da coluna para a linha: a atribuição atual continua justa, mas a coluna $j_1$ fica menos atrativa para as linhas livres, o que favorece a fase 3;
+    \item \textbf{fase 3, redução aumentante de linhas (linhas~\ref{jv:p3}--\ref{jv:displace}):} cada linha livre $i$ (linha~\ref{jv:arrloop}) busca as duas colunas de menor custo reduzido, $j_1$ e $j_2$ (linha~\ref{jv:two}). A fase é aplicada duas vezes, como recomendado pelos autores, pois as linhas desalojadas podem disputar as colunas indefinidamente. Em cada linha livre:
+    \begin{alineas}
+        \item se o mínimo é estrito (linha~\ref{jv:strict}), $v_{j_1}$ diminui em $u_2 - u_1$ (linha~\ref{jv:dec}), o que iguala o custo reduzido de $j_1$ ao de $j_2$ para a linha $i$ e mantém a aresta $\{i, j_1\}$ justa;
+        \item em caso de empate e se $j_1$ já está atribuída, a linha escolhe $j_2$ (linha~\ref{jv:tie}), para não desalojar outra linha sem necessidade;
+        \item a linha $i$ é atribuída a $j_1$; a linha que ocupava $j_1$, se houver, volta a ser livre (linha~\ref{jv:displace}) e será processada novamente, agora diante de um $v_{j_1}$ menor;
+    \end{alineas}
+    \item \textbf{fase 4, aumento por caminhos mínimos (linhas~\ref{jv:p4}--\ref{jv:aug}):} para cada linha ainda livre (linha~\ref{jv:augloop}), uma busca semelhante ao algoritmo de Dijkstra sobre os custos reduzidos encontra o caminho aumentante mais barato até uma coluna livre (linha~\ref{jv:sp}). Os custos reduzidos são não negativos, o que permite usar Dijkstra. Os potenciais das colunas examinadas são ajustados pela sua distância $d_j$ em relação ao comprimento $\mu$ do caminho (linha~\ref{jv:dual}), o que torna justas as arestas do caminho e mantém os demais custos reduzidos não negativos. Por fim, a atribuição é invertida ao longo do caminho, como no procedimento AUGMENT (linha~\ref{jv:aug});
+    \item \textbf{retorno (linha~\ref{jv:ret}):} devolve a atribuição $x$ e os potenciais de coluna $v$, que comprovam a otimalidade pela folga complementar;
+    \item \textbf{complexidade:} as fases 1 e 2 percorrem a matriz uma vez, em $O(n^2)$. A fase 3 tem custo limitado na prática por ser aplicada apenas duas vezes. Na fase 4, há no máximo $n$ linhas livres, e cada busca de caminho mínimo em uma matriz densa custa $O(n^2)$, o que leva ao limite total de $O(n^3)$, o mesmo do método Húngaro. A vantagem do LAPJV é prática: a inicialização deixa poucas linhas para a fase 4, que é a mais cara.
+\end{alineas}
 
 \subsubsection{Redução para problema de fluxo de custo mínimo}
 \label{p:reduction_to_minimal_flow}
 
 Similarmente ao que foi feito para o problema de emparelhamento de cardinalidade máxima, o problema de atribuição pode ser resolvido através de uma redução ao problema de fluxo de custo mínimo. Assim como para o problema anterior, essa redução é feita criando dois novos vértices: um vértice fonte $s$ e um vértice sorvedouro $t$. Em seguida, são adicionadas arestas do vértice fonte $s$ para cada vértice de $U$ (as linhas), com capacidade 1 e custo 0. Também são adicionadas arestas de cada vértice de $V$ (as colunas) para o vértice sorvedouro $t$, também com capacidade 1 e custo 0. Finalmente, as arestas do grafo bipartido original são adicionadas com capacidade 1 e custo igual ao custo de atribuição correspondente.
 
-Para resolver problemas de fluxo podemos utilizar algoritmos como o de caminhos de custo mínimo sucessivos (Successive Shortest Paths) ou o algoritmo de cancelamento de ciclos (Cycle canceling) \cite{schrijver}.
+Para resolver problemas de fluxo, podem ser usados algoritmos como o de caminhos de custo mínimo sucessivos (\textit{successive shortest paths}) ou o algoritmo de cancelamento de ciclos (\textit{cycle canceling}) \cite{schrijver}.
 
 % TODO: Incluir também Out-of-kilter, Simplex, e cost-scaling
 
@@ -296,7 +295,7 @@ O primeiro algoritmo, o de caminhos de custo mínimo sucessivos, foi inicialment
     \DontPrintSemicolon
     \SetAlgoLined
 
-    \Fn{OPTFLOW($G, c, s, t, \gamma, v; f, \text{sol}$)}{
+    \Fn{OPTFLOW($G, c, s, t, w, v; f, \text{sol}$)}{
         % Line 1: Single-line for loop
         \lFor{$e \in E$}{ $f(e) \leftarrow 0$ \label{ssp:init}}
 
@@ -307,7 +306,7 @@ O primeiro algoritmo, o de caminhos de custo mínimo sucessivos, foi inicialment
         \While{$\text{sol} = \text{verdadeiro}$ \KwAnd $\text{val} < v$\label{ssp:loop}}{
 
             % Line 4: Descriptive text
-            construa a rede auxiliar $N' = (G', c', s, t)$ com função de custo $\gamma'$\label{ssp:aux}\;
+            construa a rede auxiliar $N' = (G', c', s, t)$ com função de custo $w'$\label{ssp:aux}\;
 
             % Line 5: If-Else structure
             \eIf{$t$ não é alcançável a partir de $s$ em $G'$\label{ssp:reach}}{
@@ -315,7 +314,7 @@ O primeiro algoritmo, o de caminhos de custo mínimo sucessivos, foi inicialment
                 $\text{sol} \leftarrow \text{falso}$\label{ssp:fail}\;
             }{
                 % Line 7: Descriptive text
-                determine um caminho mínimo $P$ de $s$ a $t$ em $(G', \gamma')$\label{ssp:path}\;
+                determine um caminho mínimo $P$ de $s$ a $t$ em $(G', w')$\label{ssp:path}\;
 
                 % Line 8: Multiple assignments
                 $\delta \leftarrow \min \{c'(e) : e \in P \}; \delta' \leftarrow \min(\delta, v - \text{val}); \text{val} \leftarrow \text{val} + \delta'$\label{ssp:delta}\;
@@ -329,27 +328,27 @@ O primeiro algoritmo, o de caminhos de custo mínimo sucessivos, foi inicialment
     \label{alg:optflow}
 \end{algorithm}
 
-O procedimento recebe a rede $G$ com capacidades $c$, fonte $s$, sorvedouro $t$ e custos $\gamma$, além do valor de fluxo desejado $v$; devolve o fluxo $f$ e o indicador $\text{sol}$, que diz se esse valor pôde ser atingido. As linhas do Algoritmo~\ref{alg:optflow} funcionam da seguinte forma \cite{jungnickel}:
+O procedimento recebe a rede $G$ com capacidades $c$, fonte $s$, sorvedouro $t$ e custos $w$, além do valor de fluxo desejado $v$; devolve o fluxo $f$ e o indicador $\text{sol}$, que diz se esse valor pôde ser atingido. As linhas do Algoritmo~\ref{alg:optflow} funcionam da seguinte forma \cite{jungnickel}:
 
-\begin{itemize}
-    \item Linhas~\ref{ssp:init}--\ref{ssp:sol}: o fluxo começa nulo em todos os arcos, o que já é um fluxo de custo mínimo para o valor $0$; $\text{val}$ guarda o valor do fluxo atual.
-    \item Linha~\ref{ssp:loop}: cada iteração aumenta o valor do fluxo, até atingir $v$ ou até se descobrir que isso é impossível.
-    \item Linha~\ref{ssp:aux}: constrói a rede auxiliar (residual) $N'$. Para cada arco $(x,y)$ com $f(x,y) < c(x,y)$, há um arco $(x,y)$ com capacidade residual $c(x,y) - f(x,y)$ e custo $\gamma(x,y)$; para cada arco com $f(x,y) > 0$, há um arco reverso $(y,x)$ com capacidade $f(x,y)$ e custo $-\gamma(x,y)$, que representa a possibilidade de desfazer fluxo e recuperar seu custo.
-    \item Linhas~\ref{ssp:reach}--\ref{ssp:fail}: se $t$ não é alcançável a partir de $s$ na rede auxiliar, o fluxo atual é máximo e o valor $v$ não pode ser atingido; o algoritmo para com $\text{sol} = \text{falso}$.
-    \item Linha~\ref{ssp:path}: encontra o caminho $P$ de menor custo de $s$ a $t$ na rede auxiliar. Como há arcos de custo negativo, o método usado aqui precisa tratá-los (ver as opções a seguir).
-    \item Linha~\ref{ssp:delta}: $\delta$ é a menor capacidade residual do caminho, o máximo que se pode enviar por ele; $\delta'$ limita esse valor ao que ainda falta para atingir $v$.
-    \item Linha~\ref{ssp:aug}: aumenta o fluxo em $\delta'$ nos arcos de $P$ que são arcos originais e o diminui nos que são reversos. Como $P$ é um caminho mínimo, o novo fluxo continua sendo de custo mínimo para o seu valor, o que garante a otimalidade ao final.
-    \item \textbf{Complexidade:} Na redução do problema de atribuição, todas as capacidades são $1$ e $v = n$, de modo que cada iteração envia uma unidade de fluxo e há no máximo $n$ iterações. O custo de cada uma é dominado pela busca do caminho mínimo da linha~\ref{ssp:path}; com Bellman-Ford, ela custa $O(VE)$, o que resulta em $O(nVE) \subseteq O(V^2 E)$.
-\end{itemize}
+\begin{alineas}
+    \item linhas~\ref{ssp:init}--\ref{ssp:sol}: o fluxo começa nulo em todos os arcos, o que já é um fluxo de custo mínimo para o valor $0$; $\text{val}$ guarda o valor do fluxo atual;
+    \item linha~\ref{ssp:loop}: cada iteração aumenta o valor do fluxo, até atingir $v$ ou até se descobrir que isso é impossível;
+    \item linha~\ref{ssp:aux}: constrói a rede auxiliar (residual) $N'$. Para cada arco $(x,y)$ com $f(x,y) < c(x,y)$, há um arco $(x,y)$ com capacidade residual $c(x,y) - f(x,y)$ e custo $w(x,y)$; para cada arco com $f(x,y) > 0$, há um arco reverso $(y,x)$ com capacidade $f(x,y)$ e custo $-w(x,y)$, que representa a possibilidade de desfazer fluxo e recuperar seu custo;
+    \item linhas~\ref{ssp:reach}--\ref{ssp:fail}: se $t$ não é alcançável a partir de $s$ na rede auxiliar, o fluxo atual é máximo e o valor $v$ não pode ser atingido; o algoritmo para com $\text{sol} = \text{falso}$;
+    \item linha~\ref{ssp:path}: encontra o caminho $P$ de menor custo de $s$ a $t$ na rede auxiliar. Como há arcos de custo negativo, o método usado aqui precisa tratá-los (ver as opções a seguir);
+    \item linha~\ref{ssp:delta}: $\delta$ é a menor capacidade residual do caminho, o máximo que se pode enviar por ele; $\delta'$ limita esse valor ao que ainda falta para atingir $v$;
+    \item linha~\ref{ssp:aug}: aumenta o fluxo em $\delta'$ nos arcos de $P$ que são arcos originais e o diminui nos que são reversos. Como $P$ é um caminho mínimo, o novo fluxo continua sendo de custo mínimo para o seu valor, o que garante a otimalidade ao final;
+    \item \textbf{complexidade:} na redução do problema de atribuição, todas as capacidades são $1$ e $v = n$, de modo que cada iteração envia uma unidade de fluxo e há no máximo $n$ iterações. O custo de cada uma é dominado pela busca do caminho mínimo da linha~\ref{ssp:path}; com Bellman-Ford, ela custa $O(VE)$, o que resulta em $O(nVE) \subseteq O(V^2 E)$.
+\end{alineas}
 
- A complexidade do algoritmo é dependente do método utilizado para encontrar o caminho $P$. A implementação padrão utilizaria o algoritmo de Dijkstra, que tem uma complexidade de $O(E + V \log V)$ em uma implementação com filas de prioridade (Algoritmo~\ref{alg:dijkstra_fund}), onde $V$ é o número de vértices e $E$ o número de arestas. Porém, como o grafo residual pode conter arestas com custos negativos, essa implementação não funcionaria corretamente. Para contornar esse problema, temos duas opções principais:
+ A complexidade do algoritmo é dependente do método utilizado para encontrar o caminho $P$. A implementação padrão utilizaria o algoritmo de Dijkstra, que tem uma complexidade de $O(E + V \log V)$ em uma implementação com filas de prioridade (Algoritmo~\ref{alg:dijkstra_fund}), onde $V$ é o número de vértices e $E$ o número de arestas. Porém, como o grafo residual pode conter arestas com custos negativos, essa implementação não funcionaria corretamente. Para contornar esse problema, há duas opções principais:
 
- \begin{itemize}
-    \item \textbf{Utilizar Bellman-Ford:} A solução mais simples e direta é utilizar, ao invés do algoritmo de Dijkstra, o algoritmo de Bellman-Ford para encontrar o caminho de custo mínimo $P$. O Bellman-Ford é mais lento, com uma complexidade de $O(VE)$ (Algoritmo~\ref{alg:bellman_ford}), mas lida corretamente com arestas de custo negativo.
-    \item \textbf{Utilizar a técnica de potenciais:} Permite que utilizemos o algoritmo de Dijkstra mesmo na presença de arestas de custo negativo.
+ \begin{alineas}
+    \item \textbf{utilizar Bellman-Ford:} a solução mais simples e direta é utilizar, ao invés do algoritmo de Dijkstra, o algoritmo de Bellman-Ford para encontrar o caminho de custo mínimo $P$. O Bellman-Ford é mais lento, com uma complexidade de $O(VE)$ (Algoritmo~\ref{alg:bellman_ford}), mas lida corretamente com arestas de custo negativo;
+    \item \textbf{utilizar a técnica de potenciais:} permite usar o algoritmo de Dijkstra mesmo na presença de arestas de custo negativo.
     
-    A cada iteração do loop, encontra-se o caminho de custo mínimo $P$ utilizando Dijkstra com os custos reduzidos. Após encontrar o caminho, os potenciais são atualizados para todos os vértices $v$ alcançáveis a partir de $s$ no grafo residual, ajustando-os conforme a distância mínima encontrada pelo Dijkstra, de acordo com a fórmula $h(v) \leftarrow h(v) + d(s,v)$, onde $d(s,v)$ é a distância mínima de $s$ até $v$ no grafo residual com custos reduzidos.
-\end{itemize}
+    A cada iteração do laço, encontra-se o caminho de custo mínimo $P$ utilizando Dijkstra com os custos reduzidos. Após encontrar o caminho, os potenciais são atualizados para todos os vértices $v$ alcançáveis a partir de $s$ no grafo residual, ajustando-os conforme a distância mínima encontrada pelo Dijkstra, de acordo com a fórmula $h(v) \leftarrow h(v) + d(s,v)$, onde $d(s,v)$ é a distância mínima de $s$ até $v$ no grafo residual com custos reduzidos.
+\end{alineas}
 
 O Algoritmo~\ref{alg:optflow_dijkstra} é uma adaptação do Algoritmo~\ref{alg:optflow} que utiliza a técnica de potenciais:
 
@@ -357,12 +356,12 @@ O Algoritmo~\ref{alg:optflow_dijkstra} é uma adaptação do Algoritmo~\ref{alg:
     \DontPrintSemicolon
     \SetAlgoLined
 
-    \Fn{OPTFLOW\_DIJKSTRA($G, c, s, t, \gamma, v; f, \text{sol}$)}{
+    \Fn{OPTFLOW\_DIJKSTRA($G, c, s, t, w, v; f, \text{sol}$)}{
         % Inicialização do Fluxo
         \lFor{$e \in E$}{ $f(e) \leftarrow 0$ \label{sspd:init}}
 
         % Inicialização dos Potenciais (assumindo custos iniciais não negativos)
-        \lFor{$x \in V$}{ $\pi(x) \leftarrow 0$ \label{sspd:pot}}
+        \lFor{$x \in V$}{ $h(x) \leftarrow 0$ \label{sspd:pot}}
 
         $\text{sol} \leftarrow \text{verdadeiro}, \text{val} \leftarrow 0$\label{sspd:sol}\;
 
@@ -372,7 +371,7 @@ O Algoritmo~\ref{alg:optflow_dijkstra} é uma adaptação do Algoritmo~\ref{alg:
 
             % Definição do Custo Reduzido para o Dijkstra
             \For{$e=(u, v) \in E(G')$\label{sspd:redloop}}{
-                custo reduzido: $w(e) \leftarrow \gamma(e) + \pi(u) - \pi(v)$\label{sspd:red}\;
+                custo reduzido: $\bar{w}(e) \leftarrow w(e) + h(u) - h(v)$\label{sspd:red}\;
             }
 
             % Execução do Dijkstra (Lógica omitida, foco no input/output)
@@ -382,7 +381,7 @@ O Algoritmo~\ref{alg:optflow_dijkstra} é uma adaptação do Algoritmo~\ref{alg:
                 $\text{sol} \leftarrow \text{falso}$\label{sspd:fail}\;
             }{
                 % Atualização dos Potenciais (Passo Crucial)
-                \lFor{$x \in V$ tal que $d(x) < \infty$}{ $\pi(x) \leftarrow \pi(x) + d(x)$ \label{sspd:upd}}
+                \lFor{$x \in V$ tal que $d(x) < \infty$}{ $h(x) \leftarrow h(x) + d(x)$ \label{sspd:upd}}
 
                 identifique o caminho mínimo $P$ de $s$ a $t$ a partir de $d(\cdot)$\label{sspd:path}\;
 
@@ -398,17 +397,17 @@ O Algoritmo~\ref{alg:optflow_dijkstra} é uma adaptação do Algoritmo~\ref{alg:
 \end{algorithm}
 
     A estrutura é a mesma do Algoritmo~\ref{alg:optflow}; as diferenças estão no cálculo do caminho mínimo:
-    \begin{itemize}
-        \item Linhas~\ref{sspd:init}--\ref{sspd:sol}: além do fluxo nulo, os potenciais $\pi$ começam em $0$. Isso é válido porque, na rede inicial, só há arcos originais, cujos custos de atribuição são não negativos.
-        \item Linhas~\ref{sspd:loop}--\ref{sspd:aux}: como no Algoritmo~\ref{alg:optflow}, a cada iteração constrói-se a rede auxiliar, com seus arcos reversos de custo negativo.
-        \item Linhas~\ref{sspd:redloop}--\ref{sspd:red}: cada arco $(u,v)$ da rede auxiliar recebe o custo reduzido $w(e) = \gamma(e) + \pi(u) - \pi(v)$. Como os potenciais são as distâncias da iteração anterior, que respeitam a desigualdade triangular, esses custos são não negativos, inclusive nos arcos reversos.
-        \item Linha~\ref{sspd:dij}: executa Dijkstra com os custos reduzidos, o que é correto por eles serem não negativos. Em todo caminho de $s$ a $t$, os potenciais intermediários se cancelam, e o custo reduzido difere do custo original apenas pela constante $\pi(s) - \pi(t)$. Por isso, o caminho mínimo é o mesmo nos dois custos.
-        \item Linhas~\ref{sspd:reach}--\ref{sspd:fail}: se $d(t) = \infty$, $t$ não é alcançável e o algoritmo para, como antes.
-        \item Linha~\ref{sspd:upd}: os potenciais dos vértices alcançados são somados às distâncias encontradas. Com isso, os arcos do caminho mínimo passam a ter custo reduzido $0$, e os arcos reversos criados pelo aumento também, o que mantém os custos reduzidos não negativos na próxima iteração.
-        \item Linhas~\ref{sspd:path}--\ref{sspd:aug}: o caminho é recuperado a partir das distâncias, e o aumento do fluxo segue exatamente as linhas~\ref{ssp:delta}--\ref{ssp:aug} do Algoritmo~\ref{alg:optflow}.
-    \end{itemize}
+    \begin{alineas}
+        \item linhas~\ref{sspd:init}--\ref{sspd:sol}: além do fluxo nulo, os potenciais $h$ começam em $0$. Isso é válido porque, na rede inicial, só há arcos originais, cujos custos de atribuição são não negativos;
+        \item linhas~\ref{sspd:loop}--\ref{sspd:aux}: como no Algoritmo~\ref{alg:optflow}, a cada iteração constrói-se a rede auxiliar, com seus arcos reversos de custo negativo;
+        \item linhas~\ref{sspd:redloop}--\ref{sspd:red}: cada arco $(u,v)$ da rede auxiliar recebe o custo reduzido $\bar{w}(e) = w(e) + h(u) - h(v)$. Como os potenciais são as distâncias da iteração anterior, que respeitam a desigualdade triangular, esses custos são não negativos, inclusive nos arcos reversos;
+        \item linha~\ref{sspd:dij}: executa Dijkstra com os custos reduzidos, o que é correto por eles serem não negativos. Em todo caminho de $s$ a $t$, os potenciais intermediários se cancelam, e o custo reduzido difere do custo original apenas pela constante $h(s) - h(t)$. Por isso, o caminho mínimo é o mesmo nos dois custos;
+        \item linhas~\ref{sspd:reach}--\ref{sspd:fail}: se $d(t) = \infty$, $t$ não é alcançável e o algoritmo para, como antes;
+        \item linha~\ref{sspd:upd}: os potenciais dos vértices alcançados são somados às distâncias encontradas. Com isso, os arcos do caminho mínimo passam a ter custo reduzido $0$, e os arcos reversos criados pelo aumento também, o que mantém os custos reduzidos não negativos na próxima iteração;
+        \item linhas~\ref{sspd:path}--\ref{sspd:aug}: o caminho é recuperado a partir das distâncias, e o aumento do fluxo segue exatamente as linhas~\ref{ssp:delta}--\ref{ssp:aug} do Algoritmo~\ref{alg:optflow}.
+    \end{alineas}
 
-A complexidade do algoritmo utilizando Dijkstra com a técnica de potenciais é $O(V (E + V \log V))$, onde $V$ é o número de vértices e $E$ o número de arestas do grafo. Isso ocorre porque, em cada iteração do loop principal, executamos o algoritmo de Dijkstra, que tem complexidade $O(E + V \log V)$ com filas de prioridade (heap de Fibonacci), e o cálculo dos custos reduzidos e a atualização dos potenciais custam apenas $O(E)$ e $O(V)$. O número de iterações é limitado pelo valor do fluxo, $v = n$, que no problema de atribuição não passa de $V$, o número de vértices do grafo bipartido.
+A complexidade do algoritmo utilizando Dijkstra com a técnica de potenciais é $O(V (E + V \log V))$, onde $V$ é o número de vértices e $E$ o número de arestas do grafo. Isso ocorre porque, em cada iteração do laço principal, executa-se o algoritmo de Dijkstra, que tem complexidade $O(E + V \log V)$ com filas de prioridade (\textit{heap} de Fibonacci), e o cálculo dos custos reduzidos e a atualização dos potenciais custam apenas $O(E)$ e $O(V)$. O número de iterações é limitado pelo valor do fluxo, $v = n$, que no problema de atribuição não passa de $V$, o número de vértices do grafo bipartido.
 
 \subsection{Heurísticas}
 

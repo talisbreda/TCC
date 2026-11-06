@@ -15,7 +15,7 @@ chamados \textbf{vértices} (ou \textbf{nós} ou \textbf{pontos}) e um conjunto 
 chamados de \textbf{arestas} \cite{jungnickel}. O conjunto V é o conjunto de vértices de $G$ e $E$ é a família de arestas de 
 $G$.
 
-No contexto deste projeto, assumimos que as arestas $e=\{u,v\}$ são pares não ordenados de vértices distintos. A notação de par ordenado $(u,v)$ fica reservada aos arcos de grafos direcionados (Seção~\ref{sec:grafo_direcionado}). Se uma aresta $e$ 
+Neste trabalho, assume-se que as arestas $e=\{u,v\}$ são pares não ordenados de vértices distintos. A notação de par ordenado $(u,v)$ fica reservada aos arcos de grafos direcionados (Seção~\ref{sec:grafo_direcionado}). Se uma aresta $e$ 
 conecta os vértices $a$ e $b$, diz-se que $a$ e $b$ são \textbf{adjacentes} ou \textbf{vizinhos}, e que a aresta $e$ é 
 \textbf{incidente} a $a$ e $b$ \cite{schrijver}.
 
@@ -28,9 +28,9 @@ codificar relações binárias entre um conjunto de objetos.
 \subsection{Grafo direcionado}
 \label{sec:grafo_direcionado}
 
-Se as relações entre os vértices forem assimétricas, utilizamos um \textbf{grafo direcionado} ou \textbf{dígrafo}, $D=(V,A)$. 
+Se as relações entre os vértices forem assimétricas, utiliza-se um \textbf{grafo direcionado} ou \textbf{dígrafo}, $D=(V,A)$. 
 Neste caso, $A$ é uma família de pares ordenados de vértices, chamados \textbf{arcos} (ou arestas direcionadas). 
-Para um arco $e=(u,v)$, $u$ é chamado o vértice inicial ou \textbf{cauda} (tail), e $v$ é o vértice final ou \textbf{cabeça} (head)
+Para um arco $e=(u,v)$, $u$ é chamado o vértice inicial ou \textbf{cauda} (\textit{tail}), e $v$ é o vértice final ou \textbf{cabeça} (\textit{head})
 \cite{manber}
 
 % ---------------------------------------------------------------------------------------------------------------------------------
@@ -63,11 +63,11 @@ vértices dentro da mesma parte \cite{dasgupta}. Escreve-se, então,
 Essa é a notação de \citeonline{burkard}, usada em todo o trabalho para grafos bipartidos. Nela, $V$ denota apenas uma das partes; nas expressões de complexidade, porém, $V$ continua denotando o número total de vértices do grafo, como em $O(E\sqrt{V})$. Nos problemas de atribuição, em que o grafo é representado por uma matriz de custos, $U$ corresponde às linhas (por exemplo, trabalhadores) e $V$ às colunas (por exemplo, tarefas).
 
 Observações:
-\begin{itemize}
-    \item Um grafo é bipartido se e somente se não contém ciclos de comprimento ímpar \cite{schrijver}
-    \item O grafo bipartido completo $K_{m,n}$ possui $m$ vértices em $U$ e $n$ vértices em $V$, 
-    e contém todas as arestas possíveis entre $U$ e $V$ \cite{jungnickel}
-\end{itemize}
+\begin{alineas}
+    \item um grafo é bipartido se e somente se não contém ciclos de comprimento ímpar \cite{schrijver};
+    \item o grafo bipartido completo $K_{m,n}$ possui $m$ vértices em $U$ e $n$ vértices em $V$, 
+    e contém todas as arestas possíveis entre $U$ e $V$ \cite{jungnickel}.
+\end{alineas}
 
 
 % TODO: teorema da integralidade
@@ -75,7 +75,7 @@ Observações:
 
 \section{Busca em grafos}
 
-A exploração sistemática dos vértices e arestas de um grafo é uma sub-rotina fundamental para a maioria dos algoritmos em redes, incluindo aqueles utilizados para encontrar emparelhamentos, fluxo máximo e componentes conexos. A busca em grafos consiste em seguir as arestas do grafo para visitar os vértices, permitindo descobrir a estrutura da rede e propriedades de conectividade \cite{cormen}. Neste trabalho, a busca em largura e a busca em profundidade são as sub-rotinas com que os algoritmos de emparelhamento procuram caminhos aumentantes: o algoritmo de caminhos aumentantes (Algoritmo~\ref{alg:mcbm_augmenting}), o de Edmonds-Karp (Algoritmo~\ref{alg:edmonds_karp}), o de Hopcroft-Karp (Algoritmos~\ref{alg:hopcroft_karp} e~\ref{alg:hopcroft_karp_busca}) e o Blossom (Algoritmo~\ref{alg:maxmatch}).
+A busca em grafos consiste em seguir as arestas do grafo para visitar os vértices, permitindo descobrir a estrutura da rede e propriedades de conectividade \cite{cormen}. Neste trabalho, a busca em largura e a busca em profundidade são as sub-rotinas com que os algoritmos de emparelhamento procuram caminhos aumentantes: o algoritmo de caminhos aumentantes (Algoritmo~\ref{alg:mcbm_augmenting}), o de Edmonds-Karp (Algoritmo~\ref{alg:edmonds_karp}), o de Hopcroft-Karp (Algoritmos~\ref{alg:hopcroft_karp} e~\ref{alg:hopcroft_karp_busca}) e o Blossom (Algoritmo~\ref{alg:maxmatch}).
 
 \subsection{Representação computacional}
 
@@ -110,7 +110,7 @@ Nos pseudocódigos a seguir, essa operação aparece como Relaxa($u, v, w$) e cu
 
 Para grafos onde os pesos das arestas são não-negativos ($w(u,v)\geq 0$), o Algoritmo de Dijkstra é a abordagem mais eficiente. Ele utiliza uma estratégia gulosa, mantendo um conjunto de vértices cujos pesos finais dos caminhos mais curtos já foram determinados \cite{aho}.
 
-O algoritmo seleciona repetidamente o vértice $u$ com a menor estimativa de caminho mais curto $d[u]$ de uma fila de prioridade, adiciona-o ao conjunto de visitados e relaxa todas as arestas que saem de $u$. \citeonline{dasgupta} destacam que a eficiência do Dijkstra depende da estrutura de dados utilizada. Com um Heap Binário, a complexidade é $O((V+E)\log V)$. \citeonline{cormen} apontam que, ao utilizar um Heap de Fibonacci, a complexidade amortizada pode ser reduzida para $O(E + V\log V)$, o que é crucial para grafos densos. As duas complexidades são justificadas ao final da explicação do Algoritmo~\ref{alg:dijkstra_fund}.
+O algoritmo seleciona repetidamente o vértice $u$ com a menor estimativa de caminho mais curto $d[u]$ de uma fila de prioridade, adiciona-o ao conjunto de visitados e relaxa todas as arestas que saem de $u$. \citeonline{dasgupta} destacam que a eficiência do Dijkstra depende da estrutura de dados utilizada. Com um \textit{heap} binário, a complexidade é $O((V+E)\log V)$. \citeonline{cormen} apontam que, ao utilizar um \textit{heap} de Fibonacci, a complexidade amortizada pode ser reduzida para $O(E + V\log V)$, o que é crucial para grafos densos. As duas complexidades são justificadas ao final da explicação do Algoritmo~\ref{alg:dijkstra_fund}.
 
 \begin{algorithm}[H]
     \DontPrintSemicolon
@@ -134,12 +134,12 @@ O algoritmo seleciona repetidamente o vértice $u$ com a menor estimativa de cam
 
 O Algoritmo~\ref{alg:dijkstra_fund} funciona da seguinte forma \cite{cormen}:
 
-\begin{itemize}
-    \item \textbf{Inicialização (linhas~\ref{dij:init}--\ref{dij:q}):} Inicializa-Fonte atribui $v.d = \infty$ e $v.\pi = \text{NIL}$ a todo vértice, e $s.d = 0$ à fonte. O conjunto $S$ dos vértices com distância final já determinada começa vazio, e a fila de prioridade $Q$, ordenada pelo atributo $d$, começa com todos os vértices.
-    \item \textbf{Escolha gulosa (linhas~\ref{dij:loop}--\ref{dij:add}):} a cada iteração, retira-se de $Q$ o vértice $u$ de menor estimativa $u.d$ e ele é incluído em $S$. Como os pesos são não-negativos, nenhum caminho que passe por outro vértice de $Q$ pode chegar a $u$ com peso menor, e por isso $u.d = \delta(s,u)$ nesse momento.
-    \item \textbf{Relaxamento (linhas~\ref{dij:adj}--\ref{dij:relax}):} todos os arcos que saem de $u$ são relaxados (Equação~\ref{eq:relax}), o que pode diminuir a estimativa dos vizinhos de $u$ ainda em $Q$ e, com isso, alterar suas posições na fila.
-    \item \textbf{Complexidade:} cada vértice é retirado de $Q$ exatamente uma vez, totalizando $V$ operações Extrai-Mínimo, e cada arco é relaxado exatamente uma vez, quando sua origem é retirada, totalizando até $E$ diminuições de chave na fila. Com um heap binário, as duas operações custam $O(\log V)$, o que resulta em $O((V+E)\log V)$. Com um heap de Fibonacci, a diminuição de chave custa $O(1)$ amortizado, o que resulta em $O(E + V\log V)$.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{inicialização (linhas~\ref{dij:init}--\ref{dij:q}):} Inicializa-Fonte atribui $v.d = \infty$ e $v.\pi = \text{NIL}$ a todo vértice, e $s.d = 0$ à fonte. O conjunto $S$ dos vértices com distância final já determinada começa vazio, e a fila de prioridade $Q$, ordenada pelo atributo $d$, começa com todos os vértices;
+    \item \textbf{escolha gulosa (linhas~\ref{dij:loop}--\ref{dij:add}):} a cada iteração, retira-se de $Q$ o vértice $u$ de menor estimativa $u.d$ e ele é incluído em $S$. Como os pesos são não-negativos, nenhum caminho que passe por outro vértice de $Q$ pode chegar a $u$ com peso menor, e por isso $u.d = \delta(s,u)$ nesse momento;
+    \item \textbf{relaxamento (linhas~\ref{dij:adj}--\ref{dij:relax}):} todos os arcos que saem de $u$ são relaxados (Equação~\ref{eq:relax}), o que pode diminuir a estimativa dos vizinhos de $u$ ainda em $Q$ e, com isso, alterar suas posições na fila;
+    \item \textbf{complexidade:} cada vértice é retirado de $Q$ exatamente uma vez, totalizando $V$ operações Extrai-Mínimo, e cada arco é relaxado exatamente uma vez, quando sua origem é retirada, totalizando até $E$ diminuições de chave na fila. Com um \textit{heap} binário, as duas operações custam $O(\log V)$, o que resulta em $O((V+E)\log V)$. Com um \textit{heap} de Fibonacci, a diminuição de chave custa $O(1)$ amortizado, o que resulta em $O(E + V\log V)$.
+\end{alineas}
 
 \subsection{Algoritmo de Bellman-Ford}
 
@@ -171,13 +171,13 @@ A propriedade fundamental do Bellman-Ford é sua capacidade de detectar ciclos n
 
 O Algoritmo~\ref{alg:bellman_ford} funciona da seguinte forma \cite{cormen}:
 
-\begin{itemize}
-    \item \textbf{Inicialização (linha~\ref{bf:init}):} igual à do algoritmo de Dijkstra: $s.d = 0$ e $v.d = \infty$ para os demais vértices.
-    \item \textbf{Relaxamentos (linhas~\ref{bf:outer}--\ref{bf:relax}):} todos os arcos são relaxados, em qualquer ordem, $|V|-1$ vezes. Após a $i$-ésima passagem, todo vértice cujo caminho mais curto a partir de $s$ tem no máximo $i$ arcos já tem sua distância correta. Como um caminho mais curto sem ciclos tem no máximo $|V|-1$ arcos, $|V|-1$ passagens bastam quando não há ciclo negativo.
-    \item \textbf{Detecção de ciclo negativo (linhas~\ref{bf:check}--\ref{bf:neg}):} uma passagem extra verifica se algum arco ainda pode ser relaxado. Se puder, existe um ciclo de peso negativo alcançável a partir de $s$, e o algoritmo retorna \textbf{falso}.
-    \item \textbf{Retorno (linha~\ref{bf:ok}):} caso contrário, retorna \textbf{verdadeiro}, e os atributos $v.d$ e $v.\pi$ descrevem os caminhos mais curtos.
-    \item \textbf{Complexidade:} a inicialização custa $O(V)$; o laço principal faz $|V|-1$ passagens por todos os $E$ arcos, com relaxamento de custo $O(1)$, totalizando $O(VE)$; a verificação final custa $O(E)$. O total é $O(VE)$.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{inicialização (linha~\ref{bf:init}):} igual à do algoritmo de Dijkstra: $s.d = 0$ e $v.d = \infty$ para os demais vértices;
+    \item \textbf{relaxamentos (linhas~\ref{bf:outer}--\ref{bf:relax}):} todos os arcos são relaxados, em qualquer ordem, $|V|-1$ vezes. Após a $i$-ésima passagem, todo vértice cujo caminho mais curto a partir de $s$ tem no máximo $i$ arcos já tem sua distância correta. Como um caminho mais curto sem ciclos tem no máximo $|V|-1$ arcos, $|V|-1$ passagens bastam quando não há ciclo negativo;
+    \item \textbf{detecção de ciclo negativo (linhas~\ref{bf:check}--\ref{bf:neg}):} uma passagem extra verifica se algum arco ainda pode ser relaxado. Se puder, existe um ciclo de peso negativo alcançável a partir de $s$, e o algoritmo retorna \textbf{falso};
+    \item \textbf{retorno (linha~\ref{bf:ok}):} caso contrário, retorna \textbf{verdadeiro}, e os atributos $v.d$ e $v.\pi$ descrevem os caminhos mais curtos;
+    \item \textbf{complexidade:} a inicialização custa $O(V)$; o laço principal faz $|V|-1$ passagens por todos os $E$ arcos, com relaxamento de custo $O(1)$, totalizando $O(VE)$; a verificação final custa $O(E)$. O total é $O(VE)$.
+\end{alineas}
 
 % 2.7.5. Reponderação e Algoritmo de Johnson
 
@@ -189,27 +189,27 @@ O Algoritmo~\ref{alg:bellman_ford} funciona da seguinte forma \cite{cormen}:
 
 \section{Redes de fluxo em grafos}
 
-A teoria dos fluxos em redes é um ramo fundamental da otimização combinatória que modela problemas de transporte de recursos através de um sistema conectado. Esta seção define os conceitos preliminares e apresenta os teoremas centrais que sustentam os algoritmos utilizados neste trabalho. Neste trabalho, as redes de fluxo fundamentam duas reduções: a do emparelhamento bipartido de cardinalidade máxima a um problema de fluxo máximo, resolvido pelo algoritmo de Edmonds-Karp (Algoritmo~\ref{alg:edmonds_karp}), e a do problema de atribuição a um problema de fluxo de custo mínimo (Seção~\ref{p:reduction_to_minimal_flow}).
+A teoria dos fluxos em redes modela o transporte de recursos através de uma rede. Esta seção define os conceitos preliminares e apresenta os teoremas centrais que sustentam os algoritmos utilizados neste trabalho. Neste trabalho, as redes de fluxo fundamentam duas reduções: a do emparelhamento bipartido de cardinalidade máxima a um problema de fluxo máximo, resolvido pelo algoritmo de Edmonds-Karp (Algoritmo~\ref{alg:edmonds_karp}), e a do problema de atribuição a um problema de fluxo de custo mínimo (Seção~\ref{p:reduction_to_minimal_flow}).
 
 \subsection{Definições básicas}
 
 Uma rede de fluxo é definida por um grafo direcionado $G = (V, E)$, onde $V$ é o conjunto de vértices e $E$ é o conjunto de arestas. Distinguem-se dois vértices especiais: a \textbf{fonte} $s\in V$. que produz o fluxo, e o \textbf{sorvedouro} $t\in V$, que o consome. Para cada aresta $(u, v) \in E$, associa-se uma capacidade não-negativa $c(u,v) \geq 0$, que limita a quantidade de fluxo que pode atravessar aquela aresta. Um \textbf{fluxo} em $G$ é uma função $f \space : \space E \rightarrow \mathbb{R}^+$ que satisfaz as seguintes propriedades \cite{cormen}:
 
-\begin{itemize}
-    \item \textbf{Restrição de capacidade:} O fluxo em uma aresta não pode exceder a sua capacidade.
+\begin{alineas}
+    \item \textbf{restrição de capacidade:} o fluxo em uma aresta não pode exceder a sua capacidade:
     \begin{equation}
         \label{eq:capacity_restraint}
-        0 \leq f(u,v) \leq c(u,v), \qquad \forall(u,v) \in E
+        0 \leq f(u,v) \leq c(u,v), \qquad \forall(u,v) \in E;
     \end{equation}
-    \item \textbf{Conservação de fluxo:} para todo vértice $v \in V - \{s,t\}$, a quantidade total de fluxo que entra deve ser igual à que sai
+    \item \textbf{conservação de fluxo:} para todo vértice $v \in V - \{s,t\}$, a quantidade total de fluxo que entra deve ser igual à que sai:
     \begin{equation}
-        \sum_{v \in V}f(v,u) = \sum_{v \in V}f(u,v)
+        \sum_{v \in V}f(v,u) = \sum_{v \in V}f(u,v).
     \end{equation}
-\end{itemize}
+\end{alineas}
 
 \subsection{O problema do fluxo máximo}
 
-O \textbf{problema do fluxo máximo} consiste em encontrar um fluxo $f$ tal que $|f|$ seja o maior possível. Para entender a limitação desse fluxo, precisamos entender os conceitos de corte, redes residuais e caminhos aumentantes.
+O \textbf{problema do fluxo máximo} consiste em encontrar um fluxo $f$ tal que $|f|$ seja o maior possível. Para entender a limitação desse fluxo, é preciso entender os conceitos de corte, redes residuais e caminhos aumentantes.
 
 \subsubsection{Corte}
 
@@ -219,17 +219,17 @@ Um \textbf{corte} $(S,T)$ é uma partição do conjunto de vértices $V$ em dois
     c(S,T) = \sum_{u\in S,v\in T}c(u,v)
 \end{equation}
 
-O \textbf{corte mínimo} de uma rede $N$ é um corte cuja capacidade é a menor entre todos os cortes possíveis nessa rede \cite{cormen}. Isso nos leva ao \textbf{teorema do fluxo máximo e corte mínimo (Max-flow Min-cut)}
+O \textbf{corte mínimo} de uma rede $N$ é um corte cuja capacidade é a menor entre todos os cortes possíveis nessa rede \cite{cormen}. Daí decorre o \textbf{teorema do fluxo máximo e corte mínimo (\textit{max-flow min-cut})}
 
 \begin{quotation}
     \textit{O valor máximo do fluxo de uma rede $N$ é igual à capacidade do corte mínimo em $N$ \cite{jungnickel}}
 \end{quotation}
 
-Este teorema é fundamental para a compreensão e corretude dos algoritmos de caminhos aumentantes.
+Os algoritmos de caminhos aumentantes usam este teorema para provar que o fluxo final é máximo.
 
 \subsubsection{Redes residuais}
 
-A maioria dos algoritmos de resolução de problemas de fluxo máximo se baseia no conceito de redes residuais. Uma \textbf{rede residual} $G_f$ consiste em arestas com capacidades que representam como podemos alterar o fluxo das arestas em $G$. A capacidade das arestas da rede residual $G_f$ corresponde à diferença entre a capacidade da aresta original de $G$ e o fluxo $f$ que está passando pela aresta \cite{cormen}. Ou seja:
+A maioria dos algoritmos de resolução de problemas de fluxo máximo se baseia no conceito de redes residuais. Uma \textbf{rede residual} $G_f$ consiste em arestas com capacidades que representam como se pode alterar o fluxo das arestas em $G$. A capacidade das arestas da rede residual $G_f$ corresponde à diferença entre a capacidade da aresta original de $G$ e o fluxo $f$ que está passando pela aresta \cite{cormen}. Ou seja:
 
 \begin{equation}
     c_f(u,v) = c(u,v) - f(u,v)
@@ -237,10 +237,10 @@ A maioria dos algoritmos de resolução de problemas de fluxo máximo se baseia 
 
 Quando a aresta $(u,v)$ possui fluxo igual à sua capacidade, então $c_f(u,v) = 0$ e a aresta não é incluída no grafo residual $G_f$
 
-\subsubsection{Caminhos aumentantes}
+\subsubsection{Caminhos aumentantes em redes de fluxo}
 \label{p:ford_fulkerson}
 
-Dado um grafo $G=(V,E)$ e um fluxo $f$, um \textbf{caminho aumentante} é um caminho de $s$ para $t$ na rede residual $G_f$. Por definição, podemos aumentar o fluxo em uma aresta $(u,v)$ de um caminho aumentante em até $c_f(u,v)$ sem violar a capacidade da aresta original em $G$ \cite{cormen}. Esse conceito é diferente do caminho aumentante de um emparelhamento (Seção~\ref{sec:caminhos_alternantes}): aqui, trata-se de um caminho de $s$ a $t$ na rede residual, ao longo do qual o fluxo pode ser aumentado. Os dois se encontram na redução do emparelhamento bipartido a fluxo máximo (Seção~\ref{p:reducao_fluxo_mcm}), em que cada caminho aumentante de fluxo corresponde a um caminho aumentante do emparelhamento, acrescido dos arcos que saem de $s$ e chegam a $t$.
+Dado um grafo $G=(V,E)$ e um fluxo $f$, um \textbf{caminho aumentante} é um caminho de $s$ para $t$ na rede residual $G_f$. Por definição, pode-se aumentar o fluxo em uma aresta $(u,v)$ de um caminho aumentante em até $c_f(u,v)$ sem violar a capacidade da aresta original em $G$ \cite{cormen}. Esse conceito é diferente do caminho aumentante de um emparelhamento (Seção~\ref{sec:caminhos_alternantes}): aqui, trata-se de um caminho de $s$ a $t$ na rede residual, ao longo do qual o fluxo pode ser aumentado. Os dois se encontram na redução do emparelhamento bipartido a fluxo máximo (Seção~\ref{p:reducao_fluxo_mcm}), em que cada caminho aumentante de fluxo corresponde a um caminho aumentante do emparelhamento, acrescido dos arcos que saem de $s$ e chegam a $t$.
 
 O método de Ford-Fulkerson, que é base dos principais algoritmos de resolução do problema do fluxo máximo, iterativamente encontra um caminho aumentante, calcula sua capacidade residual e adiciona esse fluxo à solução atual até que não existam mais caminhos aumentantes \cite{ahuja}.
 
@@ -272,13 +272,13 @@ O método de Ford-Fulkerson, que é base dos principais algoritmos de resoluçã
 
 O Algoritmo~\ref{alg:ford_fulkerson} funciona da seguinte forma \cite{cormen}:
 
-\begin{itemize}
-    \item \textbf{Inicialização (linhas~\ref{ff:init}--\ref{ff:zero}):} o fluxo começa nulo em todos os arcos, o que satisfaz trivialmente a restrição de capacidade e a conservação de fluxo.
-    \item \textbf{Busca de caminho aumentante (linha~\ref{ff:loop}):} enquanto houver um caminho $p$ de $s$ a $t$ na rede residual $G_f$, o fluxo atual não é máximo. O método não especifica como o caminho é encontrado; qualquer busca, como BFS ou DFS, serve.
-    \item \textbf{Capacidade residual do caminho (linha~\ref{ff:cf}):} $c_f(p)$ é a menor capacidade residual entre os arcos de $p$, ou seja, o máximo de fluxo que se pode enviar por $p$ sem violar nenhuma capacidade.
-    \item \textbf{Aumento (linhas~\ref{ff:path}--\ref{ff:dec}):} para cada arco de $p$, se ele pertence à rede original (linha~\ref{ff:fwd}), o fluxo nele aumenta em $c_f(p)$ (linha~\ref{ff:inc}); caso contrário, ele é um arco reverso da rede residual, e enviar fluxo por ele equivale a cancelar fluxo do arco original $(v,u)$ (linha~\ref{ff:dec}). Em ambos os casos, o valor $|f|$ do fluxo aumenta em $c_f(p)$.
-    \item \textbf{Complexidade:} com capacidades inteiras, cada iteração aumenta $|f|$ em pelo menos uma unidade, de modo que há no máximo $|f^*|$ iterações, em que $f^*$ é o fluxo máximo. Cada iteração encontra o caminho e atualiza o fluxo em $O(E)$, o que resulta em $O(E \cdot |f^*|)$. Quando o caminho é sempre o mais curto em número de arcos, encontrado por BFS, obtém-se o algoritmo de Edmonds-Karp (Algoritmo~\ref{alg:edmonds_karp}), com complexidade $O(VE^2)$, independente das capacidades.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{inicialização (linhas~\ref{ff:init}--\ref{ff:zero}):} o fluxo começa nulo em todos os arcos, o que satisfaz trivialmente a restrição de capacidade e a conservação de fluxo;
+    \item \textbf{busca de caminho aumentante (linha~\ref{ff:loop}):} enquanto houver um caminho $p$ de $s$ a $t$ na rede residual $G_f$, o fluxo atual não é máximo. O método não especifica como o caminho é encontrado; qualquer busca, como BFS ou DFS, serve;
+    \item \textbf{capacidade residual do caminho (linha~\ref{ff:cf}):} $c_f(p)$ é a menor capacidade residual entre os arcos de $p$, ou seja, o máximo de fluxo que se pode enviar por $p$ sem violar nenhuma capacidade;
+    \item \textbf{aumento (linhas~\ref{ff:path}--\ref{ff:dec}):} para cada arco de $p$, se ele pertence à rede original (linha~\ref{ff:fwd}), o fluxo nele aumenta em $c_f(p)$ (linha~\ref{ff:inc}); caso contrário, ele é um arco reverso da rede residual, e enviar fluxo por ele equivale a cancelar fluxo do arco original $(v,u)$ (linha~\ref{ff:dec}). Em ambos os casos, o valor $|f|$ do fluxo aumenta em $c_f(p)$;
+    \item \textbf{complexidade:} com capacidades inteiras, cada iteração aumenta $|f|$ em pelo menos uma unidade, de modo que há no máximo $|f^*|$ iterações, em que $f^*$ é o fluxo máximo. Cada iteração encontra o caminho e atualiza o fluxo em $O(E)$, o que resulta em $O(E \cdot |f^*|)$. Quando o caminho é sempre o mais curto em número de arcos, encontrado por BFS, obtém-se o algoritmo de Edmonds-Karp (Algoritmo~\ref{alg:edmonds_karp}), com complexidade $O(VE^2)$, independente das capacidades.
+\end{alineas}
 
 \subsection{Fluxo de custo mínimo}
 
@@ -311,14 +311,14 @@ O critério fundamental para verificar se uma solução é ótima é o \textbf{t
     Um fluxo $f$ é uma solução viável para o problema do fluxo de custo mínimo se e somente se ele satisfaz a condição de otimalidade de ciclo negativo: a rede residual $G(f)$ não contém um ciclo de custo negativo \cite{ahuja}
 \end{quotation}
 
-Este teorema é a base dos algoritmos de \textbf{cancelamento de ciclos} (Cycle Canceling), que iterativamente identificam ciclos negativos na rede residual e enviam fluxo através deles para reduzir o custo total da função objetivo até que nenhum ciclo negativo reste.
+Este teorema é a base dos algoritmos de \textbf{cancelamento de ciclos} (\textit{cycle canceling}), que iterativamente identificam ciclos negativos na rede residual e enviam fluxo através deles para reduzir o custo total da função objetivo até que nenhum ciclo negativo reste.
 
 \subsubsection{Potenciais de vértices e custos reduzidos}
 \label{p:potenciais_fluxo}
 
-Embora o cancelamento de ciclos seja teoricamente sólido, a detecção de ciclos negativos (via Bellman-Ford) pode ser computacionalmente custosa. Para permitir o uso de algoritmos mais eficientes como o de Dijkstra, a literatura introduz o conceito de \textbf{potenciais de vértices}, baseando-se na teoria de dualidade da programação linear.
+Embora o cancelamento de ciclos seja teoricamente sólido, a detecção de ciclos negativos (via Bellman-Ford) pode ser computacionalmente custosa. Para permitir o uso de algoritmos mais eficientes como o de Dijkstra, a literatura introduz o conceito de \textbf{potenciais de vértices}, baseando-se na teoria de dualidade da programação linear (Seção~\ref{sec:pl}): os potenciais são as variáveis duais associadas aos vértices.
 
-A ideia é manter um \textbf{potencial} para cada vértice $v$ do grafo, chamado de $h(v)$, com valor inicial 0. Definimos o \textbf{custo reduzido} de uma aresta $(u,v)$ como $\gamma'(u,v) = \gamma(u,v) + h(u) - h(v)$. Se os potenciais forem escolhidos de forma adequada, todos os custos reduzidos podem ser garantidos como não-negativos, permitindo o uso do algoritmo de Dijkstra. Além disso, é garantido que os caminhos de custo mínimo no grafo original e no grafo com custos reduzidos são os mesmos. \cite{jungnickel}.
+A ideia é manter um \textbf{potencial} para cada vértice $v$ do grafo, chamado de $h(v)$, com valor inicial 0. Define-se o \textbf{custo reduzido} de uma aresta $(u,v)$ como $\bar{w}(u,v) = w(u,v) + h(u) - h(v)$. Se os potenciais forem escolhidos de forma adequada, todos os custos reduzidos podem ser garantidos como não-negativos, permitindo o uso do algoritmo de Dijkstra. Além disso, é garantido que os caminhos de custo mínimo no grafo original e no grafo com custos reduzidos são os mesmos. \cite{jungnickel}.
 
 O conceito de potenciais e de custo reduzido será utilizado em algoritmos como o de caminhos sucessivos para resolução do problema de atribuição na seção \ref{p:reduction_to_minimal_flow}.
 
@@ -327,24 +327,24 @@ O conceito de potenciais e de custo reduzido será utilizado em algoritmos como 
 % ==================================================================================================================================
 \section{Problema Geral do Emparelhamento}
 
-O problema de \textbf{matching} (emparelhamento) em grafos é um problema fundamental na otimização combinatória. Esta seção define o emparelhamento e os conceitos associados a ele, usados em todo o restante do trabalho, e apresenta o caso bipartido, sua versão ponderada (o problema de atribuição) e, por fim, um problema relacionado, mas distinto: a correspondência entre grafos.
+Esta seção define o emparelhamento e os conceitos associados a ele, usados em todo o restante do trabalho, e apresenta o caso bipartido, e sua versão ponderada, o problema de atribuição.
 
-Um \textbf{matching} $M$ em um grafo não-direcionado $G=(V,E)$ é um subconjunto de arestas $M \subseteq E$ tal que
-nenhum par de arestas em $M$ compartilha um vértice comum \cite{kleinberg}. Em outras palavras, cada nó aparece em no máximo uma aresta de $M$. A \textbf{cardinalidade} de um matching $M$ é a quantidade de arestas contidas dentro dele, e um dos problemas que serão mostrados posteriormente trata de encontrar o \textbf{matching de cardinalidade máxima} (Maximum Matching) de um grafo $G$, que é o matching $M$ com o maior número possível de arestas \cite{cormen}. A cardinalidade máxima de um matching de um grafo $G$ é denominada por $v(G)$ \cite{schrijver}.
+Um \textbf{emparelhamento} (\textit{matching}) $M$ em um grafo não-direcionado $G=(V,E)$ é um subconjunto de arestas $M \subseteq E$ tal que
+nenhum par de arestas em $M$ compartilha um vértice comum \cite{kleinberg}. Em outras palavras, cada nó aparece em no máximo uma aresta de $M$. A \textbf{cardinalidade} de um emparelhamento $M$ é a quantidade de arestas contidas dentro dele, e um dos problemas que serão mostrados posteriormente trata de encontrar o \textbf{emparelhamento de cardinalidade máxima} (\textit{maximum matching}) de um grafo $G$, que é o emparelhamento $M$ com o maior número possível de arestas \cite{cormen}. A cardinalidade máxima de um emparelhamento de um grafo $G$ é denotada por $\nu(G)$ \cite{schrijver}.
 
-Um vértice é chamado \textbf{coberto} (\textit{matched}) se for incidente a uma aresta em $M$; caso contrário, é \textbf{descoberto} (\textit{unmatched} ou \textit{exposed}) \cite{cormen}. Um \textbf{matching perfeito} é um matching em que todos os vértices do grafo estão cobertos \cite{kleinberg}.
+Um vértice é chamado \textbf{coberto} (\textit{matched}) se for incidente a uma aresta em $M$; caso contrário, é \textbf{descoberto} (\textit{unmatched} ou \textit{exposed}) \cite{cormen}. Um \textbf{emparelhamento perfeito} é um emparelhamento em que todos os vértices do grafo estão cobertos \cite{kleinberg}.
 
-O \textbf{problema de matching ponderado} (Weighted Matching Problem) envolve encontrar um matching para o qual a soma dos pesos das arestas é máxima. Em um grafo ponderado $G=(V,E,w)$, busca-se um $M\subseteq E$ que maximize $w(M)$ \cite{matching_gpus_sc24}.
+O \textbf{problema de emparelhamento ponderado} (\textit{weighted matching problem}) envolve encontrar um emparelhamento para o qual a soma dos pesos das arestas é máxima. Em um grafo ponderado $G=(V,E,w)$, busca-se um $M\subseteq E$ que maximize $w(M)$ \cite{matching_gpus_sc24}.
 
 \subsection{Caminhos alternantes e aumentantes}
 \label{sec:caminhos_alternantes}
 
 Os algoritmos exatos de emparelhamento de cardinalidade máxima apresentados neste trabalho se apoiam em dois tipos de caminho, definidos em relação a um emparelhamento $M$ \cite{schrijver}:
 
-\begin{itemize}
-    \item \textbf{Caminho $M$-alternante:} caminho cujas arestas pertencem alternadamente a $E \setminus M$ e a $M$.
-    \item \textbf{Caminho $M$-aumentante:} caminho $M$-alternante que começa e termina em vértices descobertos distintos. Como os dois extremos são descobertos, a primeira e a última aresta não pertencem a $M$; logo, o caminho tem um número ímpar $2k+1$ de arestas, das quais $k$ estão em $M$ e $k+1$ estão fora dele.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{caminho $M$-alternante:} caminho cujas arestas pertencem alternadamente a $E \setminus M$ e a $M$;
+    \item \textbf{caminho $M$-aumentante:} caminho $M$-alternante que começa e termina em vértices descobertos distintos. Como os dois extremos são descobertos, a primeira e a última aresta não pertencem a $M$; logo, o caminho tem um número ímpar $2k+1$ de arestas, das quais $k$ estão em $M$ e $k+1$ estão fora dele.
+\end{alineas}
 
 A utilidade dos caminhos aumentantes vem da \textbf{diferença simétrica}. Dado um caminho $M$-aumentante $P$, visto como um conjunto de arestas, o conjunto
 \begin{equation}
@@ -416,75 +416,12 @@ Os algoritmos exatos dos Capítulos~\ref{cap:bipartidos} e~\ref{cap:gerais} dife
 % ---------------------------------------------------------------------------------------------------------------------------------
 % 2.2.1. Matching em grafos bipartidos
 % ---------------------------------------------------------------------------------------------------------------------------------
-\subsection{Matching em grafos bipartidos}
+\subsection{Emparelhamento em grafos bipartidos}
 
-O problema de \textbf{Matching Bipartido} é o caso clássico de encontrar um matching de cardinalidade máxima em um grafo 
+O problema de \textbf{emparelhamento bipartido} é o caso clássico de encontrar um emparelhamento de cardinalidade máxima em um grafo 
 bipartido $G=(U,V;E)$ \cite{kleinberg}. Pode ser utilizado para modelar situações de atribuição, como associar empregos ($U$) a máquinas ($V$), ou professores ($U$) a cursos ($V$), onde uma aresta indica uma capacidade de atribuição \cite{kleinberg}. 
 
-Quando aplicado em grafos ponderados, o matching bipartido é conhecido como \textbf{problema de atribuição} \cite{lawler}, que trata de encontrar uma combinação ótima de atribuições de forma a minimizar o custo total associado. Mais detalhes sobre esse problema serão vistos na Seção~\ref{sec:assignment_problem}.
-
-% ---------------------------------------------------------------------------------------------------------------------------------
-% Correspondência entre grafos e atribuição quadrática
-% ---------------------------------------------------------------------------------------------------------------------------------
-\subsection{Correspondência entre grafos e atribuição quadrática}
-\label{sec:qap}
-
-Em visão computacional, o termo \textit{graph matching} designa outro problema: encontrar uma \textbf{correspondência entre os vértices de dois grafos} $G = (V, E)$ e $G' = (V', E')$ que preserve ao máximo seus atributos e suas relações \cite{learning_graph_matching}. Sejam $y_{ii'} \in \{0, 1\}$ a variável que indica se o vértice $i$ de $G$ corresponde ao vértice $i'$ de $G'$, $c_{ii'}$ a semelhança entre os dois vértices e $d_{ii'jj'}$ o quanto a relação entre $i$ e $j$ em $G$ é preservada entre $i'$ e $j'$ em $G'$. O problema consiste em
-\begin{equation}
-    \max_{y} \; \sum_{i, i'} c_{ii'}\, y_{ii'} + \sum_{i, i', j, j'} d_{ii'jj'}\, y_{ii'}\, y_{jj'},
-    \label{eq:qap}
-\end{equation}
-sujeito a cada vértice corresponder a no máximo um vértice do outro grafo, e é uma forma do \textbf{problema de atribuição quadrática} (QAP, \textit{Quadratic Assignment Problem}) \cite{learning_graph_matching, burkard}.
-
-Sem o termo quadrático, isto é, com todos os $d_{ii'jj'}$ nulos, \eqref{eq:qap} é o problema de atribuição linear da Seção~\ref{sec:assignment_problem}, que tem solução em tempo polinomial. Com ele, o ganho de cada associação passa a depender das demais, e o problema se torna NP-difícil \cite{learning_graph_matching, burkard}. A Figura~\ref{fig:qap} ilustra a diferença com $c_{ii'} = 0$ e $d_{ii'jj'} = 1$ quando $\{i, j\} \in E$ e $\{i', j'\} \in E'$: a correspondência~(a) preserva as duas arestas de $G$, e a~(b), apenas uma. Como o termo linear é o mesmo para todas as correspondências, só o termo quadrático distingue as duas.
-
-\begin{figure}[H]
-    \centering
-    \caption{Duas correspondências entre os caminhos $G$ e $G'$}
-    \label{fig:qap}
-    \begin{tikzpicture}[
-        vert/.style={circle, fill=black, inner sep=0pt, minimum size=5pt},
-        pres/.style={line width=2.2pt},
-        npres/.style={thin},
-        corr/.style={-{Stealth[length=2mm]}, dashed, gray},
-        rot/.style={font=\small},
-    ]
-        \foreach \px/\ia/\ib/\ic/\titulo in {0/1/2/3/{(a) $1 \mapsto a$, $2 \mapsto b$, $3 \mapsto c$\\duas arestas preservadas}, 7/1/3/2/{(b) $1 \mapsto a$, $2 \mapsto c$, $3 \mapsto b$\\uma aresta preservada}} {
-            \begin{scope}[xshift=\px cm]
-                \foreach \i in {1,2,3} \coordinate (g\i) at ({1.6*(\i-1)}, 1.8);
-                \foreach \i/\n in {1/a,2/b,3/c} \coordinate (h\n) at ({1.6*(\i-1)}, 0);
-                \node[rot, left=6pt] at (g1) {$G$};
-                \node[rot, left=6pt] at (ha) {$G'$};
-                \foreach \i in {1,2,3} \node[rot, above=3pt] at (g\i) {$\i$};
-                \foreach \n in {a,b,c} \node[rot, below=3pt] at (h\n) {$\n$};
-                \node[font=\small, align=center] at (1.6, -1.3) {\titulo};
-            \end{scope}
-        }
-        % (a): ambas as arestas preservadas
-        \begin{scope}
-            \foreach \i in {1,2,3} \coordinate (g\i) at ({1.6*(\i-1)}, 1.8);
-            \foreach \i/\n in {1/a,2/b,3/c} \coordinate (h\n) at ({1.6*(\i-1)}, 0);
-            \draw[pres] (g1) -- (g2) -- (g3);
-            \draw[pres] (ha) -- (hb) -- (hc);
-            \foreach \s/\t in {g1/ha, g2/hb, g3/hc} \draw[corr, shorten <=3pt, shorten >=3pt] (\s) -- (\t);
-            \foreach \v in {g1,g2,g3,ha,hb,hc} \node[vert] at (\v) {};
-        \end{scope}
-        % (b): só {2,3} -> {c,b} preservada
-        \begin{scope}[xshift=7cm]
-            \foreach \i in {1,2,3} \coordinate (g\i) at ({1.6*(\i-1)}, 1.8);
-            \foreach \i/\n in {1/a,2/b,3/c} \coordinate (h\n) at ({1.6*(\i-1)}, 0);
-            \draw[npres] (g1) -- (g2);
-            \draw[pres] (g2) -- (g3);
-            \draw[npres] (ha) -- (hb);
-            \draw[pres] (hb) -- (hc);
-            \foreach \s/\t in {g1/ha, g2/hc, g3/hb} \draw[corr, shorten <=3pt, shorten >=3pt] (\s) -- (\t);
-            \foreach \v in {g1,g2,g3,ha,hb,hc} \node[vert] at (\v) {};
-        \end{scope}
-    \end{tikzpicture}
-    \fonte{Elaborado pelo autor. As setas tracejadas indicam a correspondência; arestas grossas são as preservadas, isto é, arestas de $G$ cuja imagem também é aresta de $G'$, e essas imagens.}
-\end{figure}
-
-A correspondência entre grafos e o QAP ficam fora do escopo deste trabalho (Seção~\ref{sec:delimitacao}): em todos os problemas estudados nos capítulos seguintes, o custo de cada associação não depende das demais.
+Quando aplicado em grafos ponderados, o emparelhamento bipartido é conhecido como \textbf{problema de atribuição} \cite{lawler}, que trata de encontrar uma combinação ótima de atribuições de forma a minimizar o custo total associado. Mais detalhes sobre esse problema serão vistos na Seção~\ref{sec:assignment_problem}.
 
 % ---------------------------------------------------------------------------------------------------------------------------------
 % Métodos exatos, aproximados e heurísticos
@@ -496,26 +433,69 @@ Vários algoritmos deste trabalho, como o método Húngaro (Seção~\ref{sec:ass
 
 \subsection{Modelo de programação linear}
 
-Um problema de \textbf{programação linear} (PL) consiste em escolher valores para variáveis reais $x_1, \dots, x_m$ de modo a otimizar uma função linear delas, sujeita a restrições também lineares. Em forma matricial, com $x \in \mathbb{R}^m$, $c \in \mathbb{R}^m$, $A \in \mathbb{R}^{k \times m}$ e $b \in \mathbb{R}^k$:
+A programação linear (PL) é uma forma de descrever um problema de decisão. O modelo é dividido em três partes:
+
+\begin{alineas}
+    \item \textbf{variáveis de decisão:} um conjunto de variáveis $x_1, \dots, x_m$, onde $x_j \in \mathbb{R}$ que representam as escolhas do problema;
+    \item \textbf{função objetivo:} uma função linear dependente das variáveis de decisão;
+    \item \textbf{restrições:} limites para as variáveis de decisão, como faixas de valores onde elas devem permanecer.
+\end{alineas}
+
+A ideia é manipular os valores das variáveis para maximizar ou minimizar a função objetivo, a depender do problema a ser resolvido, levando em consideração as restrições que também devem ser lineares. Esse modelo pode ser representado de forma matricial, com uma matriz $A$ cujas linhas representam as restrições e cujas colunas representam as variáveis. Com $m$ variáveis e $k$ restrições, o modelo é escrito da seguinte forma:
+
 \begin{equation}
     \max \; c^{\top} x \quad \text{sujeito a} \quad A x \le b, \quad x \ge 0.
     \label{eq:pl_primal}
 \end{equation}
-Os elementos do modelo são:
-\begin{itemize}
-    \item \textbf{Variáveis de decisão:} as componentes de $x$, que representam as escolhas do problema.
-    \item \textbf{Função objetivo:} $c^{\top} x = \sum_j c_j x_j$, o valor a maximizar (ou minimizar).
-    \item \textbf{Restrições:} cada linha $i$ de $A x \le b$ é uma desigualdade $\sum_j a_{ij} x_j \le b_i$; junto com $x \ge 0$, elas delimitam o conjunto das \textbf{soluções viáveis}, que é um poliedro. Uma restrição satisfeita com igualdade por uma solução é dita \textbf{justa} nessa solução.
-\end{itemize}
-Quando existe solução ótima, ela é atingida em algum vértice do poliedro, e um PL pode ser resolvido em tempo polinomial \cite{cormen}.
+
+Nessa forma, $x \in \mathbb{R}^m$ é o vetor das variáveis, $c \in \mathbb{R}^m$ traz os coeficientes da função objetivo e $b \in \mathbb{R}^k$, os limites das restrições. Cada linha $i$ de $A x \le b$ é uma desigualdade $\sum_j a_{ij} x_j \le b_i$. Os valores de $x$ que satisfazem todas as restrições, inclusive $x \ge 0$, são as \textbf{soluções viáveis}.
+
+Como exemplo, considere o caminho de vértices $a$, $b$ e $c$, com as arestas $e_1 = \{a, b\}$, de peso 2, e $e_2 = \{b, c\}$, de peso 1, e o problema de escolher arestas de peso total máximo sem que duas delas compartilhem um vértice. A cada aresta $e_j$ associa-se uma variável $x_j$, que indica se ela é escolhida, e a cada vértice, uma restrição que permite escolher no máximo uma das arestas que o tocam:
+\begin{equation}
+    \max \; 2x_1 + x_2 \quad \text{sujeito a} \quad
+    \begin{array}[t]{rcll}
+        x_1       & \le & 1 & \text{(vértice $a$)} \\
+        x_1 + x_2 & \le & 1 & \text{(vértice $b$)} \\
+        x_2       & \le & 1 & \text{(vértice $c$)} \\
+        x_1, x_2  & \ge & 0. &
+    \end{array}
+    \label{eq:pl_exemplo}
+\end{equation}
+Nesse modelo, $m = 2$, $k = 3$, $c = (2, 1)$, $b = (1, 1, 1)$ e
+\begin{equation*}
+    A = \begin{bmatrix} 1 & 0 \\ 1 & 1 \\ 0 & 1 \end{bmatrix},
+\end{equation*}
+em que cada linha corresponde a um vértice, cada coluna a uma aresta, e o valor 1 indica que a aresta toca o vértice. Essa é a \textbf{matriz de incidência} do grafo, que volta a aparecer na Seção~\ref{sec:pl_inteira}. Note que, no PL, as variáveis podem assumir qualquer valor real que satisfaça as restrições, como $x_1 = x_2 = \frac{1}{2}$; a exigência de valores inteiros também é tratada na Seção~\ref{sec:pl_inteira}.
+
+Com duas variáveis, o modelo pode ser visualizado no plano. Cada restrição corresponde a um semiplano, e as soluções viáveis formam a interseção deles, que no exemplo é o triângulo de cantos $(0, 0)$, $(1, 0)$ e $(0, 1)$. Em geral, essa interseção é um \textbf{poliedro} convexo, e seus cantos são chamados de \textbf{vértices do poliedro}, que não devem ser confundidos com os vértices do grafo. A função objetivo indica uma direção: aumentar o seu valor $z$ equivale a deslocar a reta $2x_1 + x_2 = z$ nessa direção, e o maior valor viável é obtido no último ponto do poliedro que a reta toca. Por isso, quando existe solução ótima, ela é atingida em algum vértice do poliedro \cite{cormen}. No exemplo, os três vértices valem 0, 2 e 1, e o ótimo é $x = (1, 0)$, que corresponde a escolher apenas a aresta $e_1$.
+
+Na solução $(1, 0)$, as restrições dos vértices $a$ e $b$ valem com igualdade, enquanto a do vértice $c$ tem folga. Uma restrição satisfeita com igualdade por uma solução é dita \textbf{justa} nessa solução. As restrições justas são as que definem o vértice ótimo, e esse conceito é a base da folga complementar (Seção~\ref{sec:pl_dualidade}) e das arestas justas do método Húngaro.
+
+Por fim, um PL pode ser resolvido em tempo polinomial no tamanho da entrada. O método simplex, o mais usado na prática, percorre os vértices do poliedro, passando sempre a um vértice vizinho de valor melhor, mas pode visitar um número exponencial deles no pior caso; algoritmos de tempo polinomial, como o dos elipsoides e os de pontos interiores, garantem esse limite \cite{cormen}.
+
+% Um problema de \textbf{programação linear} (PL) consiste em escolher valores para variáveis reais $x_1, \dots, x_m$ de modo a otimizar uma função linear delas, sujeita a restrições também lineares. Podemos representar essas variáveis e restrições através de uma matriz $A$, em que cada linha representa uma restrição e cada coluna representa uma variável. Chamamos de \textbf{função objetivo} o valor a maximizar (ou minimizar), representado da seguinte forma:
+% \begin{equation}
+%     \max \; c^{\top} x \quad \text{sujeito a} \quad A x \le b, \quad x \ge 0.
+%     \label{eq:pl_primal}
+% \end{equation}
+
+% Os elementos do modelo são:
+% \begin{itemize}
+%     \item \textbf{Variáveis de decisão:} as componentes de $x$, que representam as escolhas do problema.
+%     \item \textbf{Função objetivo:} $c^{\top} x = \sum_j c_j x_j$, o valor a maximizar (ou minimizar).
+%     \item \textbf{Restrições:} cada linha $i$ de $A x \le b$ é uma desigualdade $\sum_j a_{ij} x_j \le b_i$; junto com $x \ge 0$, elas delimitam o conjunto das \textbf{soluções viáveis}, que é um poliedro. Uma restrição satisfeita com igualdade por uma solução é dita \textbf{justa} nessa solução.
+% \end{itemize}
+% Quando existe solução ótima, ela é atingida em algum vértice do poliedro, e um PL pode ser resolvido em tempo polinomial \cite{cormen}.
 
 \subsection{Programação inteira e relaxação linear}
+\label{sec:pl_inteira}
 
 Em problemas combinatórios, as variáveis costumam representar escolhas do tipo sim ou não, e o modelo exige $x_j \in \{0, 1\}$. Com essa exigência, o problema passa a ser de \textbf{programação linear inteira}, que é NP-difícil em geral. A \textbf{relaxação linear} do modelo troca $x_j \in \{0, 1\}$ por $0 \le x_j \le 1$. Como toda solução inteira continua viável, o ótimo da relaxação é um limitante superior para o ótimo inteiro (em maximização), mas pode ser atingido apenas por uma solução \textbf{fracionária}, que não corresponde a nenhuma escolha real.
 
 Há, porém, casos em que todo vértice do poliedro da relaxação é inteiro; neles, resolver o PL resolve também o problema inteiro. Um caso clássico é o de matrizes \textbf{totalmente unimodulares}, em que toda submatriz quadrada tem determinante $0$, $1$ ou $-1$. A matriz de incidência entre vértices e arestas de um grafo bipartido tem essa propriedade, e por isso os problemas de emparelhamento bipartido e de atribuição podem ser resolvidos pela sua relaxação linear \cite{schrijver}. Em grafos gerais isso deixa de valer, como mostra a Seção~\ref{sec:emp_pond_max}.
 
 \subsection{Dualidade e folga complementar}
+\label{sec:pl_dualidade}
 
 A todo PL corresponde outro PL, o seu \textbf{dual}. Para o problema~\eqref{eq:pl_primal}, chamado de \textbf{primal}, o dual tem uma variável $y_i \ge 0$ para cada restrição primal $i$ e uma restrição para cada variável primal $j$:
 \begin{equation}
@@ -523,11 +503,11 @@ A todo PL corresponde outro PL, o seu \textbf{dual}. Para o problema~\eqref{eq:p
     \label{eq:pl_dual}
 \end{equation}
 Os dois problemas se relacionam por três resultados \cite{cormen}:
-\begin{itemize}
-    \item \textbf{Dualidade fraca:} para quaisquer soluções viáveis $x$ do primal e $y$ do dual, $c^{\top} x \le b^{\top} y$. Toda solução dual viável é, portanto, um limitante superior para o primal.
-    \item \textbf{Dualidade forte:} se o primal tem ótimo, o dual também tem, e os dois valores ótimos são iguais.
-    \item \textbf{Folga complementar:} soluções viáveis $x$ e $y$ são ambas ótimas se, e somente se, (i) toda variável primal positiva, $x_j > 0$, torna justa a restrição dual correspondente, e (ii) toda variável dual positiva, $y_i > 0$, torna justa a restrição primal correspondente.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{dualidade fraca:} para quaisquer soluções viáveis $x$ do primal e $y$ do dual, $c^{\top} x \le b^{\top} y$. Toda solução dual viável é, portanto, um limitante superior para o primal;
+    \item \textbf{dualidade forte:} se o primal tem ótimo, o dual também tem, e os dois valores ótimos são iguais;
+    \item \textbf{folga complementar:} soluções viáveis $x$ e $y$ são ambas ótimas se, e somente se, (i) toda variável primal positiva, $x_j > 0$, torna justa a restrição dual correspondente, e (ii) toda variável dual positiva, $y_i > 0$, torna justa a restrição primal correspondente.
+\end{alineas}
 
 As variáveis duais podem ser vistas como \textbf{preços} associados às restrições; em problemas sobre grafos, em que as restrições primais são associadas a vértices, elas são chamadas de \textbf{potenciais} dos vértices. A folga complementar é a base dos \textbf{algoritmos primal-duais}: eles mantêm uma solução dual viável e constroem uma solução primal usando apenas elementos justos; quando as duas soluções satisfazem a folga complementar, ambas são ótimas. É o caso do método Húngaro e do algoritmo de Edmonds para emparelhamento de peso máximo.
 
@@ -536,10 +516,10 @@ As variáveis duais podem ser vistas como \textbf{preços} associados às restri
 
 Os métodos de solução apresentados nos capítulos seguintes são classificados em três tipos, de acordo com a garantia que oferecem sobre a qualidade da solução \cite{vazirani2001}:
 
-\begin{itemize}
-    \item \textbf{Exato:} sempre encontra uma solução ótima. É o caso, por exemplo, dos algoritmos de Hopcroft-Karp e Húngaro.
-    \item \textbf{Aproximado:} encontra, em tempo polinomial, uma solução com qualidade garantida em relação ao ótimo. Em um problema de maximização, um algoritmo é dito uma $\rho$-aproximação, com $0 < \rho \le 1$, se para toda instância a solução $S$ encontrada satisfaz $\mathrm{val}(S) \ge \rho \cdot \mathrm{OPT}$, em que $\mathrm{OPT}$ é o valor da solução ótima. O método guloso simples para emparelhamento de cardinalidade máxima, por exemplo, é uma $\frac{1}{2}$-aproximação.
-    \item \textbf{Heurístico:} encontra uma solução viável, geralmente de boa qualidade na prática, mas sem garantia provada de proximidade do ótimo.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{exato:} sempre encontra uma solução ótima. É o caso, por exemplo, dos algoritmos de Hopcroft-Karp e Húngaro;
+    \item \textbf{aproximado:} encontra, em tempo polinomial, uma solução com qualidade garantida em relação ao ótimo. Em um problema de maximização, um algoritmo é dito uma $\rho$-aproximação, com $0 < \rho \le 1$, se para toda instância a solução $S$ encontrada satisfaz $\mathrm{val}(S) \ge \rho \cdot \mathrm{OPT}$, em que $\mathrm{OPT}$ é o valor da solução ótima. O método guloso simples para emparelhamento de cardinalidade máxima, por exemplo, é uma $\frac{1}{2}$-aproximação;
+    \item \textbf{heurístico:} encontra uma solução viável, geralmente de boa qualidade na prática, mas sem garantia provada de proximidade do ótimo.
+\end{alineas}
 
 A distinção entre aproximado e heurístico depende do problema, e não apenas do método: o método guloso ordenado tem garantia de $\frac{1}{2}$ no emparelhamento de peso máximo, mas não tem garantia na atribuição de custo mínimo, como discutido na Seção~\ref{p:gulosa_ordenada}.

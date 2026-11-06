@@ -1,0 +1,61 @@
+%!TeX root = ../main.tex
+
+% ==================================================================================================================================
+% 8. Conclusões e trabalhos futuros
+% ==================================================================================================================================
+\chapter{Conclusões e trabalhos futuros}
+\label{cap:conclusoes}
+
+Este trabalho levantou os principais problemas de emparelhamento em grafos e seus métodos de solução, exatos, aproximados e heurísticos, e os comparou experimentalmente em um único ambiente de testes, com as mesmas instâncias, o mesmo protocolo de medição e os mesmos critérios para todos. Este capítulo retoma os objetivos, resume os principais resultados e as dificuldades encontradas e aponta os trabalhos futuros.
+
+% ---------------------------------------------------------------------------
+\section{Objetivos alcançados}
+\label{sec:objetivos_alcancados}
+
+O primeiro objetivo específico, mapear as variações e características dos principais problemas de emparelhamento, foi cumprido nos Capítulos~\ref{cap:bipartidos} e~\ref{cap:gerais}, que apresentam sete problemas: cardinalidade máxima, atribuição linear, atribuição gargalo e casamento estável, em grafos bipartidos, e cardinalidade máxima, peso máximo e emparelhamento induzido máximo, em grafos gerais. Para cada problema são apresentadas a definição, as propriedades que fundamentam os algoritmos e os principais métodos da literatura, com pseudocódigo, explicação linha a linha e justificativa da complexidade. O Capítulo~\ref{cap:fundamentacao} reúne os conceitos de que esses métodos dependem, como caminhos aumentantes, fluxo em redes e dualidade em programação linear.
+
+O segundo objetivo, classificar os problemas e os métodos, foi atendido pela própria organização do texto e pelas tabelas-resumo. A estrutura do grafo separa os dois capítulos de problemas, o objetivo de otimização distingue os problemas dentro de cada capítulo, e o tipo de método segue a classificação da Seção~\ref{sec:tipos_metodo}, em exato, aproximado ou heurístico, registrada nas tabelas-resumo de cada problema ao lado da complexidade e da indicação de quais algoritmos foram avaliados.
+
+O terceiro objetivo, implementar os algoritmos selecionados, resultou nas implementações relacionadas na Tabela~\ref{tab:proveniencia}: dez implementações de terceiros, usadas sem nenhuma alteração; quatro reimplementações de códigos públicos; nove implementações próprias, escritas a partir da literatura quando não havia código adequado; e cinco bibliotecas maduras, usadas como referência de correção e de desempenho.
+
+O quarto objetivo, criar um ambiente de testes unificado e nele comparar os algoritmos, foi cumprido nos Capítulos~\ref{cap:metodologia} e~\ref{cap:resultados}: o ambiente mantém intacto o código de terceiros (Seção~\ref{sec:arquitetura}), gera famílias de instâncias determinísticas (Seção~\ref{sec:geradores}) e aplica o mesmo protocolo de medição a todos os algoritmos (Seção~\ref{sec:protocolo}), comparando-os quanto ao tempo de execução, ao crescimento frente à complexidade assintótica (Seção~\ref{sec:crescimento}) e à qualidade das soluções.
+
+O quinto objetivo, organizar os resultados de forma acessível, foi atendido pelas tabelas-resumo de cada problema, pela padronização das tabelas de resultados (Seção~\ref{sec:leitura_tabelas}) e pela publicação do código, dos geradores e dos dados brutos no repositório do trabalho.
+
+% ---------------------------------------------------------------------------
+\section{Principais resultados}
+\label{sec:principais_resultados}
+
+Os resultados do Capítulo~\ref{cap:resultados} permitem quatro conclusões principais. A primeira é que \textbf{a implementação pesa tanto quanto o algoritmo}. As quatro implementações do método Húngaro, todas do mesmo algoritmo e com a mesma complexidade, chegam a diferir em quase setenta vezes no tempo (Seção~\ref{sec:res_assignment}), e duas delas apresentam defeitos (Seção~\ref{sec:defeitos}). Em grafos gerais, a implementação avaliada do algoritmo de Edmonds para cardinalidade é cerca de 1\,300 vezes mais lenta que a do NetworkX no grafo denso, enquanto a implementação de van Rantwijk é de duas a três vezes mais rápida que a rotina do NetworkX derivada dela (Seção~\ref{sec:res_general}). A complexidade assintótica, portanto, não basta para escolher um método: a qualidade da implementação disponível faz parte da escolha.
+
+A segunda conclusão é que \textbf{a estrutura da instância pode mudar a ordem entre os algoritmos}. Na atribuição gargalo, o método de caminhos aumentantes é o mais rápido nas matrizes densa e estruturada, mas o de \textit{threshold} o supera na matriz com poucos valores distintos (Seção~\ref{sec:res_bottleneck}). No casamento estável, o perfil correlacionado leva ao pior caso do algoritmo de Gale-Shapley, com $n(n+1)/2$ propostas, contra apenas $n$ no perfil cíclico, e só nele a complexidade cúbica da implementação de Lattas se manifesta (Seção~\ref{sec:res_stable}). Na atribuição linear, os defeitos das implementações públicas aparecem apenas na matriz aleatória. Uma avaliação com uma única instância representativa teria ocultado essas diferenças, o que justifica o uso de várias famílias de instâncias por problema.
+
+A terceira conclusão é que \textbf{o valor dos métodos aproximados e heurísticos depende do problema}. Os métodos com garantia de aproximação ficaram muito acima dela: na cardinalidade máxima em grafos bipartidos, o algoritmo de Karp-Sipser encontra o ótimo em todas as instâncias esparsas, e o método guloso obtém entre 85 e 98\% do ótimo, sendo de cinquenta a cem vezes mais rápido (Seção~\ref{sec:res_mcm}); no peso máximo em grafos gerais, o Path Growing entrega entre 78 e 95\% do ótimo, diante de uma garantia de metade. Já as heurísticas gulosas da atribuição gargalo, sem garantia, chegam a ficar doze vezes acima do ótimo. No emparelhamento induzido máximo, que é NP-difícil, a heurística de grau mínimo alcança ou quase alcança o ótimo onde o exato foi executado (Seção~\ref{sec:res_mim}).
+
+A quarta conclusão é que \textbf{o crescimento medido é, em geral, coerente com a teoria}, e as exceções são informativas (Seção~\ref{sec:crescimento}). O expoente empírico costuma ficar abaixo do previsto pela complexidade de pior caso, que raramente se materializa nas instâncias avaliadas, e a linguagem altera a constante, mas não a inclinação, o que torna o expoente uma métrica comparável entre implementações interpretadas e compiladas. Quando o expoente supera o teórico, como na variante orientada a objetos do Gale-Shapley, que mede 3{,}28 diante de um algoritmo quadrático, ele revela um sobrecusto de implementação que o tempo absoluto, sozinho, não deixaria claro.
+
+% ---------------------------------------------------------------------------
+\section{Dificuldades encontradas}
+\label{sec:dificuldades}
+
+A principal dificuldade veio das próprias implementações públicas. Duas das quatro implementações do método Húngaro apresentaram defeitos (Seção~\ref{sec:defeitos}), e o da implementação \texttt{benchaplin} era não determinístico: sobre a mesma entrada, ela ora acertava, ora falhava, ora não terminava, o que exigiu ajustes no protocolo de medição para tornar as execuções reprodutíveis (Seções~\ref{sec:protocolo} e~\ref{sec:ambiente}). Os defeitos foram reportados, e não corrigidos, pelos motivos da Seção~\ref{sec:defeitos}.
+
+A segunda dificuldade foi comparar implementações em linguagens diferentes. Parte dos algoritmos só tinha implementação pública confiável em Python, e as bibliotecas de referência têm núcleo compilado; há ainda casos intermediários, como laços em Python sobre vetores da biblioteca NumPy. A solução foi tabelar o tempo apenas das implementações interpretadas, classificar os casos intermediários como interpretados e comparar as duas linguagens apenas pelo expoente empírico (Seção~\ref{sec:criterios}).
+
+% ---------------------------------------------------------------------------
+\section{Trabalhos futuros}
+\label{sec:trabalhos_futuros}
+
+Algumas extensões ficaram fora do escopo deste trabalho, por limitação de tempo ou por decisão metodológica, e são os próximos passos:
+
+\begin{alineas}
+    \item \textbf{algoritmos descritos e não implementados:} parte dos métodos apresentados nos capítulos de problemas não foi incorporada ao ambiente de testes: o algoritmo de Dinic, para cardinalidade máxima em grafos bipartidos; a variante de caminhos mínimos sucessivos com Dijkstra e potenciais, para a atribuição linear; o método dual, para a atribuição gargalo; o algoritmo de Micali e Vazirani, para cardinalidade máxima em grafos gerais; e a versão otimizada do algoritmo de Edmonds ponderado \cite{galil_micali_gabow}. Como o ambiente já define a interface padrão e o protocolo de cada problema, incluí-los exige apenas um novo adaptador por algoritmo;
+    \item \textbf{métodos aproximados e heurísticas para os demais problemas:} a comparação entre métodos exatos, aproximados e heurísticos foi feita para cardinalidade máxima em grafos bipartidos, atribuição gargalo, peso máximo em grafos gerais e emparelhamento induzido máximo. Ficaram de fora a heurística gulosa descrita para a atribuição linear, o método guloso ordenado para peso máximo em grafos gerais, o método guloso simples e os algoritmos de Karp-Sipser e de crescimento de caminho para cardinalidade máxima em grafos gerais, e as metaheurísticas de busca local para o emparelhamento induzido \cite{furst};
+    \item \textbf{métricas independentes da linguagem:} o tempo absoluto das implementações compiladas não foi comparado ao das interpretadas. Contar operações elementares, como caminhos aumentantes percorridos e arestas examinadas, ou implementar um mesmo algoritmo nas duas linguagens permitiria separar o efeito da linguagem do efeito do algoritmo. A contagem foi descartada por exigir uma cópia modificada de cada código de terceiros; uma alternativa é a instrumentação externa, por ferramentas de rastreamento da própria linguagem;
+    \item \textbf{instâncias reais:} as instâncias utilizadas são sintéticas, geradas por famílias parametrizadas. Aplicar o ambiente a instâncias provenientes das aplicações citadas na introdução verificaria se as conclusões se mantêm fora dos cenários controlados;
+    \item \textbf{problemas fora do escopo:} as variações excluídas na delimitação do estudo (Seção~\ref{sec:delimitacao}), em especial as NP-difíceis, como o emparelhamento tridimensional e a atribuição quadrática.
+\end{alineas}
+
+
+\newpage
+Disclaimer: foi feito uso de inteligência artificial para auxílio com formatação e a linguagem LaTeX, busca e checagem de referências, revisão e correção de ortografia e concordância, explicação de conceitos, conversão e tradução de pseudocódigos da literatura para um formato padronizado, construção do ambiente de testes, geração de diagramas e orientações gerais quanto à estrutura do texto.

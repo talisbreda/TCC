@@ -11,8 +11,9 @@ descrito no capítulo anterior. Para cada problema, apresentam-se \textbf{todas 
 famílias de instância} definidas na Seção~\ref{sec:geradores}, de modo a expor
 como a estrutura da entrada afeta o desempenho e a qualidade. As tabelas de tempo
 deste capítulo trazem as implementações em linguagem interpretada (Python);
-conforme a Seção~\ref{sec:criterios}, os tempos das implementações de núcleo
-compilado, que servem de referência, ficam no Apêndice~\ref{ap:compilados}. Para
+conforme a Seção~\ref{sec:criterios}, as implementações de núcleo compilado, que
+servem de referência, aparecem nas tabelas de qualidade e na análise de
+crescimento (Seção~\ref{sec:crescimento}). Para
 cada instância, a tabela de tempo é seguida da tabela de qualidade. Todos os valores são gerados
 diretamente a partir dos dados medidos. A Tabela~\ref{tab:proveniencia} relaciona cada
 algoritmo destas tabelas ao seu pseudocódigo e à sua origem. Ao final, discutem-se os defeitos
@@ -23,22 +24,22 @@ encontrados em implementações públicas e o crescimento empírico dos tempos f
 \section{Leitura das tabelas}
 \label{sec:leitura_tabelas}
 
-Todas as tabelas de tempo e de qualidade deste capítulo e do Apêndice~\ref{ap:compilados}
+Todas as tabelas de tempo e de qualidade deste capítulo
 seguem o mesmo formato. Cada linha corresponde a uma implementação e cada coluna
 $n = \dots$ a um tamanho de instância, com o significado de $n$ definido na
 Tabela~\ref{tab:familias}. As demais colunas são as seguintes:
 
-\begin{itemize}
-    \item \textbf{Algoritmo:} nome do algoritmo e, entre parênteses, a origem da
-    implementação, detalhada na Tabela~\ref{tab:proveniencia}.
-    \item \textbf{Tipo:} \textit{exato}, \textit{aproximado} ou \textit{heurística},
+\begin{alineas}
+    \item \textbf{algoritmo:} nome do algoritmo e, entre parênteses, a origem da
+    implementação, detalhada na Tabela~\ref{tab:proveniencia};
+    \item \textbf{tipo:} \textit{exato}, \textit{aproximado} ou \textit{heurística},
     conforme a Seção~\ref{sec:tipos_metodo}; \textit{referência} indica uma
     biblioteca madura (NetworkX, igraph, SciPy ou lap), usada como referência de
-    correção e de desempenho. Todas elas implementam métodos exatos.
-    \item \textbf{Tempo} e \textbf{Espaço:} complexidade assintótica de pior caso
+    correção e de desempenho. Todas elas implementam métodos exatos;
+    \item \textbf{tempo} e \textbf{Espaço:} complexidade assintótica de pior caso
     da implementação avaliada, que nem sempre coincide com a melhor complexidade
     conhecida para o algoritmo.
-\end{itemize}
+\end{alineas}
 
 Nas tabelas de tempo, cada célula é a mediana, em milissegundos, das cinco
 execuções cronometradas descritas na Seção~\ref{sec:protocolo}. Nas tabelas de
@@ -48,30 +49,30 @@ algoritmo exato aparece na mesma tabela, e as razões citadas no texto são
 calculadas a partir dele. As células e as complexidades podem trazer os seguintes
 marcadores:
 
-\begin{itemize}
+\begin{alineas}
     \item \textbf{---:} célula não executada, pois o tamanho está fora da faixa
     prevista para aquele algoritmo (nota da Tabela~\ref{tab:familias}). Na rodada
-    definitiva, nenhuma célula excedeu o limite de tempo de 120 segundos.
+    definitiva, nenhuma célula excedeu o limite de tempo de 120 segundos;
     \item \textbf{BugAttr:} a implementação \texttt{benchaplin} do método Húngaro
-    termina com erro de atributo (\texttt{AttributeError}) do Python.
+    termina com erro de atributo (\texttt{AttributeError}) do Python;
     \item \textbf{BugPerc:} a implementação \texttt{hunalgorithm} do método Húngaro
     termina com erro (\texttt{OSError}) ao exceder um limite interno de iterações.
-    Os dois defeitos são discutidos na Seção~\ref{sec:defeitos}.
+    Os dois defeitos são discutidos na Seção~\ref{sec:defeitos};
     \item \textbf{0 =ref:} no casamento estável, a solução tem zero pares
     bloqueantes, ou seja, é estável, e coincide com o emparelhamento ótimo para os
-    homens calculado pela implementação numérica, usada como referência.
+    homens calculado pela implementação numérica, usada como referência;
     \item \textbf{* (na complexidade):} a implementação avaliada tem complexidade
     maior que a do algoritmo apresentado nos Capítulos~\ref{cap:bipartidos}
     e~\ref{cap:gerais}. O caminho mínimo sucessivo usa o SPFA, uma variante do
     Bellman-Ford, em vez do Dijkstra com potenciais; o Karp-Sipser localiza os
     vértices de grau 1 por varredura; o \textit{threshold} testa cada limiar por
     caminhos aumentantes, e não pelo Hopcroft-Karp; e o Gale-Shapley de Lattas busca
-    a posição de cada pretendente percorrendo a lista de preferências da mulher.
+    a posição de cada pretendente percorrendo a lista de preferências da mulher;
     \item \textbf{† (na complexidade):} a implementação tem a complexidade indicada,
     mas um sobrecusto de implementação faz o tempo medido crescer mais rápido que
     ela. É o caso do Gale-Shapley orientado a objetos, que reconstrói suas
     estruturas a cada rodada (Seção~\ref{sec:crescimento}).
-\end{itemize}
+\end{alineas}
 
 % ---------------------------------------------------------------------------
 \section{Cardinalidade máxima em grafos bipartidos}
@@ -106,16 +107,14 @@ cresce com a densidade. As duas implementações de Hopcroft-Karp, a de terceiro
 NetworkX, ficam muito próximas em todas as instâncias. O método de caminhos aumentantes
 simples fica entre os dois extremos, mas com crescimento irregular: nos grafos~2
 e~3, o tempo salta entre $n = 200$ e $n = 250$, de 75 para 420~ms e de 40 para
-260~ms. A implementação de núcleo compilado (igraph, Apêndice~\ref{ap:compilados})
-é a mais rápida em todas as instâncias, como esperado, de nove a doze vezes mais
-rápida que o Hopcroft-Karp interpretado nos grafos esparsos, em $n = 250$.
+260~ms. A implementação de núcleo compilado (igraph) não entra nas tabelas de tempo; o
+seu crescimento é discutido na Seção~\ref{sec:crescimento}.
 
 Quanto aos algoritmos aproximados, as tabelas de qualidade
 (Tabelas~\ref{tab:mcm-grafo-1-esparso-sem-perfeito-mcm-80-de-n-qualidade},
 \ref{tab:mcm-grafo-2-esparso-com-perfeito-mcm-n-qualidade}
-e~\ref{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-qualidade}) confirmam o
-compromisso entre qualidade e tempo, com uma nuance revelada pela variação entre
-instâncias. O método guloso, o mais rápido de todo o conjunto, atinge de 92 a 98\%
+e~\ref{tab:mcm-grafo-3-denso-com-perfeito-mcm-n-qualidade}) mostram que a
+qualidade dos métodos aproximados varia com a instância. O método guloso, o mais rápido de todo o conjunto, atinge de 92 a 98\%
 do ótimo no grafo~1 e cerca de 94\% no grafo denso, mas tem sua pior qualidade no
 grafo~2, esparso e com emparelhamento perfeito, em que fica em torno de 86\%: nesse
 grafo, a ordem de varredura das arestas mais facilmente o prende em um
@@ -154,9 +153,7 @@ linha; na matriz~1, ele é dado pelos algoritmos exatos, que concordam entre si.
 Entre as quatro implementações do método Húngaro, obtidas de autores distintos
 para exatamente o mesmo algoritmo, observa-se variação de mais de uma ordem de
 grandeza: nas matrizes~2 e~3, em $n = 250$, a \texttt{mayorx} leva 17~ms e a
-\texttt{benchaplin} cerca de 1{,}2~s, uma diferença de quase setenta vezes. É
-evidência de que a qualidade da implementação, e não apenas o algoritmo, determina
-o desempenho na prática. A estrutura da matriz também pesa, mas de forma desigual
+\texttt{benchaplin} cerca de 1{,}2~s, uma diferença de quase setenta vezes. A estrutura da matriz também pesa, mas de forma desigual
 entre as implementações. Na matriz aleatória
 (Tabela~\ref{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}),
 a \texttt{munkres} leva 680~ms em $n = 250$, cerca de dezenove vezes o seu tempo
@@ -168,23 +165,21 @@ por sua vez, praticamente não é afetado pela estrutura (de 213 a 235~ms em
 $n = 100$), pois o custo do SPFA depende do grafo residual, e não dos valores dos
 custos; ainda assim, a partir de $n = 50$ é mais lento que a \texttt{munkres}, a
 \texttt{hunalgorithm} e a \texttt{mayorx} sempre que elas concluem. As matrizes~2 e~3 produzem tempos quase idênticos em todas as
-implementações. As implementações de núcleo compilado (SciPy e Jonker-Volgenant,
-Apêndice~\ref{ap:compilados}) são as mais rápidas em todas as matrizes, com
-menos de 6~ms em $n = 250$.
+implementações. As implementações de núcleo compilado (SciPy e Jonker-Volgenant) ficam bem
+abaixo de todas as interpretadas, como mostra a Figura~\ref{fig:cresc-assignment}
+para a matriz~1.
 
-O ponto mais instrutivo, porém, só aparece ao comparar as instâncias: os defeitos
-das implementações \texttt{benchaplin} e \texttt{hunalgorithm}, marcados como
+Os defeitos das implementações \texttt{benchaplin} e \texttt{hunalgorithm}, marcados como
 \texttt{BugAttr} e \texttt{BugPerc} nas
 Tabelas~\ref{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
 e~\ref{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-qualidade},
 manifestam-se \textbf{exclusivamente na matriz densa aleatória}. Nas matrizes
 estruturadas, que produzem padrões de custo mais regulares, ambas concluem
-normalmente. Essa sensibilidade ao conteúdo da entrada, em que a mesma
-implementação ora funciona, ora falha, conforme a estrutura da matriz, é discutida
-em conjunto na Seção~\ref{sec:defeitos}.
+normalmente. Os dois defeitos são discutidos na Seção~\ref{sec:defeitos}.
 
 % ---------------------------------------------------------------------------
 \section{Atribuição gargalo}
+\label{sec:res_bottleneck}
 
 As Tabelas~\ref{tab:bottleneck-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
 a~\ref{tab:bottleneck-matriz-3-poucos-valores-muitos-empates-qualidade} apresentam
@@ -199,9 +194,7 @@ gulosas.
 \input{results/tex/bottleneck-matriz-3-poucos-valores-muitos-empates-qualidade}
 
 Os dois algoritmos exatos produzem sempre o mesmo custo gargalo ótimo, o que também
-serve como verificação cruzada de corretude. O tempo, no entanto, revela o
-achado mais interessante deste problema, e que ilustra bem por que vale examinar
-todas as instâncias: \textbf{a ordem entre os dois algoritmos se inverte conforme
+serve como verificação cruzada de corretude. No tempo, porém, \textbf{a ordem entre os dois algoritmos se inverte conforme
 a matriz}. Nas matrizes densa e estruturada
 (Tabelas~\ref{tab:bottleneck-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
 e~\ref{tab:bottleneck-matriz-2-estruturada-custo-i-j-1-tempo-python}), o método de
@@ -212,13 +205,10 @@ na estruturada, em $n = 200$. Na matriz com poucos valores distintos
 contudo, o \textit{threshold} passa a ser o mais rápido: como sua busca binária
 opera sobre o conjunto de valores distintos da matriz, poucos valores tornam essa
 busca curtíssima, enquanto o método construtivo não se beneficia da mesma forma.
-A conclusão de qual método é preferível, portanto, depende da estrutura esperada da
-entrada, uma nuance que uma única instância representativa teria ocultado.
+Assim, o método mais rápido depende da estrutura da entrada.
 
-As heurísticas gulosas, por sua vez, confirmam a fragilidade dos métodos gulosos
-para um objetivo de gargalo. Na matriz estruturada
-(Tabela~\ref{tab:bottleneck-matriz-2-estruturada-custo-i-j-1-qualidade}), ambas
-encontram o ótimo, pois a diagonal é a posição mais barata de cada linha e de cada
+As heurísticas gulosas só encontram o ótimo na matriz estruturada
+(Tabela~\ref{tab:bottleneck-matriz-2-estruturada-custo-i-j-1-qualidade}), pois a diagonal é a posição mais barata de cada linha e de cada
 coluna. Na matriz densa uniforme
 (Tabela~\ref{tab:bottleneck-matriz-1-densa-uniforme-custo-in-1-100-qualidade}),
 porém, o guloso simples termina com gargalos entre 47 e 99, enquanto o ótimo cai
@@ -241,6 +231,7 @@ na cardinalidade máxima, em que o algoritmo de Karp-Sipser é quase sempre óti
 
 % ---------------------------------------------------------------------------
 \section{Casamento estável}
+\label{sec:res_stable}
 
 As Tabelas~\ref{tab:stable-marriage-perfil-1-aleatorio-permutacoes-uniformes-tempo-python}
 a~\ref{tab:stable-marriage-perfil-3-ciclico-deslocamento-estruturad-qualidade}
@@ -289,6 +280,7 @@ e dicionários escalam sem dificuldade até os maiores tamanhos avaliados.
 
 % ---------------------------------------------------------------------------
 \section{Emparelhamento em grafos gerais}
+\label{sec:res_general}
 
 Cobrem-se os dois problemas de grafos gerais, cardinalidade máxima e peso
 máximo, cada um em uma instância esparsa e uma densa. Como cada tamanho usa um
@@ -321,12 +313,11 @@ implementa o mesmo método e se mantém abaixo de 13~ms em todas as instâncias.
 
 No caso ponderado
 (Tabelas~\ref{tab:general-peso-esparso-grau-3-tempo-python}
-a~\ref{tab:general-peso-denso-p-0-3-qualidade}), um resultado é digno de nota e
-mantém-se nas duas densidades: a implementação independente de van Rantwijk é de
-duas a três vezes mais rápida que a rotina correspondente do NetworkX, ainda que
-esta seja uma adaptação daquele mesmo código. A comparação, portanto, não opõe
-duas abordagens, e sim uma implementação a um descendente empacotado dela; a
-diferença mede o efeito das camadas de generalidade que a biblioteca acrescenta.
+a~\ref{tab:general-peso-denso-p-0-3-qualidade}), a implementação de van Rantwijk
+é, nas duas densidades, de duas a três vezes mais rápida que a rotina
+correspondente do NetworkX. Como a rotina do NetworkX é uma adaptação desse mesmo
+código (Seção~\ref{sec:proveniencia}), a diferença vem das alterações feitas na
+biblioteca, e não do algoritmo; quais alterações pesam mais não foi medido.
 O algoritmo aproximado Path Growing é de vinte a sessenta vezes mais rápido que os
 exatos em $n = 100$ e entrega uma fração elevada do peso ótimo, sempre bem acima da
 sua garantia teórica de metade: entre 78 e 93\% no grafo esparso e entre 84 e 95\%
@@ -334,10 +325,11 @@ no denso, em que a qualidade é, portanto, um pouco superior.
 
 % ---------------------------------------------------------------------------
 \section{Emparelhamento induzido máximo}
+\label{sec:res_mim}
 
 Sendo NP-difícil, o emparelhamento induzido máximo tem perfil distinto: o
-algoritmo exato só é viável em instâncias pequenas, e a qualidade das heurísticas
-é o eixo central. As
+algoritmo exato só é viável em instâncias pequenas, e a comparação se concentra na
+qualidade das heurísticas. As
 Tabelas~\ref{tab:mim-grafo-esparso-grau-3-tempo-python}
 a~\ref{tab:mim-grafo-denso-grau-12-qualidade} apresentam as três densidades
 avaliadas. A referência de qualidade depende do tamanho: até $n = 40$, as
@@ -362,13 +354,12 @@ $n = 30$ para 75~ms em $n = 40$, e no médio
 crescimento motivou limitar o exato a $n \le 40$ e justifica empiricamente a
 necessidade das heurísticas.
 
-A comparação entre as tabelas de qualidade revela um comportamento não-monótono
-digno de nota: a heurística de grau mínimo alcança o ótimo em todos os tamanhos
+A heurística de grau mínimo alcança o ótimo em todos os tamanhos
 tanto no grafo esparso
 (Tabela~\ref{tab:mim-grafo-esparso-grau-3-qualidade}) quanto no denso
 (Tabela~\ref{tab:mim-grafo-denso-grau-12-qualidade}), mas não na densidade
 \textit{intermediária} (Tabela~\ref{tab:mim-grafo-medio-grau-6-qualidade}), em que
-fica uma aresta abaixo dele em $n = 20$, 30 e 40. A explicação é que, em grafos
+fica uma aresta abaixo dele em $n = 20$, 30 e 40. Uma explicação provável é que, em grafos
 muito densos, quase toda aresta conflita com as demais, de modo que o
 emparelhamento induzido é pequeno e fácil de acertar; é na densidade média que há
 mais espaço para escolhas localmente boas mas globalmente subótimas. A escolha
@@ -383,9 +374,7 @@ menos de 40~ms da aleatória.
 \section{Defeitos em implementações públicas}
 \label{sec:defeitos}
 
-Um resultado que só emerge da execução repetida dos algoritmos, e que um
-levantamento puramente bibliográfico não revelaria, diz respeito à
-confiabilidade de implementações públicas de algoritmos clássicos. Duas das
+Duas das
 quatro implementações do método Húngaro avaliadas apresentam defeitos, ambos
 manifestados apenas na matriz densa aleatória, como visto nas
 Tabelas~\ref{tab:assignment-matriz-1-densa-uniforme-custo-in-1-100-tempo-python}
@@ -395,17 +384,14 @@ A primeira (\texttt{hunalgorithm}, marcador \texttt{BugPerc}) falha de forma
 determinística a partir de $n = 20$, por exceder um limite interno de iterações
 previsto em seu próprio código.
 
-A segunda (\texttt{benchaplin}, marcador \texttt{BugAttr}) é mais notável, por ser
+A segunda (\texttt{benchaplin}, marcador \texttt{BugAttr}) é
 \textbf{não determinística entre execuções}. Sobre exatamente a mesma matriz de
 entrada, a implementação ora retorna o custo ótimo correto, ora falha com um erro
 de tipo, ora ingressa em um caminho de execução tão lento que não conclui em tempo
 praticável. A causa é a dependência do defeito quanto à ordem de iteração de uma
-coleção de objetos, que a linguagem aleatoriza a cada processo. São três desfechos
-distintos para a mesma entrada, todos observados. Além de ilustrar de forma vívida
-o valor de \textit{implementar e medir} sobre apenas catalogar, esse comportamento
-tem uma consequência metodológica: a fixação da semente de aleatorização, descrita
-no capítulo anterior, foi necessária justamente para tornar os resultados
-reprodutíveis. Com a semente fixada, a rodada definitiva registra o erro a partir
+coleção de objetos, que a linguagem aleatoriza a cada processo. Por causa desse
+defeito, foi preciso fixar a semente dessa aleatorização
+(Seção~\ref{sec:ambiente}) para que os resultados fossem reprodutíveis. Com a semente fixada, a rodada definitiva registra o erro a partir
 de $n = 50$.
 
 Optou-se por \textbf{reportar} esses defeitos, e não corrigi-los: como o objeto de
@@ -438,9 +424,9 @@ Figura~\ref{fig:cresc-mcm}. Os dois Hopcroft-Karp interpretados medem 1{,}20 e
 1{,}09, abaixo do $1{,}5$ previsto, e o guloso mede exatamente 1, como esperado de
 um algoritmo linear. Na atribuição (Tabela~\ref{tab:exp-assignment} e
 Figura~\ref{fig:cresc-assignment}), as implementações de núcleo compilado situam-se
-muito abaixo das interpretadas, mas com inclinação semelhante, exatamente o efeito
-esperado: a linguagem altera a constante (a posição da reta), não o expoente (a
-inclinação).
+muito abaixo das interpretadas, mas com inclinação semelhante, como esperado, já que a linguagem altera a
+constante $C$ do modelo $t(n) \approx C \cdot n^k$ (Seção~\ref{sec:criterios}),
+mas não o expoente $k$.
 
 \input{results/tex/exp-mcm}
 \input{results/tex/exp-assignment}
@@ -461,7 +447,7 @@ cresce proporcionalmente a $n$.
 \input{results/tex/exp-bottleneck}
 \input{results/tex/exp-general-weight}
 
-Há três exceções em que o expoente medido supera o teórico. A mais reveladora é a
+Há três exceções em que o expoente medido supera o teórico. A maior delas é a da
 variante orientada a objetos do Gale-Shapley
 (Tabela~\ref{tab:exp-stable-marriage}), cujo expoente de 3{,}28 supera o 2
 previsto: o sobrecusto de implementação a torna, na prática, super-quadrática,

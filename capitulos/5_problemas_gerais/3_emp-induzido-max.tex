@@ -7,8 +7,8 @@ Diferentemente dos problemas de emparelhamento em grafos gerais vistos até o mo
 Seja $G = (V, E)$ um grafo geral. Um subconjunto de arestas $M \subseteq E$ é um \textbf{emparelhamento induzido} se satisfaz duas condições:
 
 \begin{enumerate}
-    \item \textbf{Condição de Emparelhamento:} Nenhuma aresta em $M$ compartilha um vértice (são disjuntas par a par).
-    \item \textbf{Condição Induzida:} O subgrafo induzido pelos vértices saturados por $M$, denotado por $G[V(M)]$, contém \textbf{apenas} as arestas de $M$.
+    \item \textbf{condição de Emparelhamento:} nenhuma aresta em $M$ compartilha um vértice (são disjuntas par a par);
+    \item \textbf{condição Induzida:} o subgrafo induzido pelos vértices saturados por $M$, denotado por $G[V(M)]$, contém \textbf{apenas} as arestas de $M$.
 \end{enumerate}
 
 Em termos mais simples, se tomarmos duas arestas quaisquer $\{u, v\}$ e $\{x, y\}$ pertencentes ao emparelhamento induzido, não pode existir no grafo original nenhuma aresta conectando um vértice do par $\{u, v\}$ a um vértice do par $\{x, y\}$. Isso implica que as arestas do emparelhamento devem estar ``topologicamente isoladas'' umas das outras.
@@ -80,21 +80,21 @@ Uma aplicação prática apontada por \citeonline{golumbic-lewenstein} é a esco
 
 \subsection{Complexidade computacional}
 
-Diferentemente do emparelhamento clássico (cardinalidade ou ponderado), que possui algoritmos polinomiais eficientes, o problema de encontrar o emparelhamento induzido de cardinalidade máxima é \textbf{NP-Difícil}.
+Diferentemente do emparelhamento clássico (cardinalidade ou ponderado), que possui algoritmos polinomiais eficientes, o problema de encontrar o emparelhamento induzido de cardinalidade máxima é \textbf{NP-difícil}.
 
-Este resultado foi estabelecido no trabalho fundamental de \citeonline{stockmeyer}. Eles demonstraram que o problema permanece NP-Difícil mesmo quando restrito a grafos bipartidos com grau máximo 4. Isso é um fato surpreendente e crucial: a propriedade de ser bipartido, que geralmente torna problemas de emparelhamento fáceis (como visto no Teorema de König), \textbf{não} ajuda no caso do emparelhamento induzido.
+\citeonline{stockmeyer} provaram esse resultado e mostraram que o problema continua NP-difícil mesmo quando restrito a grafos bipartidos de grau máximo 4. Ou seja, ao contrário do que acontece no emparelhamento comum, ser bipartido não torna o problema fácil.
 
 \subsection{Redução ao problema do conjunto independente}\label{sec:mim_reducao}
 
 Um \textbf{conjunto independente} em um grafo é um conjunto de vértices dois a dois não adjacentes, e o problema do \textbf{Conjunto Independente Máximo} (MIS, \textit{Maximum Independent Set}) consiste em encontrar um de maior cardinalidade. O MIM em $G$ pode ser reescrito como um MIS em um grafo construído a partir de $G$, em dois passos:
 
 \begin{enumerate}
-    \item Constrói-se o \textbf{grafo de linha} $L(G)$, que tem um vértice para cada aresta de $G$; dois vértices são adjacentes se as arestas correspondentes compartilham um extremo em $G$. Um conjunto independente em $L(G)$ é, portanto, um emparelhamento em $G$.
-    \item Constrói-se o \textbf{quadrado do grafo de linha}, $L(G)^2$. O quadrado de um grafo tem os mesmos vértices que ele e liga dois vértices quando a distância entre eles, isto é, o número de arestas do menor caminho que os une, é 1 ou 2. Em $L(G)^2$, duas arestas $e$ e $f$ de $G$ ficam adjacentes em dois casos:
-    \begin{itemize}
+    \item constrói-se o \textbf{grafo de linha} $L(G)$, que tem um vértice para cada aresta de $G$; dois vértices são adjacentes se as arestas correspondentes compartilham um extremo em $G$. Um conjunto independente em $L(G)$ é, portanto, um emparelhamento em $G$;
+    \item constrói-se o \textbf{quadrado do grafo de linha}, $L(G)^2$. O quadrado de um grafo tem os mesmos vértices que ele e liga dois vértices quando a distância entre eles, isto é, o número de arestas do menor caminho que os une, é 1 ou 2. Em $L(G)^2$, duas arestas $e$ e $f$ de $G$ ficam adjacentes em dois casos:
+    \begin{alineas}
         \item \textbf{distância 1 em $L(G)$:} $e$ e $f$ têm um extremo em comum;
         \item \textbf{distância 2 em $L(G)$:} existe uma terceira aresta $g$ que compartilha um extremo com $e$ e outro com $f$, ou seja, $g$ liga $e$ a $f$ em $G$.
-    \end{itemize}
+    \end{alineas}
 \end{enumerate}
 
 Esses dois casos são exatamente as situações que impedem $e$ e $f$ de estarem juntas em um emparelhamento induzido. Por isso, $L(G)^2$ é chamado neste trabalho de \textbf{grafo de conflitos} e denotado por $H$, e a \textbf{vizinhança} $N_H(e)$ de uma aresta $e$ é o conjunto das arestas de $G$ que conflitam com $e$. Um conjunto de arestas de $G$ é um emparelhamento induzido quando nenhum par delas conflita, isto é, quando forma um conjunto independente em $H$; assim, encontrar um emparelhamento induzido máximo em $G$ equivale a encontrar um conjunto independente máximo em $L(G)^2$ \cite{cameron}.
@@ -105,7 +105,7 @@ A redução não prova, por si só, que o MIM é difícil: ela transforma o MIM 
 
 \subsection{Abordagens de solução e heurísticas}
 
-Dada a natureza NP-Difícil do problema e a ineficácia de métodos exatos para grafos densos ou de grande escala, a literatura concentra-se majoritariamente em algoritmos construtivos gulosos e metaheurísticas.
+Dada a natureza NP-difícil do problema e a ineficácia de métodos exatos para grafos densos ou de grande escala, a literatura concentra-se majoritariamente em algoritmos construtivos gulosos e metaheurísticas.
 
 \subsubsection{Algoritmo exato}
 
@@ -140,16 +140,16 @@ Para instâncias pequenas, a redução da Seção~\ref{sec:mim_reducao} permite 
     }
 \end{algorithm}
 
-O Algoritmo~\ref{alg:mim_exact} pode ser lido linha a linha da seguinte forma:
+As etapas do Algoritmo~\ref{alg:mim_exact} são as seguintes:
 
-\begin{itemize}
-    \item \textbf{Linha~\ref{mx:build}:} Constrói-se o grafo de conflitos $H = L(G)^2$, com um vértice para cada aresta de $G$ e uma aresta entre duas arestas de $G$ que não podem estar juntas em um emparelhamento induzido: as que compartilham um vértice ou as que são ligadas por uma terceira aresta. Um emparelhamento induzido de $G$ é exatamente um conjunto independente de $H$.
-    \item \textbf{Linhas~\ref{mx:init}--\ref{mx:ret}:} A melhor solução conhecida $M^*$ começa vazia, e a busca parte de uma solução vazia com todas as arestas como candidatas. Ao final, $M^*$ contém o emparelhamento induzido máximo.
-    \item \textbf{Linha~\ref{mx:bound}:} Poda (\textit{bound}): o procedimento \textsc{Ramifica} recebe a solução parcial $M$ e o conjunto $C$ das arestas que ainda podem ser adicionadas a ela sem conflito. Mesmo que todas as candidatas fossem incluídas, a solução teria no máximo $|M| + |C|$ arestas; se isso não supera a melhor solução já encontrada, o ramo é abandonado.
-    \item \textbf{Linhas~\ref{mx:leaf}--\ref{mx:best}:} Sem candidatas restantes, a solução parcial está completa e, como passou pela poda, é maior que $M^*$, que é então substituída.
-    \item \textbf{Linhas~\ref{mx:choose}--\ref{mx:excl}:} Ramificação (\textit{branch}): escolhe-se uma candidata $e$ e exploram-se os dois casos possíveis. No primeiro, $e$ entra na solução, e saem das candidatas $e$ e todos os seus vizinhos em $H$, que passariam a conflitar com ela. No segundo, $e$ é descartada e as demais candidatas são mantidas. Todo emparelhamento induzido cai em exatamente um dos dois ramos, o que garante que o ótimo é encontrado.
-    \item \textbf{Complexidade:} A construção de $H$ compara pares de arestas, com custo $O(E^2)$. A árvore de busca tem profundidade no máximo $E$, pois cada chamada remove ao menos uma candidata, e até $2^E$ folhas no pior caso; cada chamada faz operações de conjunto de custo $O(E)$. O total é exponencial, $O(E \cdot 2^E)$ no pior caso, o que é esperado para um problema NP-difícil; a poda reduz bastante a busca na prática, mas não altera esse limite, e o algoritmo só é viável em instâncias pequenas.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{linha~\ref{mx:build}:} constrói-se o grafo de conflitos $H = L(G)^2$, com um vértice para cada aresta de $G$ e uma aresta entre duas arestas de $G$ que não podem estar juntas em um emparelhamento induzido: as que compartilham um vértice ou as que são ligadas por uma terceira aresta. Um emparelhamento induzido de $G$ é exatamente um conjunto independente de $H$;
+    \item \textbf{linhas~\ref{mx:init}--\ref{mx:ret}:} a melhor solução conhecida $M^*$ começa vazia, e a busca parte de uma solução vazia com todas as arestas como candidatas. Ao final, $M^*$ contém o emparelhamento induzido máximo;
+    \item \textbf{linha~\ref{mx:bound}:} poda (\textit{bound}): o procedimento \textsc{Ramifica} recebe a solução parcial $M$ e o conjunto $C$ das arestas que ainda podem ser adicionadas a ela sem conflito. Mesmo que todas as candidatas fossem incluídas, a solução teria no máximo $|M| + |C|$ arestas; se isso não supera a melhor solução já encontrada, o ramo é abandonado;
+    \item \textbf{linhas~\ref{mx:leaf}--\ref{mx:best}:} sem candidatas restantes, a solução parcial está completa e, como passou pela poda, é maior que $M^*$, que é então substituída;
+    \item \textbf{linhas~\ref{mx:choose}--\ref{mx:excl}:} ramificação (\textit{branch}): escolhe-se uma candidata $e$ e exploram-se os dois casos possíveis. No primeiro, $e$ entra na solução, e saem das candidatas $e$ e todos os seus vizinhos em $H$, que passariam a conflitar com ela. No segundo, $e$ é descartada e as demais candidatas são mantidas. Todo emparelhamento induzido cai em exatamente um dos dois ramos, o que garante que o ótimo é encontrado;
+    \item \textbf{complexidade:} a construção de $H$ compara pares de arestas, com custo $O(E^2)$. A árvore de busca tem profundidade no máximo $E$, pois cada chamada remove ao menos uma candidata, e até $2^E$ folhas no pior caso; cada chamada faz operações de conjunto de custo $O(E)$. O total é exponencial, $O(E \cdot 2^E)$ no pior caso, o que é esperado para um problema NP-difícil; a poda reduz bastante a busca na prática, mas não altera esse limite, e o algoritmo só é viável em instâncias pequenas.
+\end{alineas}
 
 \subsubsection{Heurísticas gulosas}
 
@@ -157,11 +157,11 @@ Dada a equivalência entre o problema do Emparelhamento Induzido Máximo em $G$ 
 
 O procedimento geral consiste em selecionar iterativamente uma aresta candidata $e$, adicioná-la à solução e retirar das candidatas a própria $e$ e as arestas que conflitam com ela, isto é, seus vizinhos $N_H(e)$ no grafo de conflitos (Seção~\ref{sec:mim_reducao}). As variantes diferem no critério de seleção da aresta:
 
-\begin{itemize}
-    \item \textbf{Guloso Aleatório (Random Greedy):} Seleciona a próxima aresta uniformemente ao acaso dentre as disponíveis. \citeonline{duckworth} analisaram o comportamento assintótico desta abordagem em grafos cúbicos aleatórios, demonstrando que, apesar de sua simplicidade, ela fornece uma linha de base (\textit{baseline}) essencial para a avaliação de métodos mais sofisticados.
-    \item \textbf{Guloso de Grau Mínimo (Min-Degree Greedy):} A heurística escolhe a candidata com \textbf{menos conflitos}, isto é, de menor grau no subgrafo $H[C]$ do grafo de conflitos induzido pelas candidatas $C$: é a aresta cuja escolha elimina o menor número de outras candidatas. Esta abordagem é uma adaptação direta da heurística \textit{Min-Degree} (ou \textit{Greedy}) para o problema do Conjunto Independente Máximo.
+\begin{alineas}
+    \item \textbf{guloso aleatório (\textit{random greedy}):} seleciona a próxima aresta uniformemente ao acaso dentre as disponíveis. \citeonline{duckworth} analisaram um algoritmo guloso aleatório em grafos cúbicos aleatórios e mostraram que, quase certamente, ele obtém um emparelhamento induzido com pelo menos $0{,}270n$ arestas, enquanto o máximo tem menos de $0{,}282n$;
+    \item \textbf{guloso de grau mínimo (\textit{min-degree greedy}):} a heurística escolhe a candidata com \textbf{menos conflitos}, isto é, de menor grau no subgrafo $H[C]$ do grafo de conflitos induzido pelas candidatas $C$: é a aresta cuja escolha elimina o menor número de outras candidatas. Esta abordagem é uma adaptação direta da heurística \textit{Min-Degree} (ou \textit{Greedy}) para o problema do Conjunto Independente Máximo.
     \citeonline{halldorsson} estabeleceram os fundamentos teóricos para essa estratégia, demonstrando que priorizar vértices de baixo grau fornece garantias de aproximação superiores em grafos esparsos e de grau limitado. No contexto do MIM, essa lógica se traduz em escolher a aresta com a menor vizinhança em $L(G)^2$, contada apenas entre as candidatas restantes. No caminho da Figura~\ref{fig:mim}, os graus iniciais em $H$ são 2, 3, 4, 3 e 2 para $e_1, \ldots, e_5$; a heurística escolhe $e_1$ (empatada com $e_5$) e descarta $e_2$ e $e_3$; restam $e_4$ e $e_5$, que conflitam entre si, e a escolha de $e_4$ leva ao emparelhamento induzido máximo $\{e_1, e_4\}$.
-\end{itemize}
+\end{alineas}
 
 As duas variantes compartilham a mesma estrutura e diferem apenas no critério de seleção, conforme o Algoritmo~\ref{alg:mim_greedy}. Ambas são classificadas como heurísticas (Seção~\ref{sec:tipos_metodo}): as garantias conhecidas para os gulosos de conjunto independente dependem do grau máximo do grafo \cite{halldorsson} e, em $L(G)^2$, esse grau cresce com o quadrado do grau de $G$, de modo que não há razão de aproximação constante para grafos gerais.
 
@@ -188,16 +188,16 @@ As duas variantes compartilham a mesma estrutura e diferem apenas no critério d
     \KwRet $M$\label{mg:ret}\;
 \end{algorithm}
 
-O Algoritmo~\ref{alg:mim_greedy} pode ser lido linha a linha da seguinte forma:
+O Algoritmo~\ref{alg:mim_greedy} funciona da seguinte forma:
 
-\begin{itemize}
-    \item \textbf{Linha~\ref{mg:build}:} Constrói-se o grafo de conflitos $H = L(G)^2$, o mesmo do Algoritmo~\ref{alg:mim_exact}.
-    \item \textbf{Linha~\ref{mg:init}:} A solução começa vazia, e todas as arestas de $G$ são candidatas.
-    \item \textbf{Linhas~\ref{mg:loop}--\ref{mg:mindeg}:} Enquanto houver candidatas, escolhe-se uma delas segundo a regra da variante: ao acaso, no guloso aleatório (linha~\ref{mg:rand}), ou a de menor grau no subgrafo de $H$ induzido pelas candidatas, no guloso de grau mínimo (linha~\ref{mg:mindeg}). O grau de $e$ em $H[C]$ é o número de candidatas que deixarão de estar disponíveis se $e$ for escolhida; minimizá-lo preserva o maior número possível de opções para os passos seguintes.
-    \item \textbf{Linhas~\ref{mg:add}--\ref{mg:remove}:} A aresta escolhida entra na solução e, junto com todos os seus vizinhos em $H$, deixa de ser candidata, o que mantém $M$ um emparelhamento induzido a cada passo.
-    \item \textbf{Linha~\ref{mg:ret}:} Quando não há mais candidatas, nenhuma aresta pode ser adicionada a $M$ sem violar a restrição induzida: o resultado é um emparelhamento induzido maximal, mas não necessariamente máximo.
-    \item \textbf{Complexidade:} A construção de $H$ custa $O(E^2)$, e $H$ tem $O(E^2)$ arestas no pior caso. O laço executa no máximo $E$ iterações, e cada aresta de $H$ é percorrida um número constante de vezes ao remover os vizinhos das escolhidas, com custo total $O(E^2)$. No guloso aleatório, cada escolha custa $O(1)$; no de grau mínimo, mantendo os graus em $H[C]$ atualizados a cada remoção, a escolha do mínimo custa $O(E)$ por iteração, também $O(E^2)$ no total. As duas variantes têm, portanto, complexidade $O(E^2)$, dominada pelo grafo de conflitos, como indicado na Tabela~\ref{tab:emp_induz_max_gerais}.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{linha~\ref{mg:build}:} constrói-se o grafo de conflitos $H = L(G)^2$, o mesmo do Algoritmo~\ref{alg:mim_exact};
+    \item \textbf{linha~\ref{mg:init}:} a solução começa vazia, e todas as arestas de $G$ são candidatas;
+    \item \textbf{linhas~\ref{mg:loop}--\ref{mg:mindeg}:} enquanto houver candidatas, escolhe-se uma delas segundo a regra da variante: ao acaso, no guloso aleatório (linha~\ref{mg:rand}), ou a de menor grau no subgrafo de $H$ induzido pelas candidatas, no guloso de grau mínimo (linha~\ref{mg:mindeg}). O grau de $e$ em $H[C]$ é o número de candidatas que deixarão de estar disponíveis se $e$ for escolhida; minimizá-lo preserva o maior número possível de opções para os passos seguintes;
+    \item \textbf{linhas~\ref{mg:add}--\ref{mg:remove}:} a aresta escolhida entra na solução e, junto com todos os seus vizinhos em $H$, deixa de ser candidata, o que mantém $M$ um emparelhamento induzido a cada passo;
+    \item \textbf{linha~\ref{mg:ret}:} quando não há mais candidatas, nenhuma aresta pode ser adicionada a $M$ sem violar a restrição induzida: o resultado é um emparelhamento induzido maximal, mas não necessariamente máximo;
+    \item \textbf{complexidade:} a construção de $H$ custa $O(E^2)$, e $H$ tem $O(E^2)$ arestas no pior caso. O laço executa no máximo $E$ iterações, e cada aresta de $H$ é percorrida um número constante de vezes ao remover os vizinhos das escolhidas, com custo total $O(E^2)$. No guloso aleatório, cada escolha custa $O(1)$; no de grau mínimo, mantendo os graus em $H[C]$ atualizados a cada remoção, a escolha do mínimo custa $O(E)$ por iteração, também $O(E^2)$ no total. As duas variantes têm, portanto, complexidade $O(E^2)$, dominada pelo grafo de conflitos, como indicado na Tabela~\ref{tab:emp_induz_max_gerais}.
+\end{alineas}
 
 \subsubsection{Metaheurísticas}
 

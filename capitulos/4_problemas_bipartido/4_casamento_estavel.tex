@@ -12,13 +12,13 @@ O problema pode ser resolvido utilizando o algoritmo de Gale-Shapley, que usa um
 % Variações do problema: Stable Roommates problem, Hospitais e Residentes, etc.
 \subsection{Propriedades}
 
-\begin{itemize}
-    \item \textbf{Estabilidade}: Um emparelhamento é estável se não houver dois indivíduos que prefeririam estar juntos em vez de com seus parceiros atuais. A estabilidade é a característica central do problema \cite{lawler}.
-    \item \textbf{Existência de solução}: Gale e Shapley provaram que sempre existe pelo menos um emparelhamento estável para qualquer conjunto de preferências \cite{ahuja}.
-    \item \textbf{Otimalidade para quem propõe}: O emparelhamento resultante do algoritmo de Gale-Shapley é ótimo para o conjunto que faz as propostas (por exemplo, os homens), significando que cada indivíduo nesse conjunto recebe o melhor parceiro possível dentro dos emparelhamentos estáveis \cite{ahuja}.
-    \item \textbf{Pessimismo para quem recebe propostas}: Por outro lado, o emparelhamento é o pior possível para o conjunto que recebe as propostas (por exemplo, as mulheres), significando que cada indivíduo nesse conjunto recebe o pior parceiro possível dentro dos emparelhamentos estáveis \cite{ahuja}.
-    \item \textbf{Não-unicidade}: Pode haver múltiplos emparelhamentos estáveis para um dado conjunto de preferências, dependendo das listas de preferências dos indivíduos \cite{kleinberg}.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{estabilidade:} um emparelhamento é estável se não houver dois indivíduos que prefeririam estar juntos em vez de com seus parceiros atuais. A estabilidade é a característica central do problema \cite{lawler};
+    \item \textbf{existência de solução:} Gale e Shapley provaram que sempre existe pelo menos um emparelhamento estável para qualquer conjunto de preferências \cite{ahuja};
+    \item \textbf{otimalidade para quem propõe:} o emparelhamento resultante do algoritmo de Gale-Shapley é ótimo para o conjunto que faz as propostas (por exemplo, os homens), significando que cada indivíduo nesse conjunto recebe o melhor parceiro possível dentro dos emparelhamentos estáveis \cite{ahuja};
+    \item \textbf{pessimismo para quem recebe propostas:} por outro lado, o emparelhamento é o pior possível para o conjunto que recebe as propostas (por exemplo, as mulheres), significando que cada indivíduo nesse conjunto recebe o pior parceiro possível dentro dos emparelhamentos estáveis \cite{ahuja};
+    \item \textbf{não-unicidade:} pode haver múltiplos emparelhamentos estáveis para um dado conjunto de preferências, dependendo das listas de preferências dos indivíduos \cite{kleinberg}.
+\end{alineas}
 
 \subsection{Algoritmo de Gale-Shapley}
 
@@ -63,15 +63,15 @@ O Algoritmo~\ref{alg:gale_shapley} apresenta o pseudocódigo, em que $M$ é o co
 
 O algoritmo funciona sob a lógica de propostas e rejeições \cite{kleinberg}:
 
-\begin{itemize}
-    \item Linha~\ref{gsh:init}: todos começam livres, sem nenhum par formado.
-    \item Linhas~\ref{gsh:loop}--\ref{gsh:choose}: enquanto houver um homem $m$ livre que ainda não propôs a todas as mulheres, escolhe-se um deles. A ordem de escolha não altera o resultado final.
-    \item Linha~\ref{gsh:propose}: $m$ propõe à mulher $w$ mais bem colocada na sua lista de preferências entre as que ainda não recebeu proposta dele. Assim, cada homem percorre sua lista em ordem e nunca propõe duas vezes à mesma mulher.
-    \item Linhas~\ref{gsh:free}--\ref{gsh:eng1}: se $w$ está livre, ela aceita a proposta e os dois ficam noivos. Uma mulher que recebeu alguma proposta nunca volta a ficar livre.
-    \item Linhas~\ref{gsh:current}--\ref{gsh:reject}: se $w$ já está noiva de $m'$, ela compara os dois segundo a sua lista. Se prefere $m'$, rejeita $m$, que continua livre e, numa próxima iteração, proporá à mulher seguinte da sua lista.
-    \item Linhas~\ref{gsh:eng2}--\ref{gsh:freed}: se $w$ prefere $m$, ela troca de noivo: $m$ e $w$ ficam noivos e $m'$ volta a ficar livre. Por isso, o parceiro de cada mulher só melhora ao longo da execução.
-    \item Linha~\ref{gsh:ret}: o laço termina quando todos os homens estão noivos, e o conjunto $S$ dos pares noivos é devolvido. $S$ é um emparelhamento perfeito e estável: se um homem $m$ preferisse uma mulher $w$ ao seu par final, ele teria proposto a $w$ antes, e $w$ só o teria rejeitado ou trocado por alguém que ela prefere; logo, não existe par instável \cite{kleinberg}.
-    \item \textbf{Complexidade:} Cada homem propõe no máximo uma vez a cada mulher, de modo que há no máximo $n^2$ iterações. Cada iteração custa $O(1)$ quando se mantém: uma lista dos homens livres, um ponteiro para a próxima mulher da lista de cada homem, o noivo atual de cada mulher e uma matriz de posições $\mathrm{rank}[w][m]$, calculada uma vez em $O(n^2)$, que permite comparar dois homens em tempo constante. O total é $O(n^2)$, linear no tamanho da entrada, que é formada pelas $2n$ listas de $n$ preferências \cite{kleinberg}.
-\end{itemize}
+\begin{alineas}
+    \item linha~\ref{gsh:init}: todos começam livres, sem nenhum par formado;
+    \item linhas~\ref{gsh:loop}--\ref{gsh:choose}: enquanto houver um homem $m$ livre que ainda não propôs a todas as mulheres, escolhe-se um deles. A ordem de escolha não altera o resultado final;
+    \item linha~\ref{gsh:propose}: $m$ propõe à mulher $w$ mais bem colocada na sua lista de preferências entre as que ainda não recebeu proposta dele. Assim, cada homem percorre sua lista em ordem e nunca propõe duas vezes à mesma mulher;
+    \item linhas~\ref{gsh:free}--\ref{gsh:eng1}: se $w$ está livre, ela aceita a proposta e os dois ficam noivos. Uma mulher que recebeu alguma proposta nunca volta a ficar livre;
+    \item linhas~\ref{gsh:current}--\ref{gsh:reject}: se $w$ já está noiva de $m'$, ela compara os dois segundo a sua lista. Se prefere $m'$, rejeita $m$, que continua livre e, numa próxima iteração, proporá à mulher seguinte da sua lista;
+    \item linhas~\ref{gsh:eng2}--\ref{gsh:freed}: se $w$ prefere $m$, ela troca de noivo: $m$ e $w$ ficam noivos e $m'$ volta a ficar livre. Por isso, o parceiro de cada mulher só melhora ao longo da execução;
+    \item linha~\ref{gsh:ret}: o laço termina quando todos os homens estão noivos, e o conjunto $S$ dos pares noivos é devolvido. $S$ é um emparelhamento perfeito e estável: se um homem $m$ preferisse uma mulher $w$ ao seu par final, ele teria proposto a $w$ antes, e $w$ só o teria rejeitado ou trocado por alguém que ela prefere; logo, não existe par instável \cite{kleinberg};
+    \item \textbf{complexidade:} cada homem propõe no máximo uma vez a cada mulher, de modo que há no máximo $n^2$ iterações. Cada iteração custa $O(1)$ quando se mantém: uma lista dos homens livres, um ponteiro para a próxima mulher da lista de cada homem, o noivo atual de cada mulher e uma matriz de posições $\mathrm{rank}[w][m]$, calculada uma vez em $O(n^2)$, que permite comparar dois homens em tempo constante. O total é $O(n^2)$, linear no tamanho da entrada, que é formada pelas $2n$ listas de $n$ preferências \cite{kleinberg}.
+\end{alineas}
 
 Neste trabalho, o algoritmo de Gale-Shapley foi avaliado em três implementações, cuja origem consta na Tabela~\ref{tab:proveniencia}.

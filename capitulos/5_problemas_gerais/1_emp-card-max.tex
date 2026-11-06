@@ -1,7 +1,7 @@
 \section{Emparelhamento de cardinalidade máxima}
 \label{sec:emp_card_max_geral}
 
-A definição do problema de emparelhamento de cardinalidade máxima é, fundamentalmente, a mesma da sua contraparte bipartida, descrita na seção \ref{sec:emp_card_max_bip}. No entanto, a solução deste problema é significativamente mais complexa que a versão bipartida, mesmo ainda sendo em tempo polinomial.
+A definição do problema de emparelhamento de cardinalidade máxima é a mesma da sua versão bipartida (Seção~\ref{sec:emp_card_max_bip}). A diferença está nos ciclos de comprimento ímpar, que impedem a busca simples de caminhos aumentantes usada no caso bipartido; ainda assim, o problema é resolvido em tempo polinomial.
 
 \subsection{Propriedades}
 
@@ -11,7 +11,7 @@ A seguir serão apresentadas algumas propriedades importantes para a compreensã
 
 Os caminhos aumentantes e o lema de Berge (Seção~\ref{sec:caminhos_alternantes}) fundamentam também a solução em grafos gerais: um emparelhamento $M$ é máximo se, e somente se, não existe caminho $M$-aumentante \cite{jungnickel}. A dificuldade está em encontrar esses caminhos.
 
-Em grafos bipartidos, ciclos sempre têm tamanho par. Isso garante que, ao realizar uma busca (BFS ou DFS) a partir de um vértice livre, nunca encontraremos uma aresta que conecte dois vértices que estejam à mesma distância (``paridade'') da raiz na árvore de busca alternante \cite{ahuja}.
+Em grafos bipartidos, ciclos sempre têm tamanho par. Isso garante que, ao realizar uma busca (BFS ou DFS) a partir de um vértice livre, nunca se encontra uma aresta que conecte dois vértices que estejam à mesma distância (``paridade'') da raiz na árvore de busca alternante \cite{ahuja}.
 
 No entanto, em grafos gerais, a presença de ciclos de comprimento ímpar quebra essa lógica. \citeonline{schrijver} explica que, ao explorar o grafo, o algoritmo pode encontrar uma aresta conectando dois vértices que possuem paridade ``par'' em relação à raiz da busca. Essa estrutura forma um \textbf{ciclo ímpar} que ``confunde'' a identificação de um caminho aumentante simples, pois um vértice poderia ser alcançado por dois caminhos alternantes de paridades diferentes.
 
@@ -89,12 +89,12 @@ Baseando-se nas flores e no teorema da contração, \citeonline{lawler} descreve
 emparelhamento máximo em grafos gerais da seguinte forma:
 
 \begin{enumerate}
-    \item \textbf{Busca:} Inicie uma busca (geralmente BFS) a partir dos vértices livres para encontrar um caminho aumentante, construindo uma Floresta de Árvores Alternantes. Na versão de \citeonline{jungnickel} (Algoritmo~\ref{alg:maxmatch}), a busca parte de um vértice livre $r$ de cada vez (linha~\ref{bl:root}) e cresce a árvore alternando uma aresta não emparelhada $\{x, y\}$ com a aresta emparelhada $\{y, mate(y)\}$ (linhas~\ref{bl:extend}--\ref{bl:grow}).
-    \item \textbf{Detecção:} Se a busca encontrar uma aresta que fecha um ciclo ímpar, uma \textbf{flor} foi identificada. Isso ocorre quando a aresta $\{x, y\}$ liga dois vértices de profundidade par da mesma árvore (linha~\ref{bl:odd}). O procedimento BLOSSOM (Algoritmo~\ref{alg:blossom_proc}) identifica o ciclo, subindo de $x$ e de $y$ até a raiz e tomando como base $w$ o ancestral comum mais profundo.
-    \item \textbf{Contração:} Contraia todos os vértices da \textbf{flor} em um único super-vértice e modifique o grafo temporariamente. O procedimento CONTRACT (Algoritmo~\ref{alg:contract}) cria o super-vértice $b = n + m$, que herda o pai, a profundidade e o parceiro da base, recebe a união das adjacências da flor e desativa os vértices originais.
-    \item \textbf{Recursão:} Continue a busca no grafo contraído. Na versão de \citeonline{jungnickel}, isso é feito sem recursão explícita: o super-vértice entra na fila de busca (linha~\ref{bl:insb} do Algoritmo~\ref{alg:contract}) e passa a ser tratado como um vértice comum, podendo ele próprio fazer parte de novas flores.
-    \item \textbf{Expansão:} Se um caminho aumentante for encontrado no grafo contraído passando pelo super-vértice, ``abra'' (expanda) a flor novamente para traduzir esse caminho para o grafo original. O caminho dentro da flor será roteado de forma a manter a alternância correta. É o primeiro laço do procedimento AUGMENT (Algoritmo~\ref{alg:augment_blossom}, linha~\ref{bl:expand}), que substitui cada super-vértice do caminho, do mais recente para o mais antigo, por um caminho alternante de comprimento par dentro da flor.
-    \item \textbf{Aumento:} Use o caminho encontrado para aumentar o emparelhamento através da diferença simétrica (inversão das arestas). O AUGMENT é chamado quando a busca alcança um vértice livre $y$ (linha~\ref{bl:calla} do Algoritmo~\ref{alg:maxmatch}), e seu último laço (linha~\ref{bl:flip}) inverte as arestas ao longo do caminho.
+    \item \textbf{busca:} inicie uma busca (geralmente BFS) a partir dos vértices livres para encontrar um caminho aumentante, construindo uma Floresta de Árvores Alternantes. Na versão de \citeonline{jungnickel} (Algoritmo~\ref{alg:maxmatch}), a busca parte de um vértice livre $r$ de cada vez (linha~\ref{bl:root}) e cresce a árvore alternando uma aresta não emparelhada $\{x, y\}$ com a aresta emparelhada $\{y, mate(y)\}$ (linhas~\ref{bl:extend}--\ref{bl:grow});
+    \item \textbf{detecção:} se a busca encontrar uma aresta que fecha um ciclo ímpar, uma \textbf{flor} foi identificada. Isso ocorre quando a aresta $\{x, y\}$ liga dois vértices de profundidade par da mesma árvore (linha~\ref{bl:odd}). O procedimento BLOSSOM (Algoritmo~\ref{alg:blossom_proc}) identifica o ciclo, subindo de $x$ e de $y$ até a raiz e tomando como base $w$ o ancestral comum mais profundo;
+    \item \textbf{contração:} contraia todos os vértices da \textbf{flor} em um único super-vértice e modifique o grafo temporariamente. O procedimento CONTRACT (Algoritmo~\ref{alg:contract}) cria o super-vértice $b = n + m$, que herda o pai, a profundidade e o parceiro da base, recebe a união das adjacências da flor e desativa os vértices originais;
+    \item \textbf{recursão:} continue a busca no grafo contraído. Na versão de \citeonline{jungnickel}, isso é feito sem recursão explícita: o super-vértice entra na fila de busca (linha~\ref{bl:insb} do Algoritmo~\ref{alg:contract}) e passa a ser tratado como um vértice comum, podendo ele próprio fazer parte de novas flores;
+    \item \textbf{expansão:} se um caminho aumentante for encontrado no grafo contraído passando pelo super-vértice, ``abra'' (expanda) a flor novamente para traduzir esse caminho para o grafo original. O caminho dentro da flor será roteado de forma a manter a alternância correta. É o primeiro laço do procedimento AUGMENT (Algoritmo~\ref{alg:augment_blossom}, linha~\ref{bl:expand}), que substitui cada super-vértice do caminho, do mais recente para o mais antigo, por um caminho alternante de comprimento par dentro da flor;
+    \item \textbf{aumento:} use o caminho encontrado para aumentar o emparelhamento através da diferença simétrica (inversão das arestas). O AUGMENT é chamado quando a busca alcança um vértice livre $y$ (linha~\ref{bl:calla} do Algoritmo~\ref{alg:maxmatch}), e seu último laço (linha~\ref{bl:flip}) inverte as arestas ao longo do caminho.
 \end{enumerate}
 
 \citeonline{schrijver} detalha que, a depender da forma como o algoritmo é implementado, principalmente no que trata da contração, a complexidade do algoritmo ingênuo pode chegar a $O(V^3)$. No entanto, melhorias subsequentes nesse algoritmo culminaram em uma implementação em $O(E\sqrt{V})$, descrita por \citeonline{vazirani}. Ela segue o esquema de fases do Hopcroft-Karp (Seção~\ref{sec:algos_exatos_emp_card_max}): cada fase encontra um conjunto maximal de caminhos aumentantes de comprimento mínimo e disjuntos em vértices, agora também na presença de flores, em tempo $O(E)$, e bastam $O(\sqrt{V})$ fases, pelo mesmo argumento do caso bipartido. No entanto, por conta da complexidade de implementação da solução mais rápida, a maioria das implementações práticas do algoritmo utilizam variantes com complexidade próxima a $O(V^3)$.
@@ -182,14 +182,14 @@ Os pseudocódigos a seguir, de \citeonline{jungnickel}, organizam esses passos e
 
 O procedimento BLOSSOM é chamado pelo MAXMATCH quando a aresta $\{x, y\}$ liga dois vértices de profundidade par da mesma árvore alternante, de raiz $r$ (linha~\ref{bl:odd} do Algoritmo~\ref{alg:maxmatch}). Seu papel é identificar o conjunto de vértices $B$ da flor e a sua base $w$:
 
-\begin{itemize}
-    \item \textbf{Linha~\ref{blp:init}:} Os conjuntos $P$ e $P'$ guardarão os caminhos de $x$ e de $y$ até a raiz, e começam contendo apenas o próprio vértice de partida.
-    \item \textbf{Linhas~\ref{blp:upx} e~\ref{blp:upy}:} Dois laços sobem na árvore pelos ponteiros de pai $p(\cdot)$, o primeiro a partir de $x$ e o segundo a partir de $y$, até alcançar a raiz $r$. Ao final, $P$ e $P'$ contêm todos os vértices dos caminhos de $x$ e de $y$ até $r$.
-    \item \textbf{Linha~\ref{blp:common}:} A interseção $S$ dos dois caminhos é o trecho que eles têm em comum, de algum vértice até a raiz.
-    \item \textbf{Linha~\ref{blp:base}:} A base $w$ é o vértice de $S$ de maior profundidade $d(\cdot)$, ou seja, o ancestral comum mais profundo de $x$ e $y$: é nele que os dois caminhos se encontram e se fecha o ciclo ímpar.
-    \item \textbf{Linha~\ref{blp:set}:} A flor $B$ é formada pelos vértices dos dois caminhos que estão abaixo de $w$, mais a própria base. Os vértices de $S$ acima de $w$ ficam de fora, pois pertencem ao caule, e não ao ciclo. Em seguida, o MAXMATCH chama o CONTRACT (Algoritmo~\ref{alg:contract}) com $B$ e $w$.
-    \item \textbf{Complexidade:} Cada caminho até a raiz tem no máximo $O(V)$ vértices, e a interseção e a união dos conjuntos podem ser feitas em tempo linear no tamanho deles; cada chamada custa, portanto, $O(V)$. Como cada contração reduz o número de vértices ativos, há no máximo $O(V)$ flores por busca, o que é compatível com o custo total $O(V^3)$ do algoritmo citado acima.
-\end{itemize}
+\begin{alineas}
+    \item \textbf{linha~\ref{blp:init}:} os conjuntos $P$ e $P'$ guardarão os caminhos de $x$ e de $y$ até a raiz, e começam contendo apenas o próprio vértice de partida;
+    \item \textbf{linhas~\ref{blp:upx} e~\ref{blp:upy}:} dois laços sobem na árvore pelos ponteiros de pai $p(\cdot)$, o primeiro a partir de $x$ e o segundo a partir de $y$, até alcançar a raiz $r$. Ao final, $P$ e $P'$ contêm todos os vértices dos caminhos de $x$ e de $y$ até $r$;
+    \item \textbf{linha~\ref{blp:common}:} a interseção $S$ dos dois caminhos é o trecho que eles têm em comum, de algum vértice até a raiz;
+    \item \textbf{linha~\ref{blp:base}:} a base $w$ é o vértice de $S$ de maior profundidade $d(\cdot)$, ou seja, o ancestral comum mais profundo de $x$ e $y$: é nele que os dois caminhos se encontram e se fecha o ciclo ímpar;
+    \item \textbf{linha~\ref{blp:set}:} a flor $B$ é formada pelos vértices dos dois caminhos que estão abaixo de $w$, mais a própria base. Os vértices de $S$ acima de $w$ ficam de fora, pois pertencem ao caule, e não ao ciclo. Em seguida, o MAXMATCH chama o CONTRACT (Algoritmo~\ref{alg:contract}) com $B$ e $w$;
+    \item \textbf{complexidade:} cada caminho até a raiz tem no máximo $O(V)$ vértices, e a interseção e a união dos conjuntos podem ser feitas em tempo linear no tamanho deles; cada chamada custa, portanto, $O(V)$. Como cada contração reduz o número de vértices ativos, há no máximo $O(V)$ flores por busca, o que é compatível com o custo total $O(V^3)$ do algoritmo citado acima.
+\end{alineas}
 
 
 % ---------------------------------------------------------
@@ -256,7 +256,7 @@ A complexidade $O(V^3)$ do conjunto resulta da contagem de \citeonline{jungnicke
 
 \subsubsection{Teorema de Tutte-Berge}
 
-O teorema de Tutte-Berge, apesar de não aparecer explicitamente na descrição do algoritmo, é fundamental para sua corretude, pois ele fornece um certificado de otimalidade. Por exemplo, digamos que a etapa de busca do algoritmo de Blossom não encontrou nenhum caminho aumentante. Como sabemos que o emparelhamento atual é máximo? Para descobrir isso, utilizamos a fórmula de Tutte-Berge, descrita por \citeonline{jungnickel} da seguinte forma:
+O teorema de Tutte-Berge, apesar de não aparecer explicitamente na descrição do algoritmo, é fundamental para sua corretude, pois ele fornece um certificado de otimalidade. Por exemplo, suponha que a etapa de busca do algoritmo de Blossom não encontrou nenhum caminho aumentante. Como saber se o emparelhamento atual é máximo? Para isso, usa-se a fórmula de Tutte-Berge, descrita por \citeonline{jungnickel} da seguinte forma:
 
 \begin{equation}
     v(G) = \frac{1}{2} \min_{U \subseteq V} (|V| + |U| - \mathrm{odd}(G - U))
@@ -287,10 +287,10 @@ Alguns dos algoritmos aproximados que resolvem este problema são os mesmos vist
 Uma variação inteligente do método guloso, descrita por \citeonline{drake}, que usa DFS e tenta evitar a ``miopia'' de escolher uma aresta isolada. Assim como os anteriores, garante um emparelhamento com pelo menos metade da cardinalidade máxima, caso particular da garantia de metade do peso máximo da versão ponderada (Seção~\ref{sec:emp_pond_max_aprox}).
 
 \begin{enumerate}
-    \item Escolha um vértice livre inicial $v$.
-    \item Inicie uma busca em profundidade (DFS) para construir um caminho simples o mais longo possível.
-    \item Ao longo desse caminho, selecione arestas alternadas para o emparelhamento (a 1ª sim, a 2ª não, a 3ª sim...).
-    \item Remova os vértices usados e repita.
+    \item escolha um vértice livre inicial $v$;
+    \item inicie uma busca em profundidade (DFS) para construir um caminho simples o mais longo possível;
+    \item ao longo desse caminho, selecione arestas alternadas para o emparelhamento (a 1ª sim, a 2ª não, a 3ª sim...);
+    \item remova os vértices usados e repita.
 \end{enumerate}
 
 Ao contrário do guloso simples (que escolhe arestas desconexas), o Path Growing tende a cobrir cadeias longas de vértices, o que é estruturalmente vantajoso. Sua complexidade é linear, $O(V + E)$: cada vértice entra em um único caminho e é removido em seguida, e cada aresta é examinada um número constante de vezes ao estender os caminhos, a mesma análise da versão ponderada (Algoritmo~\ref{alg:path_growing}).
